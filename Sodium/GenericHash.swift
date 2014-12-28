@@ -69,7 +69,7 @@ public class GenericHash {
             } else {
                 ret = crypto_generichash_init(state!, nil, 0, UInt(outputLength))
             }
-            if (ret != 0) {
+            if ret != 0 {
                 return nil
             }
             self.outputLength = outputLength;
@@ -85,7 +85,7 @@ public class GenericHash {
     
         public func final() -> NSData? {
             let output = NSMutableData(length: outputLength)
-            if (crypto_generichash_final(state!, UnsafeMutablePointer<UInt8>(output!.mutableBytes), UInt(output!.length)) != 0) {
+            if crypto_generichash_final(state!, UnsafeMutablePointer<UInt8>(output!.mutableBytes), UInt(output!.length)) != 0 {
                 return nil
             }
             return output

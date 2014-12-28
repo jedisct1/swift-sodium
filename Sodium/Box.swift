@@ -35,13 +35,13 @@ public class Box {
         if sk == nil {
             return nil
         }
-        if (crypto_box_keypair(UnsafeMutablePointer<UInt8>(pk!.mutableBytes), UnsafeMutablePointer<UInt8>(sk!.mutableBytes)) != 0) {
+        if crypto_box_keypair(UnsafeMutablePointer<UInt8>(pk!.mutableBytes), UnsafeMutablePointer<UInt8>(sk!.mutableBytes)) != 0 {
             return nil
         }
         return KeyPair(publicKey: PublicKey(data: pk!), secretKey: SecretKey(data: sk!))
     }
     
-    public func keyPair(seed: NSData) -> KeyPair? {
+    public func keyPair(# seed: NSData) -> KeyPair? {
         if seed.length != SeedBytes {
             return nil
         }
@@ -53,7 +53,7 @@ public class Box {
         if sk == nil {
             return nil
         }
-        if (crypto_box_seed_keypair(UnsafeMutablePointer<UInt8>(pk!.mutableBytes), UnsafeMutablePointer<UInt8>(sk!.mutableBytes), UnsafePointer<UInt8>(seed.bytes)) != 0) {
+        if crypto_box_seed_keypair(UnsafeMutablePointer<UInt8>(pk!.mutableBytes), UnsafeMutablePointer<UInt8>(sk!.mutableBytes), UnsafePointer<UInt8>(seed.bytes)) != 0 {
             return nil
         }
         return KeyPair(publicKey: PublicKey(data: pk!), secretKey: SecretKey(data: sk!))

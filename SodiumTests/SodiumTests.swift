@@ -112,6 +112,22 @@ class SodiumTests: XCTestCase {
         XCTAssert(h == "bb9be85c918015ea")
     }
     
+    func testSignature() {
+        let message = "My Test Message".toData()!
+        let keyPair = sodium.sign.keyPair(seed: sodium.utils.hex2bin("00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff 00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff", ignore: " ")!)!
+        let signedMessage = sodium.sign.sign(message, secretKey: keyPair.secretKey)!
+        XCTAssert(sodium.utils.bin2hex(signedMessage)! == "ce8437d58a27c4d91426d35b24cfaf1e49f95b213c15eddb198f4a8d24c0fdd0df3e7f7a894f60ec15cff25b5f6f27399ce01db0e2649fc54c91cafb8dd48a094d792054657374204d657373616765")
+        
+        let signature = sodium.sign.signature(message, secretKey: keyPair.secretKey)!
+        XCTAssert(sodium.utils.bin2hex(signature)! == "ce8437d58a27c4d91426d35b24cfaf1e49f95b213c15eddb198f4a8d24c0fdd0df3e7f7a894f60ec15cff25b5f6f27399ce01db0e2649fc54c91cafb8dd48a09")
+        
+        XCTAssert(sodium.sign.verify(signedMessage, publicKey: keyPair.publicKey) == true)
+        XCTAssert(sodium.sign.verify(message, publicKey: keyPair.publicKey, signature: signature) == true)
+        
+        let unsignedMessage = sodium.sign.open(signedMessage, publicKey: keyPair.publicKey)!
+        XCTAssert(unsignedMessage == message)
+    }
+    
     func testUtils() {
         let dataToZero = NSMutableData(bytes: UnsafePointer([1, 2, 3, 4] as [UInt8]), length: 4)
         sodium.utils.zero(dataToZero)
