@@ -75,7 +75,7 @@ public class Box {
         }
         let (authenticatedCipherText, nonce) = sealed!
         let nonceAndAuthenticatedCipherText = NSMutableData(data: nonce)
-        nonceAndAuthenticatedCipherText.appendData(message)
+        nonceAndAuthenticatedCipherText.appendData(authenticatedCipherText)
         return nonceAndAuthenticatedCipherText
     }
     
