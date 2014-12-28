@@ -18,10 +18,12 @@ public class Box {
     
     public typealias PublicKey = NSData
     public typealias SecretKey = NSData
+    public typealias Nonce = NSData
+    public typealias MAC = NSData
     
     public struct KeyPair {
-        public let pk: PublicKey
-        public let sk: SecretKey
+        public let publicKey: PublicKey
+        public let secretKey: SecretKey
     }
     
     public func keyPair() -> KeyPair? {
@@ -36,7 +38,7 @@ public class Box {
         if (crypto_box_keypair(UnsafeMutablePointer<UInt8>(pk!.mutableBytes), UnsafeMutablePointer<UInt8>(sk!.mutableBytes)) != 0) {
             return nil
         }
-        return KeyPair(pk: NSData(data: pk!), sk: NSData(data: sk!))
+        return KeyPair(publicKey: PublicKey(data: pk!), secretKey: SecretKey(data: sk!))
     }
     
     public func keyPair(seed: NSData) -> KeyPair? {
@@ -54,14 +56,66 @@ public class Box {
         if (crypto_box_seed_keypair(UnsafeMutablePointer<UInt8>(pk!.mutableBytes), UnsafeMutablePointer<UInt8>(sk!.mutableBytes), UnsafePointer<UInt8>(seed.bytes)) != 0) {
             return nil
         }
-        return KeyPair(pk: PublicKey(data: pk!), sk: SecretKey(data: sk!))
+        return KeyPair(publicKey: PublicKey(data: pk!), secretKey: SecretKey(data: sk!))
     }
     
-    public func seal(message: NSData, recipientPublicKey: PublicKey, senderSecretKey: SecretKey) -> (authenticatedCipherText: NSData, nonce: NSData)? {
-        let sealed = NSMutableData(length: message.length + MacBytes)
+    public func nonce() -> Nonce? {
+        let nonce = NSMutableData(length: NonceBytes)
+        if nonce == nil {
+            return nil
+        }
+        randombytes_buf(UnsafeMutablePointer<UInt8>(nonce!.mutableBytes), UInt(nonce!.length))
+        return nonce! as Nonce
+    }
+    
+    public func seal(message: NSData, recipientPublicKey: PublicKey, senderSecretKey: SecretKey) -> NSData? {
+        let sealed: (NSData, Nonce)? = seal(message, recipientPublicKey: recipientPublicKey, senderSecretKey: senderSecretKey)
         if sealed == nil {
             return nil
         }
-        return nil
+        let (authenticatedCipherText, nonce) = sealed!
+        let nonceAndAuthenticatedCipherText = NSMutableData(data: nonce)
+        nonceAndAuthenticatedCipherText.appendData(message)
+        return nonceAndAuthenticatedCipherText
+    }
+    
+    public func seal(message: NSData, recipientPublicKey: PublicKey, senderSecretKey: SecretKey) -> (authenticatedCipherText: NSData, nonce: Nonce)? {
+        if recipientPublicKey.length != PublicKeyBytes || senderSecretKey.length != SecretKeyBytes {
+            return nil
+        }
+        let authenticatedCipherText = NSMutableData(length: message.length + MacBytes)
+        if authenticatedCipherText == nil {
+            return nil
+        }
+        let nonce = self.nonce()
+        if nonce == nil {
+            return nil
+        }
+        if crypto_box_easy(UnsafeMutablePointer<UInt8>(authenticatedCipherText!.mutableBytes), UnsafePointer<UInt8>(message.bytes), CUnsignedLongLong(message.length), UnsafePointer<UInt8>(nonce!.bytes), UnsafePointer<UInt8>(recipientPublicKey.bytes), UnsafePointer<UInt8>(senderSecretKey.bytes)) != 0 {
+            return nil
+        }
+        return (authenticatedCipherText: authenticatedCipherText!, nonce: nonce!)
+    }
+
+    public func seal(message: NSData, recipientPublicKey: PublicKey, senderSecretKey: SecretKey) -> (authenticatedCipherText: NSData, nonce: Nonce, mac: MAC)? {
+        if recipientPublicKey.length != PublicKeyBytes || senderSecretKey.length != SecretKeyBytes {
+            return nil
+        }
+        let authenticatedCipherText = NSMutableData(length: message.length + MacBytes)
+        if authenticatedCipherText == nil {
+            return nil
+        }
+        let mac = NSMutableData(length: MacBytes)
+        if mac == nil {
+            return nil
+        }
+        let nonce = self.nonce()
+        if nonce == nil {
+            return nil
+        }
+        if crypto_box_detached(UnsafeMutablePointer<UInt8>(authenticatedCipherText!.mutableBytes), UnsafeMutablePointer<UInt8>(mac!.mutableBytes), UnsafePointer<UInt8>(message.bytes), CUnsignedLongLong(message.length), UnsafePointer<UInt8>(nonce!.bytes), UnsafePointer<UInt8>(recipientPublicKey.bytes), UnsafePointer<UInt8>(senderSecretKey.bytes)) != 0 {
+            return nil
+        }
+        return (authenticatedCipherText: authenticatedCipherText!, nonce: nonce! as Nonce, mac: mac! as MAC)
     }
 }

@@ -22,6 +22,10 @@ class SodiumTests: XCTestCase {
     
     func testExample() {
         XCTAssert(true, "Pass")
+        let sodium = Sodium()
+        let kp = sodium.box.keyPair()
+        let sealed: (NSData, Box.Nonce)? = sodium.box.seal("test".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!, recipientPublicKey: kp!.publicKey, senderSecretKey: kp!.secretKey)
+        println(sealed)
     }
     
     func testPerformanceExample() {
