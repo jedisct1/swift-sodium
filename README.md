@@ -42,7 +42,7 @@ let encryptedMessageFromAliceToBob: NSData =
                   recipientPublicKey: bobKeyPair.publicKey,
                   senderSecretKey: aliceKeyPair.secretKey)!
 
-let decryptedMessageByBob =
+let messageVerifiedAndDecryptedByBob =
   sodium.box.open(encryptedMessageFromAliceToBob,
                   senderPublicKey: bobKeyPair.publicKey,
                   recipientSecretKey: aliceKeyPair.secretKey)
