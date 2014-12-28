@@ -101,7 +101,7 @@ public class Box {
         if recipientPublicKey.length != PublicKeyBytes || senderSecretKey.length != SecretKeyBytes {
             return nil
         }
-        let authenticatedCipherText = NSMutableData(length: message.length + MacBytes)
+        let authenticatedCipherText = NSMutableData(length: message.length)
         if authenticatedCipherText == nil {
             return nil
         }
@@ -123,12 +123,8 @@ public class Box {
         if nonceAndAuthenticatedCipherText.length < NonceBytes + MacBytes {
             return nil
         }
-        let message = NSMutableData(length: nonceAndAuthenticatedCipherText.length - NonceBytes - MacBytes)
-        if message == nil {
-            return nil
-        }
-        let nonce = message!.subdataWithRange(NSRange(0..<NonceBytes)) as Nonce
-        let authenticatedCipherText = message!.subdataWithRange(NSRange(NonceBytes..<message!.length - NonceBytes))
+        let nonce = nonceAndAuthenticatedCipherText.subdataWithRange(NSRange(0..<NonceBytes)) as Nonce
+        let authenticatedCipherText = nonceAndAuthenticatedCipherText.subdataWithRange(NSRange(NonceBytes..<nonceAndAuthenticatedCipherText.length))
         return open(authenticatedCipherText, senderPublicKey: senderPublicKey, recipientSecretKey: recipientSecretKey, nonce: nonce)
     }
     
@@ -156,11 +152,11 @@ public class Box {
         if senderPublicKey.length != PublicKeyBytes || recipientSecretKey.length != SecretKeyBytes {
             return nil
         }
-        let message = NSMutableData(length: authenticatedCipherText.length - MacBytes)
+        let message = NSMutableData(length: authenticatedCipherText.length)
         if message == nil {
             return nil
         }
-        if crypto_box_open_detached(UnsafeMutablePointer<UInt8>(message!.mutableBytes), UnsafePointer<UInt8>(mac.bytes), UnsafePointer<UInt8>(authenticatedCipherText.bytes), CUnsignedLongLong(authenticatedCipherText.length), UnsafePointer<UInt8>(nonce.bytes), UnsafePointer<UInt8>(senderPublicKey.bytes), UnsafePointer<UInt8>(recipientSecretKey.bytes)) != 0 {
+        if crypto_box_open_detached(UnsafeMutablePointer<UInt8>(message!.mutableBytes), UnsafePointer<UInt8>(authenticatedCipherText.bytes), UnsafePointer<UInt8>(mac.bytes), CUnsignedLongLong(authenticatedCipherText.length), UnsafePointer<UInt8>(nonce.bytes), UnsafePointer<UInt8>(senderPublicKey.bytes), UnsafePointer<UInt8>(recipientSecretKey.bytes)) != 0 {
             return nil
         }
         return message

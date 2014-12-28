@@ -32,6 +32,24 @@ class SodiumTests: XCTestCase {
         super.tearDown()
     }
     
+    func testBox() {
+        let message = "My Test Message".toData()!
+        let aliceKeyPair = sodium.box.keyPair()!
+        let bobKeyPair = sodium.box.keyPair()!
+        
+        let encryptedMessageFromAliceToBob: NSData = sodium.box.seal(message, recipientPublicKey: bobKeyPair.publicKey, senderSecretKey: aliceKeyPair.secretKey)!
+        let decrypted = sodium.box.open(encryptedMessageFromAliceToBob, senderPublicKey: bobKeyPair.publicKey, recipientSecretKey: aliceKeyPair.secretKey)
+        XCTAssert(decrypted == message)
+        
+        let (encryptedMessageFromAliceToBob2: NSData, nonce: Box.Nonce) = sodium.box.seal(message, recipientPublicKey: bobKeyPair.publicKey, senderSecretKey: aliceKeyPair.secretKey)!
+        let decrypted2 = sodium.box.open(encryptedMessageFromAliceToBob2, senderPublicKey: aliceKeyPair.publicKey, recipientSecretKey: bobKeyPair.secretKey, nonce: nonce)
+        XCTAssert(decrypted2 == message)
+        
+        let (encryptedMessageFromAliceToBob3: NSData, nonce2: Box.Nonce, mac: Box.MAC) = sodium.box.seal(message, recipientPublicKey: bobKeyPair.publicKey, senderSecretKey: aliceKeyPair.secretKey)!
+        let decrypted3 = sodium.box.open(encryptedMessageFromAliceToBob3, senderPublicKey: aliceKeyPair.publicKey, recipientSecretKey: bobKeyPair.secretKey, nonce: nonce2, mac: mac)
+        XCTAssert(decrypted3 == message)
+    }
+    
     func testGenericHash() {
         let message = "My Test Message".toData()!
         let h1 = sodium.utils.bin2hex(sodium.genericHash.hash(message)!)!
