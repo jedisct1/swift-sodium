@@ -16,7 +16,7 @@ public class Sodium {
     public var sign = Sign()
     public var utils = Utils()
     
-    public init() {
+    public init?() {
         struct Once {
             static var once: dispatch_once_t = 0
         }

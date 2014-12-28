@@ -22,7 +22,7 @@ extension NSData {
 }
 
 class SodiumTests: XCTestCase {
-    let sodium = Sodium()
+    let sodium = Sodium()!
     
     override func setUp() {
         super.setUp()
