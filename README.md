@@ -156,7 +156,7 @@ Constant-time comparison
 ```swift
 let secret1: NSData
 let secret2: NSData
-let equality = sodium.utils.equals(secret1, to: secret2)
+let equality = sodium.utils.equals(secret1, secret2)
 ```
 
 Constant-time hexadecimal encoding

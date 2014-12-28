@@ -137,9 +137,9 @@ class SodiumTests: XCTestCase {
         let eq2 = NSData(bytes: UnsafePointer([1, 2, 3, 4] as [UInt8]), length: 4)
         let eq3 = NSData(bytes: UnsafePointer([1, 2, 3, 5] as [UInt8]), length: 4)
         let eq4 = NSData(bytes: UnsafePointer([1, 2, 3] as [UInt8]), length: 3)
-        XCTAssert(sodium.utils.equals(eq1, to: eq2))
-        XCTAssert(!sodium.utils.equals(eq1, to: eq3))
-        XCTAssert(!sodium.utils.equals(eq1, to: eq4))
+        XCTAssert(sodium.utils.equals(eq1, eq2))
+        XCTAssert(!sodium.utils.equals(eq1, eq3))
+        XCTAssert(!sodium.utils.equals(eq1, eq4))
         
         let bin = sodium.utils.hex2bin("deadbeef")!
         XCTAssert(bin.description == "<deadbeef>")

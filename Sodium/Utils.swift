@@ -14,7 +14,7 @@ public class Utils {
         data.length = 0
     }
     
-    public func equals(b1: NSData, to b2: NSData) -> Bool {
+    public func equals(b1: NSData, _ b2: NSData) -> Bool {
         if b1.length != b2.length {
             return false
         }
