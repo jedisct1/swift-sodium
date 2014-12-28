@@ -14,7 +14,7 @@ public class Utils {
         data.length = 0
     }
     
-    public func equals(b1: NSData, b2: NSData) -> Bool {
+    public func equals(b1: NSData, to b2: NSData) -> Bool {
         if b1.length != b2.length {
             return false
         }
@@ -34,7 +34,7 @@ public class Utils {
         return String.fromCString(hexDataBytes)
     }
     
-    public func hex2bin(hex: String, ignore: String?) -> NSData? {
+    public func hex2bin(hex: String, ignore: String? = nil) -> NSData? {
         let hexData = hex.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
         if hexData == nil {
             return nil
@@ -52,9 +52,5 @@ public class Utils {
         }
         binData!.length = Int(binDataLen)
         return binData
-    }
-    
-    public func hex2bin(hex: String) -> NSData? {
-        return hex2bin(hex, ignore: nil)
     }
 }

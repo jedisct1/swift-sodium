@@ -17,42 +17,62 @@ public class GenericHash {
     public let Keybytes = Int(crypto_generichash_keybytes())
     public let Primitive = String.fromCString(crypto_generichash_primitive())
     
-    public func hash(message: NSData, key: NSData) -> NSData? {
-        let output = NSMutableData(length: Int(Bytes))
+    public func hash(message: NSData, key: NSData? = nil) -> NSData? {
+        return hash(message, key: key, outputLength: Bytes)
+    }
+    
+    public func hash(message: NSData, key: NSData?, outputLength: Int) -> NSData? {
+        let output = NSMutableData(length: outputLength)
         if output == nil {
             return nil
         }
-        if (crypto_generichash(UnsafeMutablePointer<UInt8>(output!.mutableBytes), UInt(output!.length), UnsafePointer<UInt8>(message.bytes), CUnsignedLongLong(message.length), UnsafePointer<UInt8>(key.bytes), UInt(key.length)) != 0) {
+        var ret: CInt;
+        if let key = key {
+            ret = crypto_generichash(UnsafeMutablePointer<UInt8>(output!.mutableBytes), UInt(output!.length), UnsafePointer<UInt8>(message.bytes), CUnsignedLongLong(message.length), UnsafePointer<UInt8>(key.bytes), UInt(key.length))
+        } else {
+            ret = crypto_generichash(UnsafeMutablePointer<UInt8>(output!.mutableBytes), UInt(output!.length), UnsafePointer<UInt8>(message.bytes), CUnsignedLongLong(message.length), nil, 0)
+        }
+        if ret != 0 {
             return nil
         }
         return output
     }
-    
-    public func hash(message: NSData) -> NSData? {
-        return hash(message, key: NSData())
+
+    public func hash(message: NSData, outputLength: Int) -> NSData? {
+        return hash(message, key: NSData(), outputLength: outputLength)
     }
     
-    public func initStream(key: NSData) -> Stream? {
-        return Stream(key: key, outlen: Bytes)
+    public func initStream(key: NSData? = nil) -> Stream? {
+        return Stream(key: key, outputLength: Bytes)
     }
     
-    public func initStream(key: NSData, outlen: Int) -> Stream? {
-        return Stream(key: key, outlen: outlen)
+    public func initStream(key: NSData?, outputLength: Int) -> Stream? {
+        return Stream(key: key, outputLength: outputLength)
+    }
+    
+    public func initStream(outputLength: Int) -> Stream? {
+        return Stream(key: nil, outputLength: outputLength)
     }
 
     public class Stream {
-        public var outlen: Int = 0;
+        public var outputLength: Int = 0;
         private var state: UnsafeMutablePointer<crypto_generichash_state>?;
 
-        init?(key: NSData, outlen: Int) {
+        init?(key: NSData?, outputLength: Int) {
             state = UnsafeMutablePointer<crypto_generichash_state>.alloc(1);
             if state == nil {
                 return nil
             }
-            if (crypto_generichash_init(state!, UnsafePointer<UInt8>(key.bytes), UInt(key.length),  UInt(outlen)) != 0) {
+            var ret: CInt
+            if let key = key {
+                ret = crypto_generichash_init(state!, UnsafePointer<UInt8>(key.bytes), UInt(key.length), UInt(outputLength))
+            } else {
+                ret = crypto_generichash_init(state!, nil, 0, UInt(outputLength))
+            }
+            if (ret != 0) {
                 return nil
             }
-            self.outlen = outlen;
+            self.outputLength = outputLength;
         }
     
         deinit {
@@ -64,7 +84,7 @@ public class GenericHash {
         }
     
         public func final() -> NSData? {
-            let output = NSMutableData(length: outlen)
+            let output = NSMutableData(length: outputLength)
             if (crypto_generichash_final(state!, UnsafeMutablePointer<UInt8>(output!.mutableBytes), UInt(output!.length)) != 0) {
                 return nil
             }
