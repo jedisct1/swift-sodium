@@ -37,8 +37,15 @@ let aliceKeyPair = sodium.box.keyPair()!
 let bobKeyPair = sodium.box.keyPair()!
 let message: NSData = "My Test Message".toData()!
 
-let encryptedMessageFromAliceToBob: NSData = sodium.box.seal(message, recipientPublicKey: bobKeyPair.publicKey, senderSecretKey: aliceKeyPair.secretKey)!
-let decryptedMessageByBob = sodium.box.open(encryptedMessageFromAliceToBob, senderPublicKey: bobKeyPair.publicKey, recipientSecretKey: aliceKeyPair.secretKey)
+let encryptedMessageFromAliceToBob: NSData =
+  sodium.box.seal(message,
+                  recipientPublicKey: bobKeyPair.publicKey,
+                  senderSecretKey: aliceKeyPair.secretKey)!
+
+let decryptedMessageByBob =
+  sodium.box.open(encryptedMessageFromAliceToBob,
+                  senderPublicKey: bobKeyPair.publicKey,
+                  recipientSecretKey: aliceKeyPair.secretKey)
 ```
 
 `seal()` automatically generates a nonce and prepends it to the
