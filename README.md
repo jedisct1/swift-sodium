@@ -65,8 +65,7 @@ Detached signatures
 let sodium = Sodium()!
 let message = "My Test Message".toData()!
 let keyPair = sodium.sign.keyPair()!
-let signature = sodium.sign.signature(message,
-                                      secretKey: keyPair.secretKey)!
+let signature = sodium.sign.signature(message, secretKey: keyPair.secretKey)!
 if sodium.sign.verify(message,
                       publicKey: keyPair.publicKey,
                       signature: signature) {
@@ -81,10 +80,8 @@ Attached signatures
 let sodium = Sodium()!
 let message = "My Test Message".toData()!
 let keyPair = sodium.sign.keyPair()!
-let signedMessage = sodium.sign.sign(message,
-                                     secretKey: keyPair.secretKey)!
-if let unsignedMessage = sodium.sign.open(message,
-                                          publicKey: keyPair.publicKey) {
+let signedMessage = sodium.sign.sign(message, secretKey: keyPair.secretKey)!
+if let unsignedMessage = sodium.sign.open(message, publicKey: keyPair.publicKey) {
   // signature is valid
 }
 ```
@@ -116,8 +113,7 @@ Streaming
 
 ```swift
 let sodium = Sodium()!
-let (message1, message2) = ("My Test ".toData()!,
-                            "Message".toData()!)
+let (message1, message2) = ("My Test ".toData()!, "Message".toData()!)
 let key = "Secret key".toData()!
 let stream = sodium.genericHash.initStream(key)!
 stream.update(message1)
