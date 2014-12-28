@@ -12,6 +12,7 @@ public class Sodium {
     public var box = Box()
     public var genericHash = GenericHash()
     public var randomBytes = RandomBytes()
+    public var shortHash = ShortHash()
     public var utils = Utils()
     
     public init() {

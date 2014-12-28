@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		091C7CDA1A507E95002E5351 /* ShortHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091C7CD91A507E95002E5351 /* ShortHash.swift */; };
 		094F21EA1A5017CA001C3141 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094F21E91A5017CA001C3141 /* Box.swift */; };
 		095D80551A4ECCD7000B83F9 /* Sodium.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D80541A4ECCD7000B83F9 /* Sodium.swift */; };
 		095D80571A4ED0B4000B83F9 /* GenericHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D80561A4ED0B4000B83F9 /* GenericHash.swift */; };
@@ -82,6 +83,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		091C7CD91A507E95002E5351 /* ShortHash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShortHash.swift; sourceTree = "<group>"; };
 		094F21E91A5017CA001C3141 /* Box.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Box.swift; sourceTree = "<group>"; };
 		095D80541A4ECCD7000B83F9 /* Sodium.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sodium.swift; sourceTree = "<group>"; };
 		095D80561A4ED0B4000B83F9 /* GenericHash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericHash.swift; sourceTree = "<group>"; };
@@ -196,6 +198,7 @@
 				094F21E91A5017CA001C3141 /* Box.swift */,
 				095D80561A4ED0B4000B83F9 /* GenericHash.swift */,
 				095D805A1A4F35CA000B83F9 /* RandomBytes.swift */,
+				091C7CD91A507E95002E5351 /* ShortHash.swift */,
 				095D80541A4ECCD7000B83F9 /* Sodium.swift */,
 				095D805C1A4F4F72000B83F9 /* Utils.swift */,
 			);
@@ -450,6 +453,7 @@
 			files = (
 				095D80551A4ECCD7000B83F9 /* Sodium.swift in Sources */,
 				095D805D1A4F4F72000B83F9 /* Utils.swift in Sources */,
+				091C7CDA1A507E95002E5351 /* ShortHash.swift in Sources */,
 				095D805B1A4F35CA000B83F9 /* RandomBytes.swift in Sources */,
 				095D80571A4ED0B4000B83F9 /* GenericHash.swift in Sources */,
 				094F21EA1A5017CA001C3141 /* Box.swift in Sources */,

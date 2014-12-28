@@ -105,6 +105,13 @@ class SodiumTests: XCTestCase {
         XCTAssert(c2 < 10)
     }
     
+    func testShortHash() {
+        let message = "My Test Message".toData()!
+        let key = sodium.utils.hex2bin("00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff", ignore: " ")!
+        let h = sodium.utils.bin2hex(sodium.shortHash.hash(message, key: key)!)!
+        XCTAssert(h == "bb9be85c918015ea")
+    }
+    
     func testUtils() {
         let dataToZero = NSMutableData(bytes: UnsafePointer([1, 2, 3, 4] as [UInt8]), length: 4)
         sodium.utils.zero(dataToZero)
