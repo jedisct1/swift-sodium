@@ -9,9 +9,10 @@
 import Foundation
 
 public class Sodium {
-    public lazy var randomBytes: RandomBytes = RandomBytes()
-    public lazy var genericHash: GenericHash = GenericHash()
-    public lazy var utils: Utils = Utils()
+    public lazy var box = Box()
+    public lazy var genericHash = GenericHash()
+    public lazy var randomBytes = RandomBytes()
+    public lazy var utils = Utils()
     
     public init() {
         struct Once {
