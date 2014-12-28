@@ -57,6 +57,7 @@ let signedMessage = sodium.sign.sign(message, secretKey: keyPair.secretKey)!
 if let unsignedMessage = sodium.sign.open(message, publicKey: keyPair.publicKey) {
   // signature is valid
 }
+```
 
 Hashing
 =======
