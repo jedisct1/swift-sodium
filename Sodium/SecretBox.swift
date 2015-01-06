@@ -58,7 +58,7 @@ public class SecretBox {
         if nonce == nil {
             return nil
         }
-        if crypto_secretbox_easy(authenticatedCipherText!.mBytePtr, message.bytePtr, UInt64(message.length), nonce!.bytePtr, secretKey.bytePtr) != 0 {
+        if crypto_secretbox_easy(authenticatedCipherText!.mutableBytesPtr, message.bytesPtr, UInt64(message.length), nonce!.bytesPtr, secretKey.bytesPtr) != 0 {
             return nil
         }
         return (authenticatedCipherText: authenticatedCipherText!, nonce: nonce!)
@@ -80,7 +80,7 @@ public class SecretBox {
         if nonce == nil {
             return nil
         }
-        if crypto_secretbox_detached(cipherText!.mBytePtr, mac!.mBytePtr, message.bytePtr, UInt64(message.length), nonce!.bytePtr, secretKey.bytePtr) != 0 {
+        if crypto_secretbox_detached(cipherText!.mutableBytesPtr, mac!.mutableBytesPtr, message.bytesPtr, UInt64(message.length), nonce!.bytesPtr, secretKey.bytesPtr) != 0 {
             return nil
         }
         return (cipherText: cipherText!, nonce: nonce!, mac: mac!)
@@ -107,7 +107,7 @@ public class SecretBox {
         if message == nil {
             return nil
         }
-        if crypto_secretbox_open_easy(message!.mBytePtr, authenticatedCipherText.bytePtr, UInt64(authenticatedCipherText.length), nonce.bytePtr, secretKey.bytePtr) != 0 {
+        if crypto_secretbox_open_easy(message!.mutableBytesPtr, authenticatedCipherText.bytesPtr, UInt64(authenticatedCipherText.length), nonce.bytesPtr, secretKey.bytesPtr) != 0 {
             return nil
         }
         return message
@@ -124,7 +124,7 @@ public class SecretBox {
         if message == nil {
             return nil
         }
-        if crypto_secretbox_open_detached(message!.mBytePtr, cipherText.bytePtr, mac.bytePtr, UInt64(cipherText.length), nonce.bytePtr, secretKey.bytePtr) != 0 {
+        if crypto_secretbox_open_detached(message!.mutableBytesPtr, cipherText.bytesPtr, mac.bytesPtr, UInt64(cipherText.length), nonce.bytesPtr, secretKey.bytesPtr) != 0 {
             return nil
         }
         return message

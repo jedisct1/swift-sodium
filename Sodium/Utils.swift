@@ -56,13 +56,13 @@ public class Utils {
 }
 
 extension NSData {
-    var bytePtr: UnsafePointer<UInt8> {
+    var bytesPtr: UnsafePointer<UInt8> {
         return UnsafePointer<UInt8>(self.bytes)
     }
 }
 
 extension NSMutableData {
-    var mBytePtr: UnsafeMutablePointer<UInt8> {
+    var mutableBytesPtr: UnsafeMutablePointer<UInt8> {
         return UnsafeMutablePointer<UInt8>(self.mutableBytes)
     }
 }
