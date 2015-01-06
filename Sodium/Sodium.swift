@@ -10,6 +10,7 @@ import Foundation
 
 public class Sodium {
     public var box = Box()
+    public var secretBox = SecretBox()
     public var genericHash = GenericHash()
     public var randomBytes = RandomBytes()
     public var shortHash = ShortHash()
