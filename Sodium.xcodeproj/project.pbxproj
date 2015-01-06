@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		038365151A5A51D20081136D /* SecretBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038365141A5A51D20081136D /* SecretBox.swift */; };
 		091C7CDA1A507E95002E5351 /* ShortHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091C7CD91A507E95002E5351 /* ShortHash.swift */; };
 		091C7CDC1A50839D002E5351 /* Sign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091C7CDB1A50839D002E5351 /* Sign.swift */; };
 		094F21EA1A5017CA001C3141 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094F21E91A5017CA001C3141 /* Box.swift */; };
@@ -84,6 +85,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		038365141A5A51D20081136D /* SecretBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecretBox.swift; sourceTree = "<group>"; };
 		091C7CD91A507E95002E5351 /* ShortHash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShortHash.swift; sourceTree = "<group>"; };
 		091C7CDB1A50839D002E5351 /* Sign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sign.swift; sourceTree = "<group>"; };
 		094F21E91A5017CA001C3141 /* Box.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Box.swift; sourceTree = "<group>"; };
@@ -198,6 +200,7 @@
 				09A943E91A4EB70900C8A04F /* sodium_lib */,
 				09A943CC1A4EB5F500C8A04F /* Sodium.h */,
 				094F21E91A5017CA001C3141 /* Box.swift */,
+				038365141A5A51D20081136D /* SecretBox.swift */,
 				095D80561A4ED0B4000B83F9 /* GenericHash.swift */,
 				095D805A1A4F35CA000B83F9 /* RandomBytes.swift */,
 				091C7CD91A507E95002E5351 /* ShortHash.swift */,
@@ -455,6 +458,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				095D80551A4ECCD7000B83F9 /* Sodium.swift in Sources */,
+				038365151A5A51D20081136D /* SecretBox.swift in Sources */,
 				095D805D1A4F4F72000B83F9 /* Utils.swift in Sources */,
 				091C7CDC1A50839D002E5351 /* Sign.swift in Sources */,
 				091C7CDA1A507E95002E5351 /* ShortHash.swift in Sources */,

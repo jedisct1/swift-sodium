@@ -50,6 +50,34 @@ class SodiumTests: XCTestCase {
         XCTAssert(decrypted3 == message)
     }
     
+    func testSecretBox() {
+        let message = "My Test Message".toData()!
+        let secretKey = sodium.secretBox.key()!
+        
+        // test simple nonce + mac + message box
+        let encrypted: NSData = sodium.secretBox.seal(message, secretKey: secretKey)!
+        let decrypted = sodium.secretBox.open(encrypted, secretKey: secretKey)!
+        XCTAssert(decrypted == message)
+        
+        XCTAssertNil(sodium.secretBox.open(encrypted, secretKey: sodium.secretBox.key()!), "Shouldn't be able to decrypt with a bad key")
+        
+        // test (mac + message, nonce) box
+        let (encrypted2, nonce2) = sodium.secretBox.seal(message, secretKey: secretKey)!
+        let decrypted2 = sodium.secretBox.open(encrypted2, secretKey: secretKey, nonce: nonce2)
+        XCTAssert(decrypted2 == message)
+        
+        XCTAssertNil(sodium.secretBox.open(encrypted2, secretKey: secretKey, nonce: sodium.secretBox.nonce()!), "Shouldn't be able to decrypt with an invalid nonce")
+        
+        // test (message, nonce, mac) box
+        let (encrypted3, nonce3, mac3) = sodium.secretBox.seal(message, secretKey: secretKey)!
+        let decrypted3 = sodium.secretBox.open(encrypted3, secretKey: secretKey, nonce: nonce3, mac: mac3)
+        XCTAssert(decrypted3 == message)
+        
+        let (encrypted4, nonce4, mac4) = sodium.secretBox.seal(message, secretKey: secretKey)!
+        XCTAssertNil(sodium.secretBox.open(encrypted3, secretKey: secretKey, nonce: nonce3, mac: mac4), "Shouldn't be able to decrypt with an invalid MAC")
+        XCTAssertNil(sodium.secretBox.open(encrypted3, secretKey: secretKey, nonce: nonce4, mac: mac3), "Shouldn't be able to decrypt with an invalid nonce")
+    }
+    
     func testGenericHash() {
         let message = "My Test Message".toData()!
         let h1 = sodium.utils.bin2hex(sodium.genericHash.hash(message)!)!
