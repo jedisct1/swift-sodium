@@ -28,7 +28,7 @@ public class Utils {
             return nil
         }
         let hexDataBytes = UnsafeMutablePointer<CChar>(hexData!.mutableBytes)
-        if sodium_bin2hex(hexDataBytes, UInt(hexData!.length), UnsafePointer<UInt8>(bin.bytes), UInt(bin.length)) == nil {
+        if sodium_bin2hex(hexDataBytes, UInt(hexData!.length), bin.bytesPtr, UInt(bin.length)) == nil {
             return nil
         }
         return String.fromCString(hexDataBytes)
@@ -47,7 +47,7 @@ public class Utils {
         }
         var binDataLen: UInt = 0
         let ignore_cstr = ignore != nil ? (ignore! as NSString).UTF8String : nil
-        if sodium_hex2bin(UnsafeMutablePointer<UInt8>(binData!.mutableBytes), UInt(binDataCapacity),UnsafePointer<CChar>(hexData!.bytes), UInt(hexDataLen), ignore_cstr, &binDataLen, nil) != 0 {
+        if sodium_hex2bin(binData!.mutableBytesPtr, UInt(binDataCapacity),UnsafePointer<CChar>(hexData!.bytes), UInt(hexDataLen), ignore_cstr, &binDataLen, nil) != 0 {
             return nil
         }
         binData!.length = Int(binDataLen)

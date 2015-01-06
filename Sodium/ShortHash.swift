@@ -20,7 +20,7 @@ public class ShortHash {
         if output == nil {
             return nil
         }
-        if crypto_shorthash(UnsafeMutablePointer<UInt8>(output!.mutableBytes), UnsafePointer<UInt8>(message.bytes), CUnsignedLongLong(message.length), UnsafePointer<UInt8>(key.bytes)) != 0 {
+        if crypto_shorthash(output!.mutableBytesPtr, message.bytesPtr, CUnsignedLongLong(message.length), key.bytesPtr) != 0 {
             return nil
         }
         return output

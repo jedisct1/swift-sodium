@@ -17,7 +17,7 @@ public class RandomBytes {
         if output == nil {
             return nil
         }
-        randombytes_buf(UnsafeMutablePointer<UInt8>(output!.mutableBytes), UInt(output!.length))
+        randombytes_buf(output!.mutableBytesPtr, UInt(output!.length))
         return output
     }
     

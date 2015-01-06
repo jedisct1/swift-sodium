@@ -28,9 +28,9 @@ public class GenericHash {
         }
         var ret: CInt;
         if let key = key {
-            ret = crypto_generichash(UnsafeMutablePointer<UInt8>(output!.mutableBytes), UInt(output!.length), UnsafePointer<UInt8>(message.bytes), CUnsignedLongLong(message.length), UnsafePointer<UInt8>(key.bytes), UInt(key.length))
+            ret = crypto_generichash(output!.mutableBytesPtr, UInt(output!.length), message.bytesPtr, CUnsignedLongLong(message.length), key.bytesPtr, UInt(key.length))
         } else {
-            ret = crypto_generichash(UnsafeMutablePointer<UInt8>(output!.mutableBytes), UInt(output!.length), UnsafePointer<UInt8>(message.bytes), CUnsignedLongLong(message.length), nil, 0)
+            ret = crypto_generichash(output!.mutableBytesPtr, UInt(output!.length), message.bytesPtr, CUnsignedLongLong(message.length), nil, 0)
         }
         if ret != 0 {
             return nil
@@ -65,7 +65,7 @@ public class GenericHash {
             }
             var ret: CInt
             if let key = key {
-                ret = crypto_generichash_init(state!, UnsafePointer<UInt8>(key.bytes), UInt(key.length), UInt(outputLength))
+                ret = crypto_generichash_init(state!, key.bytesPtr, UInt(key.length), UInt(outputLength))
             } else {
                 ret = crypto_generichash_init(state!, nil, 0, UInt(outputLength))
             }
@@ -80,12 +80,12 @@ public class GenericHash {
         }
     
         public func update(input: NSData) -> Bool {
-            return crypto_generichash_update(state!, UnsafePointer<UInt8>(input.bytes), CUnsignedLongLong(input.length)) == 0
+            return crypto_generichash_update(state!, input.bytesPtr, CUnsignedLongLong(input.length)) == 0
         }
     
         public func final() -> NSData? {
             let output = NSMutableData(length: outputLength)
-            if crypto_generichash_final(state!, UnsafeMutablePointer<UInt8>(output!.mutableBytes), UInt(output!.length)) != 0 {
+            if crypto_generichash_final(state!, output!.mutableBytesPtr, UInt(output!.length)) != 0 {
                 return nil
             }
             return output

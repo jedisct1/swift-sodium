@@ -35,7 +35,7 @@ public class Box {
         if sk == nil {
             return nil
         }
-        if crypto_box_keypair(UnsafeMutablePointer<UInt8>(pk!.mutableBytes), UnsafeMutablePointer<UInt8>(sk!.mutableBytes)) != 0 {
+        if crypto_box_keypair(pk!.mutableBytesPtr, sk!.mutableBytesPtr) != 0 {
             return nil
         }
         return KeyPair(publicKey: PublicKey(data: pk!), secretKey: SecretKey(data: sk!))
@@ -53,7 +53,7 @@ public class Box {
         if sk == nil {
             return nil
         }
-        if crypto_box_seed_keypair(UnsafeMutablePointer<UInt8>(pk!.mutableBytes), UnsafeMutablePointer<UInt8>(sk!.mutableBytes), UnsafePointer<UInt8>(seed.bytes)) != 0 {
+        if crypto_box_seed_keypair(pk!.mutableBytesPtr, sk!.mutableBytesPtr, seed.bytesPtr) != 0 {
             return nil
         }
         return KeyPair(publicKey: PublicKey(data: pk!), secretKey: SecretKey(data: sk!))
@@ -64,7 +64,7 @@ public class Box {
         if nonce == nil {
             return nil
         }
-        randombytes_buf(UnsafeMutablePointer<UInt8>(nonce!.mutableBytes), UInt(nonce!.length))
+        randombytes_buf(nonce!.mutableBytesPtr, UInt(nonce!.length))
         return nonce! as Nonce
     }
     
@@ -91,7 +91,7 @@ public class Box {
         if nonce == nil {
             return nil
         }
-        if crypto_box_easy(UnsafeMutablePointer<UInt8>(authenticatedCipherText!.mutableBytes), UnsafePointer<UInt8>(message.bytes), CUnsignedLongLong(message.length), UnsafePointer<UInt8>(nonce!.bytes), UnsafePointer<UInt8>(recipientPublicKey.bytes), UnsafePointer<UInt8>(senderSecretKey.bytes)) != 0 {
+        if crypto_box_easy(authenticatedCipherText!.mutableBytesPtr, message.bytesPtr, CUnsignedLongLong(message.length), nonce!.bytesPtr, recipientPublicKey.bytesPtr, senderSecretKey.bytesPtr) != 0 {
             return nil
         }
         return (authenticatedCipherText: authenticatedCipherText!, nonce: nonce!)
@@ -113,7 +113,7 @@ public class Box {
         if nonce == nil {
             return nil
         }
-        if crypto_box_detached(UnsafeMutablePointer<UInt8>(authenticatedCipherText!.mutableBytes), UnsafeMutablePointer<UInt8>(mac!.mutableBytes), UnsafePointer<UInt8>(message.bytes), CUnsignedLongLong(message.length), UnsafePointer<UInt8>(nonce!.bytes), UnsafePointer<UInt8>(recipientPublicKey.bytes), UnsafePointer<UInt8>(senderSecretKey.bytes)) != 0 {
+        if crypto_box_detached(authenticatedCipherText!.mutableBytesPtr, mac!.mutableBytesPtr, message.bytesPtr, CUnsignedLongLong(message.length), nonce!.bytesPtr, recipientPublicKey.bytesPtr, senderSecretKey.bytesPtr) != 0 {
             return nil
         }
         return (authenticatedCipherText: authenticatedCipherText!, nonce: nonce! as Nonce, mac: mac! as MAC)
@@ -139,7 +139,7 @@ public class Box {
         if message == nil {
             return nil
         }
-        if crypto_box_open_easy(UnsafeMutablePointer<UInt8>(message!.mutableBytes), UnsafePointer<UInt8>(authenticatedCipherText.bytes), CUnsignedLongLong(authenticatedCipherText.length), UnsafePointer<UInt8>(nonce.bytes), UnsafePointer<UInt8>(senderPublicKey.bytes), UnsafePointer<UInt8>(recipientSecretKey.bytes)) != 0 {
+        if crypto_box_open_easy(message!.mutableBytesPtr, authenticatedCipherText.bytesPtr, CUnsignedLongLong(authenticatedCipherText.length), nonce.bytesPtr, senderPublicKey.bytesPtr, recipientSecretKey.bytesPtr) != 0 {
             return nil
         }
         return message
@@ -156,7 +156,7 @@ public class Box {
         if message == nil {
             return nil
         }
-        if crypto_box_open_detached(UnsafeMutablePointer<UInt8>(message!.mutableBytes), UnsafePointer<UInt8>(authenticatedCipherText.bytes), UnsafePointer<UInt8>(mac.bytes), CUnsignedLongLong(authenticatedCipherText.length), UnsafePointer<UInt8>(nonce.bytes), UnsafePointer<UInt8>(senderPublicKey.bytes), UnsafePointer<UInt8>(recipientSecretKey.bytes)) != 0 {
+        if crypto_box_open_detached(message!.mutableBytesPtr, authenticatedCipherText.bytesPtr, mac.bytesPtr, CUnsignedLongLong(authenticatedCipherText.length), nonce.bytesPtr, senderPublicKey.bytesPtr, recipientSecretKey.bytesPtr) != 0 {
             return nil
         }
         return message

@@ -32,7 +32,7 @@ public class Sign {
         if sk == nil {
             return nil
         }
-        if crypto_sign_keypair(UnsafeMutablePointer<UInt8>(pk!.mutableBytes), UnsafeMutablePointer<UInt8>(sk!.mutableBytes)) != 0 {
+        if crypto_sign_keypair(pk!.mutableBytesPtr, sk!.mutableBytesPtr) != 0 {
             return nil
         }
         return KeyPair(publicKey: PublicKey(data: pk!), secretKey: SecretKey(data: sk!))
@@ -50,7 +50,7 @@ public class Sign {
         if sk == nil {
             return nil
         }
-        if crypto_sign_seed_keypair(UnsafeMutablePointer<UInt8>(pk!.mutableBytes), UnsafeMutablePointer<UInt8>(sk!.mutableBytes), UnsafePointer<UInt8>(seed.bytes)) != 0 {
+        if crypto_sign_seed_keypair(pk!.mutableBytesPtr, sk!.mutableBytesPtr, seed.bytesPtr) != 0 {
             return nil
         }
         return KeyPair(publicKey: PublicKey(data: pk!), secretKey: SecretKey(data: sk!))
@@ -64,7 +64,7 @@ public class Sign {
         if signedMessage == nil {
             return nil
         }
-        if crypto_sign(UnsafeMutablePointer<UInt8>(signedMessage!.mutableBytes), nil, UnsafePointer<UInt8>(message.bytes), CUnsignedLongLong(message.length), UnsafePointer<UInt8>(secretKey.bytes)) != 0 {
+        if crypto_sign(signedMessage!.mutableBytesPtr, nil, message.bytesPtr, CUnsignedLongLong(message.length), secretKey.bytesPtr) != 0 {
             return nil
         }
         return signedMessage
@@ -78,7 +78,7 @@ public class Sign {
         if signature == nil {
             return nil
         }
-        if crypto_sign_detached(UnsafeMutablePointer<UInt8>(signature!.mutableBytes), nil, UnsafePointer<UInt8>(message.bytes), CUnsignedLongLong(message.length), UnsafePointer<UInt8>(secretKey.bytes)) != 0 {
+        if crypto_sign_detached(signature!.mutableBytesPtr, nil, message.bytesPtr, CUnsignedLongLong(message.length), secretKey.bytesPtr) != 0 {
             return nil
         }
         return signature
@@ -94,7 +94,7 @@ public class Sign {
         if publicKey.length != PublicKeyBytes {
             return false
         }
-        return crypto_sign_verify_detached(UnsafePointer<UInt8>(signature.bytes), UnsafePointer<UInt8>(message.bytes), CUnsignedLongLong(message.length), UnsafePointer<UInt8>(publicKey.bytes)) == 0
+        return crypto_sign_verify_detached(signature.bytesPtr, message.bytesPtr, CUnsignedLongLong(message.length), publicKey.bytesPtr) == 0
     }
     
     public func open(signedMessage: NSData, publicKey: PublicKey) -> NSData? {
@@ -106,7 +106,7 @@ public class Sign {
             return nil
         }
         var mlen: CUnsignedLongLong = 0;
-        if crypto_sign_open(UnsafeMutablePointer<UInt8>(message!.mutableBytes), &mlen, UnsafePointer<UInt8>(signedMessage.bytes), CUnsignedLongLong(signedMessage.length), UnsafePointer<UInt8>(publicKey.bytes)) != 0 {
+        if crypto_sign_open(message!.mutableBytesPtr, &mlen, signedMessage.bytesPtr, CUnsignedLongLong(signedMessage.length), publicKey.bytesPtr) != 0 {
             return nil
         }
         return message
