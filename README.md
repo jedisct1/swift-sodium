@@ -86,6 +86,18 @@ if let unsignedMessage = sodium.sign.open(message, publicKey: keyPair.publicKey)
 }
 ```
 
+Secret-key authenticated encryption
+===================================
+
+```swift
+let message = "My Test Message".toData()!
+let secretKey = sodium.secretBox.key()!
+let encrypted: NSData = sodium.secretBox.seal(message, secretKey: secretKey)!
+if let decrypted = sodium.secretBox.open(encrypted, secretKey: secretKey) {
+  // authenticator is valid, decrypted contains the original message
+}
+```
+
 Hashing
 =======
 
