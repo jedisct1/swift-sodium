@@ -22,7 +22,7 @@ public class SecretBox {
         if k == nil {
             return nil
         }
-        randombytes_buf(UnsafeMutablePointer<UInt8>(k!.mutableBytes), UInt(k!.length))
+        randombytes_buf(k!.mutableBytesPtr, UInt(k!.length))
         return k
     }
     
@@ -31,7 +31,7 @@ public class SecretBox {
         if n == nil {
             return nil
         }
-        randombytes_buf(UnsafeMutablePointer<UInt8>(n!.mutableBytes), UInt(n!.length))
+        randombytes_buf(n!.mutableBytesPtr, UInt(n!.length))
         return n
     }
     
