@@ -10,7 +10,7 @@ import Foundation
 
 public class Utils {
     public func zero(data: NSMutableData) {
-        sodium_memzero(UnsafeMutablePointer<Void>(data.mutableBytes), UInt(data.length))
+        sodium_memzero(UnsafeMutablePointer<Void>(data.mutableBytes), data.length)
         data.length = 0
     }
     
@@ -18,7 +18,7 @@ public class Utils {
         if b1.length != b2.length {
             return false
         }
-        let res = sodium_memcmp(UnsafePointer<Void>(b1.bytes), UnsafePointer<Void>(b2.bytes), UInt(b1.length))
+        let res = sodium_memcmp(UnsafePointer<Void>(b1.bytes), UnsafePointer<Void>(b2.bytes), b1.length)
         return res == 0;
     }
     
@@ -28,7 +28,7 @@ public class Utils {
             return nil
         }
         let hexDataBytes = UnsafeMutablePointer<CChar>(hexData!.mutableBytes)
-        if sodium_bin2hex(hexDataBytes, UInt(hexData!.length), bin.bytesPtr, UInt(bin.length)) == nil {
+        if sodium_bin2hex(hexDataBytes, hexData!.length, bin.bytesPtr, bin.length) == nil {
             return nil
         }
         return String.fromCString(hexDataBytes)
@@ -45,9 +45,9 @@ public class Utils {
         if binData == nil {
             return nil
         }
-        var binDataLen: UInt = 0
+        var binDataLen: size_t = 0
         let ignore_cstr = ignore != nil ? (ignore! as NSString).UTF8String : nil
-        if sodium_hex2bin(binData!.mutableBytesPtr, UInt(binDataCapacity),UnsafePointer<CChar>(hexData!.bytes), UInt(hexDataLen), ignore_cstr, &binDataLen, nil) != 0 {
+        if sodium_hex2bin(binData!.mutableBytesPtr, binDataCapacity,UnsafePointer<CChar>(hexData!.bytes), hexDataLen, ignore_cstr, &binDataLen, nil) != 0 {
             return nil
         }
         binData!.length = Int(binDataLen)

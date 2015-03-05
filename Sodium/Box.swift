@@ -64,7 +64,7 @@ public class Box {
         if nonce == nil {
             return nil
         }
-        randombytes_buf(nonce!.mutableBytesPtr, UInt(nonce!.length))
+        randombytes_buf(nonce!.mutableBytesPtr, nonce!.length)
         return nonce! as Nonce
     }
     
