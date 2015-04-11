@@ -28,6 +28,13 @@ script. Running this script on Xcode 6.1.1 (`6A2008a`) on the revision
 `cae09d458a4509614c6cdb32e93ab2f6263c18ce` of libsodium generates a file
 identical to the one present in this repository.
 
+or using CocoaPods
+------------------
+
+```
+pod 'Sodium', '~> 0.1'
+```
+
 Public-key authenticated encryption
 ===================================
 
