@@ -17,7 +17,7 @@ extension String {
 
 extension NSData {
     func toString() -> String? {
-        return NSString(data: self, encoding: NSUTF8StringEncoding) as! String
+        return (NSString(data: self, encoding: NSUTF8StringEncoding) as! String)
     }
 }
 
