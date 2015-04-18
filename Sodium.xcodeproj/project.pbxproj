@@ -19,7 +19,7 @@
 		09A943CD1A4EB5F500C8A04F /* Sodium.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943CC1A4EB5F500C8A04F /* Sodium.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		09A943D31A4EB5F500C8A04F /* Sodium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09A943C71A4EB5F500C8A04F /* Sodium.framework */; };
 		09A943DA1A4EB5F500C8A04F /* SodiumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A943D91A4EB5F500C8A04F /* SodiumTests.swift */; };
-		09A943EB1A4EB76F00C8A04F /* libsodium.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 09A943EA1A4EB76F00C8A04F /* libsodium.a */; };
+		09A943EB1A4EB76F00C8A04F /* libsodium-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 09A943EA1A4EB76F00C8A04F /* libsodium-ios.a */; };
 		09A944251A4EB91F00C8A04F /* core.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943F11A4EB91F00C8A04F /* core.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		09A944261A4EB91F00C8A04F /* crypto_aead_chacha20poly1305.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943F21A4EB91F00C8A04F /* crypto_aead_chacha20poly1305.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		09A944271A4EB91F00C8A04F /* crypto_auth_hmacsha256.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943F31A4EB91F00C8A04F /* crypto_auth_hmacsha256.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -101,7 +101,7 @@
 		09A943D21A4EB5F500C8A04F /* SodiumTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SodiumTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		09A943D81A4EB5F500C8A04F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		09A943D91A4EB5F500C8A04F /* SodiumTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SodiumTests.swift; sourceTree = "<group>"; };
-		09A943EA1A4EB76F00C8A04F /* libsodium.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libsodium.a; sourceTree = "<group>"; };
+		09A943EA1A4EB76F00C8A04F /* libsodium-ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libsodium-ios.a"; sourceTree = "<group>"; };
 		09A943F11A4EB91F00C8A04F /* core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = core.h; sourceTree = "<group>"; };
 		09A943F21A4EB91F00C8A04F /* crypto_aead_chacha20poly1305.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypto_aead_chacha20poly1305.h; sourceTree = "<group>"; };
 		09A943F31A4EB91F00C8A04F /* crypto_auth_hmacsha256.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypto_auth_hmacsha256.h; sourceTree = "<group>"; };
@@ -162,7 +162,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				09A943EB1A4EB76F00C8A04F /* libsodium.a in Frameworks */,
+				09A943EB1A4EB76F00C8A04F /* libsodium-ios.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -242,7 +242,7 @@
 		09A943E91A4EB70900C8A04F /* sodium_lib */ = {
 			isa = PBXGroup;
 			children = (
-				09A943EA1A4EB76F00C8A04F /* libsodium.a */,
+				09A943EA1A4EB76F00C8A04F /* libsodium-ios.a */,
 				09A944591A4EB97800C8A04F /* sodium_lib.h */,
 				09A943F11A4EB91F00C8A04F /* core.h */,
 				09A943F21A4EB91F00C8A04F /* crypto_aead_chacha20poly1305.h */,
