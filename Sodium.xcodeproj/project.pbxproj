@@ -73,20 +73,24 @@
 		09A944571A4EB91F00C8A04F /* utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944231A4EB91F00C8A04F /* utils.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		09A944581A4EB91F00C8A04F /* version.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944241A4EB91F00C8A04F /* version.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		09A9445A1A4EB97800C8A04F /* sodium_lib.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944591A4EB97800C8A04F /* sodium_lib.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		901644BB1AE36EA700163E3E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901644BA1AE36EA700163E3E /* AppDelegate.swift */; };
-		901644BD1AE36EA700163E3E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901644BC1AE36EA700163E3E /* ViewController.swift */; };
-		901644C01AE36EA800163E3E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 901644BE1AE36EA800163E3E /* Main.storyboard */; };
-		901644C21AE36EA800163E3E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 901644C11AE36EA800163E3E /* Images.xcassets */; };
-		901644C51AE36EA800163E3E /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 901644C31AE36EA800163E3E /* LaunchScreen.xib */; };
-		901644D11AE36EA800163E3E /* Example_iOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901644D01AE36EA800163E3E /* Example_iOSTests.swift */; };
-		901644E11AE36F2D00163E3E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901644E01AE36F2D00163E3E /* AppDelegate.swift */; };
-		901644E31AE36F2D00163E3E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 901644E21AE36F2D00163E3E /* Images.xcassets */; };
-		901644E61AE36F2D00163E3E /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 901644E41AE36F2D00163E3E /* MainMenu.xib */; };
-		901644F21AE36F2E00163E3E /* Example_OSXTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901644F11AE36F2E00163E3E /* Example_OSXTests.swift */; };
-		901644FD1AE372E200163E3E /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901644FC1AE372E200163E3E /* Helpers.swift */; };
-		901644FE1AE372E200163E3E /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901644FC1AE372E200163E3E /* Helpers.swift */; };
 		901644FF1AE3733F00163E3E /* Sodium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90C75E941AE3571900F1E749 /* Sodium.framework */; };
 		901645011AE374D100163E3E /* Sodium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09A943C71A4EB5F500C8A04F /* Sodium.framework */; };
+		901645031AE376C100163E3E /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901645021AE376C100163E3E /* Helpers.swift */; };
+		901645041AE376C100163E3E /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901645021AE376C100163E3E /* Helpers.swift */; };
+		9016450A1AE376E400163E3E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901645051AE376E400163E3E /* AppDelegate.swift */; };
+		9016450E1AE376E400163E3E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 901645071AE376E400163E3E /* Images.xcassets */; };
+		901645101AE376E400163E3E /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 901645081AE376E400163E3E /* Info.plist */; };
+		901645201AE378DE00163E3E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9016451B1AE378DE00163E3E /* AppDelegate.swift */; };
+		901645241AE378DE00163E3E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9016451F1AE378DE00163E3E /* ViewController.swift */; };
+		901645271AE3796300163E3E /* Example_OSXTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901645251AE3796300163E3E /* Example_OSXTests.swift */; };
+		901645281AE3796300163E3E /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 901645261AE3796300163E3E /* Info.plist */; };
+		9016452B1AE3799400163E3E /* Example_iOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901645291AE3799400163E3E /* Example_iOSTests.swift */; };
+		9016452E1AE37C0000163E3E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9016451D1AE378DE00163E3E /* Images.xcassets */; };
+		9016453B1AE37E5800163E3E /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 901645371AE37E5800163E3E /* LaunchScreen.xib */; };
+		9016453C1AE37E5800163E3E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 901645391AE37E5800163E3E /* Main.storyboard */; };
+		9016453E1AE37E6700163E3E /* Base.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 9016453D1AE37E6700163E3E /* Base.lproj */; };
+		901645461AE37F6300163E3E /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 901645441AE37F6300163E3E /* MainMenu.xib */; };
+		901645481AE37F7200163E3E /* Base.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 901645471AE37F7200163E3E /* Base.lproj */; };
 		90C75EAE1AE357CB00F1E749 /* libsodium-osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 90C75EAD1AE357CB00F1E749 /* libsodium-osx.a */; };
 		90C75EAF1AE357DF00F1E749 /* sodium_lib.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944591A4EB97800C8A04F /* sodium_lib.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		90C75EB01AE357DF00F1E749 /* core.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943F11A4EB91F00C8A04F /* core.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -248,24 +252,26 @@
 		09A944241A4EB91F00C8A04F /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
 		09A944591A4EB97800C8A04F /* sodium_lib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sodium_lib.h; sourceTree = "<group>"; };
 		901644B61AE36EA700163E3E /* Example iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		901644B91AE36EA700163E3E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		901644BA1AE36EA700163E3E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = "Example iOS/AppDelegate.swift"; sourceTree = "<group>"; };
-		901644BC1AE36EA700163E3E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = "Example iOS/ViewController.swift"; sourceTree = "<group>"; };
-		901644BF1AE36EA800163E3E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		901644C11AE36EA800163E3E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "Example iOS/Images.xcassets"; sourceTree = "<group>"; };
-		901644C41AE36EA800163E3E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		901644CA1AE36EA800163E3E /* Example iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Example iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		901644CF1AE36EA800163E3E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		901644D01AE36EA800163E3E /* Example_iOSTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Example_iOSTests.swift; path = "Example iOSTests/Example_iOSTests.swift"; sourceTree = "<group>"; };
 		901644DC1AE36F2D00163E3E /* Example OSX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example OSX.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		901644DF1AE36F2D00163E3E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		901644E01AE36F2D00163E3E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = "Example OSX/AppDelegate.swift"; sourceTree = "<group>"; };
-		901644E21AE36F2D00163E3E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "Example OSX/Images.xcassets"; sourceTree = "<group>"; };
-		901644E51AE36F2D00163E3E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		901644EB1AE36F2E00163E3E /* Example OSXTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Example OSXTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		901644F01AE36F2E00163E3E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		901644F11AE36F2E00163E3E /* Example_OSXTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Example_OSXTests.swift; path = "Example OSXTests/Example_OSXTests.swift"; sourceTree = "<group>"; };
-		901644FC1AE372E200163E3E /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		901645021AE376C100163E3E /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Helpers.swift; path = Examples/CommonCode/Helpers.swift; sourceTree = "<group>"; };
+		901645051AE376E400163E3E /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Examples/OSX/AppDelegate.swift; sourceTree = "<group>"; };
+		901645071AE376E400163E3E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Examples/OSX/Images.xcassets; sourceTree = "<group>"; };
+		901645081AE376E400163E3E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Examples/OSX/Info.plist; sourceTree = "<group>"; };
+		9016451B1AE378DE00163E3E /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Examples/iOS/AppDelegate.swift; sourceTree = "<group>"; };
+		9016451D1AE378DE00163E3E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Examples/iOS/Images.xcassets; sourceTree = "<group>"; };
+		9016451E1AE378DE00163E3E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Examples/iOS/Info.plist; sourceTree = "<group>"; };
+		9016451F1AE378DE00163E3E /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = Examples/iOS/ViewController.swift; sourceTree = "<group>"; };
+		901645251AE3796300163E3E /* Example_OSXTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Example_OSXTests.swift; path = Examples/OSX/Tests/Example_OSXTests.swift; sourceTree = "<group>"; };
+		901645261AE3796300163E3E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Examples/OSX/Tests/Info.plist; sourceTree = "<group>"; };
+		901645291AE3799400163E3E /* Example_iOSTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Example_iOSTests.swift; path = Examples/iOS/Tests/Example_iOSTests.swift; sourceTree = "<group>"; };
+		9016452A1AE3799400163E3E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Examples/iOS/Tests/Info.plist; sourceTree = "<group>"; };
+		901645381AE37E5800163E3E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Examples/iOS/Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		9016453A1AE37E5800163E3E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Examples/iOS/Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		9016453D1AE37E6700163E3E /* Base.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Base.lproj; path = Examples/iOS/Base.lproj; sourceTree = "<group>"; };
+		901645451AE37F6300163E3E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Examples/OSX/Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		901645471AE37F7200163E3E /* Base.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Base.lproj; path = Examples/OSX/Base.lproj; sourceTree = "<group>"; };
 		90C75E941AE3571900F1E749 /* Sodium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Sodium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		90C75EAD1AE357CB00F1E749 /* libsodium-osx.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libsodium-osx.a"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -471,12 +477,13 @@
 		901644B01AE36D6D00163E3E /* iOS */ = {
 			isa = PBXGroup;
 			children = (
+				9016453D1AE37E6700163E3E /* Base.lproj */,
+				901645371AE37E5800163E3E /* LaunchScreen.xib */,
+				901645391AE37E5800163E3E /* Main.storyboard */,
+				9016451B1AE378DE00163E3E /* AppDelegate.swift */,
+				9016451D1AE378DE00163E3E /* Images.xcassets */,
+				9016451F1AE378DE00163E3E /* ViewController.swift */,
 				901644F91AE370C500163E3E /* Tests */,
-				901644BA1AE36EA700163E3E /* AppDelegate.swift */,
-				901644BC1AE36EA700163E3E /* ViewController.swift */,
-				901644BE1AE36EA800163E3E /* Main.storyboard */,
-				901644C11AE36EA800163E3E /* Images.xcassets */,
-				901644C31AE36EA800163E3E /* LaunchScreen.xib */,
 				901644B81AE36EA700163E3E /* Supporting Files */,
 			);
 			name = iOS;
@@ -485,10 +492,11 @@
 		901644B11AE36D7900163E3E /* OSX */ = {
 			isa = PBXGroup;
 			children = (
+				901645471AE37F7200163E3E /* Base.lproj */,
+				901645441AE37F6300163E3E /* MainMenu.xib */,
+				901645051AE376E400163E3E /* AppDelegate.swift */,
+				901645071AE376E400163E3E /* Images.xcassets */,
 				901644FA1AE370E400163E3E /* Tests */,
-				901644E01AE36F2D00163E3E /* AppDelegate.swift */,
-				901644E21AE36F2D00163E3E /* Images.xcassets */,
-				901644E41AE36F2D00163E3E /* MainMenu.xib */,
 				901644DE1AE36F2D00163E3E /* Supporting Files */,
 			);
 			name = OSX;
@@ -497,7 +505,7 @@
 		901644B81AE36EA700163E3E /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				901644B91AE36EA700163E3E /* Info.plist */,
+				9016451E1AE378DE00163E3E /* Info.plist */,
 			);
 			name = "Supporting Files";
 			path = "Example iOS";
@@ -506,7 +514,7 @@
 		901644CE1AE36EA800163E3E /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				901644CF1AE36EA800163E3E /* Info.plist */,
+				9016452A1AE3799400163E3E /* Info.plist */,
 			);
 			name = "Supporting Files";
 			path = "Example iOSTests";
@@ -515,7 +523,7 @@
 		901644DE1AE36F2D00163E3E /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				901644DF1AE36F2D00163E3E /* Info.plist */,
+				901645081AE376E400163E3E /* Info.plist */,
 			);
 			name = "Supporting Files";
 			path = "Example OSX";
@@ -524,7 +532,7 @@
 		901644EF1AE36F2E00163E3E /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				901644F01AE36F2E00163E3E /* Info.plist */,
+				901645261AE3796300163E3E /* Info.plist */,
 			);
 			name = "Supporting Files";
 			path = "Example OSXTests";
@@ -533,7 +541,7 @@
 		901644F91AE370C500163E3E /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				901644D01AE36EA800163E3E /* Example_iOSTests.swift */,
+				901645291AE3799400163E3E /* Example_iOSTests.swift */,
 				901644CE1AE36EA800163E3E /* Supporting Files */,
 			);
 			name = Tests;
@@ -542,7 +550,7 @@
 		901644FA1AE370E400163E3E /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				901644F11AE36F2E00163E3E /* Example_OSXTests.swift */,
+				901645251AE3796300163E3E /* Example_OSXTests.swift */,
 				901644EF1AE36F2E00163E3E /* Supporting Files */,
 			);
 			name = Tests;
@@ -551,7 +559,7 @@
 		901644FB1AE3729200163E3E /* CommonCode */ = {
 			isa = PBXGroup;
 			children = (
-				901644FC1AE372E200163E3E /* Helpers.swift */,
+				901645021AE376C100163E3E /* Helpers.swift */,
 			);
 			name = CommonCode;
 			sourceTree = "<group>";
@@ -885,9 +893,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				901644C01AE36EA800163E3E /* Main.storyboard in Resources */,
-				901644C51AE36EA800163E3E /* LaunchScreen.xib in Resources */,
-				901644C21AE36EA800163E3E /* Images.xcassets in Resources */,
+				9016453C1AE37E5800163E3E /* Main.storyboard in Resources */,
+				9016453B1AE37E5800163E3E /* LaunchScreen.xib in Resources */,
+				9016453E1AE37E6700163E3E /* Base.lproj in Resources */,
+				9016452E1AE37C0000163E3E /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -902,8 +911,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				901644E31AE36F2D00163E3E /* Images.xcassets in Resources */,
-				901644E61AE36F2D00163E3E /* MainMenu.xib in Resources */,
+				9016450E1AE376E400163E3E /* Images.xcassets in Resources */,
+				901645101AE376E400163E3E /* Info.plist in Resources */,
+				901645481AE37F7200163E3E /* Base.lproj in Resources */,
+				901645461AE37F6300163E3E /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -911,6 +922,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				901645281AE3796300163E3E /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -952,9 +964,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				901644BD1AE36EA700163E3E /* ViewController.swift in Sources */,
-				901644FD1AE372E200163E3E /* Helpers.swift in Sources */,
-				901644BB1AE36EA700163E3E /* AppDelegate.swift in Sources */,
+				901645201AE378DE00163E3E /* AppDelegate.swift in Sources */,
+				901645241AE378DE00163E3E /* ViewController.swift in Sources */,
+				901645031AE376C100163E3E /* Helpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -962,7 +974,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				901644D11AE36EA800163E3E /* Example_iOSTests.swift in Sources */,
+				9016452B1AE3799400163E3E /* Example_iOSTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -970,8 +982,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				901644E11AE36F2D00163E3E /* AppDelegate.swift in Sources */,
-				901644FE1AE372E200163E3E /* Helpers.swift in Sources */,
+				9016450A1AE376E400163E3E /* AppDelegate.swift in Sources */,
+				901645041AE376C100163E3E /* Helpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -979,7 +991,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				901644F21AE36F2E00163E3E /* Example_OSXTests.swift in Sources */,
+				901645271AE3796300163E3E /* Example_OSXTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1020,31 +1032,28 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		901644BE1AE36EA800163E3E /* Main.storyboard */ = {
+		901645371AE37E5800163E3E /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				901644BF1AE36EA800163E3E /* Base */,
-			);
-			name = Main.storyboard;
-			path = "Example iOS";
-			sourceTree = "<group>";
-		};
-		901644C31AE36EA800163E3E /* LaunchScreen.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				901644C41AE36EA800163E3E /* Base */,
+				901645381AE37E5800163E3E /* Base */,
 			);
 			name = LaunchScreen.xib;
-			path = "Example iOS";
 			sourceTree = "<group>";
 		};
-		901644E41AE36F2D00163E3E /* MainMenu.xib */ = {
+		901645391AE37E5800163E3E /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				901644E51AE36F2D00163E3E /* Base */,
+				9016453A1AE37E5800163E3E /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		901645441AE37F6300163E3E /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				901645451AE37F6300163E3E /* Base */,
 			);
 			name = MainMenu.xib;
-			path = "Example OSX";
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -1216,7 +1225,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "Example iOS/Info.plist";
+				INFOPLIST_FILE = Examples/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1230,7 +1239,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "Example iOS/Info.plist";
+				INFOPLIST_FILE = Examples/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1251,7 +1260,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "Example iOSTests/Info.plist";
+				INFOPLIST_FILE = Examples/iOS/Tests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1270,7 +1279,7 @@
 					"$(inherited)",
 				);
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "Example iOSTests/Info.plist";
+				INFOPLIST_FILE = Examples/iOS/Tests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1290,7 +1299,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "Example OSX/Info.plist";
+				INFOPLIST_FILE = Examples/OSX/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1307,7 +1316,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "Example OSX/Info.plist";
+				INFOPLIST_FILE = Examples/OSX/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1330,7 +1339,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "Example OSXTests/Info.plist";
+				INFOPLIST_FILE = Examples/OSX/Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1351,7 +1360,7 @@
 					"$(inherited)",
 				);
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "Example OSXTests/Info.plist";
+				INFOPLIST_FILE = Examples/OSX/Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_NAME = "$(TARGET_NAME)";
