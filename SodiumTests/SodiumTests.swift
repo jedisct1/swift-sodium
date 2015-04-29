@@ -176,4 +176,16 @@ class SodiumTests: XCTestCase {
         let bin2 = sodium.utils.hex2bin("de-ad be:ef", ignore: ":- ")!
         XCTAssert(bin2 == bin)
     }
+
+    func testScrypt() {
+        let passwordLen = Int(sodium.randomBytes.uniform(64))
+        let password = sodium.randomBytes.buf(passwordLen)!
+        let hash = sodium.pwHash.scrypt.str(password, opsLimit: sodium.pwHash.scrypt.OpsLimitInteractive, memLimit: sodium.pwHash.scrypt.MemLimitInteractive)
+        XCTAssert(hash?.lengthOfBytesUsingEncoding(NSUTF8StringEncoding) == sodium.pwHash.scrypt.StrBytes)
+        let verify = sodium.pwHash.scrypt.strVerify(hash!, passwd: password)
+        XCTAssert(verify == true)
+        let password2 = sodium.randomBytes.buf(passwordLen)!
+        let verify2 = sodium.pwHash.scrypt.strVerify(hash!, passwd: password2)
+        XCTAssert(verify2 == false)
+    }
 }

@@ -16,6 +16,7 @@
 		095D80571A4ED0B4000B83F9 /* GenericHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D80561A4ED0B4000B83F9 /* GenericHash.swift */; };
 		095D805B1A4F35CA000B83F9 /* RandomBytes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D805A1A4F35CA000B83F9 /* RandomBytes.swift */; };
 		095D805D1A4F4F72000B83F9 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D805C1A4F4F72000B83F9 /* Utils.swift */; };
+		097F20DA1AF127480088C2FE /* PWHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 097F20D91AF127480088C2FE /* PWHash.swift */; };
 		09A943CD1A4EB5F500C8A04F /* Sodium.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943CC1A4EB5F500C8A04F /* Sodium.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		09A943D31A4EB5F500C8A04F /* Sodium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09A943C71A4EB5F500C8A04F /* Sodium.framework */; };
 		09A943DA1A4EB5F500C8A04F /* SodiumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A943D91A4EB5F500C8A04F /* SodiumTests.swift */; };
@@ -191,6 +192,7 @@
 		095D80561A4ED0B4000B83F9 /* GenericHash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericHash.swift; sourceTree = "<group>"; };
 		095D805A1A4F35CA000B83F9 /* RandomBytes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomBytes.swift; sourceTree = "<group>"; };
 		095D805C1A4F4F72000B83F9 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		097F20D91AF127480088C2FE /* PWHash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PWHash.swift; sourceTree = "<group>"; };
 		09A943C71A4EB5F500C8A04F /* Sodium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Sodium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		09A943CB1A4EB5F500C8A04F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		09A943CC1A4EB5F500C8A04F /* Sodium.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sodium.h; sourceTree = "<group>"; };
@@ -367,6 +369,7 @@
 				094F21E91A5017CA001C3141 /* Box.swift */,
 				038365141A5A51D20081136D /* SecretBox.swift */,
 				095D80561A4ED0B4000B83F9 /* GenericHash.swift */,
+				097F20D91AF127480088C2FE /* PWHash.swift */,
 				092D18191A5BF5A700972F77 /* InternalExtensions.swift */,
 				095D805A1A4F35CA000B83F9 /* RandomBytes.swift */,
 				091C7CD91A507E95002E5351 /* ShortHash.swift */,
@@ -942,6 +945,7 @@
 			files = (
 				095D80551A4ECCD7000B83F9 /* Sodium.swift in Sources */,
 				092D181A1A5BF5A700972F77 /* InternalExtensions.swift in Sources */,
+				097F20DA1AF127480088C2FE /* PWHash.swift in Sources */,
 				038365151A5A51D20081136D /* SecretBox.swift in Sources */,
 				095D805D1A4F4F72000B83F9 /* Utils.swift in Sources */,
 				091C7CDC1A50839D002E5351 /* Sign.swift in Sources */,
@@ -1461,6 +1465,7 @@
 				901644D41AE36EA800163E3E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		901644D51AE36EA800163E3E /* Build configuration list for PBXNativeTarget "Example iOSTests" */ = {
 			isa = XCConfigurationList;
@@ -1469,6 +1474,7 @@
 				901644D71AE36EA800163E3E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		901644F31AE36F2E00163E3E /* Build configuration list for PBXNativeTarget "Example OSX" */ = {
 			isa = XCConfigurationList;
@@ -1477,6 +1483,7 @@
 				901644F51AE36F2E00163E3E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		901644F61AE36F2E00163E3E /* Build configuration list for PBXNativeTarget "Example OSXTests" */ = {
 			isa = XCConfigurationList;
@@ -1485,6 +1492,7 @@
 				901644F81AE36F2E00163E3E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		90C75EAB1AE3571900F1E749 /* Build configuration list for PBXNativeTarget "Sodium_OSX" */ = {
 			isa = XCConfigurationList;
