@@ -85,6 +85,9 @@ public class GenericHash {
     
         public func final() -> NSData? {
             let output = NSMutableData(length: outputLength)
+            if output == nil {
+                return nil
+            }
             if crypto_generichash_final(state!, output!.mutableBytesPtr, output!.length) != 0 {
                 return nil
             }

@@ -38,5 +38,19 @@ public class PWHash {
             }
             return crypto_pwhash_scryptsalsa208sha256_str_verify(UnsafePointer<CChar>(hashData!.bytes), UnsafePointer<CChar>(passwd.bytes), CUnsignedLongLong(passwd.length)) == 0
         }
+
+        public func hash(outputLength: Int, passwd: NSData, salt: NSData, opsLimit: Int, memLimit: Int) -> NSData? {
+            if salt.length != SaltBytes {
+                return nil
+            }
+            let output = NSMutableData(length: outputLength)
+            if output == nil {
+                return nil
+            }
+            if crypto_pwhash_scryptsalsa208sha256(output!.mutableBytesPtr, CUnsignedLongLong(outputLength), UnsafePointer<CChar>(passwd.bytes), CUnsignedLongLong(passwd.length), salt.bytesPtr, CUnsignedLongLong(opsLimit), memLimit) != 0 {
+                return nil
+            }
+            return output
+        }
     }
 }
