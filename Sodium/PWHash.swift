@@ -32,7 +32,7 @@ public class PWHash {
         }
 
         public func strVerify(hash: String, passwd: NSData) -> Bool {
-            let hashData = hash.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
+            let hashData = (hash + "\0").dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
             if hashData == nil {
                 return false
             }
