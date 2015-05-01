@@ -187,5 +187,10 @@ class SodiumTests: XCTestCase {
         let password2 = sodium.randomBytes.buf(passwordLen)!
         let verify2 = sodium.pwHash.scrypt.strVerify(hash!, passwd: password2)
         XCTAssert(verify2 == false)
+
+        let password3 = "My Test Message".toData()!
+        let salt = NSData(bytes: UnsafePointer([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32]), length: 32)
+        let hash2 = sodium.pwHash.scrypt.hash(64, passwd: password3, salt: salt, opsLimit: sodium.pwHash.scrypt.OpsLimitInteractive, memLimit: sodium.pwHash.scrypt.MemLimitInteractive)
+        XCTAssert(sodium.utils.bin2hex(hash2!)! == "d7a19e09c8096fd75cc8cd917e62ed51d00cb43b810e9ca7f6148482016261060f4b84fd80a7dfbffbc1de9ac86d585f73786bfb2243cb57bcbfb42d7364a02d")
     }
 }
