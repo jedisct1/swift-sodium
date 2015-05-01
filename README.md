@@ -8,7 +8,7 @@ It leverages the [Sodium](http://libsodium.org/doc/) library, and
 although Swift is the primary target, the framework can also be used in
 Objective C.
 
-Swift-Sodium requires Swift 1.2 (Xcode 6.3).
+Swift-Sodium requires Swift 1.2 (introduced in Xcode 6.3).
 
 Usage
 =====
@@ -161,6 +161,20 @@ Random numbers generation
 ```swift
 let sodium = Sodium()!
 let randomData = sodium.randomBytes.buf(1000)
+```
+
+Password hashing
+================
+```swift
+let sodium = Sodium()!
+let password = "Correct Horse Battery Staple".toData()!
+let hashedStr = sodium.pwHash.scrypt.str(password,
+  opsLimit: sodium.pwHash.scrypt.OpsLimitInteractive,
+  memLimit: sodium.pwHash.scrypt.MemLimitInteractive)!
+
+if sodium.pwHash.scrypt.strVerify(hashStr, passwd: password) == false {
+  // Password doesn't match the given hash string
+}
 ```
 
 Utilities
