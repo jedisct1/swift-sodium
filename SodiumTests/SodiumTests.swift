@@ -41,11 +41,11 @@ class SodiumTests: XCTestCase {
         let decrypted = sodium.box.open(encryptedMessageFromAliceToBob, senderPublicKey: bobKeyPair.publicKey, recipientSecretKey: aliceKeyPair.secretKey)
         XCTAssert(decrypted == message)
         
-        let (encryptedMessageFromAliceToBob2: NSData, nonce: Box.Nonce) = sodium.box.seal(message, recipientPublicKey: bobKeyPair.publicKey, senderSecretKey: aliceKeyPair.secretKey)!
+        let (encryptedMessageFromAliceToBob2, nonce): (NSData, Box.Nonce) = sodium.box.seal(message, recipientPublicKey: bobKeyPair.publicKey, senderSecretKey: aliceKeyPair.secretKey)!
         let decrypted2 = sodium.box.open(encryptedMessageFromAliceToBob2, senderPublicKey: aliceKeyPair.publicKey, recipientSecretKey: bobKeyPair.secretKey, nonce: nonce)
         XCTAssert(decrypted2 == message)
         
-        let (encryptedMessageFromAliceToBob3: NSData, nonce2: Box.Nonce, mac: Box.MAC) = sodium.box.seal(message, recipientPublicKey: bobKeyPair.publicKey, senderSecretKey: aliceKeyPair.secretKey)!
+        let (encryptedMessageFromAliceToBob3, nonce2, mac): (NSData, Box.Nonce, Box.MAC) = sodium.box.seal(message, recipientPublicKey: bobKeyPair.publicKey, senderSecretKey: aliceKeyPair.secretKey)!
         let decrypted3 = sodium.box.open(encryptedMessageFromAliceToBob3, senderPublicKey: aliceKeyPair.publicKey, recipientSecretKey: bobKeyPair.secretKey, nonce: nonce2, mac: mac)
         XCTAssert(decrypted3 == message)
     }
