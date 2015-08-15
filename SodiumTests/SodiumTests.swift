@@ -48,6 +48,21 @@ class SodiumTests: XCTestCase {
         let (encryptedMessageFromAliceToBob3, nonce2, mac): (NSData, Box.Nonce, Box.MAC) = sodium.box.seal(message, recipientPublicKey: bobKeyPair.publicKey, senderSecretKey: aliceKeyPair.secretKey)!
         let decrypted3 = sodium.box.open(encryptedMessageFromAliceToBob3, senderPublicKey: aliceKeyPair.publicKey, recipientSecretKey: bobKeyPair.secretKey, nonce: nonce2, mac: mac)
         XCTAssert(decrypted3 == message)
+        
+        // beforenm tests
+        // The two beforenm keys calculated by Alice and Bob separately should be identical
+        let aliceBeforenm = sodium.box.beforenm(bobKeyPair.publicKey, senderSecretKey: aliceKeyPair.secretKey)!
+        let bobBeforenm = sodium.box.beforenm(aliceKeyPair.publicKey, senderSecretKey: bobKeyPair.secretKey)!
+        XCTAssert(aliceBeforenm == bobBeforenm)
+        
+        // Make sure the encryption using beforenm works
+        let encryptedMessageBeforenm: NSData = sodium.box.seal(message, beforenm: aliceBeforenm)!
+        let decryptedBeforenm = sodium.box.open(encryptedMessageBeforenm, beforenm: aliceBeforenm)
+        XCTAssert(decryptedBeforenm == message)
+        
+        let (encryptedMessageBeforenm2, nonceBeforenm): (NSData, Box.Nonce) = sodium.box.seal(message, beforenm: aliceBeforenm)!
+        let decryptedBeforenm2 = sodium.box.open(encryptedMessageBeforenm2, beforenm: aliceBeforenm, nonce: nonceBeforenm)
+        XCTAssert(decryptedBeforenm2 == message)
     }
     
     func testSecretBox() {

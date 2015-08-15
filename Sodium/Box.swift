@@ -15,11 +15,13 @@ public class Box {
     public let NonceBytes = Int(crypto_box_noncebytes())
     public let MacBytes = Int(crypto_box_macbytes())
     public let Primitive = String.fromCString(crypto_box_primitive())
+    public let BeforenmBytes = Int(crypto_box_beforenmbytes())
     
     public typealias PublicKey = NSData
     public typealias SecretKey = NSData
     public typealias Nonce = NSData
     public typealias MAC = NSData
+    public typealias Beforenm = NSData
     
     public struct KeyPair {
         public let publicKey: PublicKey
@@ -160,5 +162,68 @@ public class Box {
             return nil
         }
         return message
+    }
+    
+    public func beforenm(recipientPublicKey: PublicKey, senderSecretKey: SecretKey) -> NSData? {
+        let key = NSMutableData(length: BeforenmBytes)
+        if crypto_box_beforenm(key!.mutableBytesPtr, recipientPublicKey.bytesPtr, senderSecretKey.bytesPtr) != 0 {
+            return nil
+        }
+        return key
+    }
+    
+    public func seal(message: NSData, beforenm: Beforenm) -> (authenticatedCipherText: NSData, nonce: Nonce)? {
+        if beforenm.length != BeforenmBytes {
+            return nil
+        }
+        let authenticatedCipherText = NSMutableData(length: message.length + MacBytes)
+        if authenticatedCipherText == nil {
+            return nil
+        }
+        let nonce = self.nonce()
+        if nonce == nil {
+            return nil
+        }
+        if crypto_box_easy_afternm(authenticatedCipherText!.mutableBytesPtr, message.bytesPtr, CUnsignedLongLong(message.length), nonce!.bytesPtr, beforenm.bytesPtr) != 0 {
+            return nil
+        }
+        return (authenticatedCipherText: authenticatedCipherText!, nonce: nonce!)
+    }
+    
+    public func open(nonceAndAuthenticatedCipherText: NSData, beforenm: Beforenm) -> NSData? {
+        if nonceAndAuthenticatedCipherText.length < NonceBytes + MacBytes {
+            return nil
+        }
+        let nonce = nonceAndAuthenticatedCipherText.subdataWithRange(NSRange(0..<NonceBytes)) as Nonce
+        let authenticatedCipherText = nonceAndAuthenticatedCipherText.subdataWithRange(NSRange(NonceBytes..<nonceAndAuthenticatedCipherText.length))
+        return open(authenticatedCipherText, beforenm: beforenm, nonce: nonce)
+    }
+
+    public func open(authenticatedCipherText: NSData, beforenm: Beforenm, nonce: Nonce) -> NSData? {
+        if nonce.length != NonceBytes || authenticatedCipherText.length < MacBytes {
+            return nil
+        }
+        if beforenm.length != BeforenmBytes {
+            return nil
+        }
+        let message = NSMutableData(length: authenticatedCipherText.length - MacBytes)
+        if message == nil {
+            return nil
+        }
+        if crypto_box_open_easy_afternm(message!.mutableBytesPtr, authenticatedCipherText.bytesPtr, CUnsignedLongLong(authenticatedCipherText.length), nonce.bytesPtr, beforenm.bytesPtr) != 0 {
+            return nil
+        }
+        return message
+    }
+
+    public func seal(message: NSData, beforenm: Beforenm) -> NSData? {
+        let sealed: (NSData, Nonce)? = seal(message, beforenm: beforenm)
+        if sealed == nil {
+            return nil
+        }
+        let (authenticatedCipherText, nonce) = sealed!
+        let nonceAndAuthenticatedCipherText = NSMutableData(data: nonce)
+        nonceAndAuthenticatedCipherText.appendData(authenticatedCipherText)
+        return nonceAndAuthenticatedCipherText
     }
 }
