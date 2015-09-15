@@ -94,8 +94,8 @@ class SodiumTests: XCTestCase {
         s1.update(message)
         let h4 = sodium.utils.bin2hex(s1.final()!)!
         XCTAssert(h4 == h1)
-        
-        let s2 = sodium.genericHash.initStream(key)!
+
+        let s2 = sodium.genericHash.initStream(key, outputLength: sodium.genericHash.Bytes)!
         s2.update(message)
         let h5 = sodium.utils.bin2hex(s2.final()!)!
         XCTAssert(h5 == h2)
