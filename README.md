@@ -8,7 +8,7 @@ It leverages the [Sodium](http://libsodium.org/doc/) library, and
 although Swift is the primary target, the framework can also be used in
 Objective C.
 
-Swift-Sodium requires Swift 1.2 (introduced in Xcode 6.3).
+Swift-Sodium requires Swift 2.0 (introduced in Xcode 7).
 
 Usage
 =====
