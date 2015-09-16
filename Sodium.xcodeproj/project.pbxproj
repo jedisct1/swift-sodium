@@ -80,11 +80,9 @@
 		901645041AE376C100163E3E /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901645021AE376C100163E3E /* Helpers.swift */; };
 		9016450A1AE376E400163E3E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901645051AE376E400163E3E /* AppDelegate.swift */; };
 		9016450E1AE376E400163E3E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 901645071AE376E400163E3E /* Images.xcassets */; };
-		901645101AE376E400163E3E /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 901645081AE376E400163E3E /* Info.plist */; };
 		901645201AE378DE00163E3E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9016451B1AE378DE00163E3E /* AppDelegate.swift */; };
 		901645241AE378DE00163E3E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9016451F1AE378DE00163E3E /* ViewController.swift */; };
 		901645271AE3796300163E3E /* Example_OSXTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901645251AE3796300163E3E /* Example_OSXTests.swift */; };
-		901645281AE3796300163E3E /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 901645261AE3796300163E3E /* Info.plist */; };
 		9016452B1AE3799400163E3E /* Example_iOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901645291AE3799400163E3E /* Example_iOSTests.swift */; };
 		9016452E1AE37C0000163E3E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9016451D1AE378DE00163E3E /* Images.xcassets */; };
 		9016453B1AE37E5800163E3E /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 901645371AE37E5800163E3E /* LaunchScreen.xib */; };
@@ -826,7 +824,8 @@
 		09A943BE1A4EB5F500C8A04F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Frank Denis";
 				TargetAttributes = {
 					09A943C61A4EB5F500C8A04F = {
@@ -916,7 +915,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9016450E1AE376E400163E3E /* Images.xcassets in Resources */,
-				901645101AE376E400163E3E /* Info.plist in Resources */,
 				901645481AE37F7200163E3E /* Base.lproj in Resources */,
 				901645461AE37F6300163E3E /* MainMenu.xib in Resources */,
 			);
@@ -926,7 +924,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				901645281AE3796300163E3E /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1086,6 +1083,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1165,6 +1163,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Sodium",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "org.pureftpd.swiftodium.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = Sodium;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1186,6 +1185,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Sodium",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "org.pureftpd.swiftodium.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = Sodium;
 				SKIP_INSTALL = YES;
 			};
@@ -1204,6 +1204,7 @@
 				);
 				INFOPLIST_FILE = SodiumTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.pureftpd.swiftsodium.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = SodiumTests;
 			};
 			name = Debug;
@@ -1217,6 +1218,7 @@
 				);
 				INFOPLIST_FILE = SodiumTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.pureftpd.swiftsodium.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = SodiumTests;
 			};
 			name = Release;
@@ -1234,6 +1236,7 @@
 				INFOPLIST_FILE = Examples/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.vucontacts.swiftodium.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1248,6 +1251,7 @@
 				INFOPLIST_FILE = Examples/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.vucontacts.swiftodium.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1269,6 +1273,7 @@
 				INFOPLIST_FILE = Examples/iOS/Tests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.vucontacts.swiftodium.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Example iOS.app/Example iOS";
 			};
@@ -1288,6 +1293,7 @@
 				INFOPLIST_FILE = Examples/iOS/Tests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.vucontacts.swiftodium.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Example iOS.app/Example iOS";
 			};
@@ -1308,6 +1314,7 @@
 				INFOPLIST_FILE = Examples/OSX/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.vucontacts.swiftodium.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 			};
@@ -1325,6 +1332,7 @@
 				INFOPLIST_FILE = Examples/OSX/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.vucontacts.swiftodium.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 			};
@@ -1348,6 +1356,7 @@
 				INFOPLIST_FILE = Examples/OSX/Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.vucontacts.swiftodium.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Example OSX.app/Contents/MacOS/Example OSX";
@@ -1369,6 +1378,7 @@
 				INFOPLIST_FILE = Examples/OSX/Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.vucontacts.swiftodium.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Example OSX.app/Contents/MacOS/Example OSX";
@@ -1398,6 +1408,7 @@
 					"$(PROJECT_DIR)/Sodium",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.pureftpd.swiftodium.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = Sodium;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -1424,6 +1435,7 @@
 					"$(PROJECT_DIR)/Sodium",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.pureftpd.swiftodium.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = Sodium;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
