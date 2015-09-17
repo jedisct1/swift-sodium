@@ -22,7 +22,7 @@ extension NSData {
 }
 
 class SodiumTests: XCTestCase {
-    let sodium = Sodium()!
+    let sodium = Sodium(())!
     
     override func setUp() {
         super.setUp()
@@ -73,9 +73,9 @@ class SodiumTests: XCTestCase {
         let decrypted3 = sodium.secretBox.open(encrypted3, secretKey: secretKey, nonce: nonce3, mac: mac3)
         XCTAssert(decrypted3 == message)
         
-        let (_, nonce4, mac4) = sodium.secretBox.seal(message, secretKey: secretKey)!
-        XCTAssertNil(sodium.secretBox.open(encrypted3, secretKey: secretKey, nonce: nonce3, mac: mac4), "Shouldn't be able to decrypt with an invalid MAC")
-        XCTAssertNil(sodium.secretBox.open(encrypted3, secretKey: secretKey, nonce: nonce4, mac: mac3), "Shouldn't be able to decrypt with an invalid nonce")
+        let (encrypted4, nonce4, mac4) = sodium.secretBox.seal(message, secretKey: secretKey)!
+        XCTAssertNil(sodium.secretBox.open(encrypted4, secretKey: secretKey, nonce: nonce3, mac: mac4), "Shouldn't be able to decrypt with an invalid MAC")
+        XCTAssertNil(sodium.secretBox.open(encrypted4, secretKey: secretKey, nonce: nonce4, mac: mac3), "Shouldn't be able to decrypt with an invalid nonce")
     }
     
     func testGenericHash() {
@@ -94,8 +94,8 @@ class SodiumTests: XCTestCase {
         s1.update(message)
         let h4 = sodium.utils.bin2hex(s1.final()!)!
         XCTAssert(h4 == h1)
-        
-        let s2 = sodium.genericHash.initStream(key)!
+
+        let s2 = sodium.genericHash.initStream(key, outputLength: sodium.genericHash.Bytes)!
         s2.update(message)
         let h5 = sodium.utils.bin2hex(s2.final()!)!
         XCTAssert(h5 == h2)
