@@ -95,7 +95,7 @@ let sodium = Sodium()!
 let message = "My Test Message".toData()!
 let keyPair = sodium.sign.keyPair()!
 let signedMessage = sodium.sign.sign(message, secretKey: keyPair.secretKey)!
-if let unsignedMessage = sodium.sign.open(message, publicKey: keyPair.publicKey) {
+if let unsignedMessage = sodium.sign.open(signedMessage, publicKey: keyPair.publicKey) {
   // signature is valid
 }
 ```
