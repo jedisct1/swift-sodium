@@ -22,6 +22,14 @@ public class Utils {
         return res == 0;
     }
     
+    public func compare(b1: NSData, _ b2: NSData) -> Int? {
+        if b1.length != b2.length {
+            return nil
+        }
+        let res = sodium_compare(b1.bytesPtr, b2.bytesPtr, b1.length)
+        return Int(res);
+    }
+    
     public func bin2hex(bin: NSData) -> String? {
         let hexData = NSMutableData(length: bin.length * 2 + 1)
         if hexData == nil {

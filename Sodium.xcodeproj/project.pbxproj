@@ -11,6 +11,8 @@
 		091C7CDA1A507E95002E5351 /* ShortHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091C7CD91A507E95002E5351 /* ShortHash.swift */; };
 		091C7CDC1A50839D002E5351 /* Sign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091C7CDB1A50839D002E5351 /* Sign.swift */; };
 		092D181A1A5BF5A700972F77 /* InternalExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092D18191A5BF5A700972F77 /* InternalExtensions.swift */; };
+		094E49401BE6C7760053AC01 /* crypto_aead_aes256gcm.h in Headers */ = {isa = PBXBuildFile; fileRef = 094E493F1BE6C7760053AC01 /* crypto_aead_aes256gcm.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		094E49411BE6C7D00053AC01 /* crypto_aead_aes256gcm.h in Headers */ = {isa = PBXBuildFile; fileRef = 094E493F1BE6C7760053AC01 /* crypto_aead_aes256gcm.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		094F21EA1A5017CA001C3141 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094F21E91A5017CA001C3141 /* Box.swift */; };
 		095D80551A4ECCD7000B83F9 /* Sodium.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D80541A4ECCD7000B83F9 /* Sodium.swift */; };
 		095D80571A4ED0B4000B83F9 /* GenericHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D80561A4ED0B4000B83F9 /* GenericHash.swift */; };
@@ -186,6 +188,7 @@
 		091C7CD91A507E95002E5351 /* ShortHash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShortHash.swift; sourceTree = "<group>"; };
 		091C7CDB1A50839D002E5351 /* Sign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sign.swift; sourceTree = "<group>"; };
 		092D18191A5BF5A700972F77 /* InternalExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternalExtensions.swift; sourceTree = "<group>"; };
+		094E493F1BE6C7760053AC01 /* crypto_aead_aes256gcm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypto_aead_aes256gcm.h; sourceTree = "<group>"; };
 		094F21E91A5017CA001C3141 /* Box.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Box.swift; sourceTree = "<group>"; };
 		095D80541A4ECCD7000B83F9 /* Sodium.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sodium.swift; sourceTree = "<group>"; };
 		095D80561A4ED0B4000B83F9 /* GenericHash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericHash.swift; sourceTree = "<group>"; };
@@ -411,6 +414,7 @@
 				09A943EA1A4EB76F00C8A04F /* libsodium-ios.a */,
 				09A944591A4EB97800C8A04F /* sodium_lib.h */,
 				09A943F11A4EB91F00C8A04F /* core.h */,
+				094E493F1BE6C7760053AC01 /* crypto_aead_aes256gcm.h */,
 				09A943F21A4EB91F00C8A04F /* crypto_aead_chacha20poly1305.h */,
 				09A943F31A4EB91F00C8A04F /* crypto_auth_hmacsha256.h */,
 				09A943F41A4EB91F00C8A04F /* crypto_auth_hmacsha512.h */,
@@ -594,6 +598,7 @@
 				09A944531A4EB91F00C8A04F /* randombytes_salsa20_random.h in Headers */,
 				09A944421A4EB91F00C8A04F /* crypto_sign_edwards25519sha512batch.h in Headers */,
 				09A944331A4EB91F00C8A04F /* crypto_hash_sha256.h in Headers */,
+				094E49401BE6C7760053AC01 /* crypto_aead_aes256gcm.h in Headers */,
 				09A944521A4EB91F00C8A04F /* export.h in Headers */,
 				09A9443A1A4EB91F00C8A04F /* crypto_pwhash_scryptsalsa208sha256.h in Headers */,
 				09A944551A4EB91F00C8A04F /* randombytes.h in Headers */,
@@ -655,6 +660,7 @@
 				90C75EC11AE357DF00F1E749 /* crypto_int32.h in Headers */,
 				90C75EC21AE357DF00F1E749 /* crypto_int64.h in Headers */,
 				90C75EC31AE357DF00F1E749 /* crypto_onetimeauth_poly1305.h in Headers */,
+				094E49411BE6C7D00053AC01 /* crypto_aead_aes256gcm.h in Headers */,
 				90C75EC41AE357DF00F1E749 /* crypto_onetimeauth.h in Headers */,
 				90C75EC51AE357DF00F1E749 /* crypto_pwhash_scryptsalsa208sha256.h in Headers */,
 				90C75EC61AE357DF00F1E749 /* crypto_scalarmult_curve25519.h in Headers */,

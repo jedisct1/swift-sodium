@@ -23,7 +23,9 @@ public class Sodium {
             static var once: dispatch_once_t = 0
         }
         dispatch_once(&Once.once) {
-            sodium_init()
+            if sodium_init() == -1 {
+                abort()
+            }
             ()
         }
     }    

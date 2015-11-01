@@ -184,6 +184,11 @@ class SodiumTests: XCTestCase {
         XCTAssert(!sodium.utils.equals(eq1, eq3))
         XCTAssert(!sodium.utils.equals(eq1, eq4))
         
+        XCTAssert(sodium.utils.compare(eq1, eq2)! == 0)
+        XCTAssert(sodium.utils.compare(eq1, eq3)! == -1)
+        XCTAssert(sodium.utils.compare(eq3, eq2)! == 1)
+        XCTAssert(sodium.utils.compare(eq1, eq4) == nil)
+        
         let bin = sodium.utils.hex2bin("deadbeef")!
         XCTAssert(bin.description == "<deadbeef>")
         let hex = sodium.utils.bin2hex(bin)

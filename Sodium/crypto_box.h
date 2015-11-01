@@ -59,7 +59,8 @@ int crypto_box_easy(unsigned char *c, const unsigned char *m,
 SODIUM_EXPORT
 int crypto_box_open_easy(unsigned char *m, const unsigned char *c,
                          unsigned long long clen, const unsigned char *n,
-                         const unsigned char *pk, const unsigned char *sk);
+                         const unsigned char *pk, const unsigned char *sk)
+            __attribute__ ((warn_unused_result));
 
 SODIUM_EXPORT
 int crypto_box_detached(unsigned char *c, unsigned char *mac,
@@ -73,7 +74,8 @@ int crypto_box_open_detached(unsigned char *m, const unsigned char *c,
                              unsigned long long clen,
                              const unsigned char *n,
                              const unsigned char *pk,
-                             const unsigned char *sk);
+                             const unsigned char *sk)
+            __attribute__ ((warn_unused_result));
 
 /* -- Precomputation interface -- */
 
@@ -93,7 +95,8 @@ int crypto_box_easy_afternm(unsigned char *c, const unsigned char *m,
 SODIUM_EXPORT
 int crypto_box_open_easy_afternm(unsigned char *m, const unsigned char *c,
                                  unsigned long long clen, const unsigned char *n,
-                                 const unsigned char *k);
+                                 const unsigned char *k)
+            __attribute__ ((warn_unused_result));
 
 SODIUM_EXPORT
 int crypto_box_detached_afternm(unsigned char *c, unsigned char *mac,
@@ -104,7 +107,8 @@ SODIUM_EXPORT
 int crypto_box_open_detached_afternm(unsigned char *m, const unsigned char *c,
                                      const unsigned char *mac,
                                      unsigned long long clen, const unsigned char *n,
-                                     const unsigned char *k);
+                                     const unsigned char *k)
+            __attribute__ ((warn_unused_result));
 
 /* -- Ephemeral SK interface -- */
 
@@ -113,13 +117,14 @@ SODIUM_EXPORT
 size_t crypto_box_sealbytes(void);
 
 SODIUM_EXPORT
-int crypto_box_seal(unsigned char *out, const unsigned char *in,
-                    unsigned long long inlen, const unsigned char *pk);
+int crypto_box_seal(unsigned char *c, const unsigned char *m,
+                    unsigned long long mlen, const unsigned char *pk);
 
 SODIUM_EXPORT
-int crypto_box_seal_open(unsigned char *out, const unsigned char *in,
-                         unsigned long long inlen,
-                         const unsigned char *pk, const unsigned char *sk);
+int crypto_box_seal_open(unsigned char *m, const unsigned char *c,
+                         unsigned long long clen,
+                         const unsigned char *pk, const unsigned char *sk)
+            __attribute__ ((warn_unused_result));
 
 /* -- NaCl compatibility interface ; Requires padding -- */
 
@@ -139,7 +144,8 @@ int crypto_box(unsigned char *c, const unsigned char *m,
 SODIUM_EXPORT
 int crypto_box_open(unsigned char *m, const unsigned char *c,
                     unsigned long long clen, const unsigned char *n,
-                    const unsigned char *pk, const unsigned char *sk);
+                    const unsigned char *pk, const unsigned char *sk)
+            __attribute__ ((warn_unused_result));
 
 SODIUM_EXPORT
 int crypto_box_afternm(unsigned char *c, const unsigned char *m,
@@ -149,7 +155,9 @@ int crypto_box_afternm(unsigned char *c, const unsigned char *m,
 SODIUM_EXPORT
 int crypto_box_open_afternm(unsigned char *m, const unsigned char *c,
                             unsigned long long clen, const unsigned char *n,
-                            const unsigned char *k);
+                            const unsigned char *k)
+            __attribute__ ((warn_unused_result));
+
 #ifdef __cplusplus
 }
 #endif

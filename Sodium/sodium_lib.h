@@ -3,6 +3,7 @@
 #define sodium_lib_H
 
 #include "core.h"
+#include "crypto_aead_aes256gcm.h"
 #include "crypto_aead_chacha20poly1305.h"
 #include "crypto_auth.h"
 #include "crypto_auth_hmacsha256.h"
@@ -41,6 +42,9 @@
 #include "crypto_verify_32.h"
 #include "crypto_verify_64.h"
 #include "randombytes.h"
+#ifdef __native_client__
+# include "randombytes_nativeclient.h"
+#endif
 #include "randombytes_salsa20_random.h"
 #include "randombytes_sysrandom.h"
 #include "runtime.h"
