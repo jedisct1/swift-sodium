@@ -35,13 +35,6 @@ Running these scripts on Xcode 7.0 (`7A220`) on the revision
 `437b20161ca0271756e5c2b6078a94dd63b51493` of libsodium generate files
 identical to the ones present in this repository.
 
-or using CocoaPods
-------------------
-
-```
-pod 'Sodium', '~> 0.1'
-```
-
 Public-key authenticated encryption
 ===================================
 
