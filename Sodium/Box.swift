@@ -16,6 +16,7 @@ public class Box {
     public let MacBytes = Int(crypto_box_macbytes())
     public let Primitive = String.fromCString(crypto_box_primitive())
     public let BeforenmBytes = Int(crypto_box_beforenmbytes())
+    public let SealBytes = Int(crypto_box_sealbytes())
     
     public typealias PublicKey = NSData
     public typealias SecretKey = NSData
@@ -225,5 +226,33 @@ public class Box {
         let nonceAndAuthenticatedCipherText = NSMutableData(data: nonce)
         nonceAndAuthenticatedCipherText.appendData(authenticatedCipherText)
         return nonceAndAuthenticatedCipherText
+    }
+    
+    public func seal(message: NSData, recipientPublicKey: Box.PublicKey) -> NSData? {
+        if recipientPublicKey.length != PublicKeyBytes {
+            return nil
+        }
+        let anonymousCipherText = NSMutableData(length: SealBytes + message.length)
+        if anonymousCipherText == nil {
+            return nil
+        }
+        if crypto_box_seal(anonymousCipherText!.mutableBytesPtr, message.bytesPtr, CUnsignedLongLong(message.length), recipientPublicKey.bytesPtr) != 0 {
+            return nil
+        }
+        return anonymousCipherText
+    }
+    
+    public func open(anonymousCipherText: NSData, recipientPublicKey: PublicKey, recipientSecretKey: SecretKey) -> NSData? {
+        if recipientPublicKey.length != PublicKeyBytes || recipientSecretKey.length != SecretKeyBytes || anonymousCipherText.length < SealBytes {
+            return nil
+        }
+        let message = NSMutableData(length: anonymousCipherText.length - SealBytes)
+        if message == nil {
+            return nil
+        }
+        if crypto_box_seal_open(message!.mutableBytesPtr, anonymousCipherText.bytesPtr, CUnsignedLongLong(anonymousCipherText.length), recipientPublicKey.bytesPtr, recipientSecretKey.bytesPtr) != 0 {
+            return nil
+        }
+        return message
     }
 }
