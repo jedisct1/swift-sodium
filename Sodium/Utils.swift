@@ -31,34 +31,31 @@ public class Utils {
     }
     
     public func bin2hex(bin: NSData) -> String? {
-        let hexData = NSMutableData(length: bin.length * 2 + 1)
-        if hexData == nil {
+        guard let hexData = NSMutableData(length: bin.length * 2 + 1) else {
             return nil
         }
-        let hexDataBytes = UnsafeMutablePointer<CChar>(hexData!.mutableBytes)
-        if sodium_bin2hex(hexDataBytes, hexData!.length, bin.bytesPtr, bin.length) == nil {
+        let hexDataBytes = UnsafeMutablePointer<CChar>(hexData.mutableBytes)
+        if sodium_bin2hex(hexDataBytes, hexData.length, bin.bytesPtr, bin.length) == nil {
             return nil
         }
         return String.fromCString(hexDataBytes)
     }
     
     public func hex2bin(hex: String, ignore: String? = nil) -> NSData? {
-        let hexData = hex.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
-        if hexData == nil {
+        guard let hexData = hex.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) else {
             return nil
         }
-        let hexDataLen = hexData!.length
+        let hexDataLen = hexData.length
         let binDataCapacity = hexDataLen / 2
-        let binData = NSMutableData(length: binDataCapacity)
-        if binData == nil {
+        guard let binData = NSMutableData(length: binDataCapacity) else {
             return nil
         }
         var binDataLen: size_t = 0
         let ignore_cstr = ignore != nil ? (ignore! as NSString).UTF8String : nil
-        if sodium_hex2bin(binData!.mutableBytesPtr, binDataCapacity,UnsafePointer<CChar>(hexData!.bytes), hexDataLen, ignore_cstr, &binDataLen, nil) != 0 {
+        if sodium_hex2bin(binData.mutableBytesPtr, binDataCapacity,UnsafePointer<CChar>(hexData.bytes), hexDataLen, ignore_cstr, &binDataLen, nil) != 0 {
             return nil
         }
-        binData!.length = Int(binDataLen)
+        binData.length = Int(binDataLen)
         return binData
     }
 }
