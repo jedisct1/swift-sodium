@@ -13,11 +13,10 @@ public class RandomBytes {
         if length < 0 {
             return nil
         }
-        let output = NSMutableData(length: length)
-        if output == nil {
+        guard let output = NSMutableData(length: length) else {
             return nil
         }
-        randombytes_buf(output!.mutableBytesPtr, output!.length)
+        randombytes_buf(output.mutableBytesPtr, output.length)
         return output
     }
     

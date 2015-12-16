@@ -16,11 +16,10 @@ public class ShortHash {
         if key.length != KeyBytes {
             return nil
         }
-        let output = NSMutableData(length: Bytes)
-        if output == nil {
+        guard let output = NSMutableData(length: Bytes) else {
             return nil
         }
-        if crypto_shorthash(output!.mutableBytesPtr, message.bytesPtr, CUnsignedLongLong(message.length), key.bytesPtr) != 0 {
+        if crypto_shorthash(output.mutableBytesPtr, message.bytesPtr, CUnsignedLongLong(message.length), key.bytesPtr) != 0 {
             return nil
         }
         return output
