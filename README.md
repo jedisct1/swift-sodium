@@ -35,8 +35,11 @@ Running these scripts on Xcode 7.0 (`7A220`) on the revision
 `437b20161ca0271756e5c2b6078a94dd63b51493` of libsodium generate files
 identical to the ones present in this repository.
 
-Public-key authenticated encryption
-===================================
+Public-key Cryptography
+=======================
+
+Authenticated Encryption
+------------------------
 
 ```swift
 let sodium = Sodium()!
@@ -61,6 +64,30 @@ ciphertext. `open()` extracts the nonce and decrypts the ciphertext.
 The `Box` class also provides alternative functions and parameters to
 deterministically generate key pairs, to retrieve the nonce and/or the
 authenticator, and to detach them from the original message.
+
+Anonymous Encryption (Sealed Boxes)
+-----------------------------------
+
+```swift
+let sodium = Sodium()!
+let bobKeyPair = sodium.box.keyPair()!
+let message: NSData = "My Test Message".toData()!
+
+let encryptedMessageToBob: NSData =
+  sodium.box.seal(message, recipientPublicKey: bobKeyPair.publicKey)!
+
+let messageDecryptedByBob =
+  sodium.box.open(encryptedMessageToBob,
+                  recipientPublicKey: bobKeyPair.publicKey,
+                  recipientSecretKey: bobKeyPair.secretKey)
+```
+
+`seal()` generates an ephemeral keypair, uses the ephemeral secret 
+key in the encryption process, combines the ephemeral public key with
+the ciphertext, then destroys the keypair. The sender can not decrypt
+the resulting ciphertext. `open()` extracts the public key and decrypts
+using the recipient's secret key. Message integrity is verified, but 
+the sender's identity cannot be correlated to the ciphertext.
 
 Public-key signatures
 =====================

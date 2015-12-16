@@ -49,6 +49,11 @@ class SodiumTests: XCTestCase {
         let decrypted3 = sodium.box.open(encryptedMessageFromAliceToBob3, senderPublicKey: aliceKeyPair.publicKey, recipientSecretKey: bobKeyPair.secretKey, nonce: nonce2, mac: mac)
         XCTAssert(decrypted3 == message)
         
+        let encryptedMessageToBob: NSData = sodium.box.seal(message, recipientPublicKey: bobKeyPair.publicKey)!
+        let decrypted4 = sodium.box.open(encryptedMessageToBob, recipientPublicKey: bobKeyPair.publicKey,
+            recipientSecretKey: bobKeyPair.secretKey)
+        XCTAssert(decrypted4 == message)
+
         // beforenm tests
         // The two beforenm keys calculated by Alice and Bob separately should be identical
         let aliceBeforenm = sodium.box.beforenm(bobKeyPair.publicKey, senderSecretKey: aliceKeyPair.secretKey)!
@@ -64,7 +69,7 @@ class SodiumTests: XCTestCase {
         let decryptedBeforenm2 = sodium.box.open(encryptedMessageBeforenm2, beforenm: aliceBeforenm, nonce: nonceBeforenm)
         XCTAssert(decryptedBeforenm2 == message)
     }
-    
+
     func testSecretBox() {
         let message = "My Test Message".toData()!
         let secretKey = sodium.secretBox.key()!
