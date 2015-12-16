@@ -213,11 +213,10 @@ public class Box {
         if recipientPublicKey.length != PublicKeyBytes {
             return nil
         }
-        let anonymousCipherText = NSMutableData(length: SealBytes + message.length)
-        if anonymousCipherText == nil {
+        guard let anonymousCipherText = NSMutableData(length: SealBytes + message.length) else {
             return nil
         }
-        if crypto_box_seal(anonymousCipherText!.mutableBytesPtr, message.bytesPtr, CUnsignedLongLong(message.length), recipientPublicKey.bytesPtr) != 0 {
+        if crypto_box_seal(anonymousCipherText.mutableBytesPtr, message.bytesPtr, CUnsignedLongLong(message.length), recipientPublicKey.bytesPtr) != 0 {
             return nil
         }
         return anonymousCipherText
