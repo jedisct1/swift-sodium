@@ -8,13 +8,13 @@
 
 import Foundation
 
-extension NSData {
+public extension NSData {
     var bytesPtr: UnsafePointer<UInt8> {
         return UnsafePointer<UInt8>(self.bytes)
     }
 }
 
-extension NSMutableData {
+public extension NSMutableData {
     var mutableBytesPtr: UnsafeMutablePointer<UInt8> {
         return UnsafeMutablePointer<UInt8>(self.mutableBytes)
     }
