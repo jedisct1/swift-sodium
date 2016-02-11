@@ -6,7 +6,8 @@ s.summary = 'Swift-Sodium provides a safe and easy to use interface to perform c
 s.homepage = 'https://github.com/jedisct1/swift-sodium'
 s.social_media_url = 'http://twitter.com/jedisct1'
 s.authors = { 'Frank Denis' => '' }
-s.source = { :git => 'https://github.com/jedisct1/swift-sodium.git' }
+s.source = { :git => 'https://github.com/jedisct1/swift-sodium.git',
+             :tag => '0.1' }
 
 s.ios.deployment_target = '8.0'
 s.osx.deployment_target = '10.9'
