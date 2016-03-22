@@ -82,11 +82,11 @@ let messageDecryptedByBob =
                   recipientSecretKey: bobKeyPair.secretKey)
 ```
 
-`seal()` generates an ephemeral keypair, uses the ephemeral secret 
+`seal()` generates an ephemeral keypair, uses the ephemeral secret
 key in the encryption process, combines the ephemeral public key with
 the ciphertext, then destroys the keypair. The sender can not decrypt
 the resulting ciphertext. `open()` extracts the public key and decrypts
-using the recipient's secret key. Message integrity is verified, but 
+using the recipient's secret key. Message integrity is verified, but
 the sender's identity cannot be correlated to the ciphertext.
 
 Public-key signatures
@@ -187,14 +187,17 @@ let randomData = sodium.randomBytes.buf(1000)
 
 Password hashing
 ================
+
+Using Argon2i:
+
 ```swift
 let sodium = Sodium()!
 let password = "Correct Horse Battery Staple".toData()!
-let hashedStr = sodium.pwHash.scrypt.str(password,
-  opsLimit: sodium.pwHash.scrypt.OpsLimitInteractive,
-  memLimit: sodium.pwHash.scrypt.MemLimitInteractive)!
+let hashedStr = sodium.pwHash.str(password,
+  opsLimit: sodium.pwHash.OpsLimitInteractive,
+  memLimit: sodium.pwHash.MemLimitInteractive)!
 
-if sodium.pwHash.scrypt.strVerify(hashStr, passwd: password) == false {
+if sodium.pwHash.strVerify(hashStr, passwd: password) == false {
   // Password doesn't match the given hash string
 }
 ```
