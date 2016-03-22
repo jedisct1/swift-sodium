@@ -8,6 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		038365151A5A51D20081136D /* SecretBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038365141A5A51D20081136D /* SecretBox.swift */; };
+		091782501CA164970022765D /* crypto_core_hchacha20.h in Headers */ = {isa = PBXBuildFile; fileRef = 0917824D1CA164970022765D /* crypto_core_hchacha20.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		091782511CA164970022765D /* crypto_pwhash_argon2i.h in Headers */ = {isa = PBXBuildFile; fileRef = 0917824E1CA164970022765D /* crypto_pwhash_argon2i.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		091782521CA164970022765D /* crypto_pwhash.h in Headers */ = {isa = PBXBuildFile; fileRef = 0917824F1CA164970022765D /* crypto_pwhash.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		091782531CA164C00022765D /* crypto_core_hchacha20.h in Headers */ = {isa = PBXBuildFile; fileRef = 0917824D1CA164970022765D /* crypto_core_hchacha20.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		091782541CA164C30022765D /* crypto_pwhash_argon2i.h in Headers */ = {isa = PBXBuildFile; fileRef = 0917824E1CA164970022765D /* crypto_pwhash_argon2i.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		091782551CA164C70022765D /* crypto_pwhash.h in Headers */ = {isa = PBXBuildFile; fileRef = 0917824F1CA164970022765D /* crypto_pwhash.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		091C7CDA1A507E95002E5351 /* ShortHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091C7CD91A507E95002E5351 /* ShortHash.swift */; };
 		091C7CDC1A50839D002E5351 /* Sign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091C7CDB1A50839D002E5351 /* Sign.swift */; };
 		092D181A1A5BF5A700972F77 /* NSData+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092D18191A5BF5A700972F77 /* NSData+Extensions.swift */; };
@@ -185,6 +191,9 @@
 
 /* Begin PBXFileReference section */
 		038365141A5A51D20081136D /* SecretBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecretBox.swift; sourceTree = "<group>"; };
+		0917824D1CA164970022765D /* crypto_core_hchacha20.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypto_core_hchacha20.h; sourceTree = "<group>"; };
+		0917824E1CA164970022765D /* crypto_pwhash_argon2i.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypto_pwhash_argon2i.h; sourceTree = "<group>"; };
+		0917824F1CA164970022765D /* crypto_pwhash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypto_pwhash.h; sourceTree = "<group>"; };
 		091C7CD91A507E95002E5351 /* ShortHash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShortHash.swift; sourceTree = "<group>"; };
 		091C7CDB1A50839D002E5351 /* Sign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sign.swift; sourceTree = "<group>"; };
 		092D18191A5BF5A700972F77 /* NSData+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+Extensions.swift"; sourceTree = "<group>"; };
@@ -412,6 +421,9 @@
 			children = (
 				90C75EAD1AE357CB00F1E749 /* libsodium-osx.a */,
 				09A943EA1A4EB76F00C8A04F /* libsodium-ios.a */,
+				0917824D1CA164970022765D /* crypto_core_hchacha20.h */,
+				0917824E1CA164970022765D /* crypto_pwhash_argon2i.h */,
+				0917824F1CA164970022765D /* crypto_pwhash.h */,
 				09A944591A4EB97800C8A04F /* sodium_lib.h */,
 				09A943F11A4EB91F00C8A04F /* core.h */,
 				094E493F1BE6C7760053AC01 /* crypto_aead_aes256gcm.h */,
@@ -600,6 +612,7 @@
 				09A944331A4EB91F00C8A04F /* crypto_hash_sha256.h in Headers */,
 				094E49401BE6C7760053AC01 /* crypto_aead_aes256gcm.h in Headers */,
 				09A944521A4EB91F00C8A04F /* export.h in Headers */,
+				091782501CA164970022765D /* crypto_core_hchacha20.h in Headers */,
 				09A9443A1A4EB91F00C8A04F /* crypto_pwhash_scryptsalsa208sha256.h in Headers */,
 				09A944551A4EB91F00C8A04F /* randombytes.h in Headers */,
 				09A9442F1A4EB91F00C8A04F /* crypto_core_salsa208.h in Headers */,
@@ -610,6 +623,7 @@
 				09A944351A4EB91F00C8A04F /* crypto_hash.h in Headers */,
 				09A9444B1A4EB91F00C8A04F /* crypto_uint8.h in Headers */,
 				09A9444F1A4EB91F00C8A04F /* crypto_verify_16.h in Headers */,
+				091782521CA164970022765D /* crypto_pwhash.h in Headers */,
 				09A944361A4EB91F00C8A04F /* crypto_int32.h in Headers */,
 				09A9444A1A4EB91F00C8A04F /* crypto_stream.h in Headers */,
 				09A9442D1A4EB91F00C8A04F /* crypto_core_hsalsa20.h in Headers */,
@@ -621,6 +635,7 @@
 				09A9443D1A4EB91F00C8A04F /* crypto_secretbox_xsalsa20poly1305.h in Headers */,
 				09A9442E1A4EB91F00C8A04F /* crypto_core_salsa20.h in Headers */,
 				09A944561A4EB91F00C8A04F /* runtime.h in Headers */,
+				091782511CA164970022765D /* crypto_pwhash_argon2i.h in Headers */,
 				09A944321A4EB91F00C8A04F /* crypto_generichash.h in Headers */,
 				09A944381A4EB91F00C8A04F /* crypto_onetimeauth_poly1305.h in Headers */,
 				09A944271A4EB91F00C8A04F /* crypto_auth_hmacsha256.h in Headers */,
@@ -662,6 +677,7 @@
 				90C75EC31AE357DF00F1E749 /* crypto_onetimeauth_poly1305.h in Headers */,
 				094E49411BE6C7D00053AC01 /* crypto_aead_aes256gcm.h in Headers */,
 				90C75EC41AE357DF00F1E749 /* crypto_onetimeauth.h in Headers */,
+				091782531CA164C00022765D /* crypto_core_hchacha20.h in Headers */,
 				90C75EC51AE357DF00F1E749 /* crypto_pwhash_scryptsalsa208sha256.h in Headers */,
 				90C75EC61AE357DF00F1E749 /* crypto_scalarmult_curve25519.h in Headers */,
 				90C75EC71AE357DF00F1E749 /* crypto_scalarmult.h in Headers */,
@@ -672,6 +688,7 @@
 				90C75ECC1AE357DF00F1E749 /* crypto_sign_ed25519.h in Headers */,
 				90C75ECD1AE357DF00F1E749 /* crypto_sign_edwards25519sha512batch.h in Headers */,
 				90C75ECE1AE357DF00F1E749 /* crypto_sign.h in Headers */,
+				091782551CA164C70022765D /* crypto_pwhash.h in Headers */,
 				90C75ECF1AE357DF00F1E749 /* crypto_stream_aes128ctr.h in Headers */,
 				90C75ED01AE357DF00F1E749 /* crypto_stream_chacha20.h in Headers */,
 				90C75ED11AE357DF00F1E749 /* crypto_stream_salsa20.h in Headers */,
@@ -683,6 +700,7 @@
 				90C75ED71AE357E000F1E749 /* crypto_uint16.h in Headers */,
 				90C75ED81AE357E000F1E749 /* crypto_uint32.h in Headers */,
 				90C75ED91AE357E000F1E749 /* crypto_uint64.h in Headers */,
+				091782541CA164C30022765D /* crypto_pwhash_argon2i.h in Headers */,
 				90C75EDA1AE357E000F1E749 /* crypto_verify_16.h in Headers */,
 				90C75EDB1AE357E000F1E749 /* crypto_verify_32.h in Headers */,
 				90C75EDC1AE357E000F1E749 /* crypto_verify_64.h in Headers */,
