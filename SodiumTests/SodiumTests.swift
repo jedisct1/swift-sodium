@@ -177,14 +177,14 @@ class SodiumTests: XCTestCase {
     }
 
     func testUtils() {
-        let dataToZero = NSMutableData(bytes: UnsafePointer([1, 2, 3, 4] as [UInt8]), length: 4)
+        let dataToZero = NSMutableData(bytes: [1, 2, 3, 4] as [UInt8], length: 4)
         sodium.utils.zero(dataToZero)
         XCTAssert(dataToZero.length == 0)
 
-        let eq1 = NSData(bytes: UnsafePointer([1, 2, 3, 4] as [UInt8]), length: 4)
-        let eq2 = NSData(bytes: UnsafePointer([1, 2, 3, 4] as [UInt8]), length: 4)
-        let eq3 = NSData(bytes: UnsafePointer([1, 2, 3, 5] as [UInt8]), length: 4)
-        let eq4 = NSData(bytes: UnsafePointer([1, 2, 3] as [UInt8]), length: 3)
+        let eq1 = NSData(bytes: [1, 2, 3, 4] as [UInt8], length: 4)
+        let eq2 = NSData(bytes: [1, 2, 3, 4] as [UInt8], length: 4)
+        let eq3 = NSData(bytes: [1, 2, 3, 5] as [UInt8], length: 4)
+        let eq4 = NSData(bytes: [1, 2, 3] as [UInt8], length: 3)
         XCTAssert(sodium.utils.equals(eq1, eq2))
         XCTAssert(!sodium.utils.equals(eq1, eq3))
         XCTAssert(!sodium.utils.equals(eq1, eq4))
@@ -214,9 +214,10 @@ class SodiumTests: XCTestCase {
         XCTAssert(verify2 == false)
 
         let password3 = "My Test Message".toData()!
-        let salt = NSData(bytes: UnsafePointer([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32]), length: 32)
+        let salt = NSData(bytes: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32] as [UInt8], length: 32)
         let hash2 = sodium.pwHash.scrypt.hash(64, passwd: password3, salt: salt, opsLimit: sodium.pwHash.scrypt.OpsLimitInteractive, memLimit: sodium.pwHash.scrypt.MemLimitInteractive)
-        XCTAssert(sodium.utils.bin2hex(hash2!)! == "d7a19e09c8096fd75cc8cd917e62ed51d00cb43b810e9ca7f6148482016261060f4b84fd80a7dfbffbc1de9ac86d585f73786bfb2243cb57bcbfb42d7364a02d")
+        NSLog(sodium.utils.bin2hex(hash2!)!)
+        XCTAssert(sodium.utils.bin2hex(hash2!)! == "6f00c5630b0a113be73721d2bab7800c0fce4b4e7a74451704b53afcded3d9e85fbe1acea7d2aa0fecb3027e35d745547b1041d6c51f731bd0aa934da89f7adf")
     }
 
     func testPwHash() {
@@ -231,9 +232,8 @@ class SodiumTests: XCTestCase {
         XCTAssert(verify2 == false)
 
         let password3 = "My Test Message".toData()!
-        let salt = NSData(bytes: UnsafePointer([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]), length: 16)
+        let salt = NSData(bytes: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16] as [UInt8], length: 16)
         let hash2 = sodium.pwHash.hash(64, passwd: password3, salt: salt, opsLimit: sodium.pwHash.OpsLimitInteractive, memLimit: sodium.pwHash.MemLimitInteractive)
-        NSLog(sodium.utils.bin2hex(hash2!)!)
-        XCTAssert(sodium.utils.bin2hex(hash2!)! == "314bf32e623ee64c8b78b614402e056fb1e0da4e87aa15daf2f2a48b6a6b0641bf756054b6887ffde86221bfeb9803721bd69a7c565462a5c882970352be97cc")
+        XCTAssert(sodium.utils.bin2hex(hash2!)! == "51d659ee6f8790042688274c5bc8a6296390cdc786d2341c3553b01a5c3f7ff1190e04b86a878538b17ef10e74baa19295479f3e3ee587ce571f366fc66e2fdc")
     }
 }

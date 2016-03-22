@@ -23,7 +23,7 @@ public class PWHash {
         guard let output = NSMutableData(length: StrBytes) else {
             return nil
         }
-        if crypto_pwhash_str(UnsafeMutablePointer<CChar>(output.mutableBytes), UnsafePointer<CChar>(passwd.bytes), CUnsignedLongLong(passwd.length), CUnsignedLongLong(opsLimit), memLimit) != 0 {
+        if crypto_pwhash_str(UnsafeMutablePointer<CChar>(output.mutableBytes), UnsafePointer<CChar>(passwd.bytes), CUnsignedLongLong(passwd.length), CUnsignedLongLong(opsLimit), size_t(memLimit)) != 0 {
             return nil
         }
         return NSString(data: output, encoding: NSUTF8StringEncoding) as String?
@@ -43,7 +43,7 @@ public class PWHash {
         guard let output = NSMutableData(length: outputLength) else {
             return nil
         }
-        if crypto_pwhash(output.mutableBytesPtr, CUnsignedLongLong(outputLength), UnsafePointer<CChar>(passwd.bytes), CUnsignedLongLong(passwd.length), salt.bytesPtr, CUnsignedLongLong(opsLimit), memLimit, nil) != 0 {
+        if crypto_pwhash(output.mutableBytesPtr, CUnsignedLongLong(outputLength), UnsafePointer<CChar>(passwd.bytes), CUnsignedLongLong(passwd.length), salt.bytesPtr, CUnsignedLongLong(opsLimit), size_t(memLimit), nil) != 0 {
             return nil
         }
         return output
@@ -64,7 +64,7 @@ public class PWHash {
             guard let output = NSMutableData(length: StrBytes) else {
                 return nil
             }
-            if crypto_pwhash_scryptsalsa208sha256_str(UnsafeMutablePointer<CChar>(output.mutableBytes), UnsafePointer<CChar>(passwd.bytes), CUnsignedLongLong(passwd.length), CUnsignedLongLong(opsLimit), memLimit) != 0 {
+            if crypto_pwhash_scryptsalsa208sha256_str(UnsafeMutablePointer<CChar>(output.mutableBytes), UnsafePointer<CChar>(passwd.bytes), CUnsignedLongLong(passwd.length), CUnsignedLongLong(opsLimit), size_t(memLimit)) != 0 {
                 return nil
             }
             return NSString(data: output, encoding: NSUTF8StringEncoding) as String?
@@ -84,7 +84,7 @@ public class PWHash {
             guard let output = NSMutableData(length: outputLength) else {
                 return nil
             }
-            if crypto_pwhash_scryptsalsa208sha256(output.mutableBytesPtr, CUnsignedLongLong(outputLength), UnsafePointer<CChar>(passwd.bytes), CUnsignedLongLong(passwd.length), salt.bytesPtr, CUnsignedLongLong(opsLimit), memLimit) != 0 {
+            if crypto_pwhash_scryptsalsa208sha256(output.mutableBytesPtr, CUnsignedLongLong(outputLength), UnsafePointer<CChar>(passwd.bytes), CUnsignedLongLong(passwd.length), salt.bytesPtr, CUnsignedLongLong(opsLimit), size_t(memLimit)) != 0 {
                 return nil
             }
             return output
