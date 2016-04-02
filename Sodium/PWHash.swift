@@ -43,7 +43,7 @@ public class PWHash {
         guard let output = NSMutableData(length: outputLength) else {
             return nil
         }
-        if crypto_pwhash(output.mutableBytesPtr, CUnsignedLongLong(outputLength), UnsafePointer<CChar>(passwd.bytes), CUnsignedLongLong(passwd.length), salt.bytesPtr, CUnsignedLongLong(opsLimit), size_t(memLimit), nil) != 0 {
+        if crypto_pwhash(output.mutableBytesPtr, CUnsignedLongLong(outputLength), UnsafePointer<CChar>(passwd.bytes), CUnsignedLongLong(passwd.length), salt.bytesPtr, CUnsignedLongLong(opsLimit), size_t(memLimit), crypto_pwhash_ALG_DEFAULT) != 0 {
             return nil
         }
         return output
