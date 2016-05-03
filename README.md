@@ -45,9 +45,9 @@ Authenticated Encryption
 let sodium = Sodium()!
 let aliceKeyPair = sodium.box.keyPair()!
 let bobKeyPair = sodium.box.keyPair()!
-let message: NSData = "My Test Message".toData()!
+let message = "My Test Message".dataUsingEncoding(NSUTF8StringEncoding)!
 
-let encryptedMessageFromAliceToBob: NSData =
+let encryptedMessageFromAliceToBob =
   sodium.box.seal(message,
                   recipientPublicKey: bobKeyPair.publicKey,
                   senderSecretKey: aliceKeyPair.secretKey)!
@@ -71,9 +71,9 @@ Anonymous Encryption (Sealed Boxes)
 ```swift
 let sodium = Sodium()!
 let bobKeyPair = sodium.box.keyPair()!
-let message: NSData = "My Test Message".toData()!
+let message = "My Test Message".dataUsingEncoding(NSUTF8StringEncoding)!
 
-let encryptedMessageToBob: NSData =
+let encryptedMessageToBob =
   sodium.box.seal(message, recipientPublicKey: bobKeyPair.publicKey)!
 
 let messageDecryptedByBob =
@@ -97,7 +97,7 @@ Detached signatures
 
 ```swift
 let sodium = Sodium()!
-let message = "My Test Message".toData()!
+let message = "My Test Message".dataUsingEncoding(NSUTF8StringEncoding)!
 let keyPair = sodium.sign.keyPair()!
 let signature = sodium.sign.signature(message, secretKey: keyPair.secretKey)!
 if sodium.sign.verify(message,
@@ -112,7 +112,7 @@ Attached signatures
 
 ```swift
 let sodium = Sodium()!
-let message = "My Test Message".toData()!
+let message = "My Test Message".dataUsingEncoding(NSUTF8StringEncoding)!
 let keyPair = sodium.sign.keyPair()!
 let signedMessage = sodium.sign.sign(message, secretKey: keyPair.secretKey)!
 if let unsignedMessage = sodium.sign.open(signedMessage, publicKey: keyPair.publicKey) {
@@ -124,9 +124,9 @@ Secret-key authenticated encryption
 ===================================
 
 ```swift
-let message = "My Test Message".toData()!
+let message = "My Test Message".dataUsingEncoding(NSUTF8StringEncoding)!
 let secretKey = sodium.secretBox.key()!
-let encrypted: NSData = sodium.secretBox.seal(message, secretKey: secretKey)!
+let encrypted = sodium.secretBox.seal(message, secretKey: secretKey)!
 if let decrypted = sodium.secretBox.open(encrypted, secretKey: secretKey) {
   // authenticator is valid, decrypted contains the original message
 }
@@ -140,7 +140,7 @@ Deterministic hashing
 
 ```swift
 let sodium = Sodium()!
-let message = "My Test Message".toData()!
+let message = "My Test Message".dataUsingEncoding(NSUTF8StringEncoding)!
 let h = sodium.genericHash.hash(message)
 ```
 
@@ -149,8 +149,8 @@ Keyed hashing
 
 ```swift
 let sodium = Sodium()!
-let message = "My Test Message".toData()!
-let key = "Secret key".toData()!
+let message = "My Test Message".dataUsingEncoding(NSUTF8StringEncoding)!
+let key = "Secret key".dataUsingEncoding(NSUTF8StringEncoding)!
 let h = sodium.genericHash.hash(message, key: key)
 ```
 
@@ -159,8 +159,9 @@ Streaming
 
 ```swift
 let sodium = Sodium()!
-let (message1, message2) = ("My Test ".toData()!, "Message".toData()!)
-let key = "Secret key".toData()!
+let message1 = "My Test ".dataUsingEncoding(NSUTF8StringEncoding)!
+let message2 = "Message".dataUsingEncoding(NSUTF8StringEncoding)!
+let key = "Secret key".dataUsingEncoding(NSUTF8StringEncoding)!
 let stream = sodium.genericHash.initStream(key)!
 stream.update(message1)
 stream.update(message2)
@@ -171,9 +172,9 @@ Short-output hashing (SipHash)
 ==============================
 
 ```swift
-let sodium = Sodium!
-let message = "My Test Message".toData()!
-let key = sodium.randomBytes.buf(ShortHash.KeyBytes)!
+let sodium = Sodium()!
+let message = "My Test Message".dataUsingEncoding(NSUTF8StringEncoding)!
+let key = sodium.randomBytes.buf(sodium.shortHash.KeyBytes)!
 let h = sodium.shortHash.hash(message, key: key)
 ```
 
@@ -197,7 +198,7 @@ let hashedStr = sodium.pwHash.str(password,
   opsLimit: sodium.pwHash.OpsLimitInteractive,
   memLimit: sodium.pwHash.MemLimitInteractive)!
 
-if sodium.pwHash.strVerify(hashStr, passwd: password) {
+if sodium.pwHash.strVerify(hashedStr, passwd: password) {
   // Password matches the given hash string
 } else {
   // Password doesn't match the given hash string
