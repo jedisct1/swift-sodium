@@ -193,11 +193,11 @@ Using Argon2i:
 ```swift
 let sodium = Sodium()!
 let password = "Correct Horse Battery Staple".dataUsingEncoding(NSUTF8StringEncoding)!
-let hashedStr = sodium.pwHash.scrypt.str(password,
-  opsLimit: sodium.pwHash.scrypt.OpsLimitInteractive,
-  memLimit: sodium.pwHash.scrypt.MemLimitInteractive)!
+let hashedStr = sodium.pwHash.str(password,
+  opsLimit: sodium.pwHash.OpsLimitInteractive,
+  memLimit: sodium.pwHash.MemLimitInteractive)!
 
-if sodium.pwHash.scrypt.strVerify(hashStr, passwd: password) {
+if sodium.pwHash.strVerify(hashStr, passwd: password) {
   // Password matches the given hash string
 } else {
   // Password doesn't match the given hash string
