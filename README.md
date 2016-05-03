@@ -198,7 +198,7 @@ let hashedStr = sodium.pwHash.str(password,
   opsLimit: sodium.pwHash.OpsLimitInteractive,
   memLimit: sodium.pwHash.MemLimitInteractive)!
 
-if sodium.pwHash.strVerify(hashStr, passwd: password) {
+if sodium.pwHash.strVerify(hashedStr, passwd: password) {
   // Password matches the given hash string
 } else {
   // Password doesn't match the given hash string
