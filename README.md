@@ -45,9 +45,9 @@ Authenticated Encryption
 let sodium = Sodium()!
 let aliceKeyPair = sodium.box.keyPair()!
 let bobKeyPair = sodium.box.keyPair()!
-let message: NSData = "My Test Message".dataUsingEncoding(NSUTF8StringEncoding)!
+let message = "My Test Message".dataUsingEncoding(NSUTF8StringEncoding)!
 
-let encryptedMessageFromAliceToBob: NSData =
+let encryptedMessageFromAliceToBob =
   sodium.box.seal(message,
                   recipientPublicKey: bobKeyPair.publicKey,
                   senderSecretKey: aliceKeyPair.secretKey)!
@@ -71,9 +71,9 @@ Anonymous Encryption (Sealed Boxes)
 ```swift
 let sodium = Sodium()!
 let bobKeyPair = sodium.box.keyPair()!
-let message: NSData = "My Test Message".dataUsingEncoding(NSUTF8StringEncoding)!
+let message = "My Test Message".dataUsingEncoding(NSUTF8StringEncoding)!
 
-let encryptedMessageToBob: NSData =
+let encryptedMessageToBob =
   sodium.box.seal(message, recipientPublicKey: bobKeyPair.publicKey)!
 
 let messageDecryptedByBob =
@@ -126,7 +126,7 @@ Secret-key authenticated encryption
 ```swift
 let message = "My Test Message".dataUsingEncoding(NSUTF8StringEncoding)!
 let secretKey = sodium.secretBox.key()!
-let encrypted: NSData = sodium.secretBox.seal(message, secretKey: secretKey)!
+let encrypted = sodium.secretBox.seal(message, secretKey: secretKey)!
 if let decrypted = sodium.secretBox.open(encrypted, secretKey: secretKey) {
   // authenticator is valid, decrypted contains the original message
 }
