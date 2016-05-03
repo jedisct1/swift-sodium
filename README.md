@@ -174,7 +174,7 @@ Short-output hashing (SipHash)
 ```swift
 let sodium = Sodium()!
 let message = "My Test Message".dataUsingEncoding(NSUTF8StringEncoding)!
-let key = sodium.randomBytes.buf(ShortHash.KeyBytes)!
+let key = sodium.randomBytes.buf(sodium.shortHash.KeyBytes)!
 let h = sodium.shortHash.hash(message, key: key)
 ```
 
