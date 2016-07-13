@@ -124,6 +124,7 @@ Secret-key authenticated encryption
 ===================================
 
 ```swift
+let sodium = Sodium()!
 let message = "My Test Message".dataUsingEncoding(NSUTF8StringEncoding)!
 let secretKey = sodium.secretBox.key()!
 let encrypted: NSData = sodium.secretBox.seal(message, secretKey: secretKey)!
@@ -212,6 +213,7 @@ Zeroing memory
 --------------
 
 ```swift
+let sodium = Sodium()!
 var dataToZero: NSMutableData
 sodium.utils.zero(dataToZero)
 ```
@@ -220,6 +222,7 @@ Constant-time comparison
 ------------------------
 
 ```swift
+let sodium = Sodium()!
 let secret1: NSData
 let secret2: NSData
 let equality = sodium.utils.equals(secret1, secret2)
@@ -229,6 +232,7 @@ Constant-time hexadecimal encoding
 ----------------------------------
 
 ```swift
+let sodium = Sodium()!
 let data: NSData
 let hex = sodium.utils.bin2hex(data)
 ```
@@ -237,6 +241,7 @@ Hexadecimal decoding
 --------------------
 
 ```swift
+let sodium = Sodium()!
 let data1 = sodium.utils.hex2bin("deadbeef")
 let data2 = sodium.utils.hex2bin("de:ad be:ef", ignore: " :")
 ```
