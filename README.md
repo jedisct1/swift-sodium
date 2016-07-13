@@ -47,7 +47,7 @@ let aliceKeyPair = sodium.box.keyPair()!
 let bobKeyPair = sodium.box.keyPair()!
 let message = "My Test Message".dataUsingEncoding(NSUTF8StringEncoding)!
 
-let encryptedMessageFromAliceToBob =
+let encryptedMessageFromAliceToBob: NSData =
   sodium.box.seal(message,
                   recipientPublicKey: bobKeyPair.publicKey,
                   senderSecretKey: aliceKeyPair.secretKey)!
@@ -126,7 +126,7 @@ Secret-key authenticated encryption
 ```swift
 let message = "My Test Message".dataUsingEncoding(NSUTF8StringEncoding)!
 let secretKey = sodium.secretBox.key()!
-let encrypted = sodium.secretBox.seal(message, secretKey: secretKey)!
+let encrypted: NSData = sodium.secretBox.seal(message, secretKey: secretKey)!
 if let decrypted = sodium.secretBox.open(encrypted, secretKey: secretKey) {
   // authenticator is valid, decrypted contains the original message
 }
