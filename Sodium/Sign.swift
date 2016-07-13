@@ -21,6 +21,11 @@ public class Sign {
     public struct KeyPair {
         public let publicKey: PublicKey
         public let secretKey: SecretKey
+
+		public init(publicKey: PublicKey, secretKey: SecretKey) {
+			self.publicKey = publicKey
+			self.secretKey = secretKey
+		}
     }
     
     public func keyPair() -> KeyPair? {
