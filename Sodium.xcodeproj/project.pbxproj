@@ -160,6 +160,8 @@
 		90C75EEB1AE3583E00F1E749 /* Sign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091C7CDB1A50839D002E5351 /* Sign.swift */; };
 		90C75EEC1AE3583E00F1E749 /* Sodium.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D80541A4ECCD7000B83F9 /* Sodium.swift */; };
 		90C75EED1AE3583E00F1E749 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D805C1A4F4F72000B83F9 /* Utils.swift */; };
+		BDB584BD1D49AB2100A4D139 /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB584BC1D49AB2100A4D139 /* Stream.swift */; };
+		BDB584BE1D49AB2100A4D139 /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB584BC1D49AB2100A4D139 /* Stream.swift */; };
 		CFD847281BA8120900B1260F /* PWHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 097F20D91AF127480088C2FE /* PWHash.swift */; };
 /* End PBXBuildFile section */
 
@@ -284,6 +286,7 @@
 		901645471AE37F7200163E3E /* Base.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Base.lproj; path = Examples/OSX/Base.lproj; sourceTree = "<group>"; };
 		90C75E941AE3571900F1E749 /* Sodium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Sodium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		90C75EAD1AE357CB00F1E749 /* libsodium-osx.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libsodium-osx.a"; sourceTree = "<group>"; };
+		BDB584BC1D49AB2100A4D139 /* Stream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stream.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -384,6 +387,7 @@
 				091C7CDB1A50839D002E5351 /* Sign.swift */,
 				095D80541A4ECCD7000B83F9 /* Sodium.swift */,
 				095D805C1A4F4F72000B83F9 /* Utils.swift */,
+				BDB584BC1D49AB2100A4D139 /* Stream.swift */,
 			);
 			path = Sodium;
 			sourceTree = "<group>";
@@ -960,6 +964,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BDB584BD1D49AB2100A4D139 /* Stream.swift in Sources */,
 				095D80551A4ECCD7000B83F9 /* Sodium.swift in Sources */,
 				092D181A1A5BF5A700972F77 /* NSData+Extensions.swift in Sources */,
 				097F20DA1AF127480088C2FE /* PWHash.swift in Sources */,
@@ -1020,6 +1025,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BDB584BE1D49AB2100A4D139 /* Stream.swift in Sources */,
 				90C75EE51AE3583E00F1E749 /* Box.swift in Sources */,
 				90C75EE61AE3583E00F1E749 /* SecretBox.swift in Sources */,
 				CFD847281BA8120900B1260F /* PWHash.swift in Sources */,
