@@ -56,8 +56,8 @@ public class Stream {
     
     public func update(input: NSData) -> NSData?{
         
-        var len = input.length
-        var padding = counter % BLOCK_SIZE
+        let len = input.length
+        let padding = counter % BLOCK_SIZE
         if buf_size < padding + len {
             buf_size = (padding + len) * 2
             buffer = NSMutableData(length: buf_size)
@@ -68,7 +68,7 @@ public class Stream {
         
         
         
-        var succeed = cipherFunction(
+        let succeed = cipherFunction(
             buffer.mutableBytesPtr,
             plainMessage.bytesPtr,
             UInt64(padding+len), iv.bytesPtr, UInt64(counter/BLOCK_SIZE), key.bytesPtr)
