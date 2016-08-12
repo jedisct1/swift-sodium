@@ -42,7 +42,7 @@ public class Utils {
     }
     
     public func hex2bin(hex: String, ignore: String? = nil) -> NSData? {
-        guard let hexData = hex.data(usingEncoding: NSUTF8StringEncoding, allowLossyConversion: false) else {
+        guard let hexData = hex.data(using: NSUTF8StringEncoding, allowLossyConversion: false) else {
             return nil
         }
         let hexDataLen = hexData.count
