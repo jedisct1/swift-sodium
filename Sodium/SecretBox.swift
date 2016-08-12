@@ -84,8 +84,8 @@ public class SecretBox {
         guard let _ = NSMutableData(length: nonceAndAuthenticatedCipherText.length - MacBytes - NonceBytes) else {
             return nil
         }
-        let nonce = nonceAndAuthenticatedCipherText.subdataWithRange(NSRange(0..<NonceBytes)) as Nonce
-        let authenticatedCipherText = nonceAndAuthenticatedCipherText.subdataWithRange(NSRange(NonceBytes..<nonceAndAuthenticatedCipherText.length))
+        let nonce = nonceAndAuthenticatedCipherText.subdata(with: NSRange(0..<NonceBytes)) as Nonce
+        let authenticatedCipherText = nonceAndAuthenticatedCipherText.subdata(with: NSRange(NonceBytes..<nonceAndAuthenticatedCipherText.length))
         return open(authenticatedCipherText: authenticatedCipherText, secretKey: secretKey, nonce: nonce)
     }
     

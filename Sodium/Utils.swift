@@ -42,16 +42,16 @@ public class Utils {
     }
     
     public func hex2bin(hex: String, ignore: String? = nil) -> NSData? {
-        guard let hexData = hex.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) else {
+        guard let hexData = hex.data(usingEncoding: NSUTF8StringEncoding, allowLossyConversion: false) else {
             return nil
         }
-        let hexDataLen = hexData.length
+        let hexDataLen = hexData.count
         let binDataCapacity = hexDataLen / 2
         guard let binData = NSMutableData(length: binDataCapacity) else {
             return nil
         }
         var binDataLen: size_t = 0
-        let ignore_cstr = ignore != nil ? (ignore! as NSString).UTF8String : nil
+        let ignore_cstr = ignore != nil ? (ignore! as NSString).utf8String : nil
         if sodium_hex2bin(binData.mutableBytesPtr, binDataCapacity,UnsafePointer<CChar>(hexData.bytes), hexDataLen, ignore_cstr, &binDataLen, nil) != 0 {
             return nil
         }
