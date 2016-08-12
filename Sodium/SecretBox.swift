@@ -34,7 +34,7 @@ public class SecretBox {
     }
     
     public func seal(message: NSData, secretKey: Key) -> NSData? {
-        guard let (authenticatedCipherText, nonce): (NSData, Nonce) = seal(message, secretKey: secretKey) else {
+        guard let (authenticatedCipherText, nonce): (NSData, Nonce) = seal(message: message, secretKey: secretKey) else {
             return nil
         }
         let nonceAndAuthenticatedCipherText = NSMutableData(data: nonce)
@@ -86,7 +86,7 @@ public class SecretBox {
         }
         let nonce = nonceAndAuthenticatedCipherText.subdataWithRange(NSRange(0..<NonceBytes)) as Nonce
         let authenticatedCipherText = nonceAndAuthenticatedCipherText.subdataWithRange(NSRange(NonceBytes..<nonceAndAuthenticatedCipherText.length))
-        return open(authenticatedCipherText, secretKey: secretKey, nonce: nonce)
+        return open(authenticatedCipherText: authenticatedCipherText, secretKey: secretKey, nonce: nonce)
     }
     
     public func open(authenticatedCipherText: NSData, secretKey: Key, nonce: Nonce) -> NSData? {
