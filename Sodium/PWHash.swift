@@ -30,7 +30,7 @@ public class PWHash {
     }
 
     public func strVerify(hash: String, passwd: NSData) -> Bool {
-        guard let hashData = (hash + "\0").data(using: NSUTF8StringEncoding, allowLossyConversion: false) else {
+        guard let hashData = (hash + "\0").data(using: String.Encoding.utf8, allowLossyConversion: false) else {
                 return false
         }
         return crypto_pwhash_str_verify(UnsafePointer<CChar>(hashData.bytes), UnsafePointer<CChar>(passwd.bytes), CUnsignedLongLong(passwd.length)) == 0
@@ -71,7 +71,7 @@ public class PWHash {
         }
 
         public func strVerify(hash: String, passwd: NSData) -> Bool {
-            guard let hashData = (hash + "\0").data(using: NSUTF8StringEncoding, allowLossyConversion: false) else {
+            guard let hashData = (hash + "\0").data(using: String.Encoding.utf8, allowLossyConversion: false) else {
                 return false
             }
             return crypto_pwhash_scryptsalsa208sha256_str_verify(UnsafePointer<CChar>(hashData.bytes), UnsafePointer<CChar>(passwd.bytes), CUnsignedLongLong(passwd.length)) == 0
