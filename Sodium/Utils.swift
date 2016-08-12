@@ -38,7 +38,7 @@ public class Utils {
         if sodium_bin2hex(hexDataBytes, hexData.length, bin.bytesPtr, bin.length) == nil {
             return nil
         }
-        return String.fromCString(hexDataBytes)
+        return String.init(validatingUTF8: hexDataBytes)
     }
     
     public func hex2bin(hex: String, ignore: String? = nil) -> NSData? {
