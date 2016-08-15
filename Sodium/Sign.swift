@@ -41,7 +41,7 @@ public class Sign {
         return KeyPair(publicKey: PublicKey(data: pk as Data), secretKey: SecretKey(data: sk as Data))
     }
     
-    public func keyPair(seed seed: NSData) -> KeyPair? {
+    public func keyPair(seed: NSData) -> KeyPair? {
         if seed.length != SeedBytes {
             return nil
         }
