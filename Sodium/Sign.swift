@@ -38,7 +38,7 @@ public class Sign {
         if crypto_sign_keypair(pk.mutableBytesPtr, sk.mutableBytesPtr) != 0 {
             return nil
         }
-        return KeyPair(publicKey: PublicKey(data: pk), secretKey: SecretKey(data: sk))
+        return KeyPair(publicKey: PublicKey(data: pk as Data), secretKey: SecretKey(data: sk as Data))
     }
     
     public func keyPair(seed seed: NSData) -> KeyPair? {
@@ -54,7 +54,7 @@ public class Sign {
         if crypto_sign_seed_keypair(pk.mutableBytesPtr, sk.mutableBytesPtr, seed.bytesPtr) != 0 {
             return nil
         }
-        return KeyPair(publicKey: PublicKey(data: pk), secretKey: SecretKey(data: sk))
+        return KeyPair(publicKey: PublicKey(data: pk as Data), secretKey: SecretKey(data: sk as Data))
     }
     
     public func sign(message: NSData, secretKey: SecretKey) -> NSData? {

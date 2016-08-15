@@ -37,8 +37,8 @@ public class SecretBox {
         guard let (authenticatedCipherText, nonce): (NSData, Nonce) = seal(message: message, secretKey: secretKey) else {
             return nil
         }
-        let nonceAndAuthenticatedCipherText = NSMutableData(data: nonce)
-        nonceAndAuthenticatedCipherText.appendData(authenticatedCipherText)
+        let nonceAndAuthenticatedCipherText = NSMutableData(data: nonce as Data)
+        nonceAndAuthenticatedCipherText.append(authenticatedCipherText as Data)
         return nonceAndAuthenticatedCipherText
     }
     

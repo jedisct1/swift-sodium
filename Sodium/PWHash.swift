@@ -26,7 +26,7 @@ public class PWHash {
         if crypto_pwhash_str(UnsafeMutablePointer<CChar>(output.mutableBytes), UnsafePointer<CChar>(passwd.bytes), CUnsignedLongLong(passwd.length), CUnsignedLongLong(opsLimit), size_t(memLimit)) != 0 {
             return nil
         }
-        return NSString(data: output, encoding: NSUTF8StringEncoding) as String?
+        return NSString(data: output as Data, encoding: String.Encoding.utf8.rawValue) as String?
     }
 
     public func strVerify(hash: String, passwd: NSData) -> Bool {
@@ -67,7 +67,7 @@ public class PWHash {
             if crypto_pwhash_scryptsalsa208sha256_str(UnsafeMutablePointer<CChar>(output.mutableBytes), UnsafePointer<CChar>(passwd.bytes), CUnsignedLongLong(passwd.length), CUnsignedLongLong(opsLimit), size_t(memLimit)) != 0 {
                 return nil
             }
-            return NSString(data: output, encoding: NSUTF8StringEncoding) as String?
+            return NSString(data: output as Data, encoding: String.Encoding.utf8.rawValue) as String?
         }
 
         public func strVerify(hash: String, passwd: NSData) -> Bool {
