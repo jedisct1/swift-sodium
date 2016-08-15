@@ -11,13 +11,13 @@ import Sodium
 
 extension String {
     func toData() -> NSData? {
-        return self.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
+        return self.data(using: String.Encoding.utf8, allowLossyConversion: false)
     }
 }
 
 extension NSData {
     func toString() -> String? {
-        return (NSString(data: self, encoding: NSUTF8StringEncoding) as! String)
+        return (NSString(data: self as Data, encoding: String.Encoding.utf8.rawValue) as! String)
     }
 }
 
