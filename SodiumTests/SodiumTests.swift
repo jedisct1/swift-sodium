@@ -206,7 +206,7 @@ class SodiumTests: XCTestCase {
         let passwordLen = Int(sodium.randomBytes.uniform(upperBound: 64))
         let password = sodium.randomBytes.buf(length: passwordLen)!
         let hash = sodium.pwHash.scrypt.str(passwd: password, opsLimit: sodium.pwHash.scrypt.OpsLimitInteractive, memLimit: sodium.pwHash.scrypt.MemLimitInteractive)
-        XCTAssert(hash?.lengthOfBytesUsingEncoding(String.Encoding.utf8) == sodium.pwHash.scrypt.StrBytes)
+        XCTAssert(hash?.lengthOfBytes(using: String.Encoding.utf8) == sodium.pwHash.scrypt.StrBytes)
         let verify = sodium.pwHash.scrypt.strVerify(hash: hash!, passwd: password)
         XCTAssert(verify == true)
         let password2 = sodium.randomBytes.buf(length: passwordLen)!
@@ -224,7 +224,7 @@ class SodiumTests: XCTestCase {
         let passwordLen = Int(sodium.randomBytes.uniform(upperBound: 64))
         let password = sodium.randomBytes.buf(length: passwordLen)!
         let hash = sodium.pwHash.str(passwd: password, opsLimit: sodium.pwHash.OpsLimitInteractive, memLimit: sodium.pwHash.MemLimitInteractive)
-        XCTAssert(hash?.lengthOfBytesUsingEncoding(String.Encoding.utf8) == sodium.pwHash.StrBytes)
+        XCTAssert(hash?.lengthOfBytes(using: String.Encoding.utf8) == sodium.pwHash.StrBytes)
         let verify = sodium.pwHash.strVerify(hash: hash!, passwd: password)
         XCTAssert(verify == true)
         let password2 = sodium.randomBytes.buf(length: passwordLen)!
