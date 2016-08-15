@@ -52,7 +52,7 @@ public class Utils {
         }
         var binDataLen: size_t = 0
         let ignore_cstr = ignore != nil ? (ignore! as NSString).utf8String : nil
-        if sodium_hex2bin(binData.mutableBytesPtr, binDataCapacity,UnsafePointer<CChar>(hexData.bytes), hexDataLen, ignore_cstr, &binDataLen, nil) != 0 {
+        if sodium_hex2bin(binData.mutableBytesPtr, binDataCapacity,UnsafePointer<CChar>((hexData as NSData).bytes), hexDataLen, ignore_cstr, &binDataLen, nil) != 0 {
             return nil
         }
         binData.length = Int(binDataLen)

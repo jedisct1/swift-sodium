@@ -33,7 +33,7 @@ public class PWHash {
         guard let hashData = (hash + "\0").data(using: String.Encoding.utf8, allowLossyConversion: false) else {
                 return false
         }
-        return crypto_pwhash_str_verify(UnsafePointer<CChar>(hashData.bytes), UnsafePointer<CChar>(passwd.bytes), CUnsignedLongLong(passwd.length)) == 0
+        return crypto_pwhash_str_verify(UnsafePointer<CChar>((hashData as NSData).bytes), UnsafePointer<CChar>(passwd.bytes), CUnsignedLongLong(passwd.length)) == 0
     }
 
     public func hash(outputLength: Int, passwd: NSData, salt: NSData, opsLimit: Int, memLimit: Int) -> NSData? {
@@ -74,7 +74,7 @@ public class PWHash {
             guard let hashData = (hash + "\0").data(using: String.Encoding.utf8, allowLossyConversion: false) else {
                 return false
             }
-            return crypto_pwhash_scryptsalsa208sha256_str_verify(UnsafePointer<CChar>(hashData.bytes), UnsafePointer<CChar>(passwd.bytes), CUnsignedLongLong(passwd.length)) == 0
+            return crypto_pwhash_scryptsalsa208sha256_str_verify(UnsafePointer<CChar>((hashData as NSData).bytes), UnsafePointer<CChar>(passwd.bytes), CUnsignedLongLong(passwd.length)) == 0
         }
 
         public func hash(outputLength: Int, passwd: NSData, salt: NSData, opsLimit: Int, memLimit: Int) -> NSData? {
