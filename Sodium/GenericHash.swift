@@ -58,7 +58,7 @@ public class GenericHash {
         private var state: UnsafeMutablePointer<crypto_generichash_state>?
 
         init?(key: NSData?, outputLength: Int) {
-            state = UnsafeMutablePointer<crypto_generichash_state>.alloc(1)
+            state = UnsafeMutablePointer<crypto_generichash_state>.allocate(capacity: 1)
             guard let state = state else {
                 return nil
             }
@@ -75,7 +75,7 @@ public class GenericHash {
         }
     
         deinit {
-            state?.dealloc(1)
+            state?.deallocate(capacity: 1)
         }
     
         public func update(input: NSData) -> Bool {
