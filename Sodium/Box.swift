@@ -119,8 +119,8 @@ public class Box {
         if nonceAndAuthenticatedCipherText.length < NonceBytes + MacBytes {
             return nil
         }
-        let nonce = nonceAndAuthenticatedCipherText.subdataWithRange(NSRange(0..<NonceBytes)) as Nonce
-        let authenticatedCipherText = nonceAndAuthenticatedCipherText.subdataWithRange(NSRange(NonceBytes..<nonceAndAuthenticatedCipherText.length))
+        let nonce = nonceAndAuthenticatedCipherText.subdata(with: NSRange(0..<NonceBytes)) as Nonce
+        let authenticatedCipherText = nonceAndAuthenticatedCipherText.subdata(with: NSRange(NonceBytes..<nonceAndAuthenticatedCipherText.length))
         return open(authenticatedCipherText, senderPublicKey: senderPublicKey, recipientSecretKey: recipientSecretKey, nonce: nonce)
     }
     
@@ -184,8 +184,8 @@ public class Box {
         if nonceAndAuthenticatedCipherText.length < NonceBytes + MacBytes {
             return nil
         }
-        let nonce = nonceAndAuthenticatedCipherText.subdataWithRange(NSRange(0..<NonceBytes)) as Nonce
-        let authenticatedCipherText = nonceAndAuthenticatedCipherText.subdataWithRange(NSRange(NonceBytes..<nonceAndAuthenticatedCipherText.length))
+        let nonce = nonceAndAuthenticatedCipherText.subdata(with: NSRange(0..<NonceBytes)) as Nonce
+        let authenticatedCipherText = nonceAndAuthenticatedCipherText.subdata(with: NSRange(NonceBytes..<nonceAndAuthenticatedCipherText.length))
         return open(authenticatedCipherText, beforenm: beforenm, nonce: nonce)
     }
 
