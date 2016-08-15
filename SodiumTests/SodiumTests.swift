@@ -191,7 +191,7 @@ class SodiumTests: XCTestCase {
 
         XCTAssert(sodium.utils.compare(b1: eq1, eq2)! == 0)
         XCTAssert(sodium.utils.compare(b1: eq1, eq3)! == -1)
-        XCTAssert(sodium.utils.compare(b1: eq2, eq3)! == 1)
+        XCTAssert(sodium.utils.compare(b1: eq3, eq2)! == 1)
         XCTAssert(sodium.utils.compare(b1: eq1, eq4) == nil)
 
         let bin = sodium.utils.hex2bin(hex: "deadbeef")!
