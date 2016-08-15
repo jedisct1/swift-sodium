@@ -76,7 +76,7 @@ public class Box {
             return nil
         }
         let nonceAndAuthenticatedCipherText = NSMutableData(data: nonce as Data)
-        nonceAndAuthenticatedCipherText.appendData(authenticatedCipherText as Data)
+        nonceAndAuthenticatedCipherText.append(authenticatedCipherText as Data)
         return nonceAndAuthenticatedCipherText
     }
     
@@ -210,7 +210,7 @@ public class Box {
             return nil
         }
         let nonceAndAuthenticatedCipherText = NSMutableData(data: nonce as Data)
-        nonceAndAuthenticatedCipherText.appendData(authenticatedCipherText as Data)
+        nonceAndAuthenticatedCipherText.append(authenticatedCipherText as Data)
         return nonceAndAuthenticatedCipherText
     }
     
