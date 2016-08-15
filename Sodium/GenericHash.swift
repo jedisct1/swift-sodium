@@ -18,7 +18,7 @@ public class GenericHash {
     public let Primitive = String.fromCString(crypto_generichash_primitive())
     
     public func hash(message: NSData, key: NSData? = nil) -> NSData? {
-        return hash(message, key: key, outputLength: Bytes)
+        return hash(message: message, key: key, outputLength: Bytes)
     }
     
     public func hash(message: NSData, key: NSData?, outputLength: Int) -> NSData? {
@@ -38,7 +38,7 @@ public class GenericHash {
     }
 
     public func hash(message: NSData, outputLength: Int) -> NSData? {
-        return hash(message, key: NSData(), outputLength: outputLength)
+        return hash(message: message, key: NSData(), outputLength: outputLength)
     }
     
     public func initStream(key: NSData? = nil) -> Stream? {
