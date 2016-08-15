@@ -15,7 +15,7 @@ public class GenericHash {
     public let KeybytesMin = Int(crypto_generichash_keybytes_min())
     public let KeybytesMax = Int(crypto_generichash_keybytes_max())
     public let Keybytes = Int(crypto_generichash_keybytes())
-    public let Primitive = String.fromCString(crypto_generichash_primitive())
+    public let Primitive = String.init(validatingUTF8:crypto_generichash_primitive())
     
     public func hash(message: NSData, key: NSData? = nil) -> NSData? {
         return hash(message: message, key: key, outputLength: Bytes)

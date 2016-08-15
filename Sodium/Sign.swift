@@ -13,7 +13,7 @@ public class Sign {
     public let PublicKeyBytes = Int(crypto_sign_publickeybytes())
     public let SecretKeyBytes = Int(crypto_sign_secretkeybytes())
     public let Bytes = Int(crypto_sign_bytes())
-    public let Primitive = String.fromCString(crypto_sign_primitive())
+    public let Primitive = String.init(validatingUTF8:crypto_sign_primitive())
     
     public typealias PublicKey = NSData
     public typealias SecretKey = NSData

@@ -14,7 +14,7 @@ public class Box {
     public let SecretKeyBytes = Int(crypto_box_secretkeybytes())
     public let NonceBytes = Int(crypto_box_noncebytes())
     public let MacBytes = Int(crypto_box_macbytes())
-    public let Primitive = String.fromCString(crypto_box_primitive())
+    public let Primitive = String.init(validatingUTF8:crypto_box_primitive())
     public let BeforenmBytes = Int(crypto_box_beforenmbytes())
     public let SealBytes = Int(crypto_box_sealbytes())
     
