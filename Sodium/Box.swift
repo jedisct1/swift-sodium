@@ -72,7 +72,7 @@ public class Box {
     }
     
     public func seal(message: NSData, recipientPublicKey: PublicKey, senderSecretKey: SecretKey) -> NSData? {
-        guard let (authenticatedCipherText, nonce): (NSData, Nonce) = seal(message, recipientPublicKey: recipientPublicKey, senderSecretKey: senderSecretKey) else {
+        guard let (authenticatedCipherText, nonce): (NSData, Nonce) = seal(message: message, recipientPublicKey: recipientPublicKey, senderSecretKey: senderSecretKey) else {
             return nil
         }
         let nonceAndAuthenticatedCipherText = NSMutableData(data: nonce as Data)
@@ -186,7 +186,7 @@ public class Box {
         }
         let nonce = nonceAndAuthenticatedCipherText.subdata(with: NSRange(0..<NonceBytes)) as Nonce
         let authenticatedCipherText = nonceAndAuthenticatedCipherText.subdata(with: NSRange(NonceBytes..<nonceAndAuthenticatedCipherText.length))
-        return open(authenticatedCipherText, beforenm: beforenm, nonce: nonce)
+        return  open(authenticatedCipherText: authenticatedCipherText, beforenm: beforenm, nonce: nonce)
     }
 
     public func open(authenticatedCipherText: NSData, beforenm: Beforenm, nonce: Nonce) -> NSData? {
@@ -206,7 +206,7 @@ public class Box {
     }
 
     public func seal(message: NSData, beforenm: Beforenm) -> NSData? {
-        guard let (authenticatedCipherText, nonce): (NSData, Nonce) = seal(message, beforenm: beforenm) else {
+        guard let (authenticatedCipherText, nonce): (NSData, Nonce) = seal(message: message, beforenm: beforenm) else {
             return nil
         }
         let nonceAndAuthenticatedCipherText = NSMutableData(data: nonce as Data)
