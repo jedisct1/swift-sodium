@@ -44,7 +44,7 @@ public class Box {
         if crypto_box_keypair(pk.mutableBytesPtr, sk.mutableBytesPtr) != 0 {
             return nil
         }
-        return KeyPair(publicKey: PublicKey(data: pk), secretKey: SecretKey(data: sk))
+        return KeyPair(publicKey: PublicKey(data: pk as Data), secretKey: SecretKey(data: sk as Data))
     }
     
     public func keyPair(seed seed: NSData) -> KeyPair? {
@@ -60,7 +60,7 @@ public class Box {
         if crypto_box_seed_keypair(pk.mutableBytesPtr, sk.mutableBytesPtr, seed.bytesPtr) != 0 {
             return nil
         }
-        return KeyPair(publicKey: PublicKey(data: pk), secretKey: SecretKey(data: sk))
+        return KeyPair(publicKey: PublicKey(data: pk as Data), secretKey: SecretKey(data: sk as Data))
     }
     
     public func nonce() -> Nonce? {
@@ -75,8 +75,8 @@ public class Box {
         guard let (authenticatedCipherText, nonce): (NSData, Nonce) = seal(message, recipientPublicKey: recipientPublicKey, senderSecretKey: senderSecretKey) else {
             return nil
         }
-        let nonceAndAuthenticatedCipherText = NSMutableData(data: nonce)
-        nonceAndAuthenticatedCipherText.appendData(authenticatedCipherText)
+        let nonceAndAuthenticatedCipherText = NSMutableData(data: nonce as Data)
+        nonceAndAuthenticatedCipherText.appendData(authenticatedCipherText as Data)
         return nonceAndAuthenticatedCipherText
     }
     
@@ -209,8 +209,8 @@ public class Box {
         guard let (authenticatedCipherText, nonce): (NSData, Nonce) = seal(message, beforenm: beforenm) else {
             return nil
         }
-        let nonceAndAuthenticatedCipherText = NSMutableData(data: nonce)
-        nonceAndAuthenticatedCipherText.appendData(authenticatedCipherText)
+        let nonceAndAuthenticatedCipherText = NSMutableData(data: nonce as Data)
+        nonceAndAuthenticatedCipherText.appendData(authenticatedCipherText as Data)
         return nonceAndAuthenticatedCipherText
     }
     
