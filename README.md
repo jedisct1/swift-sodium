@@ -18,6 +18,9 @@ Add `Sodium.framework` as a dependency to your project, and import the module:
 import Sodium
 ```
 
+Until Xcode 8 is released, a version compatible with Swift 3 can be
+found in the `swift-3` branch.
+
 The Sodium library itself doesn't have to be installed on the system: the
 repository already includes a precompiled library for armv7, armv7s,
 arm64, as well as for the iOS simulator.
