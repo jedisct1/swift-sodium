@@ -84,8 +84,8 @@ public class Sign {
     }
     
     public func verify(signedMessage: NSData, publicKey: PublicKey) -> Bool {
-        let signature = signedMessage.subdata(with: NSRange(0..<Bytes))
-        let message = signedMessage.subdata(with: NSRange(Bytes..<signedMessage.length))
+        let signature = signedMessage.subdata(with: NSRange(0..<Bytes)) as NSData
+        let message = signedMessage.subdata(with: NSRange(Bytes..<signedMessage.length)) as NSData
         return verify(message: message, publicKey: publicKey, signature: signature)
     }
     
