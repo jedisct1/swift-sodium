@@ -8,14 +8,16 @@
 
 import Foundation
 
-public extension NSData {
-    var bytesPtr: UnsafePointer<UInt8> {
-        return UnsafePointer<UInt8>(self.bytes)
+public extension NSData {    
+    func bytesPtr<T>() -> UnsafePointer<T>{
+        let rawBytes = self.bytes
+        return rawBytes.assumingMemoryBound(to: T.self);
     }
 }
 
 public extension NSMutableData {
-    var mutableBytesPtr: UnsafeMutablePointer<UInt8> {
-        return UnsafeMutablePointer<UInt8>(self.mutableBytes)
+    func mutableBytesPtr<T>() -> UnsafeMutablePointer<T>{
+        let rawBytes = self.mutableBytes
+        return rawBytes.assumingMemoryBound(to: T.self)
     }
 }

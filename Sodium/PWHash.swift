@@ -23,7 +23,8 @@ public class PWHash {
         guard let output = NSMutableData(length: StrBytes) else {
             return nil
         }
-        if crypto_pwhash_str(UnsafeMutablePointer<CChar>(output.mutableBytes), UnsafePointer<CChar>(passwd.bytes), CUnsignedLongLong(passwd.length), CUnsignedLongLong(opsLimit), size_t(memLimit)) != 0 {
+        let outputRawBytes = output.mutableBytes
+        if crypto_pwhash_str(outputRawBytes.assumingMemoryBound(to: CChar.self), passwd.bytesPtr(), CUnsignedLongLong(passwd.length), CUnsignedLongLong(opsLimit), size_t(memLimit)) != 0 {
             return nil
         }
         return NSString(data: output as Data, encoding: String.Encoding.utf8.rawValue) as String?
@@ -33,7 +34,7 @@ public class PWHash {
         guard let hashData = (hash + "\0").data(using: String.Encoding.utf8, allowLossyConversion: false) else {
                 return false
         }
-        return crypto_pwhash_str_verify(UnsafePointer<CChar>((hashData as NSData).bytes), UnsafePointer<CChar>(passwd.bytes), CUnsignedLongLong(passwd.length)) == 0
+        return crypto_pwhash_str_verify((hashData as NSData).bytesPtr(), passwd.bytesPtr(), CUnsignedLongLong(passwd.length)) == 0
     }
 
     public func hash(outputLength: Int, passwd: NSData, salt: NSData, opsLimit: Int, memLimit: Int) -> NSData? {
@@ -43,7 +44,7 @@ public class PWHash {
         guard let output = NSMutableData(length: outputLength) else {
             return nil
         }
-        if crypto_pwhash(output.mutableBytesPtr, CUnsignedLongLong(outputLength), UnsafePointer<CChar>(passwd.bytes), CUnsignedLongLong(passwd.length), salt.bytesPtr, CUnsignedLongLong(opsLimit), size_t(memLimit), crypto_pwhash_ALG_DEFAULT) != 0 {
+        if crypto_pwhash(output.mutableBytesPtr(), CUnsignedLongLong(outputLength), passwd.bytesPtr(), CUnsignedLongLong(passwd.length), salt.bytesPtr(), CUnsignedLongLong(opsLimit), size_t(memLimit), crypto_pwhash_ALG_DEFAULT) != 0 {
             return nil
         }
         return output
@@ -64,7 +65,7 @@ public class PWHash {
             guard let output = NSMutableData(length: StrBytes) else {
                 return nil
             }
-            if crypto_pwhash_scryptsalsa208sha256_str(UnsafeMutablePointer<CChar>(output.mutableBytes), UnsafePointer<CChar>(passwd.bytes), CUnsignedLongLong(passwd.length), CUnsignedLongLong(opsLimit), size_t(memLimit)) != 0 {
+            if crypto_pwhash_scryptsalsa208sha256_str(output.mutableBytesPtr(), passwd.bytesPtr(), CUnsignedLongLong(passwd.length), CUnsignedLongLong(opsLimit), size_t(memLimit)) != 0 {
                 return nil
             }
             return NSString(data: output as Data, encoding: String.Encoding.utf8.rawValue) as String?
@@ -74,7 +75,7 @@ public class PWHash {
             guard let hashData = (hash + "\0").data(using: String.Encoding.utf8, allowLossyConversion: false) else {
                 return false
             }
-            return crypto_pwhash_scryptsalsa208sha256_str_verify(UnsafePointer<CChar>((hashData as NSData).bytes), UnsafePointer<CChar>(passwd.bytes), CUnsignedLongLong(passwd.length)) == 0
+            return crypto_pwhash_scryptsalsa208sha256_str_verify((hashData as NSData).bytesPtr(), passwd.bytesPtr(), CUnsignedLongLong(passwd.length)) == 0
         }
 
         public func hash(outputLength: Int, passwd: NSData, salt: NSData, opsLimit: Int, memLimit: Int) -> NSData? {
@@ -84,7 +85,7 @@ public class PWHash {
             guard let output = NSMutableData(length: outputLength) else {
                 return nil
             }
-            if crypto_pwhash_scryptsalsa208sha256(output.mutableBytesPtr, CUnsignedLongLong(outputLength), UnsafePointer<CChar>(passwd.bytes), CUnsignedLongLong(passwd.length), salt.bytesPtr, CUnsignedLongLong(opsLimit), size_t(memLimit)) != 0 {
+            if crypto_pwhash_scryptsalsa208sha256(output.mutableBytesPtr(), CUnsignedLongLong(outputLength), passwd.bytesPtr(), CUnsignedLongLong(passwd.length), salt.bytesPtr(), CUnsignedLongLong(opsLimit), size_t(memLimit)) != 0 {
                 return nil
             }
             return output
