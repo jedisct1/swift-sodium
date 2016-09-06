@@ -27,9 +27,9 @@ public class GenericHash {
         }
         var ret: CInt;
         if let key = key {
-            ret = crypto_generichash(output.mutableBytesPtr, output.length, message.bytesPtr, CUnsignedLongLong(message.length), key.bytesPtr, key.length)
+            ret = crypto_generichash(output.mutableBytesPtr(), output.length, message.bytesPtr(), CUnsignedLongLong(message.length), key.bytesPtr(), key.length)
         } else {
-            ret = crypto_generichash(output.mutableBytesPtr, output.length, message.bytesPtr, CUnsignedLongLong(message.length), nil, 0)
+            ret = crypto_generichash(output.mutableBytesPtr(), output.length, message.bytesPtr(), CUnsignedLongLong(message.length), nil, 0)
         }
         if ret != 0 {
             return nil
@@ -64,7 +64,7 @@ public class GenericHash {
             }
             var ret: CInt
             if let key = key {
-                ret = crypto_generichash_init(state, key.bytesPtr, key.length, outputLength)
+                ret = crypto_generichash_init(state, key.bytesPtr(), key.length, outputLength)
             } else {
                 ret = crypto_generichash_init(state, nil, 0, outputLength)
             }
@@ -79,14 +79,14 @@ public class GenericHash {
         }
     
         public func update(input: NSData) -> Bool {
-            return crypto_generichash_update(state!, input.bytesPtr, CUnsignedLongLong(input.length)) == 0
+            return crypto_generichash_update(state!, input.bytesPtr(), CUnsignedLongLong(input.length)) == 0
         }
     
         public func final() -> NSData? {
             guard let output = NSMutableData(length: outputLength) else {
                 return nil
             }
-            if crypto_generichash_final(state!, output.mutableBytesPtr, output.length) != 0 {
+            if crypto_generichash_final(state!, output.mutableBytesPtr(), output.length) != 0 {
                 return nil
             }
             return output

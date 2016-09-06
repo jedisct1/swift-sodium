@@ -41,7 +41,7 @@ public class Box {
         guard let sk = NSMutableData(length: SecretKeyBytes) else {
             return nil
         }
-        if crypto_box_keypair(pk.mutableBytesPtr, sk.mutableBytesPtr) != 0 {
+        if crypto_box_keypair(pk.mutableBytesPtr(), sk.mutableBytesPtr()) != 0 {
             return nil
         }
         return KeyPair(publicKey: PublicKey(data: pk as Data), secretKey: SecretKey(data: sk as Data))
@@ -57,7 +57,7 @@ public class Box {
         guard let sk = NSMutableData(length: SecretKeyBytes) else {
             return nil
         }
-        if crypto_box_seed_keypair(pk.mutableBytesPtr, sk.mutableBytesPtr, seed.bytesPtr) != 0 {
+        if crypto_box_seed_keypair(pk.mutableBytesPtr(), sk.mutableBytesPtr(), seed.bytesPtr()) != 0 {
             return nil
         }
         return KeyPair(publicKey: PublicKey(data: pk as Data), secretKey: SecretKey(data: sk as Data))
@@ -67,7 +67,7 @@ public class Box {
         guard let nonce = NSMutableData(length: NonceBytes) else {
             return nil
         }
-        randombytes_buf(nonce.mutableBytesPtr, nonce.length)
+        randombytes_buf(nonce.mutableBytesPtr(), nonce.length)
         return nonce as Nonce
     }
     
@@ -90,7 +90,7 @@ public class Box {
         guard let nonce = self.nonce() else {
             return nil
         }
-        if crypto_box_easy(authenticatedCipherText.mutableBytesPtr, message.bytesPtr, CUnsignedLongLong(message.length), nonce.bytesPtr, recipientPublicKey.bytesPtr, senderSecretKey.bytesPtr) != 0 {
+        if crypto_box_easy(authenticatedCipherText.mutableBytesPtr(), message.bytesPtr(), CUnsignedLongLong(message.length), nonce.bytesPtr(), recipientPublicKey.bytesPtr(), senderSecretKey.bytesPtr()) != 0 {
             return nil
         }
         return (authenticatedCipherText: authenticatedCipherText, nonce: nonce)
@@ -109,7 +109,7 @@ public class Box {
         guard let nonce = self.nonce() else {
             return nil
         }
-        if crypto_box_detached(authenticatedCipherText.mutableBytesPtr, mac.mutableBytesPtr, message.bytesPtr, CUnsignedLongLong(message.length), nonce.bytesPtr, recipientPublicKey.bytesPtr, senderSecretKey.bytesPtr) != 0 {
+        if crypto_box_detached(authenticatedCipherText.mutableBytesPtr(), mac.mutableBytesPtr(), message.bytesPtr(), CUnsignedLongLong(message.length), nonce.bytesPtr(), recipientPublicKey.bytesPtr(), senderSecretKey.bytesPtr()) != 0 {
             return nil
         }
         return (authenticatedCipherText: authenticatedCipherText, nonce: nonce as Nonce, mac: mac as MAC)
@@ -134,7 +134,7 @@ public class Box {
         guard let message = NSMutableData(length: authenticatedCipherText.length - MacBytes) else {
             return nil
         }
-        if crypto_box_open_easy(message.mutableBytesPtr, authenticatedCipherText.bytesPtr, CUnsignedLongLong(authenticatedCipherText.length), nonce.bytesPtr, senderPublicKey.bytesPtr, recipientSecretKey.bytesPtr) != 0 {
+        if crypto_box_open_easy(message.mutableBytesPtr(), authenticatedCipherText.bytesPtr(), CUnsignedLongLong(authenticatedCipherText.length), nonce.bytesPtr(), senderPublicKey.bytesPtr(), recipientSecretKey.bytesPtr()) != 0 {
             return nil
         }
         return message
@@ -150,7 +150,7 @@ public class Box {
         guard let message = NSMutableData(length: authenticatedCipherText.length) else {
             return nil
         }
-        if crypto_box_open_detached(message.mutableBytesPtr, authenticatedCipherText.bytesPtr, mac.bytesPtr, CUnsignedLongLong(authenticatedCipherText.length), nonce.bytesPtr, senderPublicKey.bytesPtr, recipientSecretKey.bytesPtr) != 0 {
+        if crypto_box_open_detached(message.mutableBytesPtr(), authenticatedCipherText.bytesPtr(), mac.bytesPtr(), CUnsignedLongLong(authenticatedCipherText.length), nonce.bytesPtr(), senderPublicKey.bytesPtr(), recipientSecretKey.bytesPtr()) != 0 {
             return nil
         }
         return message
@@ -158,7 +158,7 @@ public class Box {
     
     public func beforenm(recipientPublicKey: PublicKey, senderSecretKey: SecretKey) -> NSData? {
         let key = NSMutableData(length: BeforenmBytes)
-        if crypto_box_beforenm(key!.mutableBytesPtr, recipientPublicKey.bytesPtr, senderSecretKey.bytesPtr) != 0 {
+        if crypto_box_beforenm(key!.mutableBytesPtr(), recipientPublicKey.bytesPtr(), senderSecretKey.bytesPtr()) != 0 {
             return nil
         }
         return key
@@ -174,7 +174,7 @@ public class Box {
         guard let nonce = self.nonce() else {
             return nil
         }
-        if crypto_box_easy_afternm(authenticatedCipherText.mutableBytesPtr, message.bytesPtr, CUnsignedLongLong(message.length), nonce.bytesPtr, beforenm.bytesPtr) != 0 {
+        if crypto_box_easy_afternm(authenticatedCipherText.mutableBytesPtr(), message.bytesPtr(), CUnsignedLongLong(message.length), nonce.bytesPtr(), beforenm.bytesPtr()) != 0 {
             return nil
         }
         return (authenticatedCipherText: authenticatedCipherText, nonce: nonce)
@@ -199,7 +199,7 @@ public class Box {
         guard let message = NSMutableData(length: authenticatedCipherText.length - MacBytes) else {
             return nil
         }
-        if crypto_box_open_easy_afternm(message.mutableBytesPtr, authenticatedCipherText.bytesPtr, CUnsignedLongLong(authenticatedCipherText.length), nonce.bytesPtr, beforenm.bytesPtr) != 0 {
+        if crypto_box_open_easy_afternm(message.mutableBytesPtr(), authenticatedCipherText.bytesPtr(), CUnsignedLongLong(authenticatedCipherText.length), nonce.bytesPtr(), beforenm.bytesPtr()) != 0 {
             return nil
         }
         return message
@@ -221,7 +221,7 @@ public class Box {
         guard let anonymousCipherText = NSMutableData(length: SealBytes + message.length) else {
             return nil
         }
-        if crypto_box_seal(anonymousCipherText.mutableBytesPtr, message.bytesPtr, CUnsignedLongLong(message.length), recipientPublicKey.bytesPtr) != 0 {
+        if crypto_box_seal(anonymousCipherText.mutableBytesPtr(), message.bytesPtr(), CUnsignedLongLong(message.length), recipientPublicKey.bytesPtr()) != 0 {
             return nil
         }
         return anonymousCipherText
@@ -235,7 +235,7 @@ public class Box {
         if message == nil {
             return nil
         }
-        if crypto_box_seal_open(message!.mutableBytesPtr, anonymousCipherText.bytesPtr, CUnsignedLongLong(anonymousCipherText.length), recipientPublicKey.bytesPtr, recipientSecretKey.bytesPtr) != 0 {
+        if crypto_box_seal_open(message!.mutableBytesPtr(), anonymousCipherText.bytesPtr(), CUnsignedLongLong(anonymousCipherText.length), recipientPublicKey.bytesPtr(), recipientSecretKey.bytesPtr()) != 0 {
             return nil
         }
         return message

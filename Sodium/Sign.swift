@@ -35,7 +35,7 @@ public class Sign {
         guard let sk = NSMutableData(length: SecretKeyBytes) else {
             return nil
         }
-        if crypto_sign_keypair(pk.mutableBytesPtr, sk.mutableBytesPtr) != 0 {
+        if crypto_sign_keypair(pk.mutableBytesPtr(), sk.mutableBytesPtr()) != 0 {
             return nil
         }
         return KeyPair(publicKey: PublicKey(data: pk as Data), secretKey: SecretKey(data: sk as Data))
@@ -51,7 +51,7 @@ public class Sign {
         guard let sk = NSMutableData(length: SecretKeyBytes) else {
             return nil
         }
-        if crypto_sign_seed_keypair(pk.mutableBytesPtr, sk.mutableBytesPtr, seed.bytesPtr) != 0 {
+        if crypto_sign_seed_keypair(pk.mutableBytesPtr(), sk.mutableBytesPtr(), seed.bytesPtr()) != 0 {
             return nil
         }
         return KeyPair(publicKey: PublicKey(data: pk as Data), secretKey: SecretKey(data: sk as Data))
@@ -64,7 +64,7 @@ public class Sign {
         guard let signedMessage = NSMutableData(length: message.length + Bytes) else {
             return nil
         }
-        if crypto_sign(signedMessage.mutableBytesPtr, nil, message.bytesPtr, CUnsignedLongLong(message.length), secretKey.bytesPtr) != 0 {
+        if crypto_sign(signedMessage.mutableBytesPtr(), nil, message.bytesPtr(), CUnsignedLongLong(message.length), secretKey.bytesPtr()) != 0 {
             return nil
         }
         return signedMessage
@@ -77,7 +77,7 @@ public class Sign {
         guard let signature = NSMutableData(length: Bytes) else {
             return nil
         }
-        if crypto_sign_detached(signature.mutableBytesPtr, nil, message.bytesPtr, CUnsignedLongLong(message.length), secretKey.bytesPtr) != 0 {
+        if crypto_sign_detached(signature.mutableBytesPtr(), nil, message.bytesPtr(), CUnsignedLongLong(message.length), secretKey.bytesPtr()) != 0 {
             return nil
         }
         return signature
@@ -93,7 +93,7 @@ public class Sign {
         if publicKey.length != PublicKeyBytes {
             return false
         }
-        return crypto_sign_verify_detached(signature.bytesPtr, message.bytesPtr, CUnsignedLongLong(message.length), publicKey.bytesPtr) == 0
+        return crypto_sign_verify_detached(signature.bytesPtr(), message.bytesPtr(), CUnsignedLongLong(message.length), publicKey.bytesPtr()) == 0
     }
     
     public func open(signedMessage: NSData, publicKey: PublicKey) -> NSData? {
@@ -104,7 +104,7 @@ public class Sign {
             return nil
         }
         var mlen: CUnsignedLongLong = 0;
-        if crypto_sign_open(message.mutableBytesPtr, &mlen, signedMessage.bytesPtr, CUnsignedLongLong(signedMessage.length), publicKey.bytesPtr) != 0 {
+        if crypto_sign_open(message.mutableBytesPtr(), &mlen, signedMessage.bytesPtr(), CUnsignedLongLong(signedMessage.length), publicKey.bytesPtr()) != 0 {
             return nil
         }
         return message
