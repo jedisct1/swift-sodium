@@ -23,8 +23,7 @@ public class PWHash {
         guard let output = NSMutableData(length: StrBytes) else {
             return nil
         }
-        let outputRawBytes = output.mutableBytes
-        if crypto_pwhash_str(outputRawBytes.assumingMemoryBound(to: CChar.self), passwd.bytesPtr(), CUnsignedLongLong(passwd.length), CUnsignedLongLong(opsLimit), size_t(memLimit)) != 0 {
+        if crypto_pwhash_str(output.mutableBytesPtr(), passwd.bytesPtr(), CUnsignedLongLong(passwd.length), CUnsignedLongLong(opsLimit), size_t(memLimit)) != 0 {
             return nil
         }
         return NSString(data: output as Data, encoding: String.Encoding.utf8.rawValue) as String?
