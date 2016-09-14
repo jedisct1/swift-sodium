@@ -55,8 +55,8 @@ let encryptedMessageFromAliceToBob: NSData =
 
 let messageVerifiedAndDecryptedByBob =
   sodium.box.open(encryptedMessageFromAliceToBob,
-                  senderPublicKey: bobKeyPair.publicKey,
-                  recipientSecretKey: aliceKeyPair.secretKey)
+                  senderPublicKey: alicebKeyPair.publicKey,
+                  recipientSecretKey: bobKeyPair.secretKey)
 ```
 
 `seal()` automatically generates a nonce and prepends it to the
