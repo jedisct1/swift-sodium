@@ -19,7 +19,7 @@ public class ShortHash {
         guard let output = NSMutableData(length: Bytes) else {
             return nil
         }
-        if crypto_shorthash(output.mutableBytesPtr, message.bytesPtr, CUnsignedLongLong(message.length), key.bytesPtr) != 0 {
+        if crypto_shorthash(output.mutableBytesPtr(), message.bytesPtr(), CUnsignedLongLong(message.length), key.bytesPtr()) != 0 {
             return nil
         }
         return output
