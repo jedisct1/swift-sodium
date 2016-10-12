@@ -11,14 +11,10 @@
 		091782501CA164970022765D /* crypto_core_hchacha20.h in Headers */ = {isa = PBXBuildFile; fileRef = 0917824D1CA164970022765D /* crypto_core_hchacha20.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		091782511CA164970022765D /* crypto_pwhash_argon2i.h in Headers */ = {isa = PBXBuildFile; fileRef = 0917824E1CA164970022765D /* crypto_pwhash_argon2i.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		091782521CA164970022765D /* crypto_pwhash.h in Headers */ = {isa = PBXBuildFile; fileRef = 0917824F1CA164970022765D /* crypto_pwhash.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		091782531CA164C00022765D /* crypto_core_hchacha20.h in Headers */ = {isa = PBXBuildFile; fileRef = 0917824D1CA164970022765D /* crypto_core_hchacha20.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		091782541CA164C30022765D /* crypto_pwhash_argon2i.h in Headers */ = {isa = PBXBuildFile; fileRef = 0917824E1CA164970022765D /* crypto_pwhash_argon2i.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		091782551CA164C70022765D /* crypto_pwhash.h in Headers */ = {isa = PBXBuildFile; fileRef = 0917824F1CA164970022765D /* crypto_pwhash.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		091C7CDA1A507E95002E5351 /* ShortHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091C7CD91A507E95002E5351 /* ShortHash.swift */; };
 		091C7CDC1A50839D002E5351 /* Sign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091C7CDB1A50839D002E5351 /* Sign.swift */; };
 		092D181A1A5BF5A700972F77 /* NSData+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092D18191A5BF5A700972F77 /* NSData+Extensions.swift */; };
 		094E49401BE6C7760053AC01 /* crypto_aead_aes256gcm.h in Headers */ = {isa = PBXBuildFile; fileRef = 094E493F1BE6C7760053AC01 /* crypto_aead_aes256gcm.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		094E49411BE6C7D00053AC01 /* crypto_aead_aes256gcm.h in Headers */ = {isa = PBXBuildFile; fileRef = 094E493F1BE6C7760053AC01 /* crypto_aead_aes256gcm.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		094F21EA1A5017CA001C3141 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094F21E91A5017CA001C3141 /* Box.swift */; };
 		095D80551A4ECCD7000B83F9 /* Sodium.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D80541A4ECCD7000B83F9 /* Sodium.swift */; };
 		095D80571A4ED0B4000B83F9 /* GenericHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D80561A4ED0B4000B83F9 /* GenericHash.swift */; };
@@ -81,86 +77,15 @@
 		09A944571A4EB91F00C8A04F /* utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944231A4EB91F00C8A04F /* utils.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		09A944581A4EB91F00C8A04F /* version.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944241A4EB91F00C8A04F /* version.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		09A9445A1A4EB97800C8A04F /* sodium_lib.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944591A4EB97800C8A04F /* sodium_lib.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		901644FF1AE3733F00163E3E /* Sodium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90C75E941AE3571900F1E749 /* Sodium.framework */; };
 		901645011AE374D100163E3E /* Sodium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09A943C71A4EB5F500C8A04F /* Sodium.framework */; };
 		901645031AE376C100163E3E /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901645021AE376C100163E3E /* Helpers.swift */; };
-		901645041AE376C100163E3E /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901645021AE376C100163E3E /* Helpers.swift */; };
-		9016450A1AE376E400163E3E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901645051AE376E400163E3E /* AppDelegate.swift */; };
-		9016450E1AE376E400163E3E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 901645071AE376E400163E3E /* Images.xcassets */; };
 		901645201AE378DE00163E3E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9016451B1AE378DE00163E3E /* AppDelegate.swift */; };
 		901645241AE378DE00163E3E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9016451F1AE378DE00163E3E /* ViewController.swift */; };
-		901645271AE3796300163E3E /* Example_OSXTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901645251AE3796300163E3E /* Example_OSXTests.swift */; };
 		9016452B1AE3799400163E3E /* Example_iOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901645291AE3799400163E3E /* Example_iOSTests.swift */; };
 		9016452E1AE37C0000163E3E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9016451D1AE378DE00163E3E /* Images.xcassets */; };
 		9016453B1AE37E5800163E3E /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 901645371AE37E5800163E3E /* LaunchScreen.xib */; };
 		9016453C1AE37E5800163E3E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 901645391AE37E5800163E3E /* Main.storyboard */; };
 		9016453E1AE37E6700163E3E /* Base.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 9016453D1AE37E6700163E3E /* Base.lproj */; };
-		901645461AE37F6300163E3E /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 901645441AE37F6300163E3E /* MainMenu.xib */; };
-		901645481AE37F7200163E3E /* Base.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 901645471AE37F7200163E3E /* Base.lproj */; };
-		90C75EAE1AE357CB00F1E749 /* libsodium-osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 90C75EAD1AE357CB00F1E749 /* libsodium-osx.a */; };
-		90C75EAF1AE357DF00F1E749 /* sodium_lib.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944591A4EB97800C8A04F /* sodium_lib.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EB01AE357DF00F1E749 /* core.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943F11A4EB91F00C8A04F /* core.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EB11AE357DF00F1E749 /* crypto_aead_chacha20poly1305.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943F21A4EB91F00C8A04F /* crypto_aead_chacha20poly1305.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EB21AE357DF00F1E749 /* crypto_auth_hmacsha256.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943F31A4EB91F00C8A04F /* crypto_auth_hmacsha256.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EB31AE357DF00F1E749 /* crypto_auth_hmacsha512.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943F41A4EB91F00C8A04F /* crypto_auth_hmacsha512.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EB41AE357DF00F1E749 /* crypto_auth_hmacsha512256.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943F51A4EB91F00C8A04F /* crypto_auth_hmacsha512256.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EB51AE357DF00F1E749 /* crypto_auth.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943F61A4EB91F00C8A04F /* crypto_auth.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EB61AE357DF00F1E749 /* crypto_box_curve25519xsalsa20poly1305.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943F71A4EB91F00C8A04F /* crypto_box_curve25519xsalsa20poly1305.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EB71AE357DF00F1E749 /* crypto_box.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943F81A4EB91F00C8A04F /* crypto_box.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EB81AE357DF00F1E749 /* crypto_core_hsalsa20.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943F91A4EB91F00C8A04F /* crypto_core_hsalsa20.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EB91AE357DF00F1E749 /* crypto_core_salsa20.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943FA1A4EB91F00C8A04F /* crypto_core_salsa20.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EBA1AE357DF00F1E749 /* crypto_core_salsa208.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943FB1A4EB91F00C8A04F /* crypto_core_salsa208.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EBB1AE357DF00F1E749 /* crypto_core_salsa2012.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943FC1A4EB91F00C8A04F /* crypto_core_salsa2012.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EBC1AE357DF00F1E749 /* crypto_generichash_blake2b.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943FD1A4EB91F00C8A04F /* crypto_generichash_blake2b.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EBD1AE357DF00F1E749 /* crypto_generichash.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943FE1A4EB91F00C8A04F /* crypto_generichash.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EBE1AE357DF00F1E749 /* crypto_hash_sha256.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943FF1A4EB91F00C8A04F /* crypto_hash_sha256.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EBF1AE357DF00F1E749 /* crypto_hash_sha512.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944001A4EB91F00C8A04F /* crypto_hash_sha512.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EC01AE357DF00F1E749 /* crypto_hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944011A4EB91F00C8A04F /* crypto_hash.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EC11AE357DF00F1E749 /* crypto_int32.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944021A4EB91F00C8A04F /* crypto_int32.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EC21AE357DF00F1E749 /* crypto_int64.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944031A4EB91F00C8A04F /* crypto_int64.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EC31AE357DF00F1E749 /* crypto_onetimeauth_poly1305.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944041A4EB91F00C8A04F /* crypto_onetimeauth_poly1305.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EC41AE357DF00F1E749 /* crypto_onetimeauth.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944051A4EB91F00C8A04F /* crypto_onetimeauth.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EC51AE357DF00F1E749 /* crypto_pwhash_scryptsalsa208sha256.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944061A4EB91F00C8A04F /* crypto_pwhash_scryptsalsa208sha256.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EC61AE357DF00F1E749 /* crypto_scalarmult_curve25519.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944071A4EB91F00C8A04F /* crypto_scalarmult_curve25519.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EC71AE357DF00F1E749 /* crypto_scalarmult.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944081A4EB91F00C8A04F /* crypto_scalarmult.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EC81AE357DF00F1E749 /* crypto_secretbox_xsalsa20poly1305.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944091A4EB91F00C8A04F /* crypto_secretbox_xsalsa20poly1305.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EC91AE357DF00F1E749 /* crypto_secretbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A9440A1A4EB91F00C8A04F /* crypto_secretbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75ECA1AE357DF00F1E749 /* crypto_shorthash_siphash24.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A9440B1A4EB91F00C8A04F /* crypto_shorthash_siphash24.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75ECB1AE357DF00F1E749 /* crypto_shorthash.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A9440C1A4EB91F00C8A04F /* crypto_shorthash.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75ECC1AE357DF00F1E749 /* crypto_sign_ed25519.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A9440D1A4EB91F00C8A04F /* crypto_sign_ed25519.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75ECE1AE357DF00F1E749 /* crypto_sign.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A9440F1A4EB91F00C8A04F /* crypto_sign.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75ECF1AE357DF00F1E749 /* crypto_stream_aes128ctr.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944101A4EB91F00C8A04F /* crypto_stream_aes128ctr.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75ED01AE357DF00F1E749 /* crypto_stream_chacha20.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944111A4EB91F00C8A04F /* crypto_stream_chacha20.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75ED11AE357DF00F1E749 /* crypto_stream_salsa20.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944121A4EB91F00C8A04F /* crypto_stream_salsa20.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75ED21AE357DF00F1E749 /* crypto_stream_salsa208.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944131A4EB91F00C8A04F /* crypto_stream_salsa208.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75ED31AE357E000F1E749 /* crypto_stream_salsa2012.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944141A4EB91F00C8A04F /* crypto_stream_salsa2012.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75ED41AE357E000F1E749 /* crypto_stream_xsalsa20.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944151A4EB91F00C8A04F /* crypto_stream_xsalsa20.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75ED51AE357E000F1E749 /* crypto_stream.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944161A4EB91F00C8A04F /* crypto_stream.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75ED61AE357E000F1E749 /* crypto_uint8.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944171A4EB91F00C8A04F /* crypto_uint8.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75ED71AE357E000F1E749 /* crypto_uint16.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944181A4EB91F00C8A04F /* crypto_uint16.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75ED81AE357E000F1E749 /* crypto_uint32.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944191A4EB91F00C8A04F /* crypto_uint32.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75ED91AE357E000F1E749 /* crypto_uint64.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A9441A1A4EB91F00C8A04F /* crypto_uint64.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EDA1AE357E000F1E749 /* crypto_verify_16.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A9441B1A4EB91F00C8A04F /* crypto_verify_16.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EDB1AE357E000F1E749 /* crypto_verify_32.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A9441C1A4EB91F00C8A04F /* crypto_verify_32.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EDC1AE357E000F1E749 /* crypto_verify_64.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A9441D1A4EB91F00C8A04F /* crypto_verify_64.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EDD1AE357E000F1E749 /* export.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A9441E1A4EB91F00C8A04F /* export.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EDE1AE357E000F1E749 /* randombytes_salsa20_random.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A9441F1A4EB91F00C8A04F /* randombytes_salsa20_random.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EDF1AE357E000F1E749 /* randombytes_sysrandom.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944201A4EB91F00C8A04F /* randombytes_sysrandom.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EE01AE357E000F1E749 /* randombytes.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944211A4EB91F00C8A04F /* randombytes.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EE11AE357E000F1E749 /* runtime.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944221A4EB91F00C8A04F /* runtime.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EE21AE357E000F1E749 /* utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944231A4EB91F00C8A04F /* utils.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EE31AE357E000F1E749 /* version.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944241A4EB91F00C8A04F /* version.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EE41AE357E000F1E749 /* Sodium.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943CC1A4EB5F500C8A04F /* Sodium.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		90C75EE51AE3583E00F1E749 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094F21E91A5017CA001C3141 /* Box.swift */; };
-		90C75EE61AE3583E00F1E749 /* SecretBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038365141A5A51D20081136D /* SecretBox.swift */; };
-		90C75EE71AE3583E00F1E749 /* GenericHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D80561A4ED0B4000B83F9 /* GenericHash.swift */; };
-		90C75EE81AE3583E00F1E749 /* NSData+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092D18191A5BF5A700972F77 /* NSData+Extensions.swift */; };
-		90C75EE91AE3583E00F1E749 /* RandomBytes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D805A1A4F35CA000B83F9 /* RandomBytes.swift */; };
-		90C75EEA1AE3583E00F1E749 /* ShortHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091C7CD91A507E95002E5351 /* ShortHash.swift */; };
-		90C75EEB1AE3583E00F1E749 /* Sign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091C7CDB1A50839D002E5351 /* Sign.swift */; };
-		90C75EEC1AE3583E00F1E749 /* Sodium.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D80541A4ECCD7000B83F9 /* Sodium.swift */; };
-		90C75EED1AE3583E00F1E749 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D805C1A4F4F72000B83F9 /* Utils.swift */; };
-		CFD847281BA8120900B1260F /* PWHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 097F20D91AF127480088C2FE /* PWHash.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -177,13 +102,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 901644B51AE36EA700163E3E;
 			remoteInfo = "Example iOS";
-		};
-		901644EC1AE36F2E00163E3E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 09A943BE1A4EB5F500C8A04F /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 901644DB1AE36F2D00163E3E;
-			remoteInfo = "Example OSX";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -263,26 +181,16 @@
 		09A944591A4EB97800C8A04F /* sodium_lib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sodium_lib.h; sourceTree = "<group>"; };
 		901644B61AE36EA700163E3E /* Example iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		901644CA1AE36EA800163E3E /* Example iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Example iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		901644DC1AE36F2D00163E3E /* Example OSX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example OSX.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		901644EB1AE36F2E00163E3E /* Example OSXTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Example OSXTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		901645021AE376C100163E3E /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Helpers.swift; path = Examples/CommonCode/Helpers.swift; sourceTree = "<group>"; };
-		901645051AE376E400163E3E /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Examples/OSX/AppDelegate.swift; sourceTree = "<group>"; };
-		901645071AE376E400163E3E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Examples/OSX/Images.xcassets; sourceTree = "<group>"; };
-		901645081AE376E400163E3E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = Info.plist; path = Examples/OSX/Info.plist; sourceTree = "<group>"; };
 		9016451B1AE378DE00163E3E /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Examples/iOS/AppDelegate.swift; sourceTree = "<group>"; };
 		9016451D1AE378DE00163E3E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Examples/iOS/Images.xcassets; sourceTree = "<group>"; };
 		9016451E1AE378DE00163E3E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = Info.plist; path = Examples/iOS/Info.plist; sourceTree = "<group>"; };
 		9016451F1AE378DE00163E3E /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = Examples/iOS/ViewController.swift; sourceTree = "<group>"; };
-		901645251AE3796300163E3E /* Example_OSXTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Example_OSXTests.swift; path = Examples/OSX/Tests/Example_OSXTests.swift; sourceTree = "<group>"; };
-		901645261AE3796300163E3E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = Info.plist; path = Examples/OSX/Tests/Info.plist; sourceTree = "<group>"; };
 		901645291AE3799400163E3E /* Example_iOSTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Example_iOSTests.swift; path = Examples/iOS/Tests/Example_iOSTests.swift; sourceTree = "<group>"; };
 		9016452A1AE3799400163E3E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = Info.plist; path = Examples/iOS/Tests/Info.plist; sourceTree = "<group>"; };
 		901645381AE37E5800163E3E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Examples/iOS/Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		9016453A1AE37E5800163E3E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Examples/iOS/Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9016453D1AE37E6700163E3E /* Base.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Base.lproj; path = Examples/iOS/Base.lproj; sourceTree = "<group>"; };
-		901645451AE37F6300163E3E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Examples/OSX/Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		901645471AE37F7200163E3E /* Base.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Base.lproj; path = Examples/OSX/Base.lproj; sourceTree = "<group>"; };
-		90C75E941AE3571900F1E749 /* Sodium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Sodium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		90C75EAD1AE357CB00F1E749 /* libsodium-osx.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libsodium-osx.a"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -318,29 +226,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		901644D91AE36F2D00163E3E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				901644FF1AE3733F00163E3E /* Sodium.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		901644E81AE36F2E00163E3E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		90C75E901AE3571900F1E749 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				90C75EAE1AE357CB00F1E749 /* libsodium-osx.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -359,11 +244,8 @@
 			children = (
 				09A943C71A4EB5F500C8A04F /* Sodium.framework */,
 				09A943D21A4EB5F500C8A04F /* SodiumTests.xctest */,
-				90C75E941AE3571900F1E749 /* Sodium.framework */,
 				901644B61AE36EA700163E3E /* Example iOS.app */,
 				901644CA1AE36EA800163E3E /* Example iOSTests.xctest */,
-				901644DC1AE36F2D00163E3E /* Example OSX.app */,
-				901644EB1AE36F2E00163E3E /* Example OSXTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -482,7 +364,6 @@
 			isa = PBXGroup;
 			children = (
 				901644FB1AE3729200163E3E /* CommonCode */,
-				901644B11AE36D7900163E3E /* OSX */,
 				901644B01AE36D6D00163E3E /* iOS */,
 			);
 			name = Examples;
@@ -503,19 +384,6 @@
 			name = iOS;
 			sourceTree = "<group>";
 		};
-		901644B11AE36D7900163E3E /* OSX */ = {
-			isa = PBXGroup;
-			children = (
-				901645471AE37F7200163E3E /* Base.lproj */,
-				901645441AE37F6300163E3E /* MainMenu.xib */,
-				901645051AE376E400163E3E /* AppDelegate.swift */,
-				901645071AE376E400163E3E /* Images.xcassets */,
-				901644FA1AE370E400163E3E /* Tests */,
-				901644DE1AE36F2D00163E3E /* Supporting Files */,
-			);
-			name = OSX;
-			sourceTree = "<group>";
-		};
 		901644B81AE36EA700163E3E /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -534,38 +402,11 @@
 			path = "Example iOSTests";
 			sourceTree = "<group>";
 		};
-		901644DE1AE36F2D00163E3E /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				901645081AE376E400163E3E /* Info.plist */,
-			);
-			name = "Supporting Files";
-			path = "Example OSX";
-			sourceTree = "<group>";
-		};
-		901644EF1AE36F2E00163E3E /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				901645261AE3796300163E3E /* Info.plist */,
-			);
-			name = "Supporting Files";
-			path = "Example OSXTests";
-			sourceTree = "<group>";
-		};
 		901644F91AE370C500163E3E /* Tests */ = {
 			isa = PBXGroup;
 			children = (
 				901645291AE3799400163E3E /* Example_iOSTests.swift */,
 				901644CE1AE36EA800163E3E /* Supporting Files */,
-			);
-			name = Tests;
-			sourceTree = "<group>";
-		};
-		901644FA1AE370E400163E3E /* Tests */ = {
-			isa = PBXGroup;
-			children = (
-				901645251AE3796300163E3E /* Example_OSXTests.swift */,
-				901644EF1AE36F2E00163E3E /* Supporting Files */,
 			);
 			name = Tests;
 			sourceTree = "<group>";
@@ -645,70 +486,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		90C75E911AE3571900F1E749 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				90C75EAF1AE357DF00F1E749 /* sodium_lib.h in Headers */,
-				90C75EB01AE357DF00F1E749 /* core.h in Headers */,
-				90C75EB11AE357DF00F1E749 /* crypto_aead_chacha20poly1305.h in Headers */,
-				90C75EB21AE357DF00F1E749 /* crypto_auth_hmacsha256.h in Headers */,
-				90C75EB31AE357DF00F1E749 /* crypto_auth_hmacsha512.h in Headers */,
-				90C75EB41AE357DF00F1E749 /* crypto_auth_hmacsha512256.h in Headers */,
-				90C75EB51AE357DF00F1E749 /* crypto_auth.h in Headers */,
-				90C75EB61AE357DF00F1E749 /* crypto_box_curve25519xsalsa20poly1305.h in Headers */,
-				90C75EB71AE357DF00F1E749 /* crypto_box.h in Headers */,
-				90C75EB81AE357DF00F1E749 /* crypto_core_hsalsa20.h in Headers */,
-				90C75EB91AE357DF00F1E749 /* crypto_core_salsa20.h in Headers */,
-				90C75EBA1AE357DF00F1E749 /* crypto_core_salsa208.h in Headers */,
-				90C75EBB1AE357DF00F1E749 /* crypto_core_salsa2012.h in Headers */,
-				90C75EBC1AE357DF00F1E749 /* crypto_generichash_blake2b.h in Headers */,
-				90C75EBD1AE357DF00F1E749 /* crypto_generichash.h in Headers */,
-				90C75EBE1AE357DF00F1E749 /* crypto_hash_sha256.h in Headers */,
-				90C75EBF1AE357DF00F1E749 /* crypto_hash_sha512.h in Headers */,
-				90C75EC01AE357DF00F1E749 /* crypto_hash.h in Headers */,
-				90C75EC11AE357DF00F1E749 /* crypto_int32.h in Headers */,
-				90C75EC21AE357DF00F1E749 /* crypto_int64.h in Headers */,
-				90C75EC31AE357DF00F1E749 /* crypto_onetimeauth_poly1305.h in Headers */,
-				094E49411BE6C7D00053AC01 /* crypto_aead_aes256gcm.h in Headers */,
-				90C75EC41AE357DF00F1E749 /* crypto_onetimeauth.h in Headers */,
-				091782531CA164C00022765D /* crypto_core_hchacha20.h in Headers */,
-				90C75EC51AE357DF00F1E749 /* crypto_pwhash_scryptsalsa208sha256.h in Headers */,
-				90C75EC61AE357DF00F1E749 /* crypto_scalarmult_curve25519.h in Headers */,
-				90C75EC71AE357DF00F1E749 /* crypto_scalarmult.h in Headers */,
-				90C75EC81AE357DF00F1E749 /* crypto_secretbox_xsalsa20poly1305.h in Headers */,
-				90C75EC91AE357DF00F1E749 /* crypto_secretbox.h in Headers */,
-				90C75ECA1AE357DF00F1E749 /* crypto_shorthash_siphash24.h in Headers */,
-				90C75ECB1AE357DF00F1E749 /* crypto_shorthash.h in Headers */,
-				90C75ECC1AE357DF00F1E749 /* crypto_sign_ed25519.h in Headers */,
-				90C75ECE1AE357DF00F1E749 /* crypto_sign.h in Headers */,
-				091782551CA164C70022765D /* crypto_pwhash.h in Headers */,
-				90C75ECF1AE357DF00F1E749 /* crypto_stream_aes128ctr.h in Headers */,
-				90C75ED01AE357DF00F1E749 /* crypto_stream_chacha20.h in Headers */,
-				90C75ED11AE357DF00F1E749 /* crypto_stream_salsa20.h in Headers */,
-				90C75ED21AE357DF00F1E749 /* crypto_stream_salsa208.h in Headers */,
-				90C75ED31AE357E000F1E749 /* crypto_stream_salsa2012.h in Headers */,
-				90C75ED41AE357E000F1E749 /* crypto_stream_xsalsa20.h in Headers */,
-				90C75ED51AE357E000F1E749 /* crypto_stream.h in Headers */,
-				90C75ED61AE357E000F1E749 /* crypto_uint8.h in Headers */,
-				90C75ED71AE357E000F1E749 /* crypto_uint16.h in Headers */,
-				90C75ED81AE357E000F1E749 /* crypto_uint32.h in Headers */,
-				90C75ED91AE357E000F1E749 /* crypto_uint64.h in Headers */,
-				091782541CA164C30022765D /* crypto_pwhash_argon2i.h in Headers */,
-				90C75EDA1AE357E000F1E749 /* crypto_verify_16.h in Headers */,
-				90C75EDB1AE357E000F1E749 /* crypto_verify_32.h in Headers */,
-				90C75EDC1AE357E000F1E749 /* crypto_verify_64.h in Headers */,
-				90C75EDD1AE357E000F1E749 /* export.h in Headers */,
-				90C75EDE1AE357E000F1E749 /* randombytes_salsa20_random.h in Headers */,
-				90C75EDF1AE357E000F1E749 /* randombytes_sysrandom.h in Headers */,
-				90C75EE01AE357E000F1E749 /* randombytes.h in Headers */,
-				90C75EE11AE357E000F1E749 /* runtime.h in Headers */,
-				90C75EE21AE357E000F1E749 /* utils.h in Headers */,
-				90C75EE31AE357E000F1E749 /* version.h in Headers */,
-				90C75EE41AE357E000F1E749 /* Sodium.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
@@ -783,59 +560,6 @@
 			productReference = 901644CA1AE36EA800163E3E /* Example iOSTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		901644DB1AE36F2D00163E3E /* Example OSX */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 901644F31AE36F2E00163E3E /* Build configuration list for PBXNativeTarget "Example OSX" */;
-			buildPhases = (
-				901644D81AE36F2D00163E3E /* Sources */,
-				901644D91AE36F2D00163E3E /* Frameworks */,
-				901644DA1AE36F2D00163E3E /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "Example OSX";
-			productName = "Example OSX";
-			productReference = 901644DC1AE36F2D00163E3E /* Example OSX.app */;
-			productType = "com.apple.product-type.application";
-		};
-		901644EA1AE36F2E00163E3E /* Example OSXTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 901644F61AE36F2E00163E3E /* Build configuration list for PBXNativeTarget "Example OSXTests" */;
-			buildPhases = (
-				901644E71AE36F2E00163E3E /* Sources */,
-				901644E81AE36F2E00163E3E /* Frameworks */,
-				901644E91AE36F2E00163E3E /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				901644ED1AE36F2E00163E3E /* PBXTargetDependency */,
-			);
-			name = "Example OSXTests";
-			productName = "Example OSXTests";
-			productReference = 901644EB1AE36F2E00163E3E /* Example OSXTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		90C75E931AE3571900F1E749 /* Sodium_OSX */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 90C75EAB1AE3571900F1E749 /* Build configuration list for PBXNativeTarget "Sodium_OSX" */;
-			buildPhases = (
-				90C75E8F1AE3571900F1E749 /* Sources */,
-				90C75E901AE3571900F1E749 /* Frameworks */,
-				90C75E911AE3571900F1E749 /* Headers */,
-				90C75E921AE3571900F1E749 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = Sodium_OSX;
-			productName = "Sodium-OSX";
-			productReference = 90C75E941AE3571900F1E749 /* Sodium.framework */;
-			productType = "com.apple.product-type.framework";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -860,16 +584,6 @@
 						CreatedOnToolsVersion = 6.3;
 						TestTargetID = 901644B51AE36EA700163E3E;
 					};
-					901644DB1AE36F2D00163E3E = {
-						CreatedOnToolsVersion = 6.3;
-					};
-					901644EA1AE36F2E00163E3E = {
-						CreatedOnToolsVersion = 6.3;
-						TestTargetID = 901644DB1AE36F2D00163E3E;
-					};
-					90C75E931AE3571900F1E749 = {
-						CreatedOnToolsVersion = 6.3;
-					};
 				};
 			};
 			buildConfigurationList = 09A943C11A4EB5F500C8A04F /* Build configuration list for PBXProject "Sodium" */;
@@ -887,11 +601,8 @@
 			targets = (
 				09A943C61A4EB5F500C8A04F /* Sodium_iOS */,
 				09A943D11A4EB5F500C8A04F /* SodiumTests */,
-				90C75E931AE3571900F1E749 /* Sodium_OSX */,
 				901644B51AE36EA700163E3E /* Example iOS */,
 				901644C91AE36EA800163E3E /* Example iOSTests */,
-				901644DB1AE36F2D00163E3E /* Example OSX */,
-				901644EA1AE36F2E00163E3E /* Example OSXTests */,
 			);
 		};
 /* End PBXProject section */
@@ -923,30 +634,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		901644C81AE36EA800163E3E /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		901644DA1AE36F2D00163E3E /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				9016450E1AE376E400163E3E /* Images.xcassets in Resources */,
-				901645481AE37F7200163E3E /* Base.lproj in Resources */,
-				901645461AE37F6300163E3E /* MainMenu.xib in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		901644E91AE36F2E00163E3E /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		90C75E921AE3571900F1E749 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -999,40 +686,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		901644D81AE36F2D00163E3E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				9016450A1AE376E400163E3E /* AppDelegate.swift in Sources */,
-				901645041AE376C100163E3E /* Helpers.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		901644E71AE36F2E00163E3E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				901645271AE3796300163E3E /* Example_OSXTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		90C75E8F1AE3571900F1E749 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				90C75EE51AE3583E00F1E749 /* Box.swift in Sources */,
-				90C75EE61AE3583E00F1E749 /* SecretBox.swift in Sources */,
-				CFD847281BA8120900B1260F /* PWHash.swift in Sources */,
-				90C75EE71AE3583E00F1E749 /* GenericHash.swift in Sources */,
-				90C75EE81AE3583E00F1E749 /* NSData+Extensions.swift in Sources */,
-				90C75EE91AE3583E00F1E749 /* RandomBytes.swift in Sources */,
-				90C75EEA1AE3583E00F1E749 /* ShortHash.swift in Sources */,
-				90C75EEB1AE3583E00F1E749 /* Sign.swift in Sources */,
-				90C75EEC1AE3583E00F1E749 /* Sodium.swift in Sources */,
-				90C75EED1AE3583E00F1E749 /* Utils.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -1045,11 +698,6 @@
 			isa = PBXTargetDependency;
 			target = 901644B51AE36EA700163E3E /* Example iOS */;
 			targetProxy = 901644CB1AE36EA800163E3E /* PBXContainerItemProxy */;
-		};
-		901644ED1AE36F2E00163E3E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 901644DB1AE36F2D00163E3E /* Example OSX */;
-			targetProxy = 901644EC1AE36F2E00163E3E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1068,14 +716,6 @@
 				9016453A1AE37E5800163E3E /* Base */,
 			);
 			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		901645441AE37F6300163E3E /* MainMenu.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				901645451AE37F6300163E3E /* Base */,
-			);
-			name = MainMenu.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -1322,149 +962,6 @@
 			};
 			name = Release;
 		};
-		901644F41AE36F2E00163E3E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "-";
-				COMBINE_HIDPI_IMAGES = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = Examples/OSX/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.vucontacts.swiftodium.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-			};
-			name = Debug;
-		};
-		901644F51AE36F2E00163E3E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "-";
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = Examples/OSX/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.vucontacts.swiftodium.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-			};
-			name = Release;
-		};
-		901644F71AE36F2E00163E3E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				COMBINE_HIDPI_IMAGES = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-					"$(inherited)",
-				);
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = Examples/OSX/Tests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.vucontacts.swiftodium.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Example OSX.app/Contents/MacOS/Example OSX";
-			};
-			name = Debug;
-		};
-		901644F81AE36F2E00163E3E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-					"$(inherited)",
-				);
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = Examples/OSX/Tests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.vucontacts.swiftodium.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Example OSX.app/Contents/MacOS/Example OSX";
-			};
-			name = Release;
-		};
-		90C75EA71AE3571900F1E749 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_VERSION = A;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = "$(SRCROOT)/Sodium/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Sodium",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				PRODUCT_BUNDLE_IDENTIFIER = "org.pureftpd.swiftodium.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = Sodium;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
-		90C75EA81AE3571900F1E749 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_VERSION = A;
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "$(SRCROOT)/Sodium/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Sodium",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				PRODUCT_BUNDLE_IDENTIFIER = "org.pureftpd.swiftodium.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = Sodium;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1509,33 +1006,6 @@
 			buildConfigurations = (
 				901644D61AE36EA800163E3E /* Debug */,
 				901644D71AE36EA800163E3E /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		901644F31AE36F2E00163E3E /* Build configuration list for PBXNativeTarget "Example OSX" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				901644F41AE36F2E00163E3E /* Debug */,
-				901644F51AE36F2E00163E3E /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		901644F61AE36F2E00163E3E /* Build configuration list for PBXNativeTarget "Example OSXTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				901644F71AE36F2E00163E3E /* Debug */,
-				901644F81AE36F2E00163E3E /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		90C75EAB1AE3571900F1E749 /* Build configuration list for PBXNativeTarget "Sodium_OSX" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				90C75EA71AE3571900F1E749 /* Debug */,
-				90C75EA81AE3571900F1E749 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
