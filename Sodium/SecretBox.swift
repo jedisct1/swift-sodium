@@ -12,11 +12,11 @@ public class SecretBox {
     public let KeyBytes = Int(crypto_secretbox_keybytes())
     public let NonceBytes = Int(crypto_secretbox_noncebytes())
     public let MacBytes = Int(crypto_secretbox_macbytes())
-    
+
     public typealias Key = NSData
     public typealias Nonce = NSData
     public typealias MAC = NSData
-    
+
     public func key() -> Key? {
         guard let k = NSMutableData(length: KeyBytes) else {
             return nil
@@ -24,7 +24,7 @@ public class SecretBox {
         randombytes_buf(k.mutableBytesPtr(), k.length)
         return k
     }
-    
+
     public func nonce() -> Nonce? {
         guard let n = NSMutableData(length: NonceBytes) else {
             return nil
@@ -32,7 +32,7 @@ public class SecretBox {
         randombytes_buf(n.mutableBytesPtr(), n.length)
         return n
     }
-    
+
     public func seal(message: NSData, secretKey: Key) -> NSData? {
         guard let (authenticatedCipherText, nonce): (NSData, Nonce) = seal(message: message, secretKey: secretKey) else {
             return nil
@@ -41,7 +41,7 @@ public class SecretBox {
         nonceAndAuthenticatedCipherText.append(authenticatedCipherText as Data)
         return nonceAndAuthenticatedCipherText
     }
-    
+
     public func seal(message: NSData, secretKey: Key) -> (authenticatedCipherText: NSData, nonce: Nonce)? {
         if secretKey.length != KeyBytes {
             return nil
@@ -57,7 +57,7 @@ public class SecretBox {
         }
         return (authenticatedCipherText: authenticatedCipherText, nonce: nonce)
     }
-    
+
     public func seal(message: NSData, secretKey: Key) -> (cipherText: NSData, nonce: Nonce, mac: MAC)? {
         if secretKey.length != KeyBytes {
             return nil
@@ -76,7 +76,7 @@ public class SecretBox {
         }
         return (cipherText: cipherText, nonce: nonce, mac: mac)
     }
-    
+
     public func open(nonceAndAuthenticatedCipherText: NSData, secretKey: Key) -> NSData? {
         if nonceAndAuthenticatedCipherText.length < MacBytes + NonceBytes {
             return nil
@@ -88,7 +88,7 @@ public class SecretBox {
         let authenticatedCipherText = nonceAndAuthenticatedCipherText.subdata(with: NSRange(NonceBytes..<nonceAndAuthenticatedCipherText.length)) as NSData
         return open(authenticatedCipherText: authenticatedCipherText, secretKey: secretKey, nonce: nonce)
     }
-    
+
     public func open(authenticatedCipherText: NSData, secretKey: Key, nonce: Nonce) -> NSData? {
         if authenticatedCipherText.length < MacBytes {
             return nil
@@ -101,7 +101,7 @@ public class SecretBox {
         }
         return message
     }
-    
+
     public func open(cipherText: NSData, secretKey: Key, nonce: Nonce, mac: MAC) -> NSData? {
         if nonce.length != NonceBytes || mac.length != MacBytes {
             return nil

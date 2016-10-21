@@ -14,28 +14,28 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
+
         let sodium = Sodium()!
         let aliceKeyPair = sodium.box.keyPair()!
         let bobKeyPair = sodium.box.keyPair()!
         let message: NSData = "My Test Message".toData()!
-        
+
         println("Original Message:\(message.toString())")
-        
+
         let encryptedMessageFromAliceToBob: NSData =
         sodium.box.seal(message,
             recipientPublicKey: bobKeyPair.publicKey,
             senderSecretKey: aliceKeyPair.secretKey)!
-        
+
         println("Encrypted Message:\(encryptedMessageFromAliceToBob)")
-        
+
         let messageVerifiedAndDecryptedByBob =
         sodium.box.open(encryptedMessageFromAliceToBob,
             senderPublicKey: bobKeyPair.publicKey,
             recipientSecretKey: aliceKeyPair.secretKey)
-        
+
         println("Decrypted Message:\(messageVerifiedAndDecryptedByBob!.toString())")
-        
+
     }
 
     override func didReceiveMemoryWarning() {

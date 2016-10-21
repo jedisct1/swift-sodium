@@ -8,7 +8,7 @@
 
 import Foundation
 
-public extension NSData {    
+public extension NSData {
     func bytesPtr<T>() -> UnsafePointer<T>{
         let rawBytes = self.bytes
         return rawBytes.assumingMemoryBound(to: T.self);

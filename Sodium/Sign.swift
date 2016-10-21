@@ -14,10 +14,10 @@ public class Sign {
     public let SecretKeyBytes = Int(crypto_sign_secretkeybytes())
     public let Bytes = Int(crypto_sign_bytes())
     public let Primitive = String.init(validatingUTF8:crypto_sign_primitive())
-    
+
     public typealias PublicKey = NSData
     public typealias SecretKey = NSData
-    
+
     public struct KeyPair {
         public let publicKey: PublicKey
         public let secretKey: SecretKey
@@ -27,7 +27,7 @@ public class Sign {
             self.secretKey = secretKey
         }
     }
-    
+
     public func keyPair() -> KeyPair? {
         guard let pk = NSMutableData(length: PublicKeyBytes) else {
             return nil
@@ -40,7 +40,7 @@ public class Sign {
         }
         return KeyPair(publicKey: PublicKey(data: pk as Data), secretKey: SecretKey(data: sk as Data))
     }
-    
+
     public func keyPair(seed: NSData) -> KeyPair? {
         if seed.length != SeedBytes {
             return nil
@@ -56,7 +56,7 @@ public class Sign {
         }
         return KeyPair(publicKey: PublicKey(data: pk as Data), secretKey: SecretKey(data: sk as Data))
     }
-    
+
     public func sign(message: NSData, secretKey: SecretKey) -> NSData? {
         if secretKey.length != SecretKeyBytes {
             return nil
@@ -82,20 +82,20 @@ public class Sign {
         }
         return signature
     }
-    
+
     public func verify(signedMessage: NSData, publicKey: PublicKey) -> Bool {
         let signature = signedMessage.subdata(with: NSRange(0..<Bytes)) as NSData
         let message = signedMessage.subdata(with: NSRange(Bytes..<signedMessage.length)) as NSData
         return verify(message: message, publicKey: publicKey, signature: signature)
     }
-    
+
     public func verify(message: NSData, publicKey: PublicKey, signature: NSData) -> Bool {
         if publicKey.length != PublicKeyBytes {
             return false
         }
         return crypto_sign_verify_detached(signature.bytesPtr(), message.bytesPtr(), CUnsignedLongLong(message.length), publicKey.bytesPtr()) == 0
     }
-    
+
     public func open(signedMessage: NSData, publicKey: PublicKey) -> NSData? {
         if publicKey.length != PublicKeyBytes || signedMessage.length < Bytes {
             return nil

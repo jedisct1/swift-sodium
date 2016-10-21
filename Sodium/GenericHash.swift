@@ -16,11 +16,11 @@ public class GenericHash {
     public let KeybytesMax = Int(crypto_generichash_keybytes_max())
     public let Keybytes = Int(crypto_generichash_keybytes())
     public let Primitive = String.init(validatingUTF8:crypto_generichash_primitive())
-    
+
     public func hash(message: NSData, key: NSData? = nil) -> NSData? {
         return hash(message: message, key: key, outputLength: Bytes)
     }
-    
+
     public func hash(message: NSData, key: NSData?, outputLength: Int) -> NSData? {
         guard let output = NSMutableData(length: outputLength) else {
             return nil
@@ -40,15 +40,15 @@ public class GenericHash {
     public func hash(message: NSData, outputLength: Int) -> NSData? {
         return hash(message: message, key: NSData(), outputLength: outputLength)
     }
-    
+
     public func initStream(key: NSData? = nil) -> Stream? {
         return Stream(key: key, outputLength: Bytes)
     }
-    
+
     public func initStream(key: NSData?, outputLength: Int) -> Stream? {
         return Stream(key: key, outputLength: outputLength)
     }
-    
+
     public func initStream(outputLength: Int) -> Stream? {
         return Stream(key: nil, outputLength: outputLength)
     }
@@ -73,15 +73,15 @@ public class GenericHash {
             }
             self.outputLength = outputLength;
         }
-    
+
         deinit {
             state?.deallocate(capacity: 1)
         }
-    
+
         public func update(input: NSData) -> Bool {
             return crypto_generichash_update(state!, input.bytesPtr(), CUnsignedLongLong(input.length)) == 0
         }
-    
+
         public func final() -> NSData? {
             guard let output = NSMutableData(length: outputLength) else {
                 return nil
