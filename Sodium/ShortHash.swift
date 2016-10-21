@@ -11,7 +11,7 @@ import Foundation
 public class ShortHash {
     public let Bytes = Int(crypto_shorthash_bytes())
     public let KeyBytes = Int(crypto_shorthash_keybytes())
-    
+
     public func hash(message: NSData, key: NSData) -> NSData? {
         if key.length != KeyBytes {
             return nil

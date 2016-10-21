@@ -19,11 +19,11 @@ public class RandomBytes {
         randombytes_buf(output.mutableBytesPtr(), output.length)
         return output
     }
-    
+
     public func random() -> UInt32 {
         return randombytes_random()
     }
-    
+
     public func uniform(upperBound: UInt32) -> UInt32 {
         return randombytes_uniform(upperBound)
     }

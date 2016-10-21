@@ -13,7 +13,7 @@ public class Utils {
         sodium_memzero(UnsafeMutableRawPointer(data.mutableBytes), data.length)
         data.length = 0
     }
-    
+
     public func equals(b1: NSData, _ b2: NSData) -> Bool {
         if b1.length != b2.length {
             return false
@@ -21,7 +21,7 @@ public class Utils {
         let res = sodium_memcmp(UnsafeRawPointer(b1.bytes), UnsafeRawPointer(b2.bytes), b1.length)
         return res == 0;
     }
-    
+
     public func compare(b1: NSData, _ b2: NSData) -> Int? {
         if b1.length != b2.length {
             return nil
@@ -29,7 +29,7 @@ public class Utils {
         let res = sodium_compare(b1.bytesPtr(), b2.bytesPtr(), b1.length)
         return Int(res);
     }
-    
+
     public func bin2hex(bin: NSData) -> String? {
         guard let hexData = NSMutableData(length: bin.length * 2 + 1) else {
             return nil
@@ -39,7 +39,7 @@ public class Utils {
         }
         return String.init(validatingUTF8: hexData.mutableBytesPtr())
     }
-    
+
     public func hex2bin(hex: String, ignore: String? = nil) -> NSData? {
         guard let hexData = hex.data(using: String.Encoding.utf8, allowLossyConversion: false) else {
             return nil
