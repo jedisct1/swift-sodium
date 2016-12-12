@@ -22,30 +22,59 @@ public class Utils {
       }
     }
 
-    public func equals(b1: NSData, _ b2: NSData) -> Bool {
-        if b1.length != b2.length {
+    public func equals(_ b1: Data, _ b2: Data) -> Bool {
+        if b1.count != b2.count {
             return false
         }
-        let res = sodium_memcmp(UnsafeRawPointer(b1.bytes), UnsafeRawPointer(b2.bytes), b1.length)
-        return res == 0;
+
+        return b1.withUnsafeBytes { b1Ptr in
+          return b2.withUnsafeBytes { b2Ptr in
+            return Int(sodium_memcmp(
+                         UnsafeRawPointer(b1Ptr),
+                         UnsafeRawPointer(b2Ptr),
+                         b1.count)) == 0
+          }
+        }
     }
 
-    public func compare(b1: NSData, _ b2: NSData) -> Int? {
-        if b1.length != b2.length {
+    public func equals(_ b1: NSData, _ b2: NSData) -> Bool {
+      return equals(b1 as Data, b2 as Data)
+    }
+
+    public func compare(_ b1: Data, _ b2: Data) -> Int? {
+        if b1.count != b2.count {
             return nil
         }
-        let res = sodium_compare(b1.bytesPtr(), b2.bytesPtr(), b1.length)
-        return Int(res);
+
+        return b1.withUnsafeBytes { b1Ptr in
+          return b2.withUnsafeBytes { b2Ptr in
+            return Int(sodium_compare(
+                         b1Ptr,
+                         b2Ptr,
+                         b1.count))
+          }
+        }
+    }
+
+    public func compare(_ b1: NSData, _ b2: NSData) -> Int? {
+      return compare(b1 as Data, b2 as Data)
+    }
+
+    public func bin2hex(bin: Data) -> String? {
+        var hexData = Data(count: bin.count * 2 + 1)
+        return hexData.withUnsafeMutableBytes { (hexPtr: UnsafeMutablePointer<Int8>) -> String? in
+          return bin.withUnsafeBytes { (binPtr: UnsafePointer<UInt8>) -> String? in
+            if sodium_bin2hex(hexPtr, hexData.count, binPtr, bin.count) == nil {
+              return nil
+            }
+
+            return String.init(validatingUTF8: hexPtr)
+          }
+        }
     }
 
     public func bin2hex(bin: NSData) -> String? {
-        guard let hexData = NSMutableData(length: bin.length * 2 + 1) else {
-            return nil
-        }
-        if sodium_bin2hex(hexData.mutableBytesPtr(), hexData.length, bin.bytesPtr(), bin.length) == nil {
-            return nil
-        }
-        return String.init(validatingUTF8: hexData.mutableBytesPtr())
+      return bin2hex(bin: bin as Data)
     }
 
     public func hex2bin(hex: String, ignore: String? = nil) -> NSData? {
