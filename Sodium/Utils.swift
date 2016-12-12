@@ -11,7 +11,15 @@ import Foundation
 public class Utils {
     public func zero(data: NSMutableData) {
         sodium_memzero(UnsafeMutableRawPointer(data.mutableBytes), data.length)
-        data.length = 0
+    }
+
+    public func zero(data: inout Data)  {
+      let count = data.count
+      data.withUnsafeMutableBytes { (dataPtr: UnsafeMutablePointer<UInt8>) in
+        let rawPtr = UnsafeMutableRawPointer(dataPtr)
+        sodium_memzero(rawPtr, count)
+        return
+      }
     }
 
     public func equals(b1: NSData, _ b2: NSData) -> Bool {
