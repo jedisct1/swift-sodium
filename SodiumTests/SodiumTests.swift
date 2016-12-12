@@ -181,20 +181,25 @@ class SodiumTests: XCTestCase {
     func testUtils() {
         let dataToZero = NSMutableData(bytes: [1, 2, 3, 4] as [UInt8], length: 4)
         sodium.utils.zero(data: dataToZero)
-        XCTAssert(dataToZero.length == 0)
+        XCTAssert(dataToZero.isEqual(to: Data(bytes: [0, 0, 0, 0] as [UInt8])))
+
+        var dataToZero2 = Data(bytes: [1, 2, 3, 4] as [UInt8])
+        sodium.utils.zero(data: &dataToZero2)
+        XCTAssert(dataToZero2 == Data(bytes: [0, 0, 0, 0,] as [UInt8]))
 
         let eq1 = NSData(bytes: [1, 2, 3, 4] as [UInt8], length: 4)
         let eq2 = NSData(bytes: [1, 2, 3, 4] as [UInt8], length: 4)
         let eq3 = NSData(bytes: [1, 2, 3, 5] as [UInt8], length: 4)
         let eq4 = NSData(bytes: [1, 2, 3] as [UInt8], length: 3)
-        XCTAssert(sodium.utils.equals(b1: eq1, eq2))
-        XCTAssert(!sodium.utils.equals(b1: eq1, eq3))
-        XCTAssert(!sodium.utils.equals(b1: eq1, eq4))
 
-        XCTAssert(sodium.utils.compare(b1: eq1, eq2)! == 0)
-        XCTAssert(sodium.utils.compare(b1: eq1, eq3)! == -1)
-        XCTAssert(sodium.utils.compare(b1: eq3, eq2)! == 1)
-        XCTAssert(sodium.utils.compare(b1: eq1, eq4) == nil)
+        XCTAssert(sodium.utils.equals(eq1, eq2))
+        XCTAssert(!sodium.utils.equals(eq1, eq3))
+        XCTAssert(!sodium.utils.equals(eq1, eq4))
+
+        XCTAssert(sodium.utils.compare(eq1, eq2)! == 0)
+        XCTAssert(sodium.utils.compare(eq1, eq3)! == -1)
+        XCTAssert(sodium.utils.compare(eq3, eq2)! == 1)
+        XCTAssert(sodium.utils.compare(eq1, eq4) == nil)
 
         let bin = sodium.utils.hex2bin(hex: "deadbeef")!
         XCTAssert(bin.description == "<deadbeef>")
