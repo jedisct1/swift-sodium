@@ -45,17 +45,17 @@ Authenticated Encryption
 let sodium = Sodium()!
 let aliceKeyPair = sodium.box.keyPair()!
 let bobKeyPair = sodium.box.keyPair()!
-let message = "My Test Message".dataUsingEncoding(NSUTF8StringEncoding)!
+let message = "My Test Message".data(using:.utf8)!
 
 let encryptedMessageFromAliceToBob: NSData =
-  sodium.box.seal(message,
-                  recipientPublicKey: bobKeyPair.publicKey,
-                  senderSecretKey: aliceKeyPair.secretKey)!
+    sodium.box.seal(message: message as NSData,
+                    recipientPublicKey: bobKeyPair.publicKey,
+                    senderSecretKey: aliceKeyPair.secretKey)!
 
 let messageVerifiedAndDecryptedByBob =
-  sodium.box.open(encryptedMessageFromAliceToBob,
-                  senderPublicKey: alicebKeyPair.publicKey,
-                  recipientSecretKey: bobKeyPair.secretKey)
+    sodium.box.open(nonceAndAuthenticatedCipherText: encryptedMessageFromAliceToBob,
+                    senderPublicKey: aliceKeyPair.publicKey,
+                    recipientSecretKey: bobKeyPair.secretKey)
 ```
 
 `seal()` automatically generates a nonce and prepends it to the
@@ -71,15 +71,15 @@ Anonymous Encryption (Sealed Boxes)
 ```swift
 let sodium = Sodium()!
 let bobKeyPair = sodium.box.keyPair()!
-let message = "My Test Message".dataUsingEncoding(NSUTF8StringEncoding)!
+let message = "My Test Message".data(using:.utf8)!
 
 let encryptedMessageToBob =
-  sodium.box.seal(message, recipientPublicKey: bobKeyPair.publicKey)!
+    sodium.box.seal(message: message as NSData, recipientPublicKey: bobKeyPair.publicKey)!
 
 let messageDecryptedByBob =
-  sodium.box.open(encryptedMessageToBob,
-                  recipientPublicKey: bobKeyPair.publicKey,
-                  recipientSecretKey: bobKeyPair.secretKey)
+    sodium.box.open(anonymousCipherText: encryptedMessageToBob,
+                    recipientPublicKey: bobKeyPair.publicKey,
+                    recipientSecretKey: bobKeyPair.secretKey)
 ```
 
 `seal()` generates an ephemeral keypair, uses the ephemeral secret
@@ -97,13 +97,13 @@ Detached signatures
 
 ```swift
 let sodium = Sodium()!
-let message = "My Test Message".dataUsingEncoding(NSUTF8StringEncoding)!
+let message = "My Test Message".data(using:.utf8)!
 let keyPair = sodium.sign.keyPair()!
-let signature = sodium.sign.signature(message, secretKey: keyPair.secretKey)!
-if sodium.sign.verify(message,
+let signature = sodium.sign.signature(message: message as NSData, secretKey: keyPair.secretKey)!
+if sodium.sign.verify(message: message as NSData,
                       publicKey: keyPair.publicKey,
                       signature: signature) {
-  // signature is valid
+    // signature is valid
 }
 ```
 
@@ -112,11 +112,11 @@ Attached signatures
 
 ```swift
 let sodium = Sodium()!
-let message = "My Test Message".dataUsingEncoding(NSUTF8StringEncoding)!
+let message = "My Test Message".data(using:.utf8)!
 let keyPair = sodium.sign.keyPair()!
-let signedMessage = sodium.sign.sign(message, secretKey: keyPair.secretKey)!
-if let unsignedMessage = sodium.sign.open(signedMessage, publicKey: keyPair.publicKey) {
-  // signature is valid
+let signedMessage = sodium.sign.sign(message: message as NSData, secretKey: keyPair.secretKey)!
+if let unsignedMessage = sodium.sign.open(signedMessage: signedMessage, publicKey: keyPair.publicKey) {
+    // signature is valid
 }
 ```
 
@@ -125,11 +125,11 @@ Secret-key authenticated encryption
 
 ```swift
 let sodium = Sodium()!
-let message = "My Test Message".dataUsingEncoding(NSUTF8StringEncoding)!
+let message = "My Test Message".data(using:.utf8)!
 let secretKey = sodium.secretBox.key()!
-let encrypted: NSData = sodium.secretBox.seal(message, secretKey: secretKey)!
-if let decrypted = sodium.secretBox.open(encrypted, secretKey: secretKey) {
-  // authenticator is valid, decrypted contains the original message
+let encrypted: NSData = sodium.secretBox.seal(message: message as NSData, secretKey: secretKey)!
+if let decrypted = sodium.secretBox.open(nonceAndAuthenticatedCipherText: encrypted, secretKey: secretKey) {
+    // authenticator is valid, decrypted contains the original message
 }
 ```
 
@@ -141,8 +141,8 @@ Deterministic hashing
 
 ```swift
 let sodium = Sodium()!
-let message = "My Test Message".dataUsingEncoding(NSUTF8StringEncoding)!
-let h = sodium.genericHash.hash(message)
+let message = "My Test Message".data(using:.utf8)!
+let h = sodium.genericHash.hash(message: message as NSData)
 ```
 
 Keyed hashing
@@ -150,9 +150,9 @@ Keyed hashing
 
 ```swift
 let sodium = Sodium()!
-let message = "My Test Message".dataUsingEncoding(NSUTF8StringEncoding)!
-let key = "Secret key".dataUsingEncoding(NSUTF8StringEncoding)!
-let h = sodium.genericHash.hash(message, key: key)
+let message = "My Test Message".data(using:.utf8)!
+let key = "Secret key".data(using:.utf8)!
+let h = sodium.genericHash.hash(message: message as NSData, key: key as NSData)
 ```
 
 Streaming
@@ -160,12 +160,12 @@ Streaming
 
 ```swift
 let sodium = Sodium()!
-let message1 = "My Test ".dataUsingEncoding(NSUTF8StringEncoding)!
-let message2 = "Message".dataUsingEncoding(NSUTF8StringEncoding)!
-let key = "Secret key".dataUsingEncoding(NSUTF8StringEncoding)!
-let stream = sodium.genericHash.initStream(key)!
-stream.update(message1)
-stream.update(message2)
+let message1 = "My Test ".data(using:.utf8)!
+let message2 = "Message".data(using:.utf8)!
+let key = "Secret key".data(using:.utf8)!
+let stream = sodium.genericHash.initStream(key: key as NSData)!
+stream.update(input: message1 as NSData)
+stream.update(input: message2 as NSData)
 let h = stream.final()
 ```
 
@@ -174,9 +174,9 @@ Short-output hashing (SipHash)
 
 ```swift
 let sodium = Sodium()!
-let message = "My Test Message".dataUsingEncoding(NSUTF8StringEncoding)!
-let key = sodium.randomBytes.buf(sodium.shortHash.KeyBytes)!
-let h = sodium.shortHash.hash(message, key: key)
+let message = "My Test Message".data(using:.utf8)!
+let key = sodium.randomBytes.buf(length: sodium.shortHash.KeyBytes)!
+let h = sodium.shortHash.hash(message: message as NSData, key: key as NSData)
 ```
 
 Random numbers generation
@@ -184,7 +184,7 @@ Random numbers generation
 
 ```swift
 let sodium = Sodium()!
-let randomData = sodium.randomBytes.buf(1000)
+let randomData = sodium.randomBytes.buf(length: 1000)
 ```
 
 Password hashing
@@ -194,15 +194,15 @@ Using Argon2i:
 
 ```swift
 let sodium = Sodium()!
-let password = "Correct Horse Battery Staple".dataUsingEncoding(NSUTF8StringEncoding)!
-let hashedStr = sodium.pwHash.str(password,
-  opsLimit: sodium.pwHash.OpsLimitInteractive,
-  memLimit: sodium.pwHash.MemLimitInteractive)!
+let password = "Correct Horse Battery Staple".data(using:.utf8)!
+let hashedStr = sodium.pwHash.str(passwd: password as NSData,
+                                  opsLimit: sodium.pwHash.OpsLimitInteractive,
+                                  memLimit: sodium.pwHash.MemLimitInteractive)!
 
-if sodium.pwHash.strVerify(hashedStr, passwd: password) {
-  // Password matches the given hash string
+if sodium.pwHash.strVerify(hash: hashedStr, passwd: password as NSData) {
+    // Password matches the given hash string
 } else {
-  // Password doesn't match the given hash string
+    // Password doesn't match the given hash string
 }
 ```
 
@@ -214,8 +214,8 @@ Zeroing memory
 
 ```swift
 let sodium = Sodium()!
-var dataToZero: NSMutableData
-sodium.utils.zero(dataToZero)
+var dataToZero: NSMutableData = NSMutableData(data:"Message".data(using:.utf8)!)
+sodium.utils.zero(data: dataToZero)
 ```
 
 Constant-time comparison
@@ -223,9 +223,9 @@ Constant-time comparison
 
 ```swift
 let sodium = Sodium()!
-let secret1: NSData
-let secret2: NSData
-let equality = sodium.utils.equals(secret1, secret2)
+let secret1: NSData = NSData(data:"Secret key".data(using:.utf8)!)
+let secret2: NSData = NSData(data:"Secret key".data(using:.utf8)!)
+let equality = sodium.utils.equals(b1: secret1, secret2)
 ```
 
 Constant-time hexadecimal encoding
@@ -233,8 +233,8 @@ Constant-time hexadecimal encoding
 
 ```swift
 let sodium = Sodium()!
-let data: NSData
-let hex = sodium.utils.bin2hex(data)
+let data: NSData = NSData(data:"Secret key".data(using:.utf8)!)
+let hex = sodium.utils.bin2hex(bin: data)
 ```
 
 Hexadecimal decoding
@@ -242,6 +242,6 @@ Hexadecimal decoding
 
 ```swift
 let sodium = Sodium()!
-let data1 = sodium.utils.hex2bin("deadbeef")
-let data2 = sodium.utils.hex2bin("de:ad be:ef", ignore: " :")
+let data1 = sodium.utils.hex2bin(hex: "deadbeef")
+let data2 = sodium.utils.hex2bin(hex: "de:ad be:ef", ignore: " :")
 ```

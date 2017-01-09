@@ -159,6 +159,7 @@
 		90C75EEC1AE3583E00F1E749 /* Sodium.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D80541A4ECCD7000B83F9 /* Sodium.swift */; };
 		90C75EED1AE3583E00F1E749 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D805C1A4F4F72000B83F9 /* Utils.swift */; };
 		CFD847281BA8120900B1260F /* PWHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 097F20D91AF127480088C2FE /* PWHash.swift */; };
+		D85101041E22EF5B003DB2E8 /* ReadmeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D85101031E22EF5B003DB2E8 /* ReadmeTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -262,6 +263,8 @@
 		901645471AE37F7200163E3E /* Base.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Base.lproj; path = Examples/OSX/Base.lproj; sourceTree = "<group>"; };
 		90C75E941AE3571900F1E749 /* Sodium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Sodium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		90C75EAD1AE357CB00F1E749 /* libsodium-osx.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libsodium-osx.a"; sourceTree = "<group>"; };
+		D85101031E22EF5B003DB2E8 /* ReadmeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadmeTests.swift; sourceTree = "<group>"; };
+		D85101051E22F77E003DB2E8 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -311,6 +314,7 @@
 		09A943BD1A4EB5F500C8A04F = {
 			isa = PBXGroup;
 			children = (
+				D85101051E22F77E003DB2E8 /* README.md */,
 				901644AF1AE36D6000163E3E /* Examples */,
 				09A943C91A4EB5F500C8A04F /* Sodium */,
 				09A943D61A4EB5F500C8A04F /* SodiumTests */,
@@ -362,6 +366,7 @@
 			isa = PBXGroup;
 			children = (
 				09A943D91A4EB5F500C8A04F /* SodiumTests.swift */,
+				D85101031E22EF5B003DB2E8 /* ReadmeTests.swift */,
 				09A943D71A4EB5F500C8A04F /* Supporting Files */,
 			);
 			path = SodiumTests;
@@ -842,6 +847,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				09A943DA1A4EB5F500C8A04F /* SodiumTests.swift in Sources */,
+				D85101041E22EF5B003DB2E8 /* ReadmeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
