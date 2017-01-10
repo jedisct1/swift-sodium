@@ -9,9 +9,6 @@
 import Foundation
 
 public class Utils {
-    public func zero(data: NSMutableData) {
-        sodium_memzero(UnsafeMutableRawPointer(data.mutableBytes), data.length)
-    }
 
     public func zero(data: inout Data)  {
       let count = data.count
@@ -37,10 +34,6 @@ public class Utils {
         }
     }
 
-    public func equals(_ b1: NSData, _ b2: NSData) -> Bool {
-      return equals(b1 as Data, b2 as Data)
-    }
-
     public func compare(_ b1: Data, _ b2: Data) -> Int? {
         if b1.count != b2.count {
             return nil
@@ -56,10 +49,6 @@ public class Utils {
         }
     }
 
-    public func compare(_ b1: NSData, _ b2: NSData) -> Int? {
-      return compare(b1 as Data, b2 as Data)
-    }
-
     public func bin2hex(bin: Data) -> String? {
         var hexData = Data(count: bin.count * 2 + 1)
         return hexData.withUnsafeMutableBytes { (hexPtr: UnsafeMutablePointer<Int8>) -> String? in
@@ -73,25 +62,34 @@ public class Utils {
         }
     }
 
-    public func bin2hex(bin: NSData) -> String? {
-      return bin2hex(bin: bin as Data)
-    }
-
-    public func hex2bin(hex: String, ignore: String? = nil) -> NSData? {
-        guard let hexData = hex.data(using: String.Encoding.utf8, allowLossyConversion: false) else {
+    public func hex2bin(hex: String, ignore: String? = nil) -> Data? {
+        guard var hexData = hex.data(using: .utf8, allowLossyConversion: false) else {
             return nil
         }
+
         let hexDataLen = hexData.count
         let binDataCapacity = hexDataLen / 2
-        guard let binData = NSMutableData(length: binDataCapacity) else {
-            return nil
-        }
+        var binData = Data(count: binDataCapacity)
         var binDataLen: size_t = 0
         let ignore_cstr = ignore != nil ? (ignore! as NSString).utf8String : nil
-        if sodium_hex2bin(binData.mutableBytesPtr(), binDataCapacity,(hexData as NSData).bytesPtr(), hexDataLen, ignore_cstr, &binDataLen, nil) != 0 {
+
+        let result = binData.withUnsafeMutableBytes { binPtr in
+          return hexData.withUnsafeMutableBytes { hexPtr in
+            return sodium_hex2bin(binPtr,
+                                  binDataCapacity,
+                                  hexPtr,
+                                  hexDataLen,
+                                  ignore_cstr,
+                                  &binDataLen,
+                                  nil)
+          }
+        }
+
+        if  result != 0 {
             return nil
         }
-        binData.length = Int(binDataLen)
+
+        binData.count = Int(binDataLen)
         return binData
     }
 }

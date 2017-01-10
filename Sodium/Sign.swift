@@ -13,10 +13,10 @@ public class Sign {
     public let PublicKeyBytes = Int(crypto_sign_publickeybytes())
     public let SecretKeyBytes = Int(crypto_sign_secretkeybytes())
     public let Bytes = Int(crypto_sign_bytes())
-    public let Primitive = String.init(validatingUTF8:crypto_sign_primitive())
+    public let Primitive = String(validatingUTF8: crypto_sign_primitive())
 
-    public typealias PublicKey = NSData
-    public typealias SecretKey = NSData
+    public typealias PublicKey = Data
+    public typealias SecretKey = Data
 
     public struct KeyPair {
         public let publicKey: PublicKey
@@ -29,84 +29,141 @@ public class Sign {
     }
 
     public func keyPair() -> KeyPair? {
-        guard let pk = NSMutableData(length: PublicKeyBytes) else {
+        var pk = Data(count: PublicKeyBytes)
+        var sk = Data(count: SecretKeyBytes)
+
+        let result = pk.withUnsafeMutableBytes { pkPtr in
+            return sk.withUnsafeMutableBytes { skPtr in
+                return crypto_sign_keypair(pkPtr, skPtr)
+            }
+        }
+
+        if result != 0 {
             return nil
         }
-        guard let sk = NSMutableData(length: SecretKeyBytes) else {
-            return nil
-        }
-        if crypto_sign_keypair(pk.mutableBytesPtr(), sk.mutableBytesPtr()) != 0 {
-            return nil
-        }
-        return KeyPair(publicKey: PublicKey(data: pk as Data), secretKey: SecretKey(data: sk as Data))
+
+        return KeyPair(publicKey: pk,
+                       secretKey: sk)
     }
 
-    public func keyPair(seed: NSData) -> KeyPair? {
-        if seed.length != SeedBytes {
+    public func keyPair(seed: Data) -> KeyPair? {
+        if seed.count != SeedBytes {
             return nil
         }
-        guard let pk = NSMutableData(length: PublicKeyBytes) else {
+
+        var pk = Data(count: PublicKeyBytes)
+        var sk = Data(count: SecretKeyBytes)
+
+        let result = pk.withUnsafeMutableBytes { pkPtr in
+            return sk.withUnsafeMutableBytes { skPtr in
+                return seed.withUnsafeBytes { seedPtr in
+                    return crypto_sign_seed_keypair(pkPtr, skPtr, seedPtr)
+                }
+            }
+        }
+
+        if result != 0 {
             return nil
         }
-        guard let sk = NSMutableData(length: SecretKeyBytes) else {
-            return nil
-        }
-        if crypto_sign_seed_keypair(pk.mutableBytesPtr(), sk.mutableBytesPtr(), seed.bytesPtr()) != 0 {
-            return nil
-        }
-        return KeyPair(publicKey: PublicKey(data: pk as Data), secretKey: SecretKey(data: sk as Data))
+
+        return KeyPair(publicKey: pk,
+                       secretKey: sk)
     }
 
-    public func sign(message: NSData, secretKey: SecretKey) -> NSData? {
-        if secretKey.length != SecretKeyBytes {
+    public func sign(message: Data, secretKey: SecretKey) -> Data? {
+        if secretKey.count != SecretKeyBytes {
             return nil
         }
-        guard let signedMessage = NSMutableData(length: message.length + Bytes) else {
+
+        var signedMessage = Data(count: message.count + Bytes)
+        let result = signedMessage.withUnsafeMutableBytes { signedMessagePtr in
+            return message.withUnsafeBytes { messagePtr in
+                return secretKey.withUnsafeBytes { secretKeyPtr in
+                    return crypto_sign(
+                      signedMessagePtr,
+                      nil,
+                      messagePtr,
+                      CUnsignedLongLong(message.count),
+                      secretKeyPtr)
+                }
+            }
+        }
+
+        if result != 0 {
             return nil
         }
-        if crypto_sign(signedMessage.mutableBytesPtr(), nil, message.bytesPtr(), CUnsignedLongLong(message.length), secretKey.bytesPtr()) != 0 {
-            return nil
-        }
+
         return signedMessage
     }
 
-    public func signature(message: NSData, secretKey: SecretKey) -> NSData? {
-        if secretKey.length != SecretKeyBytes {
+    public func signature(message: Data, secretKey: SecretKey) -> Data? {
+        if secretKey.count != SecretKeyBytes {
             return nil
         }
-        guard let signature = NSMutableData(length: Bytes) else {
+
+        var signature = Data(count: Bytes)
+        let result = signature.withUnsafeMutableBytes { signaturePtr in
+            return message.withUnsafeBytes { messagePtr in
+                return secretKey.withUnsafeBytes { secretKeyPtr in
+                    return crypto_sign_detached(
+                      signaturePtr,
+                      nil,
+                      messagePtr,
+                      CUnsignedLongLong(message.count),
+                      secretKeyPtr)
+                }
+            }
+        }
+
+        if result != 0 {
             return nil
         }
-        if crypto_sign_detached(signature.mutableBytesPtr(), nil, message.bytesPtr(), CUnsignedLongLong(message.length), secretKey.bytesPtr()) != 0 {
-            return nil
-        }
+
         return signature
     }
 
-    public func verify(signedMessage: NSData, publicKey: PublicKey) -> Bool {
-        let signature = signedMessage.subdata(with: NSRange(0..<Bytes)) as NSData
-        let message = signedMessage.subdata(with: NSRange(Bytes..<signedMessage.length)) as NSData
+    public func verify(signedMessage: Data, publicKey: PublicKey) -> Bool {
+        let signature = signedMessage.subdata(in: 0..<Bytes) as Data
+        let message = signedMessage.subdata(in: Bytes..<signedMessage.count) as Data
         return verify(message: message, publicKey: publicKey, signature: signature)
     }
 
-    public func verify(message: NSData, publicKey: PublicKey, signature: NSData) -> Bool {
-        if publicKey.length != PublicKeyBytes {
+    public func verify(message: Data, publicKey: PublicKey, signature: Data) -> Bool {
+        if publicKey.count != PublicKeyBytes {
             return false
         }
-        return crypto_sign_verify_detached(signature.bytesPtr(), message.bytesPtr(), CUnsignedLongLong(message.length), publicKey.bytesPtr()) == 0
+
+        return signature.withUnsafeBytes { signaturePtr in
+            return message.withUnsafeBytes { messagePtr in
+                return publicKey.withUnsafeBytes { publicKeyPtr in
+                    return crypto_sign_verify_detached(
+                      signaturePtr,
+                      messagePtr,
+                      CUnsignedLongLong(message.count), publicKeyPtr) == 0
+                }
+            }
+        }
     }
 
-    public func open(signedMessage: NSData, publicKey: PublicKey) -> NSData? {
-        if publicKey.length != PublicKeyBytes || signedMessage.length < Bytes {
+    public func open(signedMessage: Data, publicKey: PublicKey) -> Data? {
+        if publicKey.count != PublicKeyBytes || signedMessage.count < Bytes {
             return nil
         }
-        guard let message = NSMutableData(length: signedMessage.length - Bytes) else {
-            return nil
-        }
+
+        var message = Data(count: signedMessage.count - Bytes)
         var mlen: CUnsignedLongLong = 0;
-        if crypto_sign_open(message.mutableBytesPtr(), &mlen, signedMessage.bytesPtr(), CUnsignedLongLong(signedMessage.length), publicKey.bytesPtr()) != 0 {
+        let result = message.withUnsafeMutableBytes { messagePtr in
+            return signedMessage.withUnsafeBytes { signedMessagePtr in
+                return publicKey.withUnsafeBytes { publicKeyPtr in
+                    return crypto_sign_open(messagePtr, &mlen, signedMessagePtr, CUnsignedLongLong(signedMessage.count), publicKeyPtr)
+                }
+            }
+        }
+
+        if result != 0 {
             return nil
         }
+
         return message
     }
 }

@@ -9,23 +9,23 @@
 import Foundation
 
 extension String {
-    func toData() -> NSData? {
-        return self.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
+    func toData() -> Data? {
+        return self.data(using: .utf8, allowLossyConversion: false)
     }
 }
 
 extension Dictionary {
-    func toData() -> NSData? {
-        return NSKeyedArchiver.archivedDataWithRootObject(self as! AnyObject)
+    func toData() -> Data? {
+        return NSKeyedArchiver.archivedData(withRootObject: self) as Data?
     }
 }
 
-extension NSData {
+extension Data {
     func toString() -> String? {
-        return (NSString(data: self, encoding: NSUTF8StringEncoding) as! String)
+        return String(data: self, encoding: .utf8)
     }
 
     func toDictionary() -> [String: AnyObject]? {
-        return NSKeyedUnarchiver.unarchiveObjectWithData(self) as? [String: AnyObject]
+        return NSKeyedUnarchiver.unarchiveObject(with: self) as? [String: AnyObject]
     }
 }
