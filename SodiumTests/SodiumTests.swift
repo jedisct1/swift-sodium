@@ -102,29 +102,29 @@ class SodiumTests: XCTestCase {
 
     func testGenericHash() {
         let message = "My Test Message".toData()!
-        let h1 = sodium.utils.bin2hex(bin: sodium.genericHash.hash(message: message)!)!
+        let h1 = sodium.utils.bin2hex(sodium.genericHash.hash(message: message)!)!
         XCTAssert(h1 == "64a9026fca646c31df54426ad15a341e2444d8a1863d57eb27abecf239609f75")
 
-        let key = sodium.utils.hex2bin(hex: "64 a9 02 6f ca 64 6c 31 df 54", ignore: " ")
-        let h2 = sodium.utils.bin2hex(bin: sodium.genericHash.hash(message: message, key: key)!)!
+        let key = sodium.utils.hex2bin("64 a9 02 6f ca 64 6c 31 df 54", ignore: " ")
+        let h2 = sodium.utils.bin2hex(sodium.genericHash.hash(message: message, key: key)!)!
         XCTAssert(h2 == "1773f324cba2e7b0017e32d7e44f7afd1036c5d4ef9a80ae0e52e95a629844cd")
 
-        let h3 = sodium.utils.bin2hex(bin: sodium.genericHash.hash(message: message, key: key, outputLength: sodium.genericHash.BytesMax)!)!
+        let h3 = sodium.utils.bin2hex(sodium.genericHash.hash(message: message, key: key, outputLength: sodium.genericHash.BytesMax)!)!
         XCTAssert(h3 == "cba85e39f2d03923b2f66aba99b204333edc34a8443ab1700f7920c7abcc6639963a953f35162a520b21072ab906457d21f1645e6e3985858ee95a84d0771f07")
 
         let s1 = sodium.genericHash.initStream()!
         XCTAssertTrue(s1.update(input: message))
-        let h4 = sodium.utils.bin2hex(bin: s1.final()!)!
+        let h4 = sodium.utils.bin2hex(s1.final()!)!
         XCTAssert(h4 == h1)
 
         let s2 = sodium.genericHash.initStream(key: key, outputLength: sodium.genericHash.Bytes)!
         XCTAssertTrue(s2.update(input: message))
-        let h5 = sodium.utils.bin2hex(bin: s2.final()!)!
+        let h5 = sodium.utils.bin2hex(s2.final()!)!
         XCTAssert(h5 == h2)
 
         let s3 = sodium.genericHash.initStream(key: key, outputLength: sodium.genericHash.BytesMax)!
         XCTAssertTrue(s3.update(input: message))
-        let h6 = sodium.utils.bin2hex(bin: s3.final()!)!
+        let h6 = sodium.utils.bin2hex(s3.final()!)!
         XCTAssert(h6 == h3)
     }
 
@@ -157,19 +157,19 @@ class SodiumTests: XCTestCase {
 
     func testShortHash() {
         let message = "My Test Message".toData()!
-        let key = sodium.utils.hex2bin(hex: "00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff", ignore: " ")!
-        let h = sodium.utils.bin2hex(bin: sodium.shortHash.hash(message: message, key: key)!)!
+        let key = sodium.utils.hex2bin("00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff", ignore: " ")!
+        let h = sodium.utils.bin2hex(sodium.shortHash.hash(message: message, key: key)!)!
         XCTAssert(h == "bb9be85c918015ea")
     }
 
     func testSignature() {
         let message = "My Test Message".toData()!
-        let keyPair = sodium.sign.keyPair(seed: sodium.utils.hex2bin(hex: "00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff 00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff", ignore: " ")!)!
+        let keyPair = sodium.sign.keyPair(seed: sodium.utils.hex2bin("00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff 00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff", ignore: " ")!)!
         let signedMessage = sodium.sign.sign(message: message, secretKey: keyPair.secretKey)!
-        XCTAssert(sodium.utils.bin2hex(bin: signedMessage)! == "ce8437d58a27c4d91426d35b24cfaf1e49f95b213c15eddb198f4a8d24c0fdd0df3e7f7a894f60ec15cff25b5f6f27399ce01db0e2649fc54c91cafb8dd48a094d792054657374204d657373616765")
+        XCTAssert(sodium.utils.bin2hex(signedMessage)! == "ce8437d58a27c4d91426d35b24cfaf1e49f95b213c15eddb198f4a8d24c0fdd0df3e7f7a894f60ec15cff25b5f6f27399ce01db0e2649fc54c91cafb8dd48a094d792054657374204d657373616765")
 
         let signature = sodium.sign.signature(message: message, secretKey: keyPair.secretKey)!
-        XCTAssert(sodium.utils.bin2hex(bin: signature)! == "ce8437d58a27c4d91426d35b24cfaf1e49f95b213c15eddb198f4a8d24c0fdd0df3e7f7a894f60ec15cff25b5f6f27399ce01db0e2649fc54c91cafb8dd48a09")
+        XCTAssert(sodium.utils.bin2hex(signature)! == "ce8437d58a27c4d91426d35b24cfaf1e49f95b213c15eddb198f4a8d24c0fdd0df3e7f7a894f60ec15cff25b5f6f27399ce01db0e2649fc54c91cafb8dd48a09")
 
         XCTAssert(sodium.sign.verify(signedMessage: signedMessage, publicKey: keyPair.publicKey) == true)
         XCTAssert(sodium.sign.verify(message: message, publicKey: keyPair.publicKey, signature: signature) == true)
@@ -180,11 +180,11 @@ class SodiumTests: XCTestCase {
 
     func testUtils() {
         var dataToZero = Data(bytes: [1, 2, 3, 4] as [UInt8])
-        sodium.utils.zero(data: &dataToZero)
+        sodium.utils.zero(&dataToZero)
         XCTAssert(dataToZero == Data(bytes: [0, 0, 0, 0] as [UInt8]))
 
         var dataToZero2 = Data(bytes: [1, 2, 3, 4] as [UInt8])
-        sodium.utils.zero(data: &dataToZero2)
+        sodium.utils.zero(&dataToZero2)
         XCTAssert(dataToZero2 == Data(bytes: [0, 0, 0, 0,] as [UInt8]))
 
         let eq1 = Data(bytes: [1, 2, 3, 4] as [UInt8])
@@ -201,10 +201,10 @@ class SodiumTests: XCTestCase {
         XCTAssert(sodium.utils.compare(eq3, eq2)! == 1)
         XCTAssert(sodium.utils.compare(eq1, eq4) == nil)
 
-        let bin = sodium.utils.hex2bin(hex: "deadbeef")!
-        let hex = sodium.utils.bin2hex(bin: bin)
+        let bin = sodium.utils.hex2bin("deadbeef")!
+        let hex = sodium.utils.bin2hex(bin)
         XCTAssert(hex == "deadbeef")
-        let bin2 = sodium.utils.hex2bin(hex: "de-ad be:ef", ignore: ":- ")!
+        let bin2 = sodium.utils.hex2bin("de-ad be:ef", ignore: ":- ")!
         XCTAssert(bin2 == bin)
     }
 
@@ -222,8 +222,8 @@ class SodiumTests: XCTestCase {
         let password3 = "My Test Message".toData()!
         let salt = Data(bytes: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32] as [UInt8])
         let hash2 = sodium.pwHash.scrypt.hash(outputLength: 64, passwd: password3, salt: salt, opsLimit: sodium.pwHash.scrypt.OpsLimitInteractive, memLimit: sodium.pwHash.scrypt.MemLimitInteractive)
-        NSLog(sodium.utils.bin2hex(bin: hash2!)!)
-        XCTAssert(sodium.utils.bin2hex(bin: hash2!)! == "6f00c5630b0a113be73721d2bab7800c0fce4b4e7a74451704b53afcded3d9e85fbe1acea7d2aa0fecb3027e35d745547b1041d6c51f731bd0aa934da89f7adf")
+        NSLog(sodium.utils.bin2hex(hash2!)!)
+        XCTAssert(sodium.utils.bin2hex(hash2!)! == "6f00c5630b0a113be73721d2bab7800c0fce4b4e7a74451704b53afcded3d9e85fbe1acea7d2aa0fecb3027e35d745547b1041d6c51f731bd0aa934da89f7adf")
     }
 
     func testPwHash() {
@@ -240,6 +240,6 @@ class SodiumTests: XCTestCase {
         let password3 = "My Test Message".toData()!
         let salt = Data(bytes: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16] as [UInt8])
         let hash2 = sodium.pwHash.hash(outputLength: 64, passwd: password3, salt: salt, opsLimit: sodium.pwHash.OpsLimitInteractive, memLimit: sodium.pwHash.MemLimitInteractive)
-        XCTAssert(sodium.utils.bin2hex(bin: hash2!)! == "51d659ee6f8790042688274c5bc8a6296390cdc786d2341c3553b01a5c3f7ff1190e04b86a878538b17ef10e74baa19295479f3e3ee587ce571f366fc66e2fdc")
+        XCTAssert(sodium.utils.bin2hex(hash2!)! == "51d659ee6f8790042688274c5bc8a6296390cdc786d2341c3553b01a5c3f7ff1190e04b86a878538b17ef10e74baa19295479f3e3ee587ce571f366fc66e2fdc")
     }
 }

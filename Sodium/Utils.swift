@@ -15,7 +15,7 @@ public class Utils {
      
      - Parameter data: The `Data` object to zero.
      */
-    public func zero(data: inout Data)  {
+    public func zero(_ data: inout Data)  {
       let count = data.count
       data.withUnsafeMutableBytes { (dataPtr: UnsafeMutablePointer<UInt8>) in
         let rawPtr = UnsafeMutableRawPointer(dataPtr)
@@ -67,7 +67,7 @@ public class Utils {
      
      - Returns: The encoded hexdecimal string.
      */
-    public func bin2hex(bin: Data) -> String? {
+    public func bin2hex(_ bin: Data) -> String? {
         var hexData = Data(count: bin.count * 2 + 1)
         return hexData.withUnsafeMutableBytes { (hexPtr: UnsafeMutablePointer<Int8>) -> String? in
           return bin.withUnsafeBytes { (binPtr: UnsafePointer<UInt8>) -> String? in
@@ -88,7 +88,7 @@ public class Utils {
      
      - Returns: The decoded data.
      */
-    public func hex2bin(hex: String, ignore: String? = nil) -> Data? {
+    public func hex2bin(_ hex: String, ignore: String? = nil) -> Data? {
         guard var hexData = hex.data(using: .utf8, allowLossyConversion: false) else {
             return nil
         }

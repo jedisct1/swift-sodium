@@ -216,7 +216,7 @@ Zeroing memory
 ```swift
 let sodium = Sodium()!
 var dataToZero = "Message".data(using:.utf8)!
-sodium.utils.zero(data: &dataToZero)
+sodium.utils.zero(&dataToZero)
 ```
 
 Constant-time comparison
@@ -235,7 +235,7 @@ Constant-time hexadecimal encoding
 ```swift
 let sodium = Sodium()!
 let data = "Secret key".data(using:.utf8)!
-let hex = sodium.utils.bin2hex(bin: data)
+let hex = sodium.utils.bin2hex(data)
 ```
 
 Hexadecimal decoding
@@ -243,6 +243,6 @@ Hexadecimal decoding
 
 ```swift
 let sodium = Sodium()!
-let data1 = sodium.utils.hex2bin(hex: "deadbeef")
-let data2 = sodium.utils.hex2bin(hex: "de:ad be:ef", ignore: " :")
+let data1 = sodium.utils.hex2bin("deadbeef")
+let data2 = sodium.utils.hex2bin("de:ad be:ef", ignore: " :")
 ```
