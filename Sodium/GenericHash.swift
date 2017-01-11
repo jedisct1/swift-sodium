@@ -15,37 +15,60 @@ public class GenericHash {
     public let KeybytesMin = Int(crypto_generichash_keybytes_min())
     public let KeybytesMax = Int(crypto_generichash_keybytes_max())
     public let Keybytes = Int(crypto_generichash_keybytes())
-    public let Primitive = String.init(validatingUTF8:crypto_generichash_primitive())
+    public let Primitive = String.init(validatingUTF8: crypto_generichash_primitive())
 
-    public func hash(message: NSData, key: NSData? = nil) -> NSData? {
+    public func hash(message: Data, key: Data? = nil) -> Data? {
         return hash(message: message, key: key, outputLength: Bytes)
     }
 
-    public func hash(message: NSData, key: NSData?, outputLength: Int) -> NSData? {
-        guard let output = NSMutableData(length: outputLength) else {
-            return nil
-        }
-        var ret: CInt;
+    public func hash(message: Data, key: Data?, outputLength: Int) -> Data? {
+        var output = Data(count: outputLength)
+        var result: Int32 = -1
+
         if let key = key {
-            ret = crypto_generichash(output.mutableBytesPtr(), output.length, message.bytesPtr(), CUnsignedLongLong(message.length), key.bytesPtr(), key.length)
+            result = output.withUnsafeMutableBytes { outputPtr in
+                return message.withUnsafeBytes { messagePtr in
+                    return key.withUnsafeBytes { keyPtr in
+                        return crypto_generichash(
+                          outputPtr,
+                          output.count,
+                          messagePtr,
+                          CUnsignedLongLong(message.count),
+                          keyPtr,
+                          key.count)
+                    }
+                }
+            }
         } else {
-            ret = crypto_generichash(output.mutableBytesPtr(), output.length, message.bytesPtr(), CUnsignedLongLong(message.length), nil, 0)
+            result = output.withUnsafeMutableBytes { outputPtr in
+                return message.withUnsafeBytes { messagePtr in
+                    return crypto_generichash(
+                      outputPtr,
+                      output.count,
+                      messagePtr,
+                      CUnsignedLongLong(message.count),
+                      nil,
+                      0)
+                }
+            }
         }
-        if ret != 0 {
+
+        if result != 0 {
             return nil
         }
+
         return output
     }
 
-    public func hash(message: NSData, outputLength: Int) -> NSData? {
-        return hash(message: message, key: NSData(), outputLength: outputLength)
+    public func hash(message: Data, outputLength: Int) -> Data? {
+        return hash(message: message, key: nil, outputLength: outputLength)
     }
 
-    public func initStream(key: NSData? = nil) -> Stream? {
+    public func initStream(key: Data? = nil) -> Stream? {
         return Stream(key: key, outputLength: Bytes)
     }
 
-    public func initStream(key: NSData?, outputLength: Int) -> Stream? {
+    public func initStream(key: Data?, outputLength: Int) -> Stream? {
         return Stream(key: key, outputLength: outputLength)
     }
 
@@ -57,20 +80,26 @@ public class GenericHash {
         public var outputLength: Int = 0
         private var state: UnsafeMutablePointer<crypto_generichash_state>?
 
-        init?(key: NSData?, outputLength: Int) {
+        init?(key: Data?, outputLength: Int) {
             state = UnsafeMutablePointer<crypto_generichash_state>.allocate(capacity: 1)
             guard let state = state else {
                 return nil
             }
-            var ret: CInt
+
+            var result: Int32 = -1
+
             if let key = key {
-                ret = crypto_generichash_init(state, key.bytesPtr(), key.length, outputLength)
+                result = key.withUnsafeBytes { keyPtr in
+                    crypto_generichash_init(state, keyPtr, key.count, outputLength)
+                }
             } else {
-                ret = crypto_generichash_init(state, nil, 0, outputLength)
+                result = crypto_generichash_init(state, nil, 0, outputLength)
             }
-            if ret != 0 {
+
+            if result != 0 {
                 return nil
             }
+
             self.outputLength = outputLength;
         }
 
@@ -78,17 +107,22 @@ public class GenericHash {
             state?.deallocate(capacity: 1)
         }
 
-        public func update(input: NSData) -> Bool {
-            return crypto_generichash_update(state!, input.bytesPtr(), CUnsignedLongLong(input.length)) == 0
+        public func update(input: Data) -> Bool {
+            return input.withUnsafeBytes { inputPtr in
+                return crypto_generichash_update(state!, inputPtr, CUnsignedLongLong(input.count)) == 0
+            }
         }
 
-        public func final() -> NSData? {
-            guard let output = NSMutableData(length: outputLength) else {
+        public func final() -> Data? {
+            var output = Data(count: outputLength)
+            let result = output.withUnsafeMutableBytes { outputPtr in
+                crypto_generichash_final(state!, outputPtr, output.count)
+            }
+
+            if result != 0 {
                 return nil
             }
-            if crypto_generichash_final(state!, output.mutableBytesPtr(), output.length) != 0 {
-                return nil
-            }
+
             return output
         }
     }

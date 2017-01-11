@@ -19,33 +19,67 @@ public class PWHash {
     public let MemLimitModerate = Int(crypto_pwhash_memlimit_moderate())
     public let MemLimitSensitive = Int(crypto_pwhash_memlimit_sensitive())
 
-    public func str(passwd: NSData, opsLimit: Int, memLimit: Int) -> String? {
-        guard let output = NSMutableData(length: StrBytes) else {
+    public func str(passwd: Data, opsLimit: Int, memLimit: Int) -> String? {
+        var output = Data(count: StrBytes)
+        let result = output.withUnsafeMutableBytes { outputPtr in
+            return passwd.withUnsafeBytes { passwdPtr in
+                return crypto_pwhash_str(outputPtr,
+                                         passwdPtr,
+                                         CUnsignedLongLong(passwd.count),
+                                         CUnsignedLongLong(opsLimit),
+                                         size_t(memLimit))
+            }
+        }
+
+        if result != 0 {
             return nil
         }
-        if crypto_pwhash_str(output.mutableBytesPtr(), passwd.bytesPtr(), CUnsignedLongLong(passwd.length), CUnsignedLongLong(opsLimit), size_t(memLimit)) != 0 {
-            return nil
-        }
-        return NSString(data: output as Data, encoding: String.Encoding.utf8.rawValue) as String?
+
+        return String(data: output, encoding: .utf8)
     }
 
-    public func strVerify(hash: String, passwd: NSData) -> Bool {
-        guard let hashData = (hash + "\0").data(using: String.Encoding.utf8, allowLossyConversion: false) else {
+    public func strVerify(hash: String, passwd: Data) -> Bool {
+        guard let hashData = (hash + "\0").data(using: .utf8, allowLossyConversion: false) else {
                 return false
         }
-        return crypto_pwhash_str_verify((hashData as NSData).bytesPtr(), passwd.bytesPtr(), CUnsignedLongLong(passwd.length)) == 0
+
+        return hashData.withUnsafeBytes { hashPtr in
+            return passwd.withUnsafeBytes { passwdPtr in
+                return crypto_pwhash_str_verify(
+                  hashPtr,
+                  passwdPtr,
+                  CUnsignedLongLong(passwd.count)) == 0
+            }
+        }
     }
 
-    public func hash(outputLength: Int, passwd: NSData, salt: NSData, opsLimit: Int, memLimit: Int) -> NSData? {
-        if salt.length != SaltBytes {
+    public func hash(outputLength: Int, passwd: Data, salt: Data, opsLimit: Int, memLimit: Int) -> Data? {
+        if salt.count != SaltBytes {
             return nil
         }
-        guard let output = NSMutableData(length: outputLength) else {
+
+        var output = Data(count: outputLength)
+
+        let result = passwd.withUnsafeBytes { passwdPtr in
+            return salt.withUnsafeBytes { saltPtr in
+                return output.withUnsafeMutableBytes { outputPtr in
+                    return crypto_pwhash(
+                      outputPtr,
+                      CUnsignedLongLong(outputLength),
+                      passwdPtr,
+                      CUnsignedLongLong(passwd.count),
+                      saltPtr,
+                      CUnsignedLongLong(opsLimit),
+                      size_t(memLimit),
+                      crypto_pwhash_ALG_DEFAULT)
+                }
+            }
+        }
+
+        if result != 0 {
             return nil
         }
-        if crypto_pwhash(output.mutableBytesPtr(), CUnsignedLongLong(outputLength), passwd.bytesPtr(), CUnsignedLongLong(passwd.length), salt.bytesPtr(), CUnsignedLongLong(opsLimit), size_t(memLimit), crypto_pwhash_ALG_DEFAULT) != 0 {
-            return nil
-        }
+
         return output
     }
 
@@ -60,33 +94,69 @@ public class PWHash {
         public let MemLimitInteractive = Int(crypto_pwhash_scryptsalsa208sha256_memlimit_interactive())
         public let MemLimitSensitive = Int(crypto_pwhash_scryptsalsa208sha256_memlimit_sensitive())
 
-        public func str(passwd: NSData, opsLimit: Int, memLimit: Int) -> String? {
-            guard let output = NSMutableData(length: StrBytes) else {
+        public func str(passwd: Data, opsLimit: Int, memLimit: Int) -> String? {
+            var output = Data(count: StrBytes)
+
+            let result = output.withUnsafeMutableBytes { outputPtr in
+                return passwd.withUnsafeBytes { passwdPtr in
+                    crypto_pwhash_scryptsalsa208sha256_str(
+                      outputPtr,
+                      passwdPtr,
+                      CUnsignedLongLong(passwd.count),
+                      CUnsignedLongLong(opsLimit),
+                      size_t(memLimit))
+                }
+            }
+
+            if result != 0 {
                 return nil
             }
-            if crypto_pwhash_scryptsalsa208sha256_str(output.mutableBytesPtr(), passwd.bytesPtr(), CUnsignedLongLong(passwd.length), CUnsignedLongLong(opsLimit), size_t(memLimit)) != 0 {
-                return nil
-            }
-            return NSString(data: output as Data, encoding: String.Encoding.utf8.rawValue) as String?
+
+            return String(data: output, encoding: .utf8)
         }
 
-        public func strVerify(hash: String, passwd: NSData) -> Bool {
-            guard let hashData = (hash + "\0").data(using: String.Encoding.utf8, allowLossyConversion: false) else {
+        public func strVerify(hash: String, passwd: Data) -> Bool {
+            guard let hashData = (hash + "\0").data(using: .utf8, allowLossyConversion: false) else {
                 return false
             }
-            return crypto_pwhash_scryptsalsa208sha256_str_verify((hashData as NSData).bytesPtr(), passwd.bytesPtr(), CUnsignedLongLong(passwd.length)) == 0
+
+            return hashData.withUnsafeBytes { hashDataPtr in
+                return passwd.withUnsafeBytes { passwdPtr in
+                    return crypto_pwhash_scryptsalsa208sha256_str_verify(
+                      hashDataPtr,
+                      passwdPtr,
+                      CUnsignedLongLong(passwd.count)) == 0
+                }
+            }
+
         }
 
-        public func hash(outputLength: Int, passwd: NSData, salt: NSData, opsLimit: Int, memLimit: Int) -> NSData? {
-            if salt.length != SaltBytes {
+        public func hash(outputLength: Int, passwd: Data, salt: Data, opsLimit: Int, memLimit: Int) -> Data? {
+            if salt.count != SaltBytes {
                 return nil
             }
-            guard let output = NSMutableData(length: outputLength) else {
+
+            var output = Data(count: outputLength)
+
+            let result = output.withUnsafeMutableBytes { outputPtr in
+                return passwd.withUnsafeBytes { passwdPtr in
+                    return salt.withUnsafeBytes { saltPtr in
+                        return crypto_pwhash_scryptsalsa208sha256(
+                          outputPtr,
+                          CUnsignedLongLong(outputLength),
+                          passwdPtr,
+                          CUnsignedLongLong(passwd.count),
+                          saltPtr,
+                          CUnsignedLongLong(opsLimit),
+                          size_t(memLimit))
+                    }
+                }
+            }
+
+            if result != 0 {
                 return nil
             }
-            if crypto_pwhash_scryptsalsa208sha256(output.mutableBytesPtr(), CUnsignedLongLong(outputLength), passwd.bytesPtr(), CUnsignedLongLong(passwd.length), salt.bytesPtr(), CUnsignedLongLong(opsLimit), size_t(memLimit)) != 0 {
-                return nil
-            }
+
             return output
         }
     }

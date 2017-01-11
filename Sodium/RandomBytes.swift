@@ -9,14 +9,14 @@
 import Foundation
 
 public class RandomBytes {
-    public func buf(length: Int) -> NSData? {
+    public func buf(length: Int) -> Data? {
         if length < 0 {
             return nil
         }
-        guard let output = NSMutableData(length: length) else {
-            return nil
+        var output = Data(count: length)
+        output.withUnsafeMutableBytes { outputPtr in
+            randombytes_buf(outputPtr, output.count)
         }
-        randombytes_buf(output.mutableBytesPtr(), output.length)
         return output
     }
 

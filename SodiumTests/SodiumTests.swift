@@ -10,14 +10,14 @@ import XCTest
 import Sodium
 
 extension String {
-    func toData() -> NSData? {
-        return self.data(using: String.Encoding.utf8, allowLossyConversion: false) as NSData?
+    func toData() -> Data? {
+        return self.data(using: .utf8, allowLossyConversion: false)
     }
 }
 
-extension NSData {
+extension Data {
     func toString() -> String? {
-        return (NSString(data: self as Data, encoding: String.Encoding.utf8.rawValue) as! String)
+        return String(data: self, encoding: .utf8)
     }
 }
 
@@ -37,19 +37,19 @@ class SodiumTests: XCTestCase {
         let aliceKeyPair = sodium.box.keyPair()!
         let bobKeyPair = sodium.box.keyPair()!
 
-        let encryptedMessageFromAliceToBob: NSData = sodium.box.seal(message: message, recipientPublicKey: bobKeyPair.publicKey, senderSecretKey: aliceKeyPair.secretKey)!
+        let encryptedMessageFromAliceToBob: Data = sodium.box.seal(message: message, recipientPublicKey: bobKeyPair.publicKey, senderSecretKey: aliceKeyPair.secretKey)!
         let decrypted = sodium.box.open(nonceAndAuthenticatedCipherText: encryptedMessageFromAliceToBob, senderPublicKey: bobKeyPair.publicKey, recipientSecretKey: aliceKeyPair.secretKey)
         XCTAssert(decrypted == message)
 
-        let (encryptedMessageFromAliceToBob2, nonce): (NSData, Box.Nonce) = sodium.box.seal(message: message, recipientPublicKey: bobKeyPair.publicKey, senderSecretKey: aliceKeyPair.secretKey)!
+        let (encryptedMessageFromAliceToBob2, nonce): (Data, Box.Nonce) = sodium.box.seal(message: message, recipientPublicKey: bobKeyPair.publicKey, senderSecretKey: aliceKeyPair.secretKey)!
         let decrypted2 = sodium.box.open(authenticatedCipherText: encryptedMessageFromAliceToBob2, senderPublicKey: aliceKeyPair.publicKey, recipientSecretKey: bobKeyPair.secretKey, nonce: nonce)
         XCTAssert(decrypted2 == message)
 
-        let (encryptedMessageFromAliceToBob3, nonce2, mac): (NSData, Box.Nonce, Box.MAC) = sodium.box.seal(message: message, recipientPublicKey: bobKeyPair.publicKey, senderSecretKey: aliceKeyPair.secretKey)!
+        let (encryptedMessageFromAliceToBob3, nonce2, mac): (Data, Box.Nonce, Box.MAC) = sodium.box.seal(message: message, recipientPublicKey: bobKeyPair.publicKey, senderSecretKey: aliceKeyPair.secretKey)!
         let decrypted3 = sodium.box.open(authenticatedCipherText: encryptedMessageFromAliceToBob3, senderPublicKey: aliceKeyPair.publicKey, recipientSecretKey: bobKeyPair.secretKey, nonce: nonce2, mac: mac)
         XCTAssert(decrypted3 == message)
 
-        let encryptedMessageToBob: NSData = sodium.box.seal(message: message, recipientPublicKey: bobKeyPair.publicKey)!
+        let encryptedMessageToBob: Data = sodium.box.seal(message: message, recipientPublicKey: bobKeyPair.publicKey)!
         let decrypted4 = sodium.box.open(anonymousCipherText: encryptedMessageToBob, recipientPublicKey: bobKeyPair.publicKey,
             recipientSecretKey: bobKeyPair.secretKey)
         XCTAssert(decrypted4 == message)
@@ -61,11 +61,11 @@ class SodiumTests: XCTestCase {
         XCTAssert(aliceBeforenm == bobBeforenm)
 
         // Make sure the encryption using beforenm works
-        let encryptedMessageBeforenm: NSData = sodium.box.seal(message: message, beforenm: aliceBeforenm)!
+        let encryptedMessageBeforenm: Data = sodium.box.seal(message: message, beforenm: aliceBeforenm)!
         let decryptedBeforenm = sodium.box.open(nonceAndAuthenticatedCipherText: encryptedMessageBeforenm, beforenm: aliceBeforenm)
         XCTAssert(decryptedBeforenm == message)
 
-        let (encryptedMessageBeforenm2, nonceBeforenm): (NSData, Box.Nonce) = sodium.box.seal(message: message, beforenm: aliceBeforenm)!
+        let (encryptedMessageBeforenm2, nonceBeforenm): (Data, Box.Nonce) = sodium.box.seal(message: message, beforenm: aliceBeforenm)!
         let decryptedBeforenm2 = sodium.box.open(authenticatedCipherText: encryptedMessageBeforenm2, beforenm: aliceBeforenm, nonce: nonceBeforenm)
         XCTAssert(decryptedBeforenm2 == message)
     }
@@ -75,7 +75,7 @@ class SodiumTests: XCTestCase {
         let secretKey = sodium.secretBox.key()!
 
         // test simple nonce + mac + message box
-        let encrypted: NSData = sodium.secretBox.seal(message: message, secretKey: secretKey)!
+        let encrypted: Data = sodium.secretBox.seal(message: message, secretKey: secretKey)!
         let decrypted = sodium.secretBox.open(nonceAndAuthenticatedCipherText: encrypted, secretKey: secretKey)!
         XCTAssert(decrypted == message)
 
@@ -88,7 +88,7 @@ class SodiumTests: XCTestCase {
         let decrypted2 = sodium.secretBox.open(authenticatedCipherText: encrypted2, secretKey: secretKey, nonce: nonce2)
         XCTAssert(decrypted2 == message)
 
-        XCTAssertNil(sodium.secretBox.open(authenticatedCipherText: encrypted2, secretKey: secretKey, nonce: sodium.secretBox.nonce()!), "Shouldn't be able to decrypt with an invalid nonce")
+        XCTAssertNil(sodium.secretBox.open(authenticatedCipherText: encrypted2, secretKey: secretKey, nonce: sodium.secretBox.nonce()), "Shouldn't be able to decrypt with an invalid nonce")
 
         // test (message, nonce, mac) box
         let (encrypted3, nonce3, mac3) = sodium.secretBox.seal(message: message, secretKey: secretKey)!
@@ -132,8 +132,8 @@ class SodiumTests: XCTestCase {
         let randomLen = 100 + Int(sodium.randomBytes.uniform(upperBound: 100))
         let random1 = sodium.randomBytes.buf(length: randomLen)!
         let random2 = sodium.randomBytes.buf(length: randomLen)!
-        XCTAssert(random1.length == randomLen)
-        XCTAssert(random2.length == randomLen)
+        XCTAssert(random1.count == randomLen)
+        XCTAssert(random2.count == randomLen)
         XCTAssert(random1 != random2)
 
         var c1 = 0
@@ -179,25 +179,29 @@ class SodiumTests: XCTestCase {
     }
 
     func testUtils() {
-        let dataToZero = NSMutableData(bytes: [1, 2, 3, 4] as [UInt8], length: 4)
-        sodium.utils.zero(data: dataToZero)
-        XCTAssert(dataToZero.length == 0)
+        var dataToZero = Data(bytes: [1, 2, 3, 4] as [UInt8])
+        sodium.utils.zero(data: &dataToZero)
+        XCTAssert(dataToZero == Data(bytes: [0, 0, 0, 0] as [UInt8]))
 
-        let eq1 = NSData(bytes: [1, 2, 3, 4] as [UInt8], length: 4)
-        let eq2 = NSData(bytes: [1, 2, 3, 4] as [UInt8], length: 4)
-        let eq3 = NSData(bytes: [1, 2, 3, 5] as [UInt8], length: 4)
-        let eq4 = NSData(bytes: [1, 2, 3] as [UInt8], length: 3)
-        XCTAssert(sodium.utils.equals(b1: eq1, eq2))
-        XCTAssert(!sodium.utils.equals(b1: eq1, eq3))
-        XCTAssert(!sodium.utils.equals(b1: eq1, eq4))
+        var dataToZero2 = Data(bytes: [1, 2, 3, 4] as [UInt8])
+        sodium.utils.zero(data: &dataToZero2)
+        XCTAssert(dataToZero2 == Data(bytes: [0, 0, 0, 0,] as [UInt8]))
 
-        XCTAssert(sodium.utils.compare(b1: eq1, eq2)! == 0)
-        XCTAssert(sodium.utils.compare(b1: eq1, eq3)! == -1)
-        XCTAssert(sodium.utils.compare(b1: eq3, eq2)! == 1)
-        XCTAssert(sodium.utils.compare(b1: eq1, eq4) == nil)
+        let eq1 = Data(bytes: [1, 2, 3, 4] as [UInt8])
+        let eq2 = Data(bytes: [1, 2, 3, 4] as [UInt8])
+        let eq3 = Data(bytes: [1, 2, 3, 5] as [UInt8])
+        let eq4 = Data(bytes: [1, 2, 3] as [UInt8])
+
+        XCTAssert(sodium.utils.equals(eq1, eq2))
+        XCTAssert(!sodium.utils.equals(eq1, eq3))
+        XCTAssert(!sodium.utils.equals(eq1, eq4))
+
+        XCTAssert(sodium.utils.compare(eq1, eq2)! == 0)
+        XCTAssert(sodium.utils.compare(eq1, eq3)! == -1)
+        XCTAssert(sodium.utils.compare(eq3, eq2)! == 1)
+        XCTAssert(sodium.utils.compare(eq1, eq4) == nil)
 
         let bin = sodium.utils.hex2bin(hex: "deadbeef")!
-        XCTAssert(bin.description == "<deadbeef>")
         let hex = sodium.utils.bin2hex(bin: bin)
         XCTAssert(hex == "deadbeef")
         let bin2 = sodium.utils.hex2bin(hex: "de-ad be:ef", ignore: ":- ")!
@@ -216,7 +220,7 @@ class SodiumTests: XCTestCase {
         XCTAssert(verify2 == false)
 
         let password3 = "My Test Message".toData()!
-        let salt = NSData(bytes: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32] as [UInt8], length: 32)
+        let salt = Data(bytes: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32] as [UInt8])
         let hash2 = sodium.pwHash.scrypt.hash(outputLength: 64, passwd: password3, salt: salt, opsLimit: sodium.pwHash.scrypt.OpsLimitInteractive, memLimit: sodium.pwHash.scrypt.MemLimitInteractive)
         NSLog(sodium.utils.bin2hex(bin: hash2!)!)
         XCTAssert(sodium.utils.bin2hex(bin: hash2!)! == "6f00c5630b0a113be73721d2bab7800c0fce4b4e7a74451704b53afcded3d9e85fbe1acea7d2aa0fecb3027e35d745547b1041d6c51f731bd0aa934da89f7adf")
@@ -234,7 +238,7 @@ class SodiumTests: XCTestCase {
         XCTAssert(verify2 == false)
 
         let password3 = "My Test Message".toData()!
-        let salt = NSData(bytes: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16] as [UInt8], length: 16)
+        let salt = Data(bytes: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16] as [UInt8])
         let hash2 = sodium.pwHash.hash(outputLength: 64, passwd: password3, salt: salt, opsLimit: sodium.pwHash.OpsLimitInteractive, memLimit: sodium.pwHash.MemLimitInteractive)
         XCTAssert(sodium.utils.bin2hex(bin: hash2!)! == "51d659ee6f8790042688274c5bc8a6296390cdc786d2341c3553b01a5c3f7ff1190e04b86a878538b17ef10e74baa19295479f3e3ee587ce571f366fc66e2fdc")
     }

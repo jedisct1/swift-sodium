@@ -21,23 +21,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let sodium = Sodium()!
         let aliceKeyPair = sodium.box.keyPair()!
         let bobKeyPair = sodium.box.keyPair()!
-        let message: NSData = "My Test Message".toData()!
+        let message = "My Test Message".toData()!
 
-        println("Original Message:\(message.toString())")
+        print("Original Message:\(message.toString())")
 
-        let encryptedMessageFromAliceToBob: NSData =
-        sodium.box.seal(message,
-            recipientPublicKey: bobKeyPair.publicKey,
-            senderSecretKey: aliceKeyPair.secretKey)!
+        let encryptedMessageFromAliceToBob: Data =
+            sodium.box.seal(
+                message: message,
+                recipientPublicKey: bobKeyPair.publicKey,
+                senderSecretKey: aliceKeyPair.secretKey)!
 
-        println("Encrypted Message:\(encryptedMessageFromAliceToBob)")
+        print("Encrypted Message:\(encryptedMessageFromAliceToBob)")
 
         let messageVerifiedAndDecryptedByBob =
-        sodium.box.open(encryptedMessageFromAliceToBob,
-            senderPublicKey: bobKeyPair.publicKey,
-            recipientSecretKey: aliceKeyPair.secretKey)
+            sodium.box.open(
+              nonceAndAuthenticatedCipherText: encryptedMessageFromAliceToBob,
+                senderPublicKey: bobKeyPair.publicKey,
+                recipientSecretKey: aliceKeyPair.secretKey)
 
-        println("Decrypted Message:\(messageVerifiedAndDecryptedByBob!.toString())")
+        print("Decrypted Message:\(messageVerifiedAndDecryptedByBob!.toString())")
 
     }
 
