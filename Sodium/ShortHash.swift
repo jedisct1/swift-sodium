@@ -12,6 +12,14 @@ public class ShortHash {
     public let Bytes = Int(crypto_shorthash_bytes())
     public let KeyBytes = Int(crypto_shorthash_keybytes())
 
+    /**
+     Computes short but unpredictable (without knowing the secret key) values suitable for picking a list in a hash table for a given key.
+ 
+     - Parameter message: The data to be hashed.
+     - Parameter key: The hash key.  Must be of length `KeyBytes`. Can be created using `RandomBytes.buf()`.
+ 
+     - Returns: The computed fingerprint.  Will be of length `Bytes`.
+     */
     public func hash(message: Data, key: Data) -> Data? {
         if key.count != KeyBytes {
             return nil

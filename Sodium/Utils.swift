@@ -10,6 +10,11 @@ import Foundation
 
 public class Utils {
 
+    /**
+     Tries to effectively zero bytes in `data`, even if optimizations are being applied to the code.
+     
+     - Parameter data: The `Data` object to zero.
+     */
     public func zero(data: inout Data)  {
       let count = data.count
       data.withUnsafeMutableBytes { (dataPtr: UnsafeMutablePointer<UInt8>) in
@@ -19,6 +24,9 @@ public class Utils {
       }
     }
 
+    /**
+     - Returns: `true` if the bytes in `b1` match the bytes in `b2`. Otherwise, it returns false.
+     */
     public func equals(_ b1: Data, _ b2: Data) -> Bool {
         if b1.count != b2.count {
             return false
@@ -34,6 +42,9 @@ public class Utils {
         }
     }
 
+    /**
+     - Returns: 0 if the bytes in `b1` match the bytes in `b2`. Otherwise, it returns -1.
+     */
     public func compare(_ b1: Data, _ b2: Data) -> Int? {
         if b1.count != b2.count {
             return nil
@@ -49,6 +60,13 @@ public class Utils {
         }
     }
 
+    /**
+     Converts bytes stored in `bin` into a hexadecimal string.
+     
+     - Parameter bin: The data to encode as hexdecimal.
+     
+     - Returns: The encoded hexdecimal string.
+     */
     public func bin2hex(bin: Data) -> String? {
         var hexData = Data(count: bin.count * 2 + 1)
         return hexData.withUnsafeMutableBytes { (hexPtr: UnsafeMutablePointer<Int8>) -> String? in
@@ -62,6 +80,14 @@ public class Utils {
         }
     }
 
+    /**
+     Decode as a hexdecimal string, ignoring characters included for readability.
+     
+     - Parameter hex: The hexdecimal string to decode.
+     - Parameter ignore: Optional string containing readability characters to ignore during decoding.
+     
+     - Returns: The decoded data.
+     */
     public func hex2bin(hex: String, ignore: String? = nil) -> Data? {
         guard var hexData = hex.data(using: .utf8, allowLossyConversion: false) else {
             return nil

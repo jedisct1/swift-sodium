@@ -28,6 +28,11 @@ public class Sign {
         }
     }
 
+    /**
+     Randomly generates a signing secret key and a corresponding public key.
+     
+     - Returns: A key pair containing the secret key and public key.
+     */
     public func keyPair() -> KeyPair? {
         var pk = Data(count: PublicKeyBytes)
         var sk = Data(count: SecretKeyBytes)
@@ -46,6 +51,13 @@ public class Sign {
                        secretKey: sk)
     }
 
+    /**
+     Generates a signing secret key and a corresponding public key based on a provided seed value
+     
+     - Parameter seed: The value from which to derive the secret and public key.
+     
+     - Returns: A key pair containing the secret key and public key.
+     */
     public func keyPair(seed: Data) -> KeyPair? {
         if seed.count != SeedBytes {
             return nil
@@ -70,6 +82,14 @@ public class Sign {
                        secretKey: sk)
     }
 
+    /**
+     Signs a message with the sender's secret key
+     
+     - Parameter message: The message to encrypt.
+     - Parameter secretKey: The sender's secret key.
+     
+     - Returns: The signed message.
+     */
     public func sign(message: Data, secretKey: SecretKey) -> Data? {
         if secretKey.count != SecretKeyBytes {
             return nil
@@ -96,6 +116,14 @@ public class Sign {
         return signedMessage
     }
 
+    /**
+     Computes a detached signature for a message with the sender's secret key
+     
+     - Parameter message: The message to encrypt.
+     - Parameter secretKey: The sender's secret key.
+     
+     - Returns: The computed signature.
+     */
     public func signature(message: Data, secretKey: SecretKey) -> Data? {
         if secretKey.count != SecretKeyBytes {
             return nil
@@ -122,12 +150,29 @@ public class Sign {
         return signature
     }
 
+    /**
+     Verifies a signed message with the sender's public key
+     
+     - Parameter signedMessage: The signed message to verify.
+     - Parameter publicKey: The sender's public key.
+     
+     - Returns: `true` if verification is successful.
+     */
     public func verify(signedMessage: Data, publicKey: PublicKey) -> Bool {
         let signature = signedMessage.subdata(in: 0..<Bytes) as Data
         let message = signedMessage.subdata(in: Bytes..<signedMessage.count) as Data
         return verify(message: message, publicKey: publicKey, signature: signature)
     }
 
+    /**
+     Verifies the detached signature of a message with the sender's public key
+     
+     - Parameter message: The message to verify.
+     - Parameter publicKey: The sender's public key.
+     - Parameter signature: The detached signature to verify.
+     
+     - Returns: `true` if verification is successful.
+     */
     public func verify(message: Data, publicKey: PublicKey, signature: Data) -> Bool {
         if publicKey.count != PublicKeyBytes {
             return false
@@ -145,6 +190,14 @@ public class Sign {
         }
     }
 
+    /**
+     Extracts and returns the message data of a signed message if the signature is verified  with the sender's secret key.
+     
+     - Parameter signedMessage: The signed message to open.
+     - Parameter publicKey: The sender's public key.
+     
+     - Returns: The message data if verification is successful.
+     */
     public func open(signedMessage: Data, publicKey: PublicKey) -> Data? {
         if publicKey.count != PublicKeyBytes || signedMessage.count < Bytes {
             return nil

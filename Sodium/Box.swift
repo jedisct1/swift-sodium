@@ -34,6 +34,12 @@ public class Box {
         }
     }
 
+    
+    /**
+     Randomly generates an encryption secret key and a corresponding public key.
+     
+     - Returns: A key pair containing the secret key and public key.
+     */
     public func keyPair() -> KeyPair? {
         var pk = Data(count: PublicKeyBytes)
         var sk = Data(count: SecretKeyBytes)
@@ -50,6 +56,13 @@ public class Box {
         return KeyPair(publicKey: pk, secretKey: sk)
     }
 
+    /**
+     Generates an encryption secret key and a corresponding public key based on a provided seed value
+     
+     - Parameter seed: The value from which to derive the secret and public key.
+     
+     - Returns: A key pair containing the secret key and public key.
+     */
     public func keyPair(seed: Data) -> KeyPair? {
         if seed.count != SeedBytes {
             return nil
@@ -81,6 +94,15 @@ public class Box {
         return nonce
     }
 
+    /**
+     Encrypts a message with a recipient's public key and a sender's secret key
+     
+     - Parameter message: The message to encrypt.
+     - Parameter recipientPublicKey: The recipient's public key.
+     - Parameter senderSecretKey: The sender's secret key.
+     
+     - Returns: A `Data` object containing the nonce and authenticated ciphertext.
+     */
     public func seal(message: Data, recipientPublicKey: PublicKey, senderSecretKey: SecretKey) -> Data? {
         guard let (authenticatedCipherText, nonce): (Data, Nonce) = seal(message: message, recipientPublicKey: recipientPublicKey, senderSecretKey: senderSecretKey) else {
             return nil
@@ -90,6 +112,15 @@ public class Box {
         return nonceAndAuthenticatedCipherText
     }
 
+    /**
+     Encrypts a message with a recipient's public key and a sender's secret key
+     
+     - Parameter message: The message to encrypt.
+     - Parameter recipientPublicKey: The recipient's public key.
+     - Parameter senderSecretKey: The sender's secret key.
+     
+     - Returns: The authenticated ciphertext and encryption nonce.
+     */
     public func seal(message: Data, recipientPublicKey: PublicKey, senderSecretKey: SecretKey) -> (authenticatedCipherText: Data, nonce: Nonce)? {
         if recipientPublicKey.count != PublicKeyBytes || senderSecretKey.count != SecretKeyBytes {
             return nil
@@ -122,6 +153,15 @@ public class Box {
         return (authenticatedCipherText: authenticatedCipherText, nonce: nonce)
     }
 
+    /**
+     Encrypts a message with a recipient's public key and a sender's secret key (Detached mode).
+     
+     - Parameter message: The message to encrypt.
+     - Parameter recipientPublicKey: The recipient's public key.
+     - Parameter senderSecretKey: The sender's secret key.
+     
+     - Returns: The authenticated ciphertext, encryption nonce, and authentication tag.
+     */
     public func seal(message: Data, recipientPublicKey: PublicKey, senderSecretKey: SecretKey) -> (authenticatedCipherText: Data, nonce: Nonce, mac: MAC)? {
         if recipientPublicKey.count != PublicKeyBytes || senderSecretKey.count != SecretKeyBytes {
             return nil
@@ -157,6 +197,15 @@ public class Box {
         return (authenticatedCipherText: authenticatedCipherText, nonce: nonce as Nonce, mac: mac as MAC)
     }
 
+    /**
+     Decrypts a message with a sender's public key and the recipient's secret key
+     
+     - Parameter nonceAndAuthenticatedCipherText: A `Data` object containing the nonce and authenticated ciphertext.
+     - Parameter senderPublicKey: The sender's public key.
+     - Parameter recipientSecretKey: The recipient's secret key.
+     
+     - Returns: The decrypted message.
+     */
     public func open(nonceAndAuthenticatedCipherText: Data, senderPublicKey: PublicKey, recipientSecretKey: SecretKey) -> Data? {
         if nonceAndAuthenticatedCipherText.count < NonceBytes + MacBytes {
             return nil
@@ -166,6 +215,16 @@ public class Box {
         return open(authenticatedCipherText: authenticatedCipherText, senderPublicKey: senderPublicKey, recipientSecretKey: recipientSecretKey, nonce: nonce)
     }
 
+    /**
+     Decrypts a message with a sender's public key, recipient's secret key, and encryption nonce.
+     
+     - Parameter authenticatedCipherText: The authenticated ciphertext.
+     - Parameter senderPublicKey: The sender's public key.
+     - Parameter recipientSecretKey: The recipient's secret key.
+     - Parameter nonce: The encryption nonce.
+     
+     - Returns: The decrypted message.
+     */
     public func open(authenticatedCipherText: Data, senderPublicKey: PublicKey, recipientSecretKey: SecretKey, nonce: Nonce) -> Data? {
         if nonce.count != NonceBytes || authenticatedCipherText.count < MacBytes {
             return nil
@@ -201,6 +260,17 @@ public class Box {
         return message
     }
 
+    /**
+     Decrypts a message with a sender's public key, recipient's secret key, encryption nonce, and authentication tag.
+     
+     - Parameter authenticatedCipherText: The authenticated ciphertext.
+     - Parameter senderPublicKey: The sender's public key.
+     - Parameter recipientSecretKey: The recipient's secret key.
+     - Parameter nonce: The encryption nonce.
+     - Parameter mac: The authentication tag.
+     
+     - Returns: The decrypted message.
+     */
     public func open(authenticatedCipherText: Data, senderPublicKey: PublicKey, recipientSecretKey: SecretKey, nonce: Nonce, mac: MAC) -> Data? {
         if nonce.count != NonceBytes || mac.count != MacBytes {
             return nil
@@ -238,6 +308,16 @@ public class Box {
         return message
     }
 
+    /**
+     Computes a shared secret key given a public key and a secret key.
+ 
+     Applications that send several messages to the same receiver or receive several messages from the same sender can gain speed by calculating the shared key only once, and reusing it in subsequent operations.
+ 
+     - Parameter recipientPublicKey: The recipient's public key.
+     - Parameter senderSecretKey: The sender's secret key.
+ 
+     - Returns: The computed shared secret key
+     */
     public func beforenm(recipientPublicKey: PublicKey, senderSecretKey: SecretKey) -> Data? {
         var key = Data(count: BeforenmBytes)
         let result = key.withUnsafeMutableBytes { keyPtr in
@@ -255,6 +335,14 @@ public class Box {
         return key
     }
 
+    /**
+     Encrypts a message with the shared secret key generated from a recipient's public key and a sender's secret key using `beforenm()`.
+     
+     - Parameter message: The message to encrypt.
+     - Parameter beforenm: The shared secret key.
+     
+     - Returns: The authenticated ciphertext and encryption nonce.
+     */
     public func seal(message: Data, beforenm: Beforenm) -> (authenticatedCipherText: Data, nonce: Nonce)? {
         if beforenm.count != BeforenmBytes {
             return nil
@@ -285,6 +373,14 @@ public class Box {
         return (authenticatedCipherText: authenticatedCipherText, nonce: nonce)
     }
 
+    /**
+     Decrypts a message with the shared secret key generated from a recipient's public key and a sender's secret key using `beforenm()`.
+     
+     - Parameter nonceAndAuthenticatedCipherText: A `Data` object containing the nonce and authenticated ciphertext.
+     - Parameter beforenm: The shared secret key.
+     
+     - Returns: The decrypted message.
+     */
     public func open(nonceAndAuthenticatedCipherText: Data, beforenm: Beforenm) -> Data? {
         if nonceAndAuthenticatedCipherText.count < NonceBytes + MacBytes {
             return nil
@@ -295,6 +391,15 @@ public class Box {
         return  open(authenticatedCipherText: authenticatedCipherText, beforenm: beforenm, nonce: nonce)
     }
 
+    /**
+     Decrypts a message and encryption nonce with the shared secret key generated from a recipient's public key and a sender's secret key using `beforenm()`.
+     
+     - Parameter authenticatedCipherText: The authenticated ciphertext.
+     - Parameter beforenm: The shared secret key.
+     - Parameter nonce: The encryption nonce.
+     
+     - Returns: The decrypted message.
+     */
     public func open(authenticatedCipherText: Data, beforenm: Beforenm, nonce: Nonce) -> Data? {
         if nonce.count != NonceBytes || authenticatedCipherText.count < MacBytes {
             return nil
@@ -327,6 +432,14 @@ public class Box {
         return message
     }
 
+    /**
+     Encrypts a message with the shared secret key generated from a recipient's public key and a sender's secret key using `beforenm()`.
+     
+     - Parameter message: The message to encrypt.
+     - Parameter beforenm: The shared secret key.
+     
+     - Returns: A `Data` object containing the encryption nonce and authenticated ciphertext.
+     */
     public func seal(message: Data, beforenm: Beforenm) -> Data? {
         guard let (authenticatedCipherText, nonce): (Data, Nonce) = seal(message: message, beforenm: beforenm) else {
             return nil
@@ -337,6 +450,14 @@ public class Box {
         return nonceAndAuthenticatedCipherText
     }
 
+    /**
+     Encrypts a message with a recipient's public key
+     
+     - Parameter message: The message to encrypt.
+     - Parameter recipientPublicKey: The recipient's public key.
+     
+     - Returns: The anonymous ciphertext.
+     */
     public func seal(message: Data, recipientPublicKey: Box.PublicKey) -> Data? {
         if recipientPublicKey.count != PublicKeyBytes {
             return nil
@@ -362,6 +483,15 @@ public class Box {
         return anonymousCipherText
     }
 
+    /**
+     Decrypts a message with the recipient's public key and secret key
+     
+     - Parameter anonymousCipherText: A `Data` object containing the anonymous ciphertext.
+     - Parameter senderPublicKey: The recipient's public key.
+     - Parameter recipientSecretKey: The recipient's secret key.
+     
+     - Returns: The decrypted message.
+     */
     public func open(anonymousCipherText: Data, recipientPublicKey: PublicKey, recipientSecretKey: SecretKey) -> Data? {
         if recipientPublicKey.count != PublicKeyBytes || recipientSecretKey.count != SecretKeyBytes || anonymousCipherText.count < SealBytes {
             return nil
