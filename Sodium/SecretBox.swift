@@ -17,6 +17,11 @@ public class SecretBox {
     public typealias Nonce = Data
     public typealias MAC = Data
 
+    /**
+     Randomly generates a shared secret key.
+     
+     - Returns: The generated key.
+     */
     public func key() -> Key? {
         var k = Data(count: KeyBytes)
         k.withUnsafeMutableBytes { kPtr in
@@ -25,6 +30,11 @@ public class SecretBox {
         return k
     }
 
+    /**
+     Randomly generates an ecryption nonce.
+     
+     - Returns: The generated nonce.
+     */
     public func nonce() -> Nonce {
         var n = Data(count: NonceBytes)
         n.withUnsafeMutableBytes { nPtr in
@@ -33,6 +43,14 @@ public class SecretBox {
         return n
     }
 
+    /**
+     Encrypts a message with a shared secret key.
+     
+     - Parameter message: The message to encrypt.
+     - Parameter secretKey: The shared secret key.
+     
+     - Returns: A `Data` object containing the nonce and authenticated ciphertext.
+     */
     public func seal(message: Data, secretKey: Key) -> Data? {
         guard let (authenticatedCipherText, nonce): (Data, Nonce) = seal(message: message, secretKey: secretKey) else {
             return nil
@@ -43,6 +61,14 @@ public class SecretBox {
         return nonceAndAuthenticatedCipherText
     }
 
+    /**
+     Encrypts a message with a shared secret key.
+     
+     - Parameter message: The message to encrypt.
+     - Parameter secretKey: The shared secret key.
+     
+     - Returns: The authenticated ciphertext and encryption nonce.
+     */
     public func seal(message: Data, secretKey: Key) -> (authenticatedCipherText: Data, nonce: Nonce)? {
         if secretKey.count != KeyBytes {
             return nil
@@ -73,6 +99,14 @@ public class SecretBox {
         return (authenticatedCipherText: authenticatedCipherText, nonce: nonce)
     }
 
+    /**
+     Encrypts a message with a shared secret key (Detached mode).
+     
+     - Parameter message: The message to encrypt.
+     - Parameter secretKey: The shared secret key.
+     
+     - Returns: The encrypted ciphertext, encryption nonce, and authentication tag.
+     */
     public func seal(message: Data, secretKey: Key) -> (cipherText: Data, nonce: Nonce, mac: MAC)? {
         if secretKey.count != KeyBytes {
             return nil
@@ -107,6 +141,14 @@ public class SecretBox {
         return (cipherText: cipherText, nonce: nonce, mac: mac)
     }
 
+    /**
+     Decrypts a message with a shared secret key
+     
+     - Parameter nonceAndAuthenticatedCipherText: A `Data` object containing the nonce and authenticated ciphertext.
+     - Parameter secretKey: The shared secret key.
+     
+     - Returns: The decrypted message.
+     */
     public func open(nonceAndAuthenticatedCipherText: Data, secretKey: Key) -> Data? {
         if nonceAndAuthenticatedCipherText.count < MacBytes + NonceBytes {
             return nil
@@ -117,6 +159,15 @@ public class SecretBox {
         return open(authenticatedCipherText: authenticatedCipherText, secretKey: secretKey, nonce: nonce)
     }
 
+    /**
+     Decrypts a message with a shared secret key and encryption nonce.
+     
+     - Parameter authenticatedCipherText: The authenticated ciphertext.
+     - Parameter secretKey: The shared secret key.
+     - Parameter nonce: The encryption nonce.
+     
+     - Returns: The decrypted message.
+     */
     public func open(authenticatedCipherText: Data, secretKey: Key, nonce: Nonce) -> Data? {
         if authenticatedCipherText.count < MacBytes {
             return nil
@@ -146,6 +197,15 @@ public class SecretBox {
         return message
     }
 
+    /**
+     Decrypts a message with a shared secret key, encryption nonce, and authentication tag.
+     
+     - Parameter cipherText: The encrypted ciphertext.
+     - Parameter secretKey: The shared secret key.
+     - Parameter nonce: The encryption nonce.
+     
+     - Returns: The decrypted message.
+     */
     public func open(cipherText: Data, secretKey: Key, nonce: Nonce, mac: MAC) -> Data? {
         if nonce.count != NonceBytes || mac.count != MacBytes {
             return nil
