@@ -18,7 +18,7 @@ public class Sodium {
     public var sign = Sign()
     public var utils = Utils()
 
-    public init?() {
+    public init() {
         struct Once {
             static var once : () = {
                 if sodium_init() == -1 {
