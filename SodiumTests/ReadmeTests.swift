@@ -76,14 +76,14 @@ class ReadmeTests : XCTestCase {
     func testDeterministicHashing() {
         let sodium = Sodium()!
         let message = "My Test Message".data(using:.utf8)!
-        let h = sodium.genericHash.hash(message: message )
+        let h = sodium.genericHash.hash(message: message)
     }
 
     func testKeyedHashing() {
         let sodium = Sodium()!
         let message = "My Test Message".data(using:.utf8)!
         let key = "Secret key".data(using:.utf8)!
-        let h = sodium.genericHash.hash(message: message, key: key )
+        let h = sodium.genericHash.hash(message: message, key: key)
     }
 
     func testStreaming() {
@@ -91,9 +91,9 @@ class ReadmeTests : XCTestCase {
         let message1 = "My Test ".data(using:.utf8)!
         let message2 = "Message".data(using:.utf8)!
         let key = "Secret key".data(using:.utf8)!
-        let stream = sodium.genericHash.initStream(key: key )!
-        stream.update(input: message1 )
-        stream.update(input: message2 )
+        let stream = sodium.genericHash.initStream(key: key)!
+        stream.update(input: message1)
+        stream.update(input: message2)
         let h = stream.final()
     }
 
@@ -101,7 +101,7 @@ class ReadmeTests : XCTestCase {
         let sodium = Sodium()!
         let message = "My Test Message".data(using:.utf8)!
         let key = sodium.randomBytes.buf(length: sodium.shortHash.KeyBytes)!
-        let h = sodium.shortHash.hash(message: message, key: key )
+        let h = sodium.shortHash.hash(message: message, key: key)
     }
 
     func testRandomNumberGeneration() {
@@ -116,7 +116,7 @@ class ReadmeTests : XCTestCase {
                                           opsLimit: sodium.pwHash.OpsLimitInteractive,
                                           memLimit: sodium.pwHash.MemLimitInteractive)!
 
-        if sodium.pwHash.strVerify(hash: hashedStr, passwd: password ) {
+        if sodium.pwHash.strVerify(hash: hashedStr, passwd: password) {
             // Password matches the given hash string
         } else {
             // Password doesn't match the given hash string

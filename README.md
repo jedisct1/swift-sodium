@@ -143,7 +143,7 @@ Deterministic hashing
 ```swift
 let sodium = Sodium()!
 let message = "My Test Message".data(using:.utf8)!
-let h = sodium.genericHash.hash(message: message )
+let h = sodium.genericHash.hash(message: message)
 ```
 
 Keyed hashing
@@ -153,7 +153,7 @@ Keyed hashing
 let sodium = Sodium()!
 let message = "My Test Message".data(using:.utf8)!
 let key = "Secret key".data(using:.utf8)!
-let h = sodium.genericHash.hash(message: message, key: key )
+let h = sodium.genericHash.hash(message: message, key: key)
 ```
 
 Streaming
@@ -164,9 +164,9 @@ let sodium = Sodium()!
 let message1 = "My Test ".data(using:.utf8)!
 let message2 = "Message".data(using:.utf8)!
 let key = "Secret key".data(using:.utf8)!
-let stream = sodium.genericHash.initStream(key: key )!
-stream.update(input: message1 )
-stream.update(input: message2 )
+let stream = sodium.genericHash.initStream(key: key)!
+stream.update(input: message1)
+stream.update(input: message2)
 let h = stream.final()
 ```
 
@@ -177,7 +177,7 @@ Short-output hashing (SipHash)
 let sodium = Sodium()!
 let message = "My Test Message".data(using:.utf8)!
 let key = sodium.randomBytes.buf(length: sodium.shortHash.KeyBytes)!
-let h = sodium.shortHash.hash(message: message, key: key )
+let h = sodium.shortHash.hash(message: message, key: key)
 ```
 
 Random numbers generation
@@ -200,7 +200,7 @@ let hashedStr = sodium.pwHash.str(passwd: password,
                                     opsLimit: sodium.pwHash.OpsLimitInteractive,
                                     memLimit: sodium.pwHash.MemLimitInteractive)!
 
-if sodium.pwHash.strVerify(hash: hashedStr, passwd: password ) {
+if sodium.pwHash.strVerify(hash: hashedStr, passwd: password) {
     // Password matches the given hash string
 } else {
     // Password doesn't match the given hash string
