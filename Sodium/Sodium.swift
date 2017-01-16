@@ -19,12 +19,8 @@ public class Sodium {
     public var utils = Utils()
 
     public init?() {
-        struct Once {
-            static var once : () = {
-                if sodium_init() == -1 {
-                    abort()
-                }
-            }()
+        if sodium_init() == -1 {
+            return nil
         }
     }
 }
