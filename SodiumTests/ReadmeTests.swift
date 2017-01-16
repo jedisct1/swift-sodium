@@ -25,6 +25,8 @@ class ReadmeTests : XCTestCase {
             sodium.box.open(nonceAndAuthenticatedCipherText: encryptedMessageFromAliceToBob,
                             senderPublicKey: aliceKeyPair.publicKey,
                             recipientSecretKey: bobKeyPair.secretKey)
+
+        XCTAssertNotNil(messageVerifiedAndDecryptedByBob)
     }
 
     func testAnonymousEncryptionSealedBoxes() {
@@ -39,6 +41,8 @@ class ReadmeTests : XCTestCase {
             sodium.box.open(anonymousCipherText: encryptedMessageToBob,
                             recipientPublicKey: bobKeyPair.publicKey,
                             recipientSecretKey: bobKeyPair.secretKey)
+
+        XCTAssertNotNil(messageDecryptedByBob)
     }
 
     func testDetachedSignatures() {
@@ -76,14 +80,18 @@ class ReadmeTests : XCTestCase {
     func testDeterministicHashing() {
         let sodium = Sodium()!
         let message = "My Test Message".data(using:.utf8)!
-        let h = sodium.genericHash.hash(message: message )
+        let h = sodium.genericHash.hash(message: message)
+
+        XCTAssertNotNil(h)
     }
 
     func testKeyedHashing() {
         let sodium = Sodium()!
         let message = "My Test Message".data(using:.utf8)!
         let key = "Secret key".data(using:.utf8)!
-        let h = sodium.genericHash.hash(message: message, key: key )
+        let h = sodium.genericHash.hash(message: message, key: key)
+
+        XCTAssertNotNil(h)
     }
 
     func testStreaming() {
@@ -91,22 +99,28 @@ class ReadmeTests : XCTestCase {
         let message1 = "My Test ".data(using:.utf8)!
         let message2 = "Message".data(using:.utf8)!
         let key = "Secret key".data(using:.utf8)!
-        let stream = sodium.genericHash.initStream(key: key )!
-        stream.update(input: message1 )
-        stream.update(input: message2 )
+        let stream = sodium.genericHash.initStream(key: key)!
+        stream.update(input: message1)
+        stream.update(input: message2)
         let h = stream.final()
+
+        XCTAssertNotNil(h)
     }
 
     func testShortOutputHashing() {
         let sodium = Sodium()!
         let message = "My Test Message".data(using:.utf8)!
         let key = sodium.randomBytes.buf(length: sodium.shortHash.KeyBytes)!
-        let h = sodium.shortHash.hash(message: message, key: key )
+        let h = sodium.shortHash.hash(message: message, key: key)
+
+        XCTAssertNotNil(h)
     }
 
     func testRandomNumberGeneration() {
         let sodium = Sodium()!
         let randomData = sodium.randomBytes.buf(length: 1000)
+
+        XCTAssertNotNil(randomData)
     }
 
     func testPasswordHashing() {
@@ -116,7 +130,7 @@ class ReadmeTests : XCTestCase {
                                           opsLimit: sodium.pwHash.OpsLimitInteractive,
                                           memLimit: sodium.pwHash.MemLimitInteractive)!
 
-        if sodium.pwHash.strVerify(hash: hashedStr, passwd: password ) {
+        if sodium.pwHash.strVerify(hash: hashedStr, passwd: password) {
             // Password matches the given hash string
         } else {
             // Password doesn't match the given hash string
@@ -134,17 +148,24 @@ class ReadmeTests : XCTestCase {
         let secret1 = "Secret key".data(using:.utf8)!
         let secret2 = "Secret key".data(using:.utf8)!
         let equality = sodium.utils.equals(secret1, secret2)
+
+        XCTAssertTrue(equality)
     }
 
     func testConstantTimeHexdecimalEncoding() {
         let sodium = Sodium()!
         let data = "Secret key".data(using:.utf8)!
         let hex = sodium.utils.bin2hex(data)
+
+        XCTAssertNotNil(hex)
     }
 
     func testHexDecimalDecoding() {
         let sodium = Sodium()!
         let data1 = sodium.utils.hex2bin("deadbeef")
         let data2 = sodium.utils.hex2bin("de:ad be:ef", ignore: " :")
+
+        XCTAssertNotNil(data1)
+        XCTAssertNotNil(data2)
     }
 }
