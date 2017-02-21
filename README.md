@@ -207,6 +207,24 @@ if sodium.pwHash.strVerify(hash: hashedStr, passwd: password) {
 }
 ```
 
+Key exchange (Diffie Hellman)
+=============================
+
+```swift
+let sodium = Sodium()!
+let aliceKeyPair = sodium.box.keyPair()!
+let bobKeyPair = sodium.box.keyPair()!
+
+let sharedSecretForAlice = sodium.keyExchange.diffieHellman(secretKey: aliceKeyPair.secretKey,
+                                                            publicKey: aliceKeyPair.publicKey,
+                                                       otherPublicKey: bobKeyPair.publicKey)
+let sharedSecretForBob = sodium.keyExchange.diffieHellman(secretKey: bobKeyPair.secretKey,
+                                                          publicKey: bobKeyPair.publicKey,
+                                                     otherPublicKey: aliceKeyPair.publicKey)
+
+let equality = sodium.utils.equals(sharedSecretForAlice, sharedSecretForBob) // true
+```
+
 Utilities
 =========
 
