@@ -242,4 +242,14 @@ class SodiumTests: XCTestCase {
         let hash2 = sodium.pwHash.hash(outputLength: 64, passwd: password3, salt: salt, opsLimit: sodium.pwHash.OpsLimitInteractive, memLimit: sodium.pwHash.MemLimitInteractive)
         XCTAssert(sodium.utils.bin2hex(hash2!)! == "51d659ee6f8790042688274c5bc8a6296390cdc786d2341c3553b01a5c3f7ff1190e04b86a878538b17ef10e74baa19295479f3e3ee587ce571f366fc66e2fdc")
     }
+    
+    func testKeyExchange() {
+        let aliceKeyPair = sodium.box.keyPair()!
+        let bobKeyPair = sodium.box.keyPair()!
+        
+        let sharedSecretForAlice = sodium.keyExchange.diffieHellman(secretKey: aliceKeyPair.secretKey, publicKey: aliceKeyPair.publicKey, otherPublicKey: bobKeyPair.publicKey)
+        let sharedSecretForBob = sodium.keyExchange.diffieHellman(secretKey: bobKeyPair.secretKey, publicKey: bobKeyPair.publicKey, otherPublicKey: aliceKeyPair.publicKey)
+        
+        XCTAssert(sharedSecretForAlice == sharedSecretForBob)
+    }
 }

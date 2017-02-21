@@ -17,6 +17,7 @@ public class Sodium {
     public var shortHash = ShortHash()
     public var sign = Sign()
     public var utils = Utils()
+    public var keyExchange = KeyExchange()
 
     public init?() {
         struct Once {

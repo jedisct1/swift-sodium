@@ -80,6 +80,8 @@
 		09A944571A4EB91F00C8A04F /* utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944231A4EB91F00C8A04F /* utils.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		09A944581A4EB91F00C8A04F /* version.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944241A4EB91F00C8A04F /* version.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		09A9445A1A4EB97800C8A04F /* sodium_lib.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944591A4EB97800C8A04F /* sodium_lib.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7D4E43271E5BA91C005C9556 /* KeyExchange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4E43261E5BA91C005C9556 /* KeyExchange.swift */; };
+		7D4E43281E5BA91C005C9556 /* KeyExchange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4E43261E5BA91C005C9556 /* KeyExchange.swift */; };
 		901644FF1AE3733F00163E3E /* Sodium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90C75E941AE3571900F1E749 /* Sodium.framework */; };
 		901645011AE374D100163E3E /* Sodium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09A943C71A4EB5F500C8A04F /* Sodium.framework */; };
 		901645031AE376C100163E3E /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901645021AE376C100163E3E /* Helpers.swift */; };
@@ -243,6 +245,7 @@
 		09A944231A4EB91F00C8A04F /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
 		09A944241A4EB91F00C8A04F /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
 		09A944591A4EB97800C8A04F /* sodium_lib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sodium_lib.h; sourceTree = "<group>"; };
+		7D4E43261E5BA91C005C9556 /* KeyExchange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyExchange.swift; sourceTree = "<group>"; };
 		901644B61AE36EA700163E3E /* Example iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		901644DC1AE36F2D00163E3E /* Example OSX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example OSX.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		901645021AE376C100163E3E /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Helpers.swift; path = Examples/CommonCode/Helpers.swift; sourceTree = "<group>"; };
@@ -346,6 +349,7 @@
 				091C7CDB1A50839D002E5351 /* Sign.swift */,
 				095D80541A4ECCD7000B83F9 /* Sodium.swift */,
 				095D805C1A4F4F72000B83F9 /* Utils.swift */,
+				7D4E43261E5BA91C005C9556 /* KeyExchange.swift */,
 			);
 			path = Sodium;
 			sourceTree = "<group>";
@@ -825,6 +829,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7D4E43271E5BA91C005C9556 /* KeyExchange.swift in Sources */,
 				095D80551A4ECCD7000B83F9 /* Sodium.swift in Sources */,
 				097F20DA1AF127480088C2FE /* PWHash.swift in Sources */,
 				038365151A5A51D20081136D /* SecretBox.swift in Sources */,
@@ -869,6 +874,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7D4E43281E5BA91C005C9556 /* KeyExchange.swift in Sources */,
 				90C75EE51AE3583E00F1E749 /* Box.swift in Sources */,
 				90C75EE61AE3583E00F1E749 /* SecretBox.swift in Sources */,
 				CFD847281BA8120900B1260F /* PWHash.swift in Sources */,
