@@ -9,11 +9,13 @@
 import Foundation
 
 public class RandomBytes {
+    public let SeedBytes = Int(randombytes_seedbytes())
+
     /**
      Returns a `Data object of length `length` containing an unpredictable sequence of bytes.
- 
+
      - Parameter length: The number of bytes to generate.
- 
+
      - Returns: The generated data.
      */
     public func buf(length: Int) -> Data? {
@@ -36,12 +38,33 @@ public class RandomBytes {
 
     /**
      Returns an unpredictable value between 0 and `upper_bound` (excluded). Unlike randombytes_random() % upper_bound, it does its best to guarantee a uniform distribution of the possible output values even when upper_bound is not a power of 2.
-     
+
      - Parameter upperBound: The upper bound (excluded) of the returned value.
-     
+
      - Returns: The unpredictable value.
      */
     public func uniform(upperBound: UInt32) -> UInt32 {
         return randombytes_uniform(upperBound)
+    }
+
+    /**
+     Returns a deterministic stream of unbiased bits derived from a seed.
+
+     - Parameter length: The number of bytes to generate.
+     - Parameter seed: The seed.
+
+     - Returns: The generated data.
+     */
+    public func deterministic(length: Int, seed: Data) -> Data? {
+        if length < 0 || seed.count != SeedBytes {
+            return nil
+        }
+        var output = Data(count: length)
+        output.withUnsafeMutableBytes { outputPtr in
+            return seed.withUnsafeBytes { seedPtr in
+                randombytes_buf_deterministic(outputPtr, output.count, seedPtr)
+            }
+        }
+        return output
     }
 }
