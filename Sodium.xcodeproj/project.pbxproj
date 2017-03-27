@@ -151,7 +151,7 @@
 		90C75EE11AE357E000F1E749 /* runtime.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944221A4EB91F00C8A04F /* runtime.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		90C75EE21AE357E000F1E749 /* utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944231A4EB91F00C8A04F /* utils.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		90C75EE31AE357E000F1E749 /* version.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A944241A4EB91F00C8A04F /* version.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		90C75EE41AE357E000F1E749 /* Sodium.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943CC1A4EB5F500C8A04F /* Sodium.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		90C75EE41AE357E000F1E749 /* Sodium.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943CC1A4EB5F500C8A04F /* Sodium.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		90C75EE51AE3583E00F1E749 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094F21E91A5017CA001C3141 /* Box.swift */; };
 		90C75EE61AE3583E00F1E749 /* SecretBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038365141A5A51D20081136D /* SecretBox.swift */; };
 		90C75EE71AE3583E00F1E749 /* GenericHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D80561A4ED0B4000B83F9 /* GenericHash.swift */; };
