@@ -44,7 +44,7 @@ public class KeyExchange {
     }
 
     /**
-     Randomly generates a key exchange secret key and a corresponding public key.
+     Generates a key exchange secret key and a corresponding public key.
 
      - Returns: A key pair containing the secret key and public key.
      */
@@ -68,7 +68,7 @@ public class KeyExchange {
     }
 
     /**
-     Generates a key exchange secret key and a corresponding public key based on a provided seed value
+     Generates a key exchange secret key and a corresponding public key derived from a seed.
 
      - Parameter seed: The value from which to derive the secret and public key.
 
@@ -109,7 +109,7 @@ public class KeyExchange {
 
      - Returns: A `SessionKeyPair` consisting of a receive (`rx`) key and a transmit (`tx`) key
 
-     - Note: `rx` on client side equals `tx` on server side and vice versa
+     - Note: `rx` on client side equals `tx` on server side and vice versa.
      */
     public func sessionKeyPair(publicKey: PublicKey, secretKey: SecretKey, otherPublicKey: PublicKey, side: Side) -> SessionKeyPair? {
 

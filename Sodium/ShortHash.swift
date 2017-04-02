@@ -15,7 +15,7 @@ public class ShortHash {
     public typealias Key = Data
 
     /**
-     Generates a  secret key.
+     Generates a secret key.
 
      - Returns: The generated key.
      */

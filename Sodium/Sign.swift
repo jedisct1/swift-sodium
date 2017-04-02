@@ -29,7 +29,7 @@ public class Sign {
     }
 
     /**
-     Randomly generates a signing secret key and a corresponding public key.
+     Generates a signing secret key and a corresponding public key.
 
      - Returns: A key pair containing the secret key and public key.
      */
@@ -52,7 +52,7 @@ public class Sign {
     }
 
     /**
-     Generates a signing secret key and a corresponding public key based on a provided seed value
+     Generates a signing secret key and a corresponding public key derived from a seed.
 
      - Parameter seed: The value from which to derive the secret and public key.
 
@@ -117,7 +117,7 @@ public class Sign {
     }
 
     /**
-     Computes a detached signature for a message with the sender's secret key
+     Computes a detached signature for a message with the sender's secret key.
 
      - Parameter message: The message to encrypt.
      - Parameter secretKey: The sender's secret key.
@@ -151,7 +151,7 @@ public class Sign {
     }
 
     /**
-     Verifies a signed message with the sender's public key
+     Verifies a signed message with the sender's public key.
 
      - Parameter signedMessage: The signed message to verify.
      - Parameter publicKey: The sender's public key.
@@ -165,7 +165,7 @@ public class Sign {
     }
 
     /**
-     Verifies the detached signature of a message with the sender's public key
+     Verifies the detached signature of a message with the sender's public key.
 
      - Parameter message: The message to verify.
      - Parameter publicKey: The sender's public key.

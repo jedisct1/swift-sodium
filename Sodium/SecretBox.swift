@@ -18,7 +18,7 @@ public class SecretBox {
     public typealias MAC = Data
 
     /**
-     Randomly generates a shared secret key.
+     Generates a shared secret key.
 
      - Returns: The generated key.
      */
@@ -31,7 +31,7 @@ public class SecretBox {
     }
 
     /**
-     Randomly generates an ecryption nonce.
+     Generates an encryption nonce.
 
      - Returns: The generated nonce.
      */
@@ -100,7 +100,7 @@ public class SecretBox {
     }
 
     /**
-     Encrypts a message with a shared secret key (Detached mode).
+     Encrypts a message with a shared secret key (detached mode).
 
      - Parameter message: The message to encrypt.
      - Parameter secretKey: The shared secret key.
@@ -142,7 +142,7 @@ public class SecretBox {
     }
 
     /**
-     Decrypts a message with a shared secret key
+     Decrypts a message with a shared secret key.
 
      - Parameter nonceAndAuthenticatedCipherText: A `Data` object containing the nonce and authenticated ciphertext.
      - Parameter secretKey: The shared secret key.

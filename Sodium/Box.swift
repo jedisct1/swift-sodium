@@ -36,7 +36,7 @@ public class Box {
 
 
     /**
-     Randomly generates an encryption secret key and a corresponding public key.
+     Generates an encryption secret key and a corresponding public key.
 
      - Returns: A key pair containing the secret key and public key.
      */
@@ -57,7 +57,7 @@ public class Box {
     }
 
     /**
-     Generates an encryption secret key and a corresponding public key based on a provided seed value
+     Generates an encryption secret key and a corresponding public key derived from a seed.
 
      - Parameter seed: The value from which to derive the secret and public key.
 
@@ -95,7 +95,7 @@ public class Box {
     }
 
     /**
-     Encrypts a message with a recipient's public key and a sender's secret key
+     Encrypts a message with a recipient's public key and a sender's secret key.
 
      - Parameter message: The message to encrypt.
      - Parameter recipientPublicKey: The recipient's public key.
@@ -113,7 +113,7 @@ public class Box {
     }
 
     /**
-     Encrypts a message with a recipient's public key and a sender's secret key
+     Encrypts a message with a recipient's public key and a sender's secret key.
 
      - Parameter message: The message to encrypt.
      - Parameter recipientPublicKey: The recipient's public key.
@@ -154,7 +154,7 @@ public class Box {
     }
 
     /**
-     Encrypts a message with a recipient's public key and a sender's secret key (Detached mode).
+     Encrypts a message with a recipient's public key and a sender's secret key (detached mode).
 
      - Parameter message: The message to encrypt.
      - Parameter recipientPublicKey: The recipient's public key.
@@ -198,7 +198,7 @@ public class Box {
     }
 
     /**
-     Decrypts a message with a sender's public key and the recipient's secret key
+     Decrypts a message with a sender's public key and the recipient's secret key.
 
      - Parameter nonceAndAuthenticatedCipherText: A `Data` object containing the nonce and authenticated ciphertext.
      - Parameter senderPublicKey: The sender's public key.
@@ -451,7 +451,7 @@ public class Box {
     }
 
     /**
-     Encrypts a message with a recipient's public key
+     Encrypts a message with a recipient's public key.
 
      - Parameter message: The message to encrypt.
      - Parameter recipientPublicKey: The recipient's public key.
@@ -484,7 +484,7 @@ public class Box {
     }
 
     /**
-     Decrypts a message with the recipient's public key and secret key
+     Decrypts a message with the recipient's public key and secret key.
 
      - Parameter anonymousCipherText: A `Data` object containing the anonymous ciphertext.
      - Parameter senderPublicKey: The recipient's public key.
