@@ -12,17 +12,32 @@ public class GenericHash {
     public let BytesMin = Int(crypto_generichash_bytes_min())
     public let BytesMax = Int(crypto_generichash_bytes_max())
     public let Bytes = Int(crypto_generichash_bytes())
-    public let KeybytesMin = Int(crypto_generichash_keybytes_min())
-    public let KeybytesMax = Int(crypto_generichash_keybytes_max())
-    public let Keybytes = Int(crypto_generichash_keybytes())
+    public let KeyBytesMin = Int(crypto_generichash_keybytes_min())
+    public let KeyBytesMax = Int(crypto_generichash_keybytes_max())
+    public let KeyBytes = Int(crypto_generichash_keybytes())
     public let Primitive = String.init(validatingUTF8: crypto_generichash_primitive())
+
+    public typealias Key = Data
+
+    /**
+     Generates a  secret key.
+
+     - Returns: The generated key.
+     */
+    public func key() -> Key? {
+        var k = Data(count: KeyBytes)
+        k.withUnsafeMutableBytes { kPtr in
+            crypto_generichash_keygen(kPtr)
+        }
+        return k
+    }
 
     /**
      Computes a fixed-length fingerprint for an arbitrary long message. A key can also be specified. A message will always have the same fingerprint for a given key, but different keys used to hash the same message are very likely to produce distinct fingerprints.
-     
+
      - Parameter message: The message from which to compute the fingerprint.
      - Parameter key: Optional key to use while computing the fingerprint.
- 
+
      - Returns: The computed fingerprint.
      */
     public func hash(message: Data, key: Data? = nil) -> Data? {
@@ -31,11 +46,11 @@ public class GenericHash {
 
     /**
      Computes a fixed-length fingerprint for an arbitrary long message. A message will always have the same fingerprint for a given key, but different keys used to hash the same message are very likely to produce distinct fingerprints.
-     
+
      - Parameter message: The message from which to compute the fingerprint.
      - Parameter key: The key to use while computing the fingerprint.
      - Parameter outputLength: Desired length of the computed fingerprint.
-     
+
      - Returns: The computed fingerprint.
      */
     public func hash(message: Data, key: Data?, outputLength: Int) -> Data? {
@@ -79,10 +94,10 @@ public class GenericHash {
 
     /**
      Computes a fixed-length fingerprint for an arbitrary long message.
-     
+
      - Parameter message: The message from which to compute the fingerprint.
      - Parameter outputLength: Desired length of the computed fingerprint.
-     
+
      - Returns: The computed fingerprint.
      */
     public func hash(message: Data, outputLength: Int) -> Data? {
@@ -91,9 +106,9 @@ public class GenericHash {
 
     /**
      Initializes a `Stream` object to compute a fixed-length fingerprint for an incoming stream of data.arbitrary long message. Particular data will always have the same fingerprint for a given key, but different keys used to hash the same data are very likely to produce distinct fingerprints.
-     
+
      - Parameter key: Optional key to use while computing the fingerprint.
-     
+
      - Returns: The initialized `Stream`.
      */
     public func initStream(key: Data? = nil) -> Stream? {
@@ -102,10 +117,10 @@ public class GenericHash {
 
     /**
      Initializes a `Stream` object to compute a fixed-length fingerprint for an incoming stream of data.arbitrary long message. Particular data will always have the same fingerprint for a given key, but different keys used to hash the same data are very likely to produce distinct fingerprints.
-     
+
      - Parameter key: Optional key to use while computing the fingerprint.
      - Parameter outputLength: Desired length of the computed fingerprint.
-     
+
      - Returns: The initialized `Stream`.
      */
     public func initStream(key: Data?, outputLength: Int) -> Stream? {
@@ -114,9 +129,9 @@ public class GenericHash {
 
     /**
      Initializes a `Stream` object to compute a fixed-length fingerprint for an incoming stream of data.arbitrary long message.
-     
+
      - Parameter: outputLength: Desired length of the computed fingerprint.
-     
+
      - Returns: The initialized `Stream`.
      */
     public func initStream(outputLength: Int) -> Stream? {
@@ -156,9 +171,9 @@ public class GenericHash {
 
         /**
          Updates the hash stream with incoming data to contribute to the computed fingerprint.
-         
+
          - Parameter input: The incoming stream data.
-         
+
          - Returns: `true` if the data was consumed successfully.
          */
         public func update(input: Data) -> Bool {
@@ -169,7 +184,7 @@ public class GenericHash {
 
         /**
          Signals that the incoming stream of data is complete and triggers computation of the resulting fingerprint.
- 
+
          - Returns: The computed fingerprint.
          */
         public func final() -> Data? {

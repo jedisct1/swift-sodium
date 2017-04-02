@@ -12,7 +12,7 @@ public class Utils {
 
     /**
      Tries to effectively zero bytes in `data`, even if optimizations are being applied to the code.
-     
+
      - Parameter data: The `Data` object to zero.
      */
     public func zero(_ data: inout Data)  {
@@ -62,9 +62,9 @@ public class Utils {
 
     /**
      Converts bytes stored in `bin` into a hexadecimal string.
-     
+
      - Parameter bin: The data to encode as hexdecimal.
-     
+
      - Returns: The encoded hexdecimal string.
      */
     public func bin2hex(_ bin: Data) -> String? {
@@ -82,10 +82,10 @@ public class Utils {
 
     /**
      Decode as a hexdecimal string, ignoring characters included for readability.
-     
+
      - Parameter hex: The hexdecimal string to decode.
      - Parameter ignore: Optional string containing readability characters to ignore during decoding.
-     
+
      - Returns: The decoded data.
      */
     public func hex2bin(_ hex: String, ignore: String? = nil) -> Data? {
