@@ -15,14 +15,22 @@ public class Auth {
 
     public func authKey() -> AuthKey? {
         var ak = Data(count: authKeyBytes)
+        ak.withUnsafeMutableBytes { akPtr in
+            crypto_auth_keygen(akPtr)
+        }
         return ak
     }
 
     public func sign(message: Data, authKey: AuthKey) -> Data? {
-        return nil
+        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: authKeyBytes)
+        let result = crypto_auth_hmacsha512256(buffer, [UInt8](message), UInt64(message.count),  [UInt8](authKey))
+        guard result == 0 else {
+            return nil
+        }
+        return Data(bytes: buffer, count: authKeyBytes)
     }
 
     public func verify(message: Data, authKey: AuthKey, signature: Data) -> Bool {
-        return false
+        return crypto_auth_hmacsha512256_verify([UInt8](signature), [UInt8](message), UInt64(message.count), [UInt8](authKey)) == 0
     }
 }
