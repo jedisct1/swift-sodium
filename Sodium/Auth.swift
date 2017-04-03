@@ -23,7 +23,7 @@ public class Auth {
 
     public func sign(message: Data, authKey: AuthKey) -> Data? {
         let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: authKeyBytes)
-        let result = crypto_auth_hmacsha512256(buffer, [UInt8](message), UInt64(message.count),  [UInt8](authKey))
+        let result = crypto_auth(buffer, [UInt8](message), UInt64(message.count),  [UInt8](authKey))
         guard result == 0 else {
             return nil
         }
@@ -31,6 +31,6 @@ public class Auth {
     }
 
     public func verify(message: Data, authKey: AuthKey, signature: Data) -> Bool {
-        return crypto_auth_hmacsha512256_verify([UInt8](signature), [UInt8](message), UInt64(message.count), [UInt8](authKey)) == 0
+        return crypto_auth_verify([UInt8](signature), [UInt8](message), UInt64(message.count), [UInt8](authKey)) == 0
     }
 }
