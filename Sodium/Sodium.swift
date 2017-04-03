@@ -18,6 +18,7 @@ public class Sodium {
     public var sign = Sign()
     public var utils = Utils()
     public var keyExchange = KeyExchange()
+    public var auth = Auth()
 
     public init?() {
         struct Once {
