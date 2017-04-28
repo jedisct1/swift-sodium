@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "sodium_lib.h"
 
 //! Project version number for Sodium.
 FOUNDATION_EXPORT double SodiumVersionNumber;

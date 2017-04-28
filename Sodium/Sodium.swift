@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import libsodium
 
 public class Sodium {
     public var box = Box()

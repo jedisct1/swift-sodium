@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import libsodium
 
 public class Box {
     public let SeedBytes = Int(crypto_box_seedbytes())

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import libsodium
 
 public class GenericHash {
     public let BytesMin = Int(crypto_generichash_bytes_min())
