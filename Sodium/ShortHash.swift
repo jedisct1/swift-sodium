@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import libsodium
 
 public class ShortHash {
     public let Bytes = Int(crypto_shorthash_bytes())

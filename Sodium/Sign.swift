@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import libsodium
 
 public class Sign {
     public let SeedBytes = Int(crypto_sign_seedbytes())

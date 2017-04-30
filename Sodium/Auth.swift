@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import libsodium
 
 public class Auth {
     public let authKeyBytes = Int(crypto_auth_KEYBYTES)
