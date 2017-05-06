@@ -21,7 +21,7 @@ public class Sodium {
     public var keyExchange = KeyExchange()
     public var auth = Auth()
 
-    public init?() {
+    public init() {
         struct Once {
             static var once : () = {
                 if sodium_init() == -1 {

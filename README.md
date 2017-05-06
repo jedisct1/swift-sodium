@@ -43,7 +43,7 @@ Authenticated Encryption
 ------------------------
 
 ```swift
-let sodium = Sodium()!
+let sodium = Sodium()
 let aliceKeyPair = sodium.box.keyPair()!
 let bobKeyPair = sodium.box.keyPair()!
 let message = "My Test Message".data(using:.utf8)!
@@ -70,7 +70,7 @@ Anonymous Encryption (Sealed Boxes)
 -----------------------------------
 
 ```swift
-let sodium = Sodium()!
+let sodium = Sodium()
 let bobKeyPair = sodium.box.keyPair()!
 let message = "My Test Message".data(using:.utf8)!
 
@@ -97,7 +97,7 @@ Detached signatures
 -------------------
 
 ```swift
-let sodium = Sodium()!
+let sodium = Sodium()
 let message = "My Test Message".data(using:.utf8)!
 let keyPair = sodium.sign.keyPair()!
 let signature = sodium.sign.signature(message: message, secretKey: keyPair.secretKey)!
@@ -113,7 +113,7 @@ Attached signatures
 -------------------
 
 ```swift
-let sodium = Sodium()!
+let sodium = Sodium()
 let message = "My Test Message".data(using:.utf8)!
 let keyPair = sodium.sign.keyPair()!
 let signedMessage = sodium.sign.sign(message: message, secretKey: keyPair.secretKey)!
@@ -126,7 +126,7 @@ Secret-key authenticated encryption
 ===================================
 
 ```swift
-let sodium = Sodium()!
+let sodium = Sodium()
 let message = "My Test Message".data(using:.utf8)!
 let secretKey = sodium.secretBox.key()!
 let encrypted: Data = sodium.secretBox.seal(message: message, secretKey: secretKey)!
@@ -142,7 +142,7 @@ Deterministic hashing
 ---------------------
 
 ```swift
-let sodium = Sodium()!
+let sodium = Sodium()
 let message = "My Test Message".data(using:.utf8)!
 let h = sodium.genericHash.hash(message: message)
 ```
@@ -151,7 +151,7 @@ Keyed hashing
 -------------
 
 ```swift
-let sodium = Sodium()!
+let sodium = Sodium()
 let message = "My Test Message".data(using:.utf8)!
 let key = "Secret key".data(using:.utf8)!
 let h = sodium.genericHash.hash(message: message, key: key)
@@ -161,7 +161,7 @@ Streaming
 ---------
 
 ```swift
-let sodium = Sodium()!
+let sodium = Sodium()
 let message1 = "My Test ".data(using:.utf8)!
 let message2 = "Message".data(using:.utf8)!
 let key = "Secret key".data(using:.utf8)!
@@ -175,7 +175,7 @@ Short-output hashing (SipHash)
 ==============================
 
 ```swift
-let sodium = Sodium()!
+let sodium = Sodium()
 let message = "My Test Message".data(using:.utf8)!
 let key = sodium.randomBytes.buf(length: sodium.shortHash.KeyBytes)!
 let h = sodium.shortHash.hash(message: message, key: key)
@@ -185,7 +185,7 @@ Random numbers generation
 =========================
 
 ```swift
-let sodium = Sodium()!
+let sodium = Sodium()
 let randomData = sodium.randomBytes.buf(length: 1000)
 ```
 
@@ -195,7 +195,7 @@ Password hashing
 Using Argon2i:
 
 ```swift
-let sodium = Sodium()!
+let sodium = Sodium()
 let password = "Correct Horse Battery Staple".data(using:.utf8)!
 let hashedStr = sodium.pwHash.str(passwd: password,
                                     opsLimit: sodium.pwHash.OpsLimitInteractive,
@@ -232,7 +232,7 @@ Zeroing memory
 --------------
 
 ```swift
-let sodium = Sodium()!
+let sodium = Sodium()
 var dataToZero = "Message".data(using:.utf8)!
 sodium.utils.zero(&dataToZero)
 ```
@@ -241,7 +241,7 @@ Constant-time comparison
 ------------------------
 
 ```swift
-let sodium = Sodium()!
+let sodium = Sodium()
 let secret1 = "Secret key".data(using:.utf8)!
 let secret2 = "Secret key".data(using:.utf8)!
 let equality = sodium.utils.equals(secret1, secret2)
@@ -251,7 +251,7 @@ Constant-time hexadecimal encoding
 ----------------------------------
 
 ```swift
-let sodium = Sodium()!
+let sodium = Sodium()
 let data = "Secret key".data(using:.utf8)!
 let hex = sodium.utils.bin2hex(data)
 ```
@@ -260,7 +260,7 @@ Hexadecimal decoding
 --------------------
 
 ```swift
-let sodium = Sodium()!
+let sodium = Sodium()
 let data1 = sodium.utils.hex2bin("deadbeef")
 let data2 = sodium.utils.hex2bin("de:ad be:ef", ignore: " :")
 ```
