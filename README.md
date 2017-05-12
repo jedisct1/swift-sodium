@@ -1,4 +1,4 @@
-q# Sodium [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+# Sodium [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![Make a donation to support this project](https://img.shields.io/badge/donate-PayPal-green.svg?style=flat)](https://www.libsodium.org/donate)
 
 Swift-Sodium
@@ -186,7 +186,9 @@ Random numbers generation
 
 ```swift
 let sodium = Sodium()!
-let randomData = sodium.randomBytes.buf(length: 1000)
+let randomData = sodium.randomBytes.buf(length: 1000)!
+let seed = "0123456789abcdef0123456789abcdef".data(using:.utf8)!
+let stream = sodium.randomBytes.deterministic(length: 1000, seed: seed)!
 ```
 
 Password hashing
