@@ -49,7 +49,7 @@ class SodiumTests: XCTestCase {
         let decrypted3 = sodium.box.open(authenticatedCipherText: encryptedMessageFromAliceToBob3, senderPublicKey: aliceKeyPair.publicKey, recipientSecretKey: bobKeyPair.secretKey, nonce: nonce2, mac: mac)
         XCTAssertEqual(decrypted3, message)
 
-        let userNonce = sodium.randomBytes.buf(length: 24)!
+        let userNonce = sodium.randomBytes.buf(length: sodium.box.NonceBytes)!
         let encryptedMessageFromAliceToBob4: Data = sodium.box.seal(message: message, recipientPublicKey: bobKeyPair.publicKey, senderSecretKey: aliceKeyPair.secretKey, nonce: userNonce)!
         let decrypted4 = sodium.box.open(authenticatedCipherText: encryptedMessageFromAliceToBob4, senderPublicKey: bobKeyPair.publicKey, recipientSecretKey: aliceKeyPair.secretKey, nonce: userNonce)
         XCTAssertEqual(message, decrypted4)
