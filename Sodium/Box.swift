@@ -114,6 +114,46 @@ public class Box {
     }
 
     /**
+     Encrypts a message with a recipient's public key and a sender's secret key using a user-provided nonce.
+
+     - Parameter message: The message to encrypt.
+     - Parameter recipientPublicKey: The recipient's public key.
+     - Parameter senderSecretKey: The sender's secret key.
+     - Paramter nonce: The user-specified nonce.
+
+     - Returns: The authenticated ciphertext.
+     */
+    public func seal(message: Data, recipientPublicKey: PublicKey, senderSecretKey: SecretKey, nonce: Nonce) -> Data? {
+        guard recipientPublicKey.count == PublicKeyBytes, senderSecretKey.count == SecretKeyBytes, nonce.count == NonceBytes else { return nil }
+
+        var authenticatedCipherText = Data(count: message.count + MacBytes)
+
+        let result = authenticatedCipherText.withUnsafeMutableBytes { authenticatedCipherTextPtr in
+            return message.withUnsafeBytes { messagePtr in
+                return nonce.withUnsafeBytes { noncePtr in
+                    return recipientPublicKey.withUnsafeBytes { recipientPublicKeyPtr in
+                        return senderSecretKey.withUnsafeBytes { senderSecretKeyPtr in
+                            return crypto_box_easy(
+                                authenticatedCipherTextPtr,
+                                messagePtr,
+                                CUnsignedLongLong(message.count),
+                                noncePtr,
+                                recipientPublicKeyPtr,
+                                senderSecretKeyPtr)
+                        }
+                    }
+                }
+            }
+        }
+
+        if result != 0 {
+            return nil
+        }
+
+        return authenticatedCipherText
+    }
+
+    /**
      Encrypts a message with a recipient's public key and a sender's secret key.
 
      - Parameter message: The message to encrypt.
