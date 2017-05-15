@@ -61,6 +61,9 @@ let messageVerifiedAndDecryptedByBob =
 
 `seal()` automatically generates a nonce and prepends it to the
 ciphertext. `open()` extracts the nonce and decrypts the ciphertext.
+Optionally, `Box` provides the ability to utilize a user-defined nonce via
+`seal(message:recipientPublicKey:senderSecretKey:nonce:)`.
+
 
 The `Box` class also provides alternative functions and parameters to
 deterministically generate key pairs, to retrieve the nonce and/or the
