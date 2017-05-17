@@ -15,7 +15,8 @@ s.osx.deployment_target = '10.10'
 s.ios.vendored_library    = 'Sodium/libsodium/libsodium-ios.a'
 s.osx.vendored_library    = 'Sodium/libsodium/libsodium-osx.a'
 
-s.source_files = 'Sodium/*.{swift,h}', 'Sodium/libsodium/*.{swift,h}'
+s.source_files = 'Sodium/**/*.{swift,h}'
+s.private_header_files = 'Sodium/libsodium/*.h'
 
 s.preserve_paths = 'Sodium/libsodium/module.modulemap'
 s.pod_target_xcconfig = {
