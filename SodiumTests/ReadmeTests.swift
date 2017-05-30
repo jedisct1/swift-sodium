@@ -168,4 +168,14 @@ class ReadmeTests : XCTestCase {
         XCTAssertNotNil(data1)
         XCTAssertNotNil(data2)
     }
+
+    func testStream() {
+        let sodium = Sodium()!
+        let input = "test".data(using:.utf8)!
+        let key = sodium.stream.key()!;
+        let (output, nonce) = sodium.stream.xor(input: input, secretKey: key)!
+        let twice = sodium.stream.xor(input: output, nonce: nonce, secretKey: key)!
+
+        XCTAssertEqual(input, twice)
+    }
 }

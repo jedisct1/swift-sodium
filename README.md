@@ -268,3 +268,37 @@ let sodium = Sodium()!
 let data1 = sodium.utils.hex2bin("deadbeef")
 let data2 = sodium.utils.hex2bin("de:ad be:ef", ignore: " :")
 ```
+
+Helpers to build custom constructions
+=====================================
+
+Only use the functions below if you know that you absolutely need
+them, and know how to use them correctly.
+
+Unauthenticated encryption
+--------------------------
+
+The `sodium.stream.xor()` function combines (using the XOR operation)
+an arbitrary-long input with the output of a deterministic key stream
+derived from a key and a nonce. The same operation applied twice
+produces the original input.
+
+No authentication tag is added to the output. The data can be tampered
+with; an adversary can flip arbitrary bits.
+
+In order to encrypt data using a secret key, the `SecretBox` class is
+likely to be what you are looking for.
+
+In order to generate a deterministic stream out of a seed, the
+`RandomBytes.deterministic_rand()` function is likely to be what you
+need.
+
+```swift
+let sodium = Sodium()!
+let input = "test".data(using:.utf8)!
+let key = sodium.stream.key()!;
+let (output, nonce) = sodium.stream.xor(input: input, secretKey: key)!
+let twice = sodium.stream.xor(input: output, nonce: nonce, secretKey: key)!
+
+XCTAssertEqual(input, twice)
+```

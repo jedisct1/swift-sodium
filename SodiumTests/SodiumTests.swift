@@ -158,7 +158,7 @@ class SodiumTests: XCTestCase {
             }
         }
         XCTAssert(c2 < 10)
-        
+
         let seed = sodium.utils.hex2bin("00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff 00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff", ignore: " ")!
         let randomd = sodium.utils.bin2hex(sodium.randomBytes.deterministic(length: 10, seed: seed)!)!;
         XCTAssertEqual(randomd, "444dc0602207c270b93f");
@@ -251,16 +251,25 @@ class SodiumTests: XCTestCase {
         let hash2 = sodium.pwHash.hash(outputLength: 64, passwd: password3, salt: salt, opsLimit: sodium.pwHash.OpsLimitInteractive, memLimit: sodium.pwHash.MemLimitInteractive)
         XCTAssertEqual(sodium.utils.bin2hex(hash2!)!, "51d659ee6f8790042688274c5bc8a6296390cdc786d2341c3553b01a5c3f7ff1190e04b86a878538b17ef10e74baa19295479f3e3ee587ce571f366fc66e2fdc")
     }
-    
+
     func testKeyExchange() {
         let aliceKeyPair = sodium.keyExchange.keyPair()!
         let bobKeyPair = sodium.keyExchange.keyPair()!
-        
+
         let sessionKeyPairForAlice = sodium.keyExchange.sessionKeyPair(publicKey: aliceKeyPair.publicKey, secretKey: aliceKeyPair.secretKey, otherPublicKey: bobKeyPair.publicKey, side: .client)!
         let sessionKeyPairForBob = sodium.keyExchange.sessionKeyPair(publicKey: bobKeyPair.publicKey, secretKey: bobKeyPair.secretKey, otherPublicKey: aliceKeyPair.publicKey, side: .server)!
-        
+
         XCTAssertEqual(sessionKeyPairForAlice.rx, sessionKeyPairForBob.tx)
         XCTAssertEqual(sessionKeyPairForAlice.tx, sessionKeyPairForBob.rx)
     }
 
+    func testStream() {
+        let key = sodium.stream.key()!;
+        let inputLen = Int(sodium.randomBytes.uniform(upperBound: 1024))
+        let input = sodium.randomBytes.buf(length: inputLen)!
+        let (output, nonce) = sodium.stream.xor(input: input, secretKey: key)!
+        let twice = sodium.stream.xor(input: output, nonce: nonce, secretKey: key)!
+
+        XCTAssertEqual(input, twice)
+    }
 }

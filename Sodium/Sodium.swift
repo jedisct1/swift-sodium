@@ -20,7 +20,7 @@ public class Sodium {
     public let utils = Utils()
     public let keyExchange = KeyExchange()
     public let auth = Auth()
-    public let cipheredStream = CipheredStream()
+    public let stream = Stream()
 
     public init?() {
         struct Once {
