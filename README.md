@@ -109,7 +109,6 @@ if sodium.sign.verify(message: message,
                         signature: signature) {
     // signature is valid
 }
-}
 ```
 
 Attached signatures
