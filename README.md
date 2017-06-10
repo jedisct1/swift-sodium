@@ -105,8 +105,8 @@ let message = "My Test Message".data(using:.utf8)!
 let keyPair = sodium.sign.keyPair()!
 let signature = sodium.sign.signature(message: message, secretKey: keyPair.secretKey)!
 if sodium.sign.verify(message: message,
-                        publicKey: keyPair.publicKey,
-                        signature: signature) {
+                      publicKey: keyPair.publicKey,
+                      signature: signature) {
     // signature is valid
 }
 ```
@@ -202,8 +202,8 @@ Using Argon2i:
 let sodium = Sodium()!
 let password = "Correct Horse Battery Staple".data(using:.utf8)!
 let hashedStr = sodium.pwHash.str(passwd: password,
-                                    opsLimit: sodium.pwHash.OpsLimitInteractive,
-                                    memLimit: sodium.pwHash.MemLimitInteractive)!
+                                  opsLimit: sodium.pwHash.OpsLimitInteractive,
+                                  memLimit: sodium.pwHash.MemLimitInteractive)!
 
 if sodium.pwHash.strVerify(hash: hashedStr, passwd: password) {
     // Password matches the given hash string
