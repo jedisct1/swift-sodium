@@ -238,8 +238,10 @@ Create a Diffie-Hellman (ECDH) shared secret using your private key and someone 
 let sodium = Sodium()!
 let aliceKeyPair = sodium.box.keyPair()!
 let bobKeyPair = sodium.box.keyPair()!
-let sharedSecret = sodium.keyAgreement.sharedSecret(secretKey: aliceKeyPair.secretKey, publicKey: bobKeyPair.publicKey)
+let sharedSecretAlice = sodium.keyAgreement.sharedSecret(secretKey: aliceKeyPair.secretKey, publicKey: bobKeyPair.publicKey)
+let sharedSecretBob = sodium.keyAgreement.sharedSecret(secretKey: bobKeyPair.secretKey, publicKey: aliceKeyPair.publicKey)
 
+let aliceBobKeyEquality = sodium.utils.equals(sharedSecretAlice, sharedSecretBob) // true
 ```
 
 Derive a public key from a private key:
