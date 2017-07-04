@@ -302,3 +302,15 @@ let twice = sodium.stream.xor(input: output, nonce: nonce, secretKey: key)!
 
 XCTAssertEqual(input, twice)
 ```
+
+Authentication tags
+-------------------
+
+The `sodium.auth.tag()` function computes an authentication tag (HMAC) using
+a message and a key. Parties knowing the key can then verify the authenticity
+of the message using the same parameters and the `sodium.auth.verify()`
+function.
+
+Authentication tags are not signatures: the same key is used both for
+computing and verifying a tag. Therefore, verifiers can also compute
+tags for arbitrary messages.

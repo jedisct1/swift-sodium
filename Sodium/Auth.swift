@@ -10,29 +10,80 @@ import Foundation
 import libsodium
 
 public class Auth {
-    public let authKeyBytes = Int(crypto_auth_KEYBYTES)
-    public let authBytes = Int(crypto_auth_BYTES)
-    
-    public typealias AuthKey = Data
+    public let KeyBytes = Int(crypto_auth_keybytes())
+    public let Bytes = Int(crypto_auth_bytes())
 
-    public func authKey() -> AuthKey? {
-        var ak = Data(count: authKeyBytes)
-        ak.withUnsafeMutableBytes { akPtr in
-            crypto_auth_keygen(akPtr)
+    public typealias SecretKey = Data
+
+    /**
+     Generates a key to compute authentication tags.
+
+     - Returns: The generated key.
+     */
+    public func key() -> SecretKey? {
+        var secretKey = Data(count: KeyBytes)
+        secretKey.withUnsafeMutableBytes { secretKeyPtr in
+            crypto_auth_keygen(secretKeyPtr)
         }
-        return ak
+        return secretKey
     }
 
-    public func sign(message: Data, authKey: AuthKey) -> Data? {
-        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: authKeyBytes)
-        let result = crypto_auth(buffer, [UInt8](message), UInt64(message.count),  [UInt8](authKey))
-        guard result == 0 else {
+    /**
+     Computes an authentication tag for a message using a key
+
+     - Parameter message: The message to authenticate.
+     - Parameter secretKey: The key required to create and verify messages.
+
+     - Returns: The computed authentication tag.
+     */
+    public func tag(message: Data, secretKey: SecretKey) -> Data? {
+        if secretKey.count != KeyBytes {
             return nil
         }
-        return Data(bytes: buffer, count: authKeyBytes)
+
+        var tag = Data(count: Bytes)
+        let result = tag.withUnsafeMutableBytes { tagPtr in
+            return message.withUnsafeBytes { messagePtr in
+                return secretKey.withUnsafeBytes { secretKeyPtr in
+                    return crypto_auth(
+                        tagPtr,
+                        messagePtr,
+                        CUnsignedLongLong(message.count),
+                        secretKeyPtr)
+                }
+            }
+        }
+
+        if result != 0 {
+            return nil
+        }
+
+        return tag
     }
 
-    public func verify(message: Data, authKey: AuthKey, signature: Data) -> Bool {
-        return crypto_auth_verify([UInt8](signature), [UInt8](message), UInt64(message.count), [UInt8](authKey)) == 0
+    /**
+     Verifies that an authentication tag is valid for a message and a key
+
+     - Parameter message: The message to verify.
+     - Parameter secretKey: The key required to create and verify messages.
+     - Parameter tag: The authentication tag.
+
+     - Returns: `true` if verification is successful.
+     */
+    public func verify(message: Data, secretKey: SecretKey, tag: Data) -> Bool {
+        if secretKey.count != KeyBytes {
+            return false
+        }
+
+        return tag.withUnsafeBytes { tagPtr in
+            return message.withUnsafeBytes { messagePtr in
+                return secretKey.withUnsafeBytes { secretKeyPtr in
+                    return crypto_auth_verify(
+                        tagPtr,
+                        messagePtr,
+                        CUnsignedLongLong(message.count), secretKeyPtr) == 0
+                }
+            }
+        }
     }
 }

@@ -272,4 +272,16 @@ class SodiumTests: XCTestCase {
 
         XCTAssertEqual(input, twice)
     }
+    
+    func testAuth() {
+        let key = sodium.utils.hex2bin("eea6a7251c1e72916d11c2cb214d3c252539121d8e234e652d651fa4c8cff880")!
+        let message = sodium.utils.hex2bin("8e993b9f48681273c29650ba32fc76ce48332ea7164d96a4476fb8c531a1186ac0dfc17c98dce87b4da7f011ec48c97271d2c20f9b928fe2270d6fb863d51738b48eeee314a7cc8ab932164548e526ae90224368517acfeabd6bb3732bc0e9da99832b61ca01b6de56244a9e88d5f9b37973f622a43d14a6599b1f654cb45a74e355a5")!
+        let tag = sodium.auth.tag(message: message, secretKey: key)!
+        XCTAssertEqual(sodium.utils.bin2hex(tag)!, "b2a31b8d4e01afcab2ee545b5caf4e3d212a99d7b3a116a97cec8e83c32e107d")
+        let verify = sodium.auth.verify(message: message, secretKey: key, tag: tag)
+        XCTAssertTrue(verify)
+        let key2 = sodium.auth.key()!;
+        let verify2 = sodium.auth.verify(message: message, secretKey: key2, tag: tag)
+        XCTAssertFalse(verify2)
+    }
 }
