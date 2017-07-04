@@ -11,6 +11,7 @@ import libsodium
 
 public class Auth {
     public let authKeyBytes = Int(crypto_auth_KEYBYTES)
+    public let authBytes = Int(crypto_auth_BYTES)
     
     public typealias AuthKey = Data
 
