@@ -144,7 +144,7 @@ public class GenericHash {
         private var state: UnsafeMutablePointer<crypto_generichash_state>?
 
         init?(key: Data?, outputLength: Int) {
-            state = UnsafeMutablePointer<crypto_generichash_state>.allocate(capacity: 1)
+            state = UnsafeMutablePointer<crypto_generichash_state>.allocate(capacity: crypto_generichash_statebytes())
             guard let state = state else {
                 return nil
             }
@@ -167,7 +167,7 @@ public class GenericHash {
         }
 
         deinit {
-            state?.deallocate(capacity: 1)
+            state?.deallocate(capacity: crypto_generichash_statebytes())
         }
 
         /**
