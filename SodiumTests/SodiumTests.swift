@@ -272,4 +272,28 @@ class SodiumTests: XCTestCase {
 
         XCTAssertEqual(input, twice)
     }
+	
+	func testPublicKey() {
+		let aliceSecretKey = sodium.utils.hex2bin("a9029ec4ec56dd6f3ce5a5fa27a17a005ce73a5b8e77529887f24f73ffa10d67")!
+		let alicePublicKey = sodium.keyAgreement.publicKey(secretKey: aliceSecretKey)
+		XCTAssertNotNil(alicePublicKey)
+		XCTAssertEqual(alicePublicKey, sodium.utils.hex2bin("4f664e4ade93259209fe3fd91a8a81cd8513e1f82e843f8a6a93e008fd762c42"))
+	}
+	
+	func testKeyAgreement() {
+		let aliceSecretKey = sodium.utils.hex2bin("a9029ec4ec56dd6f3ce5a5fa27a17a005ce73a5b8e77529887f24f73ffa10d67")!
+		let alicePublicKey = sodium.keyAgreement.publicKey(secretKey: aliceSecretKey)
+		XCTAssertNotNil(alicePublicKey)
+		
+		let bobSecretKey = sodium.utils.hex2bin("723b93373c2a53350de18e3f08ab5755fa3c49e34e4c7df2380c07a51342b389")!
+		let bobPublicKey = sodium.keyAgreement.publicKey(secretKey: bobSecretKey)
+		XCTAssertNotNil(bobPublicKey)
+		
+		let sharedSecretAlice = sodium.keyAgreement.sharedSecret(secretKey: aliceSecretKey, publicKey: bobPublicKey!)
+		let sharedSecretBob = sodium.keyAgreement.sharedSecret(secretKey: bobSecretKey, publicKey: alicePublicKey!)
+		XCTAssertNotNil(sharedSecretAlice)
+		XCTAssertNotNil(sharedSecretBob)
+		XCTAssertEqual(sharedSecretAlice, sharedSecretBob)
+		XCTAssertEqual(sharedSecretAlice, sodium.utils.hex2bin("6bc85632e5d352dc4e1089e710ccabd9e9ca6443979d92c97e6510699a2e8408"))
+	}
 }

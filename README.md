@@ -229,6 +229,29 @@ let aliceToBobKeyEquality = sodium.utils.equals(sessionKeyPairForAlice.tx, sessi
 let bobToAliceKeyEquality = sodium.utils.equals(sessionKeyPairForAlice.rx, sessionKeyPairForBob.tx) // true
 ```
 
+Key Agreement
+=============
+
+Create a Diffie-Hellman (ECDH) shared secret using your private key and someone else's public key:
+
+```swift
+let sodium = Sodium()!
+let aliceKeyPair = sodium.box.keyPair()!
+let bobKeyPair = sodium.box.keyPair()!
+let sharedSecretAlice = sodium.keyAgreement.sharedSecret(secretKey: aliceKeyPair.secretKey, publicKey: bobKeyPair.publicKey)
+let sharedSecretBob = sodium.keyAgreement.sharedSecret(secretKey: bobKeyPair.secretKey, publicKey: aliceKeyPair.publicKey)
+
+let aliceBobKeyEquality = sodium.utils.equals(sharedSecretAlice, sharedSecretBob) // true
+```
+
+Derive a public key from a private key:
+
+```swift
+let sodium = Sodium()
+let aliceSecretKey = sodium.utils.hex2bin("a9029ec4ec56dd6f3ce5a5fa27a17a005ce73a5b8e77529887f24f73ffa10d67")!
+let alicePublicKey = sodium.keyAgreement.publicKey(secretKey: aliceSecretKey)
+```
+
 Utilities
 =========
 
