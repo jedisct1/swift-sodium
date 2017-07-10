@@ -11,6 +11,7 @@ import libsodium
 
 public class KeyDerivation {
     public typealias Key = Data
+    public typealias SubKey = Data
     public let BytesMin = Int(crypto_kdf_bytes_min())
     public let BytesMax = Int(crypto_kdf_bytes_max())
     public let KeyBytes = Int(crypto_kdf_keybytes())
@@ -31,7 +32,7 @@ public class KeyDerivation {
      - Note: Input and output keys must have a length between 16 and 64 bytes (inclusive), otherwise an error is thrown. Context must be at most 8 characters long. If the specified context is shorter than 8 characters, it will be padded to 8 characters.
 
      */
-    public func derive(secretKey: Data, index: UInt64, length: Int, context: String) throws -> Key? {
+    public func derive(secretKey: Data, index: UInt64, length: Int, context: String) throws -> Data? {
         if length < BytesMin {
             return nil
         }
