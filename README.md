@@ -261,12 +261,12 @@ by incrementing the index.
 let sodium = Sodium()!
 let aliceKeyPair = sodium.box.keyPair()!
 
-let subKey1 = try sodium.keyDerivation.derive(secretKey: aliceKeyPair.secretKey,
-                                              index: 0, length: 32,
-                                              context: "Context!")
-let subKey2 = try sodium.keyDerivation.derive(secretKey: aliceKeyPair.secretKey,
-                                              index: 1, length: 32,
-                                              context: "Context!")
+let subKey1 = sodium.keyDerivation.derive(secretKey: aliceKeyPair.secretKey,
+                                          index: 0, length: 32,
+                                          context: "Context!")
+let subKey2 = sodium.keyDerivation.derive(secretKey: aliceKeyPair.secretKey,
+                                          index: 1, length: 32,
+                                          context: "Context!")
 ```
 
 Utilities
