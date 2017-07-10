@@ -285,50 +285,39 @@ class SodiumTests: XCTestCase {
         XCTAssertFalse(verify2)
     }
 
-    func testKeyDerivationInputKeyTooShort() throws {
-        let sodium = Sodium()!
+    func testKeyDerivationInputKeyTooShort() {
         let seed = sodium.utils.hex2bin("00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff 00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff", ignore: " ")!
         let secretKey = sodium.randomBytes.deterministic(length: sodium.keyDerivation.KeyBytes - 1, seed: seed)!
 
-        XCTAssertThrowsError(try sodium.keyDerivation.derive(secretKey: secretKey, index: 0, context: "TEST"))
+        XCTAssertNil(sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: 32, context: "TEST"))
     }
 
-    func testKeyDerivationInputKeyTooLong() throws {
-        let sodium = Sodium()!
-        let seed = sodium.utils.hex2bin("00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff 00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff", ignore: " ")!
-        let secretKey = sodium.randomBytes.deterministic(length: sodium.keyDerivation.KeyBytes + 1, seed: seed)!
-
-        XCTAssertThrowsError(try sodium.keyDerivation.derive(secretKey: secretKey, index: 0, context: "TEST"))
+    func testKeyDerivationInputKeyTooLong() {
+        let secretKey = Data(count: 100)
+        XCTAssertNil(sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: 32, context: "TEST"))
     }
 
-    func testKeyDerivationSubKeyTooShort() throws {
-        let sodium = Sodium()!
+    func testKeyDerivationSubKeyTooShort() {
+        let secretKey = sodium.keyDerivation.key()!;
+        XCTAssertNil(sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: 15, context: "TEST"))
+    }
+
+    func testKeyDerivationSubKeyTooLong() {
+        let secretKey = sodium.keyDerivation.key()!;
+        XCTAssertNil(sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: 65, context: "TEST"))
+    }
+
+    func testKeyDerivationContextTooLong() {
+        let secretKey = sodium.keyDerivation.key()!;
+        XCTAssertNil(sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: 32, context: "TEST_SODIUM"))
+    }
+
+    func testKeyDerivation() {
         let secretKey = sodium.utils.hex2bin("a9029ec4ec56dd6f3ce5a5fa27a17a005ce73a5b8e77529887f24f73ffa10d67")!
+        let subKey1 = sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: 32, context: "TEST")!
+        let subKey2 = sodium.keyDerivation.derive(secretKey: secretKey, index: 1, length: 32, context: "TEST")!
 
-        XCTAssertThrowsError(try sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: 15, context: "TEST"))
-    }
-
-    func testKeyDerivationSubKeyTooLong() throws {
-        let sodium = Sodium()!
-        let secretKey = sodium.utils.hex2bin("a9029ec4ec56dd6f3ce5a5fa27a17a005ce73a5b8e77529887f24f73ffa10d67")!
-
-        XCTAssertThrowsError(try sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: 65, context: "TEST"))
-    }
-
-    func testKeyDerivationContextTooLong() throws {
-        let sodium = Sodium()!
-        let secretKey = sodium.utils.hex2bin("a9029ec4ec56dd6f3ce5a5fa27a17a005ce73a5b8e77529887f24f73ffa10d67")!
-
-        XCTAssertThrowsError(try sodium.keyDerivation.derive(secretKey: secretKey, index: 0, context: "TEST_SODIUM"))
-    }
-
-    func testKeyDerivation() throws {
-        let sodium = Sodium()!
-        let secretKey = sodium.utils.hex2bin("a9029ec4ec56dd6f3ce5a5fa27a17a005ce73a5b8e77529887f24f73ffa10d67")!
-        let subKey1 = try sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: 32, context: "TEST")
-        let subKey2 = try sodium.keyDerivation.derive(secretKey: secretKey, index: 1, length: 32, context: "TEST")
-
-        XCTAssertEqual(sodium.utils.bin2hex(subKey1)!, "20ebeb174ab40b84b566e8bf65b950cef58ddd71ac83f71556e222383606c61f")
-        XCTAssertEqual(sodium.utils.bin2hex(subKey2)!, "58cee31c62d12611396cb3ee761f2af62b8d5354f787ce6801b3c71218b66840")
+        XCTAssertEqual(sodium.utils.bin2hex(subKey1)!, "dc6768bce6628c0f25998cfc8a09bb557a67335d20374dafdcb3a32dbc6f71f6")
+        XCTAssertEqual(sodium.utils.bin2hex(subKey2)!, "5da61f328584b58eafcd3e1095cbc37515b33b9e29ece103d998acc8d27b314d")
     }
 }

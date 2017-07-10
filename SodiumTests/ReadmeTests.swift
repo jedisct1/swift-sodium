@@ -191,7 +191,7 @@ class ReadmeTests : XCTestCase {
 
     func testKeyDerivation() {
         let sodium = Sodium()!
-        let secretKey = sodium.keyDerivation.keygen()!
+        let secretKey = sodium.keyDerivation.key()!
 
         let subKey1 = sodium.keyDerivation.derive(secretKey: secretKey,
             index: 0, length: 32,
@@ -199,5 +199,6 @@ class ReadmeTests : XCTestCase {
         let subKey2 = sodium.keyDerivation.derive(secretKey: secretKey,
             index: 1, length: 32,
             context: "Context!")!
+        XCTAssertNotEqual(subKey1, subKey2);
     }
 }

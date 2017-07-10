@@ -50,7 +50,7 @@ public class KeyDerivation {
         if secretKey.count != KeyBytes {
             return nil
         }
-        var contextBin = [UInt8](context.utf8)
+        var contextBin = context.data(using: String.Encoding.utf8)!;
         if contextBin.count > ContextBytes {
             return nil
         }
