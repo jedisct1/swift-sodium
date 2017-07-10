@@ -252,18 +252,22 @@ let tagIsValid = sodium.auth.verify(message: input, secretKey: key, tag: tag)
 Key derivation
 ============
 
-The `sodium.keyDerivation.derive()` function generates a subkey using an input (master) key,
-an index, and a String identifying the context. Up to (2^64) - 1 subkeys can be generated for
-each context, by incrementing the index.
+The `sodium.keyDerivation.derive()` function generates a subkey using
+an input (master) key, an index, and a 8 bytes string identifying the
+context. Up to (2^64) - 1 subkeys can be generated for each context,
+by incrementing the index.
 
 ```swift
 let sodium = Sodium()!
 let aliceKeyPair = sodium.box.keyPair()!
 
-let subKey1 = try sodium.keyDerivation.derive(fromKey: aliceKeyPair.secretKey, atIndex: 0, havingOutputBytes: 32, inContext: "TEST")
-let subKey2 = try sodium.keyDerivation.derive(fromKey: aliceKeyPair.secretKey, atIndex: 1, havingOutputBytes: 32, inContext: "TEST")
+let subKey1 = try sodium.keyDerivation.derive(fromKey: aliceKeyPair.secretKey,
+                                              atIndex: 0, havingOutputBytes: 32,
+                                              inContext: "Context!")
+let subKey2 = try sodium.keyDerivation.derive(fromKey: aliceKeyPair.secretKey,
+                                              atIndex: 1, havingOutputBytes: 32,
+                                              inContext: "Context!")
 ```
-
 
 Utilities
 =========
