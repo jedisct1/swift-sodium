@@ -27,7 +27,7 @@ public class KeyDerivation {
      - Note: Input and output keys must have a length between 16 and 64 bytes (inclusive), otherwise an error is thrown. Context must be at most 8 characters long. If the specified context is shorter than 8 characters, it will be padded to 8 characters.
 
      */
-    public func derive(secretKey inputKey: Key, index index: UInt64, length length: Int = crypto_kdf_keybytes(), context context: String) throws -> Key {
+    public func derive(secretKey: Key, index: UInt64, length: Int = crypto_kdf_keybytes(), context context: String) throws -> Key {
         if length < crypto_kdf_bytes_min() {
             throw NSError(domain: "libsodium", code: -10,
                           userInfo: [NSLocalizedDescriptionKey: String(format:"the length of the derived key must be at least %d bytes", crypto_kdf_bytes_min())])
@@ -38,12 +38,12 @@ public class KeyDerivation {
                           userInfo: [NSLocalizedDescriptionKey: String(format:"the length of the derived key must be less than or equal to %d bytes", crypto_kdf_bytes_max())])
         }
 
-        if inputKey.count < crypto_kdf_bytes_min() {
+        if secretKey.count < crypto_kdf_bytes_min() {
             throw NSError(domain: "libsodium", code: -12,
                           userInfo: [NSLocalizedDescriptionKey: String(format:"the length of the input key must be at least %d bytes", crypto_kdf_bytes_min())])
         }
 
-        if inputKey.count > crypto_kdf_bytes_max() {
+        if secretKey.count > crypto_kdf_bytes_max() {
             throw NSError(domain: "libsodium", code: -13,
                           userInfo: [NSLocalizedDescriptionKey: String(format:"the length of the input key must be less than or equal to %d bytes", crypto_kdf_bytes_max())])
         }
@@ -58,8 +58,8 @@ public class KeyDerivation {
         var subKey = Key(count: length)
 
         let result = subKey.withUnsafeMutableBytes { (subKeyPtr) -> Int32 in
-            return inputKey.withUnsafeBytes { (inputKeyPtr) -> Int32 in
-                return crypto_kdf_derive_from_key(subKeyPtr, length, index, contextPadded, inputKeyPtr)
+            return secretKey.withUnsafeBytes { (secretKeyPtr) -> Int32 in
+                return crypto_kdf_derive_from_key(subKeyPtr, length, index, contextPadded, secretKeyPtr)
             }
         }
 
