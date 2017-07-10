@@ -10,12 +10,26 @@ import Foundation
 import libsodium
 
 public class KeyDerivation {
-    public typealias Key = Data
-    public typealias SubKey = Data
     public let BytesMin = Int(crypto_kdf_bytes_min())
     public let BytesMax = Int(crypto_kdf_bytes_max())
     public let KeyBytes = Int(crypto_kdf_keybytes())
     public let ContextBytes = Int(crypto_kdf_contextbytes())
+
+    public typealias Key = Data
+    public typealias SubKey = Data
+
+    /**
+     Generates a secret key.
+
+     - Returns: The generated key.
+     */
+    public func key() -> Key? {
+        var k = Data(count: KeyBytes)
+        k.withUnsafeMutableBytes { kPtr in
+            crypto_kdf_keygen(kPtr)
+        }
+        return k
+    }
 
     /**
      Derives a subkey from the specified input key. Each index (from 0 to (2^64) - 1) yields a unique deterministic subkey.
@@ -28,7 +42,6 @@ public class KeyDerivation {
      - Returns: the derived key or nil on error.
 
      - Note: Input and output keys must have a length between 16 and 64 bytes (inclusive), otherwise an error is returned. Context must be at most 8 characters long. If the specified context is shorter than 8 characters, it will be padded to 8 characters.
-
      */
     public func derive(secretKey: Data, index: UInt64, length: Int, context: String) -> Data? {
         if length < BytesMin {

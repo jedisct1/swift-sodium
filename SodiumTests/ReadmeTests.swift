@@ -191,12 +191,12 @@ class ReadmeTests : XCTestCase {
 
     func testKeyDerivation() {
         let sodium = Sodium()!
-        let aliceKeyPair = sodium.box.keyPair()!
+        let secretKey = sodium.keyDerivation.keygen()!
 
-        let subKey1 = sodium.keyDerivation.derive(secretKey: aliceKeyPair.secretKey,
+        let subKey1 = sodium.keyDerivation.derive(secretKey: secretKey,
             index: 0, length: 32,
             context: "Context!")!
-        let subKey2 = sodium.keyDerivation.derive(secretKey: aliceKeyPair.secretKey,
+        let subKey2 = sodium.keyDerivation.derive(secretKey: secretKey,
             index: 1, length: 32,
             context: "Context!")!
     }
