@@ -178,14 +178,14 @@ class ReadmeTests : XCTestCase {
 
         XCTAssertEqual(input, twice)
     }
-    
+
     func testAuth() {
         let sodium = Sodium()!
         let input = "test".data(using:.utf8)!
         let key = sodium.auth.key()!;
         let tag = sodium.auth.tag(message: input, secretKey: key)!
         let tagIsValid = sodium.auth.verify(message: input, secretKey: key, tag: tag)
-        
+
         XCTAssertTrue(tagIsValid)
     }
 }

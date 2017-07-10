@@ -21,7 +21,7 @@ public class Sodium {
     public let keyExchange = KeyExchange()
     public let auth = Auth()
     public let stream = Stream()
-	public let keyDerivation = KeyDerivation()
+        public let keyDerivation = KeyDerivation()
 
     public init?() {
         struct Once {
