@@ -35,13 +35,13 @@ public class KeyDerivation {
      Derives a subkey from the specified input key. Each index (from 0 to (2^64) - 1) yields a unique deterministic subkey.
      The sequence of subkeys is likely unique for a given context.
 
-     - Parameter secretKey: the master key from which to derive the subkey (must be between 16 and 64 bytes in length, inclusive)
+     - Parameter secretKey: the master key from which to derive the subkey (must be KeyBytes bytes)
      - Parameter index: the index of the subkey to generate (allowed range: 0 to (2^64) - 1)
-     - Parameter length: the desired length of the subkey in bytes (allowed range: 16 to 64; default: 32)
+     - Parameter length: the desired length of the subkey in bytes (allowed range: BytesMin to BytesMax)
      - Parameter context: a String that identifies the context; use a different value for different types of keys (should be exactly 8 characters long but must be no longer than 8 characters)
      - Returns: the derived key or nil on error.
 
-     - Note: Input and output keys must have a length between 16 and 64 bytes (inclusive), otherwise an error is returned. Context must be at most 8 characters long. If the specified context is shorter than 8 characters, it will be padded to 8 characters.
+     - Note: Output keys must have a length between BytesMin and BytesMax bytes (inclusive), otherwise an error is returned. Context must be at most 8 characters long. If the specified context is shorter than 8 characters, it will be padded to 8 characters. The master key is KeyBytes long.
      */
     public func derive(secretKey: Data, index: UInt64, length: Int, context: String) -> Data? {
         if length < BytesMin {
