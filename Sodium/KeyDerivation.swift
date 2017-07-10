@@ -27,7 +27,7 @@ public class KeyDerivation {
      - Note: Input and output keys must have a length between 16 and 64 bytes (inclusive), otherwise an error is thrown. Context must be at most 8 characters long. If the specified context is shorter than 8 characters, it will be padded to 8 characters.
 
      */
-    public func derive(secretKey: Key, index: UInt64, length: Int = crypto_kdf_keybytes(), context context: String) throws -> Key {
+    public func derive(secretKey: Key, index: UInt64, length: Int = crypto_kdf_keybytes(), context: String) throws -> Key {
         if length < crypto_kdf_bytes_min() {
             throw NSError(domain: "libsodium", code: -10,
                           userInfo: [NSLocalizedDescriptionKey: String(format:"the length of the derived key must be at least %d bytes", crypto_kdf_bytes_min())])
