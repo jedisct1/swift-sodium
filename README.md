@@ -250,7 +250,7 @@ let tagIsValid = sodium.auth.verify(message: input, secretKey: key, tag: tag)
 ```
 
 Key derivation
-============
+==============
 
 The `sodium.keyDerivation.derive()` function generates a subkey using
 an input (master) key, an index, and a 8 bytes string identifying the
