@@ -44,38 +44,33 @@ public class KeyDerivation {
      - Note: Output keys must have a length between BytesMin and BytesMax bytes (inclusive), otherwise an error is returned. Context must be at most 8 characters long. If the specified context is shorter than 8 characters, it will be padded to 8 characters. The master key is KeyBytes long.
      */
     public func derive(secretKey: Data, index: UInt64, length: Int, context: String) -> Data? {
-        if length < BytesMin {
+        if length < BytesMin || length > BytesMax {
             return nil
         }
-
-        if length > BytesMax {
-            return nil
-        }
-
         if secretKey.count != KeyBytes {
             return nil
         }
-
         var contextBin = [UInt8](context.utf8)
         if contextBin.count > ContextBytes {
             return nil
         }
+
         while contextBin.count < ContextBytes {
             contextBin += [0]
         }
 
-        var subKey = Data(count: length)
+        var output = Data(count: length)
 
-        let result = subKey.withUnsafeMutableBytes { subKeyPtr in
+        let result = output.withUnsafeMutableBytes { outputPtr in
             return secretKey.withUnsafeBytes { secretKeyPtr in
                 return contextBin.withUnsafeBytes { contextBinPtr in
-                    return crypto_kdf_derive_from_key(subKeyPtr, length, index, contextBinPtr, secretKeyPtr)
+                    return crypto_kdf_derive_from_key(outputPtr, length, index, contextBinPtr, secretKeyPtr)
                 }
             }
         }
         if result != 0 {
             return nil
         }
-        return subKey
+        return output
     }
 }
