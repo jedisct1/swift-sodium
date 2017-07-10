@@ -303,30 +303,30 @@ class SodiumTests: XCTestCase {
 
     func testKeyDerivationSubKeyTooShort() throws {
         let sodium = Sodium()!
-        let aliceSecretKey = sodium.utils.hex2bin("a9029ec4ec56dd6f3ce5a5fa27a17a005ce73a5b8e77529887f24f73ffa10d67")!
+        let secretKey = sodium.utils.hex2bin("a9029ec4ec56dd6f3ce5a5fa27a17a005ce73a5b8e77529887f24f73ffa10d67")!
 
-        XCTAssertThrowsError(try sodium.keyDerivation.derive(secretKey: aliceSecretKey, index: 0, length: 15, context: "TEST"))
+        XCTAssertThrowsError(try sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: 15, context: "TEST"))
     }
 
     func testKeyDerivationSubKeyTooLong() throws {
         let sodium = Sodium()!
-        let aliceSecretKey = sodium.utils.hex2bin("a9029ec4ec56dd6f3ce5a5fa27a17a005ce73a5b8e77529887f24f73ffa10d67")!
+        let secretKey = sodium.utils.hex2bin("a9029ec4ec56dd6f3ce5a5fa27a17a005ce73a5b8e77529887f24f73ffa10d67")!
 
-        XCTAssertThrowsError(try sodium.keyDerivation.derive(secretKey: aliceSecretKey, index: 0, length: 65, context: "TEST"))
+        XCTAssertThrowsError(try sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: 65, context: "TEST"))
     }
 
     func testKeyDerivationContextTooLong() throws {
         let sodium = Sodium()!
-        let aliceSecretKey = sodium.utils.hex2bin("a9029ec4ec56dd6f3ce5a5fa27a17a005ce73a5b8e77529887f24f73ffa10d67")!
+        let secretKey = sodium.utils.hex2bin("a9029ec4ec56dd6f3ce5a5fa27a17a005ce73a5b8e77529887f24f73ffa10d67")!
 
-        XCTAssertThrowsError(try sodium.keyDerivation.derive(secretKey: aliceSecretKey, index: 0, context: "TEST_SODIUM"))
+        XCTAssertThrowsError(try sodium.keyDerivation.derive(secretKey: secretKey, index: 0, context: "TEST_SODIUM"))
     }
 
     func testKeyDerivation() throws {
         let sodium = Sodium()!
-        let aliceSecretKey = sodium.utils.hex2bin("a9029ec4ec56dd6f3ce5a5fa27a17a005ce73a5b8e77529887f24f73ffa10d67")!
-        let subKey1 = try sodium.keyDerivation.derive(secretKey: aliceSecretKey, index: 0, length: 32, context: "TEST")
-        let subKey2 = try sodium.keyDerivation.derive(secretKey: aliceSecretKey, index: 1, length: 32, context: "TEST")
+        let secretKey = sodium.utils.hex2bin("a9029ec4ec56dd6f3ce5a5fa27a17a005ce73a5b8e77529887f24f73ffa10d67")!
+        let subKey1 = try sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: 32, context: "TEST")
+        let subKey2 = try sodium.keyDerivation.derive(secretKey: secretKey, index: 1, length: 32, context: "TEST")
 
         XCTAssertEqual(sodium.utils.bin2hex(subKey1)!, "20ebeb174ab40b84b566e8bf65b950cef58ddd71ac83f71556e222383606c61f")
         XCTAssertEqual(sodium.utils.bin2hex(subKey2)!, "58cee31c62d12611396cb3ee761f2af62b8d5354f787ce6801b3c71218b66840")
