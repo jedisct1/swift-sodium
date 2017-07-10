@@ -288,7 +288,7 @@ class SodiumTests: XCTestCase {
     func testKeyDerivationInputKeyTooShort() throws {
         let sodium = Sodium()!
         let seed = sodium.utils.hex2bin("00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff 00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff", ignore: " ")!
-        let secretKey = sodium.randomBytes.deterministic(length: 15, seed: seed)!
+        let secretKey = sodium.randomBytes.deterministic(length: sodium.keyDerivation.KeyBytes - 1, seed: seed)!
 
         XCTAssertThrowsError(try sodium.keyDerivation.derive(secretKey: secretKey, index: 0, context: "TEST"))
     }
@@ -296,7 +296,7 @@ class SodiumTests: XCTestCase {
     func testKeyDerivationInputKeyTooLong() throws {
         let sodium = Sodium()!
         let seed = sodium.utils.hex2bin("00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff 00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff", ignore: " ")!
-        let secretKey = sodium.randomBytes.deterministic(length: 65, seed: seed)!
+        let secretKey = sodium.randomBytes.deterministic(length: sodium.keyDerivation.KeyBytes + 1, seed: seed)!
 
         XCTAssertThrowsError(try sodium.keyDerivation.derive(secretKey: secretKey, index: 0, context: "TEST"))
     }
