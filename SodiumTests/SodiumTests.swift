@@ -160,8 +160,8 @@ class SodiumTests: XCTestCase {
         XCTAssert(c2 < 10)
 
         let seed = sodium.utils.hex2bin("00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff 00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff", ignore: " ")!
-        let randomd = sodium.utils.bin2hex(sodium.randomBytes.deterministic(length: 10, seed: seed)!)!;
-        XCTAssertEqual(randomd, "444dc0602207c270b93f");
+        let randomd = sodium.utils.bin2hex(sodium.randomBytes.deterministic(length: 10, seed: seed)!)!
+        XCTAssertEqual(randomd, "444dc0602207c270b93f")
     }
 
     func testShortHash() {
@@ -264,7 +264,7 @@ class SodiumTests: XCTestCase {
     }
 
     func testStream() {
-        let key = sodium.stream.key()!;
+        let key = sodium.stream.key()!
         let inputLen = Int(sodium.randomBytes.uniform(upperBound: 1024))
         let input = sodium.randomBytes.buf(length: inputLen)!
         let (output, nonce) = sodium.stream.xor(input: input, secretKey: key)!
@@ -280,7 +280,7 @@ class SodiumTests: XCTestCase {
         XCTAssertEqual(sodium.utils.bin2hex(tag)!, "b2a31b8d4e01afcab2ee545b5caf4e3d212a99d7b3a116a97cec8e83c32e107d")
         let verify = sodium.auth.verify(message: message, secretKey: key, tag: tag)
         XCTAssertTrue(verify)
-        let key2 = sodium.auth.key()!;
+        let key2 = sodium.auth.key()!
         let verify2 = sodium.auth.verify(message: message, secretKey: key2, tag: tag)
         XCTAssertFalse(verify2)
     }
@@ -298,17 +298,17 @@ class SodiumTests: XCTestCase {
     }
 
     func testKeyDerivationSubKeyTooShort() {
-        let secretKey = sodium.keyDerivation.key()!;
+        let secretKey = sodium.keyDerivation.key()!
         XCTAssertNil(sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: 15, context: "TEST"))
     }
 
     func testKeyDerivationSubKeyTooLong() {
-        let secretKey = sodium.keyDerivation.key()!;
+        let secretKey = sodium.keyDerivation.key()!
         XCTAssertNil(sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: 65, context: "TEST"))
     }
 
     func testKeyDerivationContextTooLong() {
-        let secretKey = sodium.keyDerivation.key()!;
+        let secretKey = sodium.keyDerivation.key()!
         XCTAssertNil(sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: 32, context: "TEST_SODIUM"))
     }
 

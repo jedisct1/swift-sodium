@@ -164,7 +164,7 @@ public class GenericHash {
                 return nil
             }
 
-            self.outputLength = outputLength;
+            self.outputLength = outputLength
         }
 
         deinit {
