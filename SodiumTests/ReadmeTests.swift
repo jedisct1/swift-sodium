@@ -172,7 +172,7 @@ class ReadmeTests : XCTestCase {
     func testStream() {
         let sodium = Sodium()!
         let input = "test".data(using:.utf8)!
-        let key = sodium.stream.key()!;
+        let key = sodium.stream.key()!
         let (output, nonce) = sodium.stream.xor(input: input, secretKey: key)!
         let twice = sodium.stream.xor(input: output, nonce: nonce, secretKey: key)!
 
@@ -182,7 +182,7 @@ class ReadmeTests : XCTestCase {
     func testAuth() {
         let sodium = Sodium()!
         let input = "test".data(using:.utf8)!
-        let key = sodium.auth.key()!;
+        let key = sodium.auth.key()!
         let tag = sodium.auth.tag(message: input, secretKey: key)!
         let tagIsValid = sodium.auth.verify(message: input, secretKey: key, tag: tag)
 
@@ -199,6 +199,6 @@ class ReadmeTests : XCTestCase {
         let subKey2 = sodium.keyDerivation.derive(secretKey: secretKey,
             index: 1, length: 32,
             context: "Context!")!
-        XCTAssertNotEqual(subKey1, subKey2);
+        XCTAssertNotEqual(subKey1, subKey2)
     }
 }

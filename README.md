@@ -244,7 +244,7 @@ tags for arbitrary messages.
 ```swift
 let sodium = Sodium()!
 let input = "test".data(using:.utf8)!
-let key = sodium.auth.key()!;
+let key = sodium.auth.key()!
 let tag = sodium.auth.tag(message: input, secretKey: key)!
 let tagIsValid = sodium.auth.verify(message: input, secretKey: key, tag: tag)
 ```
@@ -336,7 +336,7 @@ need.
 ```swift
 let sodium = Sodium()!
 let input = "test".data(using:.utf8)!
-let key = sodium.stream.key()!;
+let key = sodium.stream.key()!
 let (output, nonce) = sodium.stream.xor(input: input, secretKey: key)!
 let twice = sodium.stream.xor(input: output, nonce: nonce, secretKey: key)!
 

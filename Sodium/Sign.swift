@@ -205,7 +205,7 @@ public class Sign {
         }
 
         var message = Data(count: signedMessage.count - Bytes)
-        var mlen: CUnsignedLongLong = 0;
+        var mlen: CUnsignedLongLong = 0
         let result = message.withUnsafeMutableBytes { messagePtr in
             return signedMessage.withUnsafeBytes { signedMessagePtr in
                 return publicKey.withUnsafeBytes { publicKeyPtr in
