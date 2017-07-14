@@ -231,7 +231,6 @@ class SodiumTests: XCTestCase {
         let password3 = "My Test Message".toData()!
         let salt = Data(bytes: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32] as [UInt8])
         let hash2 = sodium.pwHash.scrypt.hash(outputLength: 64, passwd: password3, salt: salt, opsLimit: sodium.pwHash.scrypt.OpsLimitInteractive, memLimit: sodium.pwHash.scrypt.MemLimitInteractive)
-        NSLog(sodium.utils.bin2hex(hash2!)!)
         XCTAssertEqual(sodium.utils.bin2hex(hash2!)!, "6f00c5630b0a113be73721d2bab7800c0fce4b4e7a74451704b53afcded3d9e85fbe1acea7d2aa0fecb3027e35d745547b1041d6c51f731bd0aa934da89f7adf")
     }
 
