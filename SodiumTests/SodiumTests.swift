@@ -286,8 +286,7 @@ class SodiumTests: XCTestCase {
     }
 
     func testKeyDerivationInputKeyTooShort() {
-        let seed = sodium.utils.hex2bin("00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff 00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff", ignore: " ")!
-        let secretKey = sodium.randomBytes.deterministic(length: sodium.keyDerivation.KeyBytes - 1, seed: seed)!
+        let secretKey = sodium.randomBytes.buf(length: sodium.keyDerivation.KeyBytes - 1)!
 
         XCTAssertNil(sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: sodium.keyDerivation.BytesMin, context: "TEST"))
     }
