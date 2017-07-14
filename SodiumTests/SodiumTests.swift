@@ -313,11 +313,18 @@ class SodiumTests: XCTestCase {
     }
 
     func testKeyDerivation() {
-        let secretKey = sodium.utils.hex2bin("a9029ec4ec56dd6f3ce5a5fa27a17a005ce73a5b8e77529887f24f73ffa10d67")!
+        let secretKey = sodium.keyDerivation.key()!
         let subKey1 = sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: sodium.keyDerivation.BytesMin, context: "TEST")!
-        let subKey2 = sodium.keyDerivation.derive(secretKey: secretKey, index: 1, length: sodium.keyDerivation.BytesMin, context: "TEST")!
+        let subKey2 = sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: sodium.keyDerivation.BytesMin, context: "TEST")!
+        let subKey3 = sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: sodium.keyDerivation.BytesMin, context: "TEST\0")!
+        let subKey4 = sodium.keyDerivation.derive(secretKey: secretKey, index: 1, length: sodium.keyDerivation.BytesMin, context: "TEST")!
+        let subKey5 = sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: sodium.keyDerivation.BytesMin, context: "test")!
 
-        XCTAssertEqual(sodium.utils.bin2hex(subKey1)!, "40d69c5e6e8b46e399433c9b5c3a7713")
-        XCTAssertEqual(sodium.utils.bin2hex(subKey2)!, "8ba83c1cd5a3be912a80ef2abe1457c5")
+        XCTAssertEqual(subKey1, subKey2, "Equally derived keys must be equal!")
+        XCTAssertEqual(subKey1, subKey3, "Manual padding should result in same key.")
+
+        XCTAssertNotEqual(subKey1, subKey4, "Subkeys with different indices must be different!")
+        XCTAssertNotEqual(subKey1, subKey5, "Subkeys with different contexts must be different!")
+    }
     }
 }
