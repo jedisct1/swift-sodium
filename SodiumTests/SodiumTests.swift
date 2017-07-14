@@ -231,7 +231,6 @@ class SodiumTests: XCTestCase {
         let password3 = "My Test Message".toData()!
         let salt = Data(bytes: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32] as [UInt8])
         let hash2 = sodium.pwHash.scrypt.hash(outputLength: 64, passwd: password3, salt: salt, opsLimit: sodium.pwHash.scrypt.OpsLimitInteractive, memLimit: sodium.pwHash.scrypt.MemLimitInteractive)
-        NSLog(sodium.utils.bin2hex(hash2!)!)
         XCTAssertEqual(sodium.utils.bin2hex(hash2!)!, "6f00c5630b0a113be73721d2bab7800c0fce4b4e7a74451704b53afcded3d9e85fbe1acea7d2aa0fecb3027e35d745547b1041d6c51f731bd0aa934da89f7adf")
     }
 
@@ -286,38 +285,52 @@ class SodiumTests: XCTestCase {
     }
 
     func testKeyDerivationInputKeyTooShort() {
-        let seed = sodium.utils.hex2bin("00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff 00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff", ignore: " ")!
-        let secretKey = sodium.randomBytes.deterministic(length: sodium.keyDerivation.KeyBytes - 1, seed: seed)!
+        let secretKey = sodium.randomBytes.buf(length: sodium.keyDerivation.KeyBytes - 1)!
 
-        XCTAssertNil(sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: 32, context: "TEST"))
+        XCTAssertNil(sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: sodium.keyDerivation.BytesMin, context: "TEST"))
     }
 
     func testKeyDerivationInputKeyTooLong() {
-        let secretKey = Data(count: 100)
-        XCTAssertNil(sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: 32, context: "TEST"))
+        let secretKey = sodium.randomBytes.buf(length: sodium.keyDerivation.BytesMax + 1)!
+        XCTAssertNil(sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: sodium.keyDerivation.BytesMin, context: "TEST"))
     }
 
     func testKeyDerivationSubKeyTooShort() {
         let secretKey = sodium.keyDerivation.key()!
-        XCTAssertNil(sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: 15, context: "TEST"))
+        XCTAssertNil(sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: sodium.keyDerivation.BytesMin - 1, context: "TEST"))
     }
 
     func testKeyDerivationSubKeyTooLong() {
         let secretKey = sodium.keyDerivation.key()!
-        XCTAssertNil(sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: 65, context: "TEST"))
+        XCTAssertNil(sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: sodium.keyDerivation.BytesMax + 1, context: "TEST"))
     }
 
     func testKeyDerivationContextTooLong() {
         let secretKey = sodium.keyDerivation.key()!
-        XCTAssertNil(sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: 32, context: "TEST_SODIUM"))
+        XCTAssertNil(sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: sodium.keyDerivation.BytesMin, context: "TEST_SODIUM"))
     }
 
     func testKeyDerivation() {
-        let secretKey = sodium.utils.hex2bin("a9029ec4ec56dd6f3ce5a5fa27a17a005ce73a5b8e77529887f24f73ffa10d67")!
-        let subKey1 = sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: 32, context: "TEST")!
-        let subKey2 = sodium.keyDerivation.derive(secretKey: secretKey, index: 1, length: 32, context: "TEST")!
+        let secretKey = sodium.keyDerivation.key()!
+        let subKey1 = sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: sodium.keyDerivation.BytesMin, context: "TEST")!
+        let subKey2 = sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: sodium.keyDerivation.BytesMin, context: "TEST")!
+        let subKey3 = sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: sodium.keyDerivation.BytesMin, context: "TEST\0")!
+        let subKey4 = sodium.keyDerivation.derive(secretKey: secretKey, index: 1, length: sodium.keyDerivation.BytesMin, context: "TEST")!
+        let subKey5 = sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: sodium.keyDerivation.BytesMin, context: "test")!
 
-        XCTAssertEqual(sodium.utils.bin2hex(subKey1)!, "dc6768bce6628c0f25998cfc8a09bb557a67335d20374dafdcb3a32dbc6f71f6")
-        XCTAssertEqual(sodium.utils.bin2hex(subKey2)!, "5da61f328584b58eafcd3e1095cbc37515b33b9e29ece103d998acc8d27b314d")
+        XCTAssertEqual(subKey1, subKey2, "Equally derived keys must be equal!")
+        XCTAssertEqual(subKey1, subKey3, "Manual padding should result in same key.")
+
+        XCTAssertNotEqual(subKey1, subKey4, "Subkeys with different indices must be different!")
+        XCTAssertNotEqual(subKey1, subKey5, "Subkeys with different contexts must be different!")
+    }
+
+    func testKeyDerivationRegression() {
+        let secretKey = sodium.utils.hex2bin("a9029ec4ec56dd6f3ce5a5fa27a17a005ce73a5b8e77529887f24f73ffa10d67")!
+        let subKey1 = sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: sodium.keyDerivation.BytesMin, context: "TEST")!
+        let subKey2 = sodium.keyDerivation.derive(secretKey: secretKey, index: 1, length: sodium.keyDerivation.BytesMin, context: "TEST")!
+
+        XCTAssertEqual(sodium.utils.bin2hex(subKey1)!, "40d69c5e6e8b46e399433c9b5c3a7713")
+        XCTAssertEqual(sodium.utils.bin2hex(subKey2)!, "8ba83c1cd5a3be912a80ef2abe1457c5")
     }
 }
