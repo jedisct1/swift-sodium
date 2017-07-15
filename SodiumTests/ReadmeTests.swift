@@ -62,7 +62,7 @@ class ReadmeTests : XCTestCase {
         let message = "My Test Message".data(using:.utf8)!
         let keyPair = sodium.sign.keyPair()!
         let signedMessage = sodium.sign.sign(message: message, secretKey: keyPair.secretKey)!
-        if let unsignedMessage = sodium.sign.open(signedMessage: signedMessage, publicKey: keyPair.publicKey) {
+        if sodium.sign.open(signedMessage: signedMessage, publicKey: keyPair.publicKey) != nil {
             // signature is valid
         }
     }
@@ -72,7 +72,7 @@ class ReadmeTests : XCTestCase {
         let message = "My Test Message".data(using:.utf8)!
         let secretKey = sodium.secretBox.key()!
         let encrypted: Data = sodium.secretBox.seal(message: message, secretKey: secretKey)!
-        if let decrypted = sodium.secretBox.open(nonceAndAuthenticatedCipherText: encrypted, secretKey: secretKey) {
+        if sodium.secretBox.open(nonceAndAuthenticatedCipherText: encrypted, secretKey: secretKey) != nil {
             // authenticator is valid, decrypted contains the original message
         }
     }
