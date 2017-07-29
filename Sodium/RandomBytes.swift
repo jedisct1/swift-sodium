@@ -57,7 +57,7 @@ public class RandomBytes {
      - Returns: The generated data.
      */
     public func deterministic(length: Int, seed: Data) -> Data? {
-        if length < 0 || seed.count != SeedBytes {
+        if length < 0 || seed.count != SeedBytes || length > 0x4000000000 {
             return nil
         }
         var output = Data(count: length)
