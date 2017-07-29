@@ -20,6 +20,12 @@ public class PWHash {
     public let MemLimitModerate = Int(crypto_pwhash_memlimit_moderate())
     public let MemLimitSensitive = Int(crypto_pwhash_memlimit_sensitive())
 
+    public enum Alg {
+        case Default
+        case Argon2I13
+        case Argon2ID13
+    }
+
     /**
      Generates an ASCII encoded string, which includes:
 
@@ -87,16 +93,25 @@ public class PWHash {
      - Parameter salt: Unpredicatable salt data.  Must have a fixed length of `SaltBytes`.
      - Parameter opsLimit: Represents a maximum amount of computations to perform. Raising this number will make the function require more CPU cycles to compute a key.
      - Parameter memLimit: The maximum amount of RAM that the function will use, in bytes.
+     - Parameter alg: The algorithm identifier (.Default, .Argon2I13, .Argon2ID13).
 
      - Returns: The derived key data.
      */
-    public func hash(outputLength: Int, passwd: Data, salt: Data, opsLimit: Int, memLimit: Int) -> Data? {
+    public func hash(outputLength: Int, passwd: Data, salt: Data, opsLimit: Int, memLimit: Int, alg: Alg = .Default) -> Data? {
         if salt.count != SaltBytes {
             return nil
         }
 
         var output = Data(count: outputLength)
-
+        var algId: Int32
+        switch alg {
+        case .Default:
+            algId = crypto_pwhash_alg_default()
+        case .Argon2I13:
+            algId = crypto_pwhash_alg_argon2i13()
+        case .Argon2ID13:
+            algId = crypto_pwhash_alg_argon2id13()
+        }
         let result = passwd.withUnsafeBytes { passwdPtr in
             return salt.withUnsafeBytes { saltPtr in
                 return output.withUnsafeMutableBytes { outputPtr in
@@ -108,7 +123,7 @@ public class PWHash {
                       saltPtr,
                       CUnsignedLongLong(opsLimit),
                       size_t(memLimit),
-                      crypto_pwhash_ALG_DEFAULT)
+                      algId)
                 }
             }
         }
