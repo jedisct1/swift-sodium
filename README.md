@@ -43,7 +43,7 @@ Authenticated Encryption
 ------------------------
 
 ```swift
-let sodium = Sodium()!
+let sodium = Sodium(())!
 let aliceKeyPair = sodium.box.keyPair()!
 let bobKeyPair = sodium.box.keyPair()!
 let message = "My Test Message".data(using:.utf8)!
