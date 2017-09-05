@@ -68,6 +68,7 @@
 
 /* Begin PBXFileReference section */
 		038365141A5A51D20081136D /* SecretBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecretBox.swift; sourceTree = "<group>"; };
+		091125881F5F210700CBF38A /* crypto_secretstream_xchacha20poly1305.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = crypto_secretstream_xchacha20poly1305.h; sourceTree = "<group>"; };
 		0917824D1CA164970022765D /* crypto_core_hchacha20.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypto_core_hchacha20.h; sourceTree = "<group>"; };
 		0917824E1CA164970022765D /* crypto_pwhash_argon2i.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypto_pwhash_argon2i.h; sourceTree = "<group>"; };
 		0917824F1CA164970022765D /* crypto_pwhash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypto_pwhash.h; sourceTree = "<group>"; };
@@ -307,6 +308,7 @@
 				09A943F61A4EB91F00C8A04F /* crypto_auth.h */,
 				09A943F71A4EB91F00C8A04F /* crypto_box_curve25519xsalsa20poly1305.h */,
 				09A943F81A4EB91F00C8A04F /* crypto_box.h */,
+				091125881F5F210700CBF38A /* crypto_secretstream_xchacha20poly1305.h */,
 				09A943F91A4EB91F00C8A04F /* crypto_core_hsalsa20.h */,
 				09A943FA1A4EB91F00C8A04F /* crypto_core_salsa20.h */,
 				09A943FB1A4EB91F00C8A04F /* crypto_core_salsa208.h */,

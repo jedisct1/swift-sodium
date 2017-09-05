@@ -35,6 +35,7 @@
 #include "crypto_scalarmult_curve25519.h"
 #include "crypto_secretbox.h"
 #include "crypto_secretbox_xsalsa20poly1305.h"
+#include "crypto_secretstream_xchacha20poly1305.h"
 #include "crypto_shorthash.h"
 #include "crypto_shorthash_siphash24.h"
 #include "crypto_sign.h"
