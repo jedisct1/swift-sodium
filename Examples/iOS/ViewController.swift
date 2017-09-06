@@ -20,7 +20,7 @@ class ViewController: UIViewController {
         let bobKeyPair = sodium.box.keyPair()!
         let message = "My Test Message".toData()!
 
-        print("Original Message:\(message.toString())")
+        print("Original Message:\(message.toString()!)")
 
         let encryptedMessageFromAliceToBob: Data =
             sodium.box.seal(
@@ -36,7 +36,7 @@ class ViewController: UIViewController {
                 senderPublicKey: bobKeyPair.publicKey,
                 recipientSecretKey: aliceKeyPair.secretKey)
 
-        print("Decrypted Message:\(messageVerifiedAndDecryptedByBob!.toString())")
+        print("Decrypted Message:\(messageVerifiedAndDecryptedByBob!.toString()!)")
 
     }
 

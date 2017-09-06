@@ -15,7 +15,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var window: NSWindow!
 
 
-    func applicationDidFinishLaunching(aNotification: NSNotification) {
+    func applicationDidFinishLaunching(_ notification: Notification) {
         // Insert code here to initialize your application
 
         let sodium = Sodium()!
@@ -23,7 +23,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let bobKeyPair = sodium.box.keyPair()!
         let message = "My Test Message".toData()!
 
-        print("Original Message:\(message.toString())")
+        print("Original Message:\(message.toString()!)")
 
         let encryptedMessageFromAliceToBob: Data =
             sodium.box.seal(
@@ -39,14 +39,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 senderPublicKey: bobKeyPair.publicKey,
                 recipientSecretKey: aliceKeyPair.secretKey)
 
-        print("Decrypted Message:\(messageVerifiedAndDecryptedByBob!.toString())")
+        print("Decrypted Message:\(messageVerifiedAndDecryptedByBob!.toString()!)")
 
     }
 
-    func applicationWillTerminate(aNotification: NSNotification) {
+    func applicationWillTerminate(_ notification: Notification) {
         // Insert code here to tear down your application
     }
-
-
 }
 
