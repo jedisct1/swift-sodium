@@ -90,7 +90,7 @@ public class Utils {
      - Returns: The decoded data.
      */
     public func hex2bin(_ hex: String, ignore: String? = nil) -> Data? {
-        guard var hexData = hex.data(using: .utf8, allowLossyConversion: false) else {
+        guard let hexData = hex.data(using: .utf8, allowLossyConversion: false) else {
             return nil
         }
 
@@ -101,7 +101,7 @@ public class Utils {
         let ignore_cstr = ignore != nil ? (ignore! as NSString).utf8String : nil
 
         let result = binData.withUnsafeMutableBytes { binPtr in
-          return hexData.withUnsafeMutableBytes { hexPtr in
+          return hexData.withUnsafeBytes { hexPtr in
             return sodium_hex2bin(binPtr,
                                   binDataCapacity,
                                   hexPtr,
