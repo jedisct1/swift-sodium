@@ -24,12 +24,8 @@ public class Sodium {
         public let keyDerivation = KeyDerivation()
 
     public init?() {
-        struct Once {
-            static var once : () = {
-                if sodium_init() == -1 {
-                    abort()
-                }
-            }()
+        if sodium_init() == -1 {
+            return nil
         }
     }
 }
