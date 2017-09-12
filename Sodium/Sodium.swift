@@ -21,15 +21,15 @@ public class Sodium {
     public let keyExchange = KeyExchange()
     public let auth = Auth()
     public let stream = Stream()
-        public let keyDerivation = KeyDerivation()
-
-    public init?() {
-        struct Once {
-            static var once : () = {
-                if sodium_init() == -1 {
-                    abort()
-                }
-            }()
+    public let keyDerivation = KeyDerivation()
+    
+    private static let once: Void = {
+        if sodium_init() == -1 {
+            fatalError("Failed to initialize libSodium")
         }
+    }()
+    
+    public init() {
+        _ = Sodium.once
     }
 }
