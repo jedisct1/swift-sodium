@@ -8,7 +8,7 @@
 
 #define SODIUM_LIBRARY_VERSION_MAJOR 9
 #define SODIUM_LIBRARY_VERSION_MINOR 6
-
+#define SODIUM_LIBRARY_MINIMAL 1
 
 #ifdef __cplusplus
 extern "C" {
