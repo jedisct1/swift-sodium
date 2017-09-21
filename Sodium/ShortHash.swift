@@ -12,12 +12,12 @@ import libsodium
 public class ShortHash {
     public let Bytes = Int(crypto_shorthash_bytes())
     public let KeyBytes = Int(crypto_shorthash_keybytes())
-
+    
     public typealias Key = Data
-
+    
     /**
      Generates a secret key.
-
+     
      - Returns: The generated key.
      */
     public func key() -> Key? {
@@ -27,22 +27,22 @@ public class ShortHash {
         }
         return k
     }
-
+    
     /**
      Computes short but unpredictable (without knowing the secret key) values suitable for picking a list in a hash table for a given key.
-
+     
      - Parameter message: The data to be hashed.
      - Parameter key: The hash key.  Must be of length `KeyBytes`. Can be created using `RandomBytes.buf()`.
-
+     
      - Returns: The computed fingerprint.  Will be of length `Bytes`.
      */
     public func hash(message: Data, key: Data) -> Data? {
         if key.count != KeyBytes {
             return nil
         }
-
+        
         var output = Data(count: Bytes)
-
+        
         let result = output.withUnsafeMutableBytes { outputPtr in
             return message.withUnsafeBytes { messagePtr in
                 return key.withUnsafeBytes { keyPtr in
@@ -50,11 +50,11 @@ public class ShortHash {
                 }
             }
         }
-
+        
         if result != 0 {
             return nil
         }
-
+        
         return output
     }
 }

@@ -24,7 +24,7 @@ extension Data {
     func toString() -> String? {
         return String(data: self, encoding: .utf8)
     }
-
+    
     func toDictionary() -> [String: AnyObject]? {
         return NSKeyedUnarchiver.unarchiveObject(with: self) as? [String: AnyObject]
     }
