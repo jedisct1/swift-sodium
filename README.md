@@ -127,6 +127,37 @@ if let unsignedMessage = sodium.sign.open(signedMessage: signedMessage, publicKe
 Secret-key authenticated encryption
 ===================================
 
+Authenticated encryption for a sequence of messages
+---------------------------------------------------
+
+```swift
+let sodium = Sodium()
+let message1 = "Message 1".data(using:.utf8)!
+let message2 = "Message 2".data(using:.utf8)!
+let message3 = "Message 3".data(using:.utf8)!
+
+let secretkey = sodium.secretStream.xchacha20poly1305.key()!
+
+/* stream encryption */
+
+let stream_enc = sodium.secretStream.xchacha20poly1305.initPush(secretKey: secretKey)!
+let header = stream.header()
+let encrypted1 = stream_enc.push(message: message1)!
+let encrypted2 = stream_enc.push(message: message2)!
+let encrypted3 = stream_enc.push(message: message3,
+                             tag: SecretStream.XChaCha20Poly1305.Tag.FINAL)!
+
+/* stream decryption */
+
+let stream_dec = sodium.secretStream.xchacha20poly1305.initPull(secretKey: secretKey, header: header)!
+let (message1, tag1) = stream_dec.pull(cipherText: encrypted1)!
+let (message2, tag2) = stream_dec.pull(cipherText: encrypted2)!
+let (message3, tag3) = stream_dec.pull(cipherText: encrypted3)!
+```
+
+Authenticated encryption for independent messages
+-------------------------------------------------
+
 ```swift
 let sodium = Sodium()
 let message = "My Test Message".data(using:.utf8)!
