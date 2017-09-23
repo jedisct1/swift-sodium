@@ -227,8 +227,6 @@ let stream = sodium.randomBytes.deterministic(length: 1000, seed: seed)!
 Password hashing
 ================
 
-Using Argon2:
-
 ```swift
 let sodium = Sodium()
 let password = "Correct Horse Battery Staple".data(using:.utf8)!
