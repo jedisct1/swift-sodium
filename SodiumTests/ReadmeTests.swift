@@ -254,4 +254,15 @@ class ReadmeTests : XCTestCase {
         XCTAssertEqual(data2, "data".toData())
         XCTAssertEqual(data3, "data".toData())
     }
+    
+    func testPadding() {
+        let sodium = Sodium()
+        var data = "test".toData()!
+        
+        // make data.count a multiple of 16
+        sodium.utils.pad(data: &data, blockSize: 16)!
+        
+        // restore original size
+        sodium.utils.unpad(data: &data, blockSize: 16)!
+    }
 }

@@ -327,6 +327,20 @@ let secret2 = "Secret key".data(using:.utf8)!
 let equality = sodium.utils.equals(secret1, secret2)
 ```
 
+Padding
+-------
+
+```swift
+let sodium = Sodium()
+var data = "test".toData()!
+
+// make data.count a multiple of 16
+sodium.utils.pad(data: &data, blockSize: 16)!
+
+// restore original size
+sodium.utils.unpad(data: &data, blockSize: 16)!
+```
+
 Constant-time hexadecimal encoding
 ----------------------------------
 
