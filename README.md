@@ -8,6 +8,10 @@ Swift-Sodium provides a safe and easy to use interface to perform common cryptog
 
 It leverages the [Sodium](https://download.libsodium.org/doc/) library, and although Swift is the primary target, the framework can also be used in Objective C applications.
 
+## Please help!
+
+The current Swift-Sodium documentation is not great. Your help to improve it and make it awesome would be very appreciated!
+
 ## Usage
 
 Add `Sodium.framework` as a dependency to your project, and import the module:
