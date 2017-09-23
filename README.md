@@ -144,8 +144,7 @@ let stream_enc = sodium.secretStream.xchacha20poly1305.initPush(secretKey: secre
 let header = stream_enc.header()
 let encrypted1 = stream_enc.push(message: message1)!
 let encrypted2 = stream_enc.push(message: message2)!
-let encrypted3 = stream_enc.push(message: message3,
-tag: SecretStream.XChaCha20Poly1305.Tag.FINAL)!
+let encrypted3 = stream_enc.push(message: message3, tag: .FINAL)!
 
 /* stream decryption */
 
@@ -257,9 +256,9 @@ let aliceKeyPair = sodium.keyExchange.keyPair()!
 let bobKeyPair = sodium.keyExchange.keyPair()!
 
 let sessionKeyPairForAlice = sodium.keyExchange.sessionKeyPair(publicKey: aliceKeyPair.publicKey,
-    secretKey: aliceKeyPair.secretKey, otherPublicKey: bobKeyPair.publicKey, side: .client)!
+    secretKey: aliceKeyPair.secretKey, otherPublicKey: bobKeyPair.publicKey, side: .CLIENT)!
 let sessionKeyPairForBob = sodium.keyExchange.sessionKeyPair(publicKey: bobKeyPair.publicKey,
-    secretKey: bobKeyPair.secretKey, otherPublicKey: aliceKeyPair.publicKey, side: .server)!
+    secretKey: bobKeyPair.secretKey, otherPublicKey: aliceKeyPair.publicKey, side: .SERVER)!
 
 let aliceToBobKeyEquality = sodium.utils.equals(sessionKeyPairForAlice.tx, sessionKeyPairForBob.xx) // true
 let bobToAliceKeyEquality = sodium.utils.equals(sessionKeyPairForAlice.rx, sessionKeyPairForBob.tx) // true
@@ -365,7 +364,7 @@ Constant-time base64 encoding
 ```swift
 let sodium = Sodium()
 let b64 = sodium.utils.bin2base64("data".toData()!)!
-let b64_2 = sodium.utils.bin2base64("data".toData()!, variant: Utils.Base64Variant.URLSAFE_NO_PADDING)!
+let b64_2 = sodium.utils.bin2base64("data".toData()!, variant: .URLSAFE_NO_PADDING)!
 ```
 
 Base64 decoding
@@ -374,7 +373,7 @@ Base64 decoding
 ```swift
 let data1 = sodium.utils.base642bin(b64)
 let data2 = sodium.utils.base642bin(b64, ignore: " \n")
-let data3 = sodium.utils.base642bin(b64_2, variant: Utils.Base64Variant.URLSAFE_NO_PADDING, ignore: " \n")
+let data3 = sodium.utils.base642bin(b64_2, variant: .URLSAFE_NO_PADDING, ignore: " \n")
 ```
 
 Helpers to build custom constructions

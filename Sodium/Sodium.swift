@@ -2,9 +2,6 @@
 //  Sodium.swift
 //  Sodium
 //
-//  Created by Frank Denis on 12/27/14.
-//  Copyright (c) 2014 Frank Denis. All rights reserved.
-//
 
 import Foundation
 import libsodium
@@ -23,13 +20,13 @@ public class Sodium {
     public let stream = Stream()
     public let keyDerivation = KeyDerivation()
     public let secretStream = SecretStream()
-    
+
     private static let once: Void = {
-        if sodium_init() == -1 {
-            fatalError("Failed to initialize libSodium")
+        if sodium_init() < 0 {
+            fatalError("Failed to initialize libsodium")
         }
     }()
-    
+
     public init() {
         _ = Sodium.once
     }

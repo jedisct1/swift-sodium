@@ -223,8 +223,7 @@ class ReadmeTests : XCTestCase {
         let header = stream_enc.header()
         let encrypted1 = stream_enc.push(message: message1)!
         let encrypted2 = stream_enc.push(message: message2)!
-        let encrypted3 = stream_enc.push(message: message3,
-                                         tag: SecretStream.XChaCha20Poly1305.Tag.FINAL)!
+        let encrypted3 = stream_enc.push(message: message3, tag: .FINAL)!
         
         /* stream decryption */
         
@@ -236,19 +235,19 @@ class ReadmeTests : XCTestCase {
         XCTAssertEqual(message1, message1_dec)
         XCTAssertEqual(message2, message2_dec)
         XCTAssertEqual(message3, message3_dec)
-        XCTAssertEqual(tag1, SecretStream.XChaCha20Poly1305.Tag.MESSAGE)
-        XCTAssertEqual(tag2, SecretStream.XChaCha20Poly1305.Tag.MESSAGE)
-        XCTAssertEqual(tag3, SecretStream.XChaCha20Poly1305.Tag.FINAL)
+        XCTAssertEqual(tag1, .MESSAGE)
+        XCTAssertEqual(tag2, .MESSAGE)
+        XCTAssertEqual(tag3, .FINAL)
     }
     
     func testBase64() {
         let sodium = Sodium()
         let b64 = sodium.utils.bin2base64("data".toData()!)!
-        let b64_2 = sodium.utils.bin2base64("data".toData()!, variant: Utils.Base64Variant.URLSAFE_NO_PADDING)!
+        let b64_2 = sodium.utils.bin2base64("data".toData()!, variant: .URLSAFE_NO_PADDING)!
 
         let data1 = sodium.utils.base642bin(b64)
         let data2 = sodium.utils.base642bin(b64, ignore: " \n")
-        let data3 = sodium.utils.base642bin(b64_2, variant: Utils.Base64Variant.URLSAFE_NO_PADDING, ignore: " \n")
+        let data3 = sodium.utils.base642bin(b64_2, variant: .URLSAFE_NO_PADDING, ignore: " \n")
         
         XCTAssertEqual(data1, "data".toData())
         XCTAssertEqual(data2, "data".toData())

@@ -241,8 +241,8 @@ class SodiumTests: XCTestCase {
         let aliceKeyPair = sodium.keyExchange.keyPair()!
         let bobKeyPair = sodium.keyExchange.keyPair()!
         
-        let sessionKeyPairForAlice = sodium.keyExchange.sessionKeyPair(publicKey: aliceKeyPair.publicKey, secretKey: aliceKeyPair.secretKey, otherPublicKey: bobKeyPair.publicKey, side: .client)!
-        let sessionKeyPairForBob = sodium.keyExchange.sessionKeyPair(publicKey: bobKeyPair.publicKey, secretKey: bobKeyPair.secretKey, otherPublicKey: aliceKeyPair.publicKey, side: .server)!
+        let sessionKeyPairForAlice = sodium.keyExchange.sessionKeyPair(publicKey: aliceKeyPair.publicKey, secretKey: aliceKeyPair.secretKey, otherPublicKey: bobKeyPair.publicKey, side: .CLIENT)!
+        let sessionKeyPairForBob = sodium.keyExchange.sessionKeyPair(publicKey: bobKeyPair.publicKey, secretKey: bobKeyPair.secretKey, otherPublicKey: aliceKeyPair.publicKey, side: .SERVER)!
         
         XCTAssertEqual(sessionKeyPairForAlice.rx, sessionKeyPairForBob.tx)
         XCTAssertEqual(sessionKeyPairForAlice.tx, sessionKeyPairForBob.rx)
@@ -328,15 +328,15 @@ class SodiumTests: XCTestCase {
         let header = stream.header()
         let encrypted1 = stream.push(message: "message 1".toData()!)!
         let encrypted2 = stream.push(message: "message 2".toData()!)!
-        let encrypted3 = stream.push(message: "message 3".toData()!, tag: SecretStream.XChaCha20Poly1305.Tag.FINAL)!
+        let encrypted3 = stream.push(message: "message 3".toData()!, tag: .FINAL)!
         
         let stream2 = sodium.secretStream.xchacha20poly1305.initPull(secretKey: secretKey, header: header)!
         let (message1, tag1) = stream2.pull(cipherText: encrypted1)!
         let (message2, tag2) = stream2.pull(cipherText: encrypted2)!
         let (message3, tag3) = stream2.pull(cipherText: encrypted3)!
-        XCTAssertEqual(tag1, SecretStream.XChaCha20Poly1305.Tag.MESSAGE)
-        XCTAssertEqual(tag2, SecretStream.XChaCha20Poly1305.Tag.MESSAGE)
-        XCTAssertEqual(tag3, SecretStream.XChaCha20Poly1305.Tag.FINAL)
+        XCTAssertEqual(tag1, .MESSAGE)
+        XCTAssertEqual(tag2, .MESSAGE)
+        XCTAssertEqual(tag3, .FINAL)
         XCTAssertEqual(message1, "message 1".toData()!)
         XCTAssertEqual(message2, "message 2".toData()!)
         XCTAssertEqual(message3, "message 3".toData()!)
@@ -350,8 +350,8 @@ class SodiumTests: XCTestCase {
         XCTAssertEqual(b64, "dGVzdA==")
         XCTAssertEqual(bin2, bin)
         
-        let b64_nopad = sodium.utils.bin2base64(bin, variant: Utils.Base64Variant.URLSAFE_NO_PADDING)!
-        let bin2_nopad = sodium.utils.base642bin(b64_nopad, variant: Utils.Base64Variant.URLSAFE_NO_PADDING)!
+        let b64_nopad = sodium.utils.bin2base64(bin, variant: .URLSAFE_NO_PADDING)!
+        let bin2_nopad = sodium.utils.base642bin(b64_nopad, variant: .URLSAFE_NO_PADDING)!
         XCTAssertEqual(b64_nopad, "dGVzdA")
         XCTAssertEqual(bin2_nopad, bin)
     }
