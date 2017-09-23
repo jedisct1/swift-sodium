@@ -355,4 +355,12 @@ class SodiumTests: XCTestCase {
         XCTAssertEqual(b64_nopad, "dGVzdA")
         XCTAssertEqual(bin2_nopad, bin)
     }
+    
+    func testPad() {
+        var data = "test".toData()!
+        sodium.utils.pad(data: &data, blockSize: 16)!
+        XCTAssertTrue(data.count % 16 == 0)
+        sodium.utils.unpad(data: &data, blockSize: 16)!
+        XCTAssertTrue(data.count == 4)
+    }
 }

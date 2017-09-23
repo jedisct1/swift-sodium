@@ -167,14 +167,14 @@ public class Utils {
         let ignore_cstr = ignore != nil ? (ignore! as NSString).utf8String : nil
         
         let result = binData.withUnsafeMutableBytes { binPtr in
-            return b64Data.withUnsafeBytes { b64Ptr in
-                return sodium_base642bin(binPtr,
-                                         binDataCapacity,
-                                         b64Ptr,
-                                         b64DataLen,
-                                         ignore_cstr,
-                                         &binDataLen,
-                                         nil, variant.rawValue)
+            b64Data.withUnsafeBytes { b64Ptr in
+                sodium_base642bin(binPtr,
+                                  binDataCapacity,
+                                  b64Ptr,
+                                  b64DataLen,
+                                  ignore_cstr,
+                                  &binDataLen,
+                                  nil, variant.rawValue)
             }
         }
         
@@ -184,5 +184,46 @@ public class Utils {
         
         binData.count = Int(binDataLen)
         return binData
+    }
+    
+    /*
+     Add padding to `data` so that its length becomes a multiple of `blockSize`
+     
+     - Parameter data: input/output buffer, will be modified in-place
+     - Parameter blocksize: the block size
+     */
+    public func pad(data: inout Data, blockSize: Int) -> ()? {
+        let dataCount = data.count
+        data.reserveCapacity(dataCount + blockSize)
+        data.count = dataCount + blockSize
+        var paddedLen: size_t = 0
+        let result = data.withUnsafeMutableBytes { dataPtr in
+            sodium_pad(&paddedLen, dataPtr, dataCount, blockSize, dataCount + blockSize)
+        }
+        if result != 0 {
+            return nil
+        }
+        data.count = Int(paddedLen)
+        
+        return ()
+    }
+    
+    /*
+     Remove padding from `data` to restore its original size
+     
+     - Parameter data: input/output buffer, will be modified in-place
+     - Parameter blocksize: the block size
+     */
+    public func unpad(data: inout Data, blockSize: Int) -> ()? {
+        var unpaddedLen: size_t = 0
+        let result = data.withUnsafeMutableBytes { dataPtr in
+            sodium_unpad(&unpaddedLen, dataPtr, data.count, blockSize)
+        }
+        if result != 0 {
+            return nil
+        }
+        data.count = Int(unpaddedLen)
+        
+        return ()
     }
 }
