@@ -84,6 +84,26 @@ public class PWHash {
     }
     
     /**
+     Check that a string previously hashed password matches the current algorithm and parameters
+     
+     - Parameter hash: The password hash string to check.
+     - Parameter opsLimit: Represents a maximum amount of computations to perform. Raising this number will make the function require more CPU cycles to compute a key.
+     - Parameter memLimit: The maximum amount of RAM that the function will use, in bytes.
+     
+     - Returns: `true` if the password hash should be updated.
+     */
+    public func strNeedsRehash(hash: String, opsLimit: Int, memLimit: Int) -> Bool {
+        guard let hashData = (hash + "\0").data(using: .utf8, allowLossyConversion: false) else {
+            return true
+        }
+        return hashData.withUnsafeBytes { hashPtr in
+            return crypto_pwhash_str_needs_rehash(
+                hashPtr,
+                CUnsignedLongLong(opsLimit), size_t(memLimit)) != 0
+        }
+    }
+    
+    /**
      Derives a key from a password and a salt using the Argon2 password hashing function.
      
      Keep in mind that in order to produce the same key from the same password, the same salt, and the same values for opslimit and memlimit have to be used. Therefore, these parameters have to be stored for each user.
@@ -116,14 +136,10 @@ public class PWHash {
             return salt.withUnsafeBytes { saltPtr in
                 return output.withUnsafeMutableBytes { outputPtr in
                     return crypto_pwhash(
-                        outputPtr,
-                        CUnsignedLongLong(outputLength),
-                        passwdPtr,
-                        CUnsignedLongLong(passwd.count),
-                        saltPtr,
-                        CUnsignedLongLong(opsLimit),
-                        size_t(memLimit),
-                        algId)
+                        outputPtr, CUnsignedLongLong(outputLength),
+                        passwdPtr, CUnsignedLongLong(passwd.count),
+                        saltPtr, CUnsignedLongLong(opsLimit),
+                        size_t(memLimit), algId)
                 }
             }
         }

@@ -227,7 +227,7 @@ let stream = sodium.randomBytes.deterministic(length: 1000, seed: seed)!
 Password hashing
 ================
 
-Using Argon2i:
+Using Argon2:
 
 ```swift
 let sodium = Sodium()
@@ -240,6 +240,13 @@ if sodium.pwHash.strVerify(hash: hashedStr, passwd: password) {
     // Password matches the given hash string
 } else {
     // Password doesn't match the given hash string
+}
+
+if sodium.pwHash.strNeedsRehash(hash: hashedStr,
+                                opsLimit: sodium.pwHash.OpsLimitInteractive,
+                                memLimit: sodium.pwHash.MemLimitInteractive) {
+    // Previously hashed password should be recomputed because the way it was
+    // hashed doesn't match the current algorithm and the given parameters.
 }
 ```
 
