@@ -148,7 +148,9 @@ public class Utils {
     }
     
     /*
-     - Parameter hex: The hexdecimal string to decode.
+     Decode as a base64 string, ignoring characters included for readability.
+     
+     - Parameter b64: The base64 string to decode.
      - Parameter ignore: Optional string containing readability characters to ignore during decoding.
      
      - Returns: The decoded data.
