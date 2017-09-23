@@ -109,10 +109,7 @@ public class SecretStream {
              - Returns: The ciphertext.
              */
             public func push(message: Data, tag: Tag = .MESSAGE, ad: Data? = nil) -> Data? {
-                var _ad = Data(count: 0)
-                if ad != nil {
-                    _ad = ad!
-                }
+                let _ad = ad == nil ? Data(count: 0) : ad!
                 var cipherText = Data(count: message.count + ABytes)
                 let result = cipherText.withUnsafeMutableBytes { cipherTextPtr in
                     _ad.withUnsafeBytes { adPtr in
@@ -177,25 +174,20 @@ public class SecretStream {
                 if cipherText.count < ABytes {
                     return nil
                 }
-                var _ad = Data(count: 0)
-                if ad != nil {
-                    _ad = ad!
-                }
                 var message = Data(count: cipherText.count - ABytes)
-                var _tag = Data(count: 1)
+                let _ad = ad == nil ? Data(count: 0) : ad!
+                var _tag: UInt8 = 0
                 let result = cipherText.withUnsafeBytes { cipherTextPtr in
                     _ad.withUnsafeBytes { adPtr in
                         message.withUnsafeMutableBytes { messagePtr in
-                            _tag.withUnsafeMutableBytes { tagPtr in
-                                crypto_secretstream_xchacha20poly1305_pull(state!, messagePtr, nil, tagPtr, cipherTextPtr, CUnsignedLongLong(cipherText.count), adPtr, CUnsignedLongLong(_ad.count))
-                            }
+                            crypto_secretstream_xchacha20poly1305_pull(state!, messagePtr, nil, &_tag, cipherTextPtr, CUnsignedLongLong(cipherText.count), adPtr, CUnsignedLongLong(_ad.count))
                         }
                     }
                 }
                 if result != 0 {
                     return nil
                 }
-                guard let tag = Tag.init(rawValue: _tag[0]) else {
+                guard let tag = Tag.init(rawValue: _tag) else {
                     return nil
                 }
                 return (message, tag)
