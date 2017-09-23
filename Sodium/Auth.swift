@@ -1,8 +1,3 @@
-//
-//  Auth.swift
-//  Sodium
-//
-
 import Foundation
 import libsodium
 

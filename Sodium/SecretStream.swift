@@ -1,8 +1,3 @@
-//
-//  SecretStream.swift
-//  Sodium_iOS
-//
-
 import Foundation
 import libsodium
 

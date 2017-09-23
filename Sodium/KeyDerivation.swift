@@ -1,8 +1,3 @@
-//
-//  KeyDerivation.swift
-//  Sodium
-//
-
 import Foundation
 import libsodium
 

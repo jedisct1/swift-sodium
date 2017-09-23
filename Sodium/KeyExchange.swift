@@ -1,8 +1,3 @@
-//
-//  KeyExchange.swift
-//  Sodium
-//
-
 import Foundation
 import libsodium
 

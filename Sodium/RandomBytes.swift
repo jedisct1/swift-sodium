@@ -1,8 +1,3 @@
-//
-//  RandomBytes.swift
-//  Sodium
-//
-
 import Foundation
 import libsodium
 

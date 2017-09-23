@@ -1,8 +1,3 @@
-//
-//  SecretBox.swift
-//  Sodium
-//
-
 import Foundation
 import libsodium
 

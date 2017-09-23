@@ -1,8 +1,3 @@
-//
-//  Sign.swift
-//  Sodium
-//
-
 import Foundation
 import libsodium
 

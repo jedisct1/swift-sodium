@@ -1,8 +1,3 @@
-//
-//  ShortHash.swift
-//  Sodium
-//
-
 import Foundation
 import libsodium
 

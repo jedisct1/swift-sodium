@@ -1,8 +1,3 @@
-//
-//  Utils.swift
-//  Sodium
-//
-
 import Foundation
 import libsodium
 

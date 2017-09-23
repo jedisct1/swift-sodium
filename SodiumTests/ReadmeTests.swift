@@ -1,11 +1,3 @@
-//
-//  ReadmeTests.swift
-//  Sodium
-//
-//  Created by Joseph Ross on 1/8/17.
-//  Copyright © 2017 Joseph Ross. All rights reserved.
-//
-
 import XCTest
 import Sodium
 

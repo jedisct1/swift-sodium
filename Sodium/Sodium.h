@@ -1,11 +1,3 @@
-//
-//  Sodium.h
-//  Sodium
-//
-//  Created by Frank Denis on 12/27/14.
-//  Copyright (c) 2014 Frank Denis. All rights reserved.
-//
-
 #import <Foundation/Foundation.h>
 
 //! Project version number for Sodium.
