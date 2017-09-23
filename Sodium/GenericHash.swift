@@ -142,17 +142,23 @@ public class GenericHash {
                 result = crypto_generichash_init(state, nil, 0, outputLength)
             }
             if result != 0 {
+                free()
                 return nil
             }
             self.outputLength = outputLength
         }
 
-        deinit {
+        private func free() {
             guard let state = state else {
                 return
             }
             let rawState = UnsafeMutableRawPointer(state).bindMemory(to: UInt8.self, capacity: crypto_generichash_statebytes())
             rawState.deallocate(capacity: 1)
+            self.state = nil
+        }
+
+        deinit {
+            free()
         }
 
         /**

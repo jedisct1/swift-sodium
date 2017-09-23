@@ -80,6 +80,7 @@ public class SecretStream {
                     }
                 }
                 if result != 0 {
+                    free()
                     return nil
                 }
             }
@@ -126,12 +127,17 @@ public class SecretStream {
                 crypto_secretstream_xchacha20poly1305_rekey(state)
             }
 
-            deinit {
+            private func free() {
                 guard let state = state else {
                     return
                 }
                 let rawState = UnsafeMutableRawPointer(state).bindMemory(to: UInt8.self, capacity: crypto_secretstream_xchacha20poly1305_statebytes())
                 rawState.deallocate(capacity: 1)
+                self.state = nil
+            }
+
+            deinit {
+                free()
             }
         }
 
@@ -153,6 +159,7 @@ public class SecretStream {
                     }
                 }
                 if result != 0 {
+                    free()
                     return nil
                 }
             }
@@ -195,12 +202,17 @@ public class SecretStream {
                 crypto_secretstream_xchacha20poly1305_rekey(state)
             }
 
-            deinit {
+            private func free() {
                 guard let state = state else {
                     return
                 }
                 let rawState = UnsafeMutableRawPointer(state).bindMemory(to: UInt8.self, capacity: crypto_secretstream_xchacha20poly1305_statebytes())
                 rawState.deallocate(capacity: 1)
+                self.state = nil
+            }
+
+            deinit {
+                free()
             }
         }
     }
