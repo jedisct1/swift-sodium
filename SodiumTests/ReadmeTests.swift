@@ -209,6 +209,38 @@ class ReadmeTests : XCTestCase {
         XCTAssertNotEqual(subKey1, subKey2)
     }
     
+    func testSecretStream() {
+        let sodium = Sodium()
+        let message1 = "Message 1".data(using:.utf8)!
+        let message2 = "Message 2".data(using:.utf8)!
+        let message3 = "Message 3".data(using:.utf8)!
+        
+        let secretkey = sodium.secretStream.xchacha20poly1305.key()!
+        
+        /* stream encryption */
+        
+        let stream_enc = sodium.secretStream.xchacha20poly1305.initPush(secretKey: secretkey)!
+        let header = stream_enc.header()
+        let encrypted1 = stream_enc.push(message: message1)!
+        let encrypted2 = stream_enc.push(message: message2)!
+        let encrypted3 = stream_enc.push(message: message3,
+                                         tag: SecretStream.XChaCha20Poly1305.Tag.FINAL)!
+        
+        /* stream decryption */
+        
+        let stream_dec = sodium.secretStream.xchacha20poly1305.initPull(secretKey: secretkey, header: header)!
+        let (message1_dec, tag1) = stream_dec.pull(cipherText: encrypted1)!
+        let (message2_dec, tag2) = stream_dec.pull(cipherText: encrypted2)!
+        let (message3_dec, tag3) = stream_dec.pull(cipherText: encrypted3)!
+        
+        XCTAssertEqual(message1, message1_dec)
+        XCTAssertEqual(message2, message2_dec)
+        XCTAssertEqual(message3, message3_dec)
+        XCTAssertEqual(tag1, SecretStream.XChaCha20Poly1305.Tag.MESSAGE)
+        XCTAssertEqual(tag2, SecretStream.XChaCha20Poly1305.Tag.MESSAGE)
+        XCTAssertEqual(tag3, SecretStream.XChaCha20Poly1305.Tag.FINAL)
+    }
+    
     func testBase64() {
         let sodium = Sodium()
         let b64 = sodium.utils.bin2base64("data".toData()!)!
