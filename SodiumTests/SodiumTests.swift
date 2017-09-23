@@ -339,4 +339,17 @@ class SodiumTests: XCTestCase {
         XCTAssertEqual(message3, "message 3".toData()!)
         XCTAssertNil(stream2.pull(cipherText: encrypted3))
     }
+    
+    func testBase64() {
+        let bin = "test".toData()!
+        let b64 = sodium.utils.bin2base64(bin)!
+        let bin2 = sodium.utils.base642bin(b64)!
+        XCTAssertEqual(b64, "dGVzdA==")
+        XCTAssertEqual(bin2, bin)
+        
+        let b64_nopad = sodium.utils.bin2base64(bin, variant: Utils.Base64Variant.URLSAFE_NO_PADDING)!
+        let bin2_nopad = sodium.utils.base642bin(b64_nopad, variant: Utils.Base64Variant.URLSAFE_NO_PADDING)!
+        XCTAssertEqual(b64_nopad, "dGVzdA")
+        XCTAssertEqual(bin2_nopad, bin)
+    }
 }

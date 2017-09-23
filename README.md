@@ -340,6 +340,24 @@ let data1 = sodium.utils.hex2bin("deadbeef")
 let data2 = sodium.utils.hex2bin("de:ad be:ef", ignore: " :")
 ```
 
+Constant-time base64 encoding
+-----------------------------
+
+```swift
+let sodium = Sodium()
+let b64 = sodium.utils.bin2base64("data".toData()!)!
+let b64_2 = sodium.utils.bin2base64("data".toData()!, variant: Utils.Base64Variant.URLSAFE_NO_PADDING)!
+```
+
+Base64 decoding
+---------------
+
+```swift
+let data1 = sodium.utils.base642bin(b64)
+let data2 = sodium.utils.base642bin(b64, ignore: " \n")
+let data3 = sodium.utils.base642bin(b64_2, variant: Utils.Base64Variant.URLSAFE_NO_PADDING, ignore: " \n")
+```
+
 Helpers to build custom constructions
 =====================================
 

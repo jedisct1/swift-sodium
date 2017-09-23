@@ -119,4 +119,68 @@ public class Utils {
         binData.count = Int(binDataLen)
         return binData
     }
+    
+    public enum Base64Variant: CInt {
+        case ORIGINAL            = 1
+        case ORIGINAL_NO_PADDING = 3
+        case URLSAFE             = 5
+        case URLSAFE_NO_PADDING  = 7
+    }
+    
+    /**
+     Converts bytes stored in `bin` into a Base64 representation.
+     
+     - Parameter bin: The data to encode as Base64.
+     - Parameter variant: the Base64 variant to use. By default: URLSAFE.
+     
+     - Returns: The encoded base64 string.
+     */
+    public func bin2base64(_ bin: Data, variant: Base64Variant = Base64Variant.URLSAFE) -> String? {
+        var b64Data = Data(count: sodium_base64_encoded_len(bin.count, variant.rawValue))
+        return b64Data.withUnsafeMutableBytes { (b64Ptr: UnsafeMutablePointer<Int8>) -> String? in
+            return bin.withUnsafeBytes { (binPtr: UnsafePointer<UInt8>) -> String? in
+                if sodium_bin2base64(b64Ptr, b64Data.count, binPtr, bin.count, variant.rawValue) == nil {
+                    return nil
+                }                
+                return String.init(validatingUTF8: b64Ptr)
+            }
+        }
+    }
+    
+    /*
+     - Parameter hex: The hexdecimal string to decode.
+     - Parameter ignore: Optional string containing readability characters to ignore during decoding.
+     
+     - Returns: The decoded data.
+     */
+    public func base642bin(_ b64: String, variant: Base64Variant = Base64Variant.URLSAFE, ignore: String? = nil) -> Data? {
+        guard let b64Data = b64.data(using: .utf8, allowLossyConversion: false) else {
+            return nil
+        }
+        
+        let b64DataLen = b64Data.count
+        let binDataCapacity = b64DataLen * 3 / 4
+        var binData = Data(count: binDataCapacity)
+        var binDataLen: size_t = 0
+        let ignore_cstr = ignore != nil ? (ignore! as NSString).utf8String : nil
+        
+        let result = binData.withUnsafeMutableBytes { binPtr in
+            return b64Data.withUnsafeBytes { b64Ptr in
+                return sodium_base642bin(binPtr,
+                                         binDataCapacity,
+                                         b64Ptr,
+                                         b64DataLen,
+                                         ignore_cstr,
+                                         &binDataLen,
+                                         nil, variant.rawValue)
+            }
+        }
+        
+        if  result != 0 {
+            return nil
+        }
+        
+        binData.count = Int(binDataLen)
+        return binData
+    }
 }

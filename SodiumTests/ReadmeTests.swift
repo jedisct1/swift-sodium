@@ -201,4 +201,18 @@ class ReadmeTests : XCTestCase {
                                                   context: "Context!")!
         XCTAssertNotEqual(subKey1, subKey2)
     }
+    
+    func testBase64() {
+        let sodium = Sodium()
+        let b64 = sodium.utils.bin2base64("data".toData()!)!
+        let b64_2 = sodium.utils.bin2base64("data".toData()!, variant: Utils.Base64Variant.URLSAFE_NO_PADDING)!
+
+        let data1 = sodium.utils.base642bin(b64)
+        let data2 = sodium.utils.base642bin(b64, ignore: " \n")
+        let data3 = sodium.utils.base642bin(b64_2, variant: Utils.Base64Variant.URLSAFE_NO_PADDING, ignore: " \n")
+        
+        XCTAssertEqual(data1, "data".toData())
+        XCTAssertEqual(data2, "data".toData())
+        XCTAssertEqual(data3, "data".toData())
+    }
 }
