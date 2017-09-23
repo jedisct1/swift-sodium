@@ -29,7 +29,67 @@ script.
 
 Running these scripts on Xcode 9.0 (`9A235`) on the revision `94550cefd5921c09a1ea352c759851b7ad0e592b` of libsodium  generates files identical to the ones present in this repository.
 
+## Secret-key cryptography
+
+Messages are encrypted and decrypted using the same secret key.
+
+That key can be generated using the `key()` method, derived from a password using the Password Hashing API, or computed using a secret key and the peer's public key with the Key Exchange API.
+
+### Authenticated encryption for a sequence of messages
+
+```swift
+let sodium = Sodium()
+let message1 = "Message 1".data(using:.utf8)!
+let message2 = "Message 2".data(using:.utf8)!
+let message3 = "Message 3".data(using:.utf8)!
+
+let secretkey = sodium.secretStream.xchacha20poly1305.key()!
+
+/* stream encryption */
+
+let stream_enc = sodium.secretStream.xchacha20poly1305.initPush(secretKey: secretkey)!
+let header = stream_enc.header()
+let encrypted1 = stream_enc.push(message: message1)!
+let encrypted2 = stream_enc.push(message: message2)!
+let encrypted3 = stream_enc.push(message: message3, tag: .FINAL)!
+
+/* stream decryption */
+
+let stream_dec = sodium.secretStream.xchacha20poly1305.initPull(secretKey: secretkey, header: header)!
+let (message1_dec, tag1) = stream_dec.pull(cipherText: encrypted1)!
+let (message2_dec, tag2) = stream_dec.pull(cipherText: encrypted2)!
+let (message3_dec, tag3) = stream_dec.pull(cipherText: encrypted3)!
+```
+
+A stream is a sequence of messages, that will be encrypted as they arrive, and that are expected to be received in the same order as they were received.
+
+Streams can be arbitrary long. This API can thus be used for file encryption, by splitting files into small chunks so that the whole content doesn't need to fit in memory.
+
+It can also be used to exchange a sequence of messages between two peers.
+
+The decryption function automatically checks that chunks have been received without modification, and truncation or reordering.
+
+A tag is attached to each message, and can be used to signal the end of a sub-sequence (`PUSH`), or the end of the string (`FINAL`).
+
+### Authenticated encryption for independent messages
+
+```swift
+let sodium = Sodium()
+let message = "My Test Message".data(using:.utf8)!
+let secretKey = sodium.secretBox.key()!
+let encrypted: Data = sodium.secretBox.seal(message: message, secretKey: secretKey)!
+if let decrypted = sodium.secretBox.open(nonceAndAuthenticatedCipherText: encrypted, secretKey: secretKey) {
+    // authenticator is valid, decrypted contains the original message
+}
+```
+
+This API encrypts a message. The decryption process check that they haven't been tampered with before decrypting them.
+
+Messages encrypted that way are independent: if multiple messages are sent that way, the recipient cannot detect if some messages have been duplicated, deleted or reordered without including additional data to each message.
+
 ## Public-key Cryptography
+
+With public-key cryptography, each peer has two keys: a secret key, that has to remain secret, and a public key that anyone can use to send an encrypted message to that peer. That public key can be only be used to encrypt a message. The related secret is required to decrypt it.
 
 ### Authenticated Encryption
 
@@ -80,7 +140,29 @@ let messageDecryptedByBob =
 
 The sender can not decrypt the resulting ciphertext. `open()` extracts the public key and decrypts using the recipient's secret key. Message integrity is verified, but the sender's identity cannot be correlated to the ciphertext.
 
+## Key exchange
+
+```swift
+let sodium = Sodium()
+let aliceKeyPair = sodium.keyExchange.keyPair()!
+let bobKeyPair = sodium.keyExchange.keyPair()!
+
+let sessionKeyPairForAlice = sodium.keyExchange.sessionKeyPair(publicKey: aliceKeyPair.publicKey,
+    secretKey: aliceKeyPair.secretKey, otherPublicKey: bobKeyPair.publicKey, side: .CLIENT)!
+let sessionKeyPairForBob = sodium.keyExchange.sessionKeyPair(publicKey: bobKeyPair.publicKey,
+    secretKey: bobKeyPair.secretKey, otherPublicKey: aliceKeyPair.publicKey, side: .SERVER)!
+
+let aliceToBobKeyEquality = sodium.utils.equals(sessionKeyPairForAlice.tx, sessionKeyPairForBob.xx) // true
+let bobToAliceKeyEquality = sodium.utils.equals(sessionKeyPairForAlice.rx, sessionKeyPairForBob.tx) // true
+```
+
+This operation computes a shared secret key using a secret key and a peer's public key.
+
 ## Public-key signatures
+
+Signatures allow multiple parties to verify the authenticity of a public message, using the public key of the author's message.
+
+This can be especially useful to sign software updates.
 
 ### Detached signatures
 
@@ -105,46 +187,6 @@ let keyPair = sodium.sign.keyPair()!
 let signedMessage = sodium.sign.sign(message: message, secretKey: keyPair.secretKey)!
 if let unsignedMessage = sodium.sign.open(signedMessage: signedMessage, publicKey: keyPair.publicKey) {
     // signature is valid
-}
-```
-
-## Secret-key authenticated encryption
-
-### Authenticated encryption for a sequence of messages
-
-```swift
-let sodium = Sodium()
-let message1 = "Message 1".data(using:.utf8)!
-let message2 = "Message 2".data(using:.utf8)!
-let message3 = "Message 3".data(using:.utf8)!
-
-let secretkey = sodium.secretStream.xchacha20poly1305.key()!
-
-/* stream encryption */
-
-let stream_enc = sodium.secretStream.xchacha20poly1305.initPush(secretKey: secretkey)!
-let header = stream_enc.header()
-let encrypted1 = stream_enc.push(message: message1)!
-let encrypted2 = stream_enc.push(message: message2)!
-let encrypted3 = stream_enc.push(message: message3, tag: .FINAL)!
-
-/* stream decryption */
-
-let stream_dec = sodium.secretStream.xchacha20poly1305.initPull(secretKey: secretkey, header: header)!
-let (message1_dec, tag1) = stream_dec.pull(cipherText: encrypted1)!
-let (message2_dec, tag2) = stream_dec.pull(cipherText: encrypted2)!
-let (message3_dec, tag3) = stream_dec.pull(cipherText: encrypted3)!
-```
-
-### Authenticated encryption for independent messages
-
-```swift
-let sodium = Sodium()
-let message = "My Test Message".data(using:.utf8)!
-let secretKey = sodium.secretBox.key()!
-let encrypted: Data = sodium.secretBox.seal(message: message, secretKey: secretKey)!
-if let decrypted = sodium.secretBox.open(nonceAndAuthenticatedCipherText: encrypted, secretKey: secretKey) {
-    // authenticator is valid, decrypted contains the original message
 }
 ```
 
@@ -221,22 +263,6 @@ if sodium.pwHash.strNeedsRehash(hash: hashedStr,
 }
 ```
 
-## Key exchange
-
-```swift
-let sodium = Sodium()
-let aliceKeyPair = sodium.keyExchange.keyPair()!
-let bobKeyPair = sodium.keyExchange.keyPair()!
-
-let sessionKeyPairForAlice = sodium.keyExchange.sessionKeyPair(publicKey: aliceKeyPair.publicKey,
-    secretKey: aliceKeyPair.secretKey, otherPublicKey: bobKeyPair.publicKey, side: .CLIENT)!
-let sessionKeyPairForBob = sodium.keyExchange.sessionKeyPair(publicKey: bobKeyPair.publicKey,
-    secretKey: bobKeyPair.secretKey, otherPublicKey: aliceKeyPair.publicKey, side: .SERVER)!
-
-let aliceToBobKeyEquality = sodium.utils.equals(sessionKeyPairForAlice.tx, sessionKeyPairForBob.xx) // true
-let bobToAliceKeyEquality = sodium.utils.equals(sessionKeyPairForAlice.rx, sessionKeyPairForBob.tx) // true
-```
-
 ## Authentication tags
 
 The `sodium.auth.tag()` function computes an authentication tag (HMAC) using a message and a key. Parties knowing the key can then verify the authenticity of the message using the same parameters and the `sodium.auth.verify()` function.
@@ -298,6 +324,8 @@ sodium.utils.pad(data: &data, blockSize: 16)!
 // restore original size
 sodium.utils.unpad(data: &data, blockSize: 16)!
 ```
+
+Padding can be useful to hide the length of a message before it is encrypted.
 
 ### Constant-time hexadecimal encoding
 
