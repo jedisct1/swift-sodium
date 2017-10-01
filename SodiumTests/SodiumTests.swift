@@ -223,7 +223,7 @@ class SodiumTests: XCTestCase {
         let password3 = "My Test Message".toData()!
         let salt = Data(bytes: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16] as [UInt8])
         let hash2 = sodium.pwHash.hash(outputLength: 64, passwd: password3, salt: salt, opsLimit: sodium.pwHash.OpsLimitInteractive, memLimit: sodium.pwHash.MemLimitInteractive)
-        XCTAssertEqual(sodium.utils.bin2hex(hash2!)!, "51d659ee6f8790042688274c5bc8a6296390cdc786d2341c3553b01a5c3f7ff1190e04b86a878538b17ef10e74baa19295479f3e3ee587ce571f366fc66e2fdc")
+        XCTAssertEqual(sodium.utils.bin2hex(hash2!)!, "cc80dee6a19da46ed6ea11507dd709ce52519ddd1fd2d823ce85b9e9b4fd96d06583de2ca8bcc5998f3483a8a424c4e93ddb500968b0dbefb667d56d421d5a6c")
 
         XCTAssertFalse(sodium.pwHash.strNeedsRehash(hash: hash!, opsLimit: sodium.pwHash.OpsLimitInteractive, memLimit: sodium.pwHash.MemLimitInteractive))
         XCTAssertTrue(sodium.pwHash.strNeedsRehash(hash: hash!, opsLimit: sodium.pwHash.OpsLimitSensitive, memLimit: sodium.pwHash.MemLimitSensitive))
