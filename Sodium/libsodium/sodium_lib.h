@@ -60,7 +60,6 @@
 # include "crypto_box_curve25519xchacha20poly1305.h"
 # include "crypto_secretbox_xchacha20poly1305.h"
 # include "crypto_pwhash_scryptsalsa208sha256.h"
-# include "crypto_stream_aes128ctr.h"
 # include "crypto_stream_salsa2012.h"
 # include "crypto_stream_salsa208.h"
 # include "crypto_stream_xchacha20.h"
