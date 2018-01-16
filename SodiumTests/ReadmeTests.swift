@@ -37,6 +37,23 @@ class ReadmeTests : XCTestCase {
         XCTAssertNotNil(messageDecryptedByBob)
     }
 
+	func testKeyExchange() {
+		let sodium = Sodium()
+		let aliceKeyPair = sodium.keyExchange.keyPair()!
+		let bobKeyPair = sodium.keyExchange.keyPair()!
+
+		let sessionKeyPairForAlice = sodium.keyExchange.sessionKeyPair(publicKey: aliceKeyPair.publicKey,
+																	   secretKey: aliceKeyPair.secretKey, otherPublicKey: bobKeyPair.publicKey, side: .CLIENT)!
+		let sessionKeyPairForBob = sodium.keyExchange.sessionKeyPair(publicKey: bobKeyPair.publicKey,
+																	 secretKey: bobKeyPair.secretKey, otherPublicKey: aliceKeyPair.publicKey, side: .SERVER)!
+
+		let aliceToBobKeyEquality = sodium.utils.equals(sessionKeyPairForAlice.tx, sessionKeyPairForBob.rx) // true
+		let bobToAliceKeyEquality = sodium.utils.equals(sessionKeyPairForAlice.rx, sessionKeyPairForBob.tx) // true
+
+		XCTAssertTrue(aliceToBobKeyEquality)
+		XCTAssertTrue(bobToAliceKeyEquality)
+	}
+
     func testDetachedSignatures() {
         let sodium = Sodium()
         let message = "My Test Message".data(using:.utf8)!
