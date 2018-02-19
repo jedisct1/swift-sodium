@@ -91,7 +91,8 @@ public class Utils {
         let binDataCapacity = hexDataLen / 2
         var binData = Data(count: binDataCapacity)
         var binDataLen: size_t = 0
-        let ignore_cstr = ignore != nil ? (ignore! as NSString).cString(using: String.Encoding.isoLatin1.rawValue) : nil
+        let ignore_nsstr = ignore.flatMap({ NSString(string: $0) })
+        let ignore_cstr = ignore_nsstr?.cString(using: String.Encoding.isoLatin1.rawValue)
 
         let result = binData.withUnsafeMutableBytes { binPtr in
             hexData.withUnsafeBytes { hexPtr in
@@ -152,7 +153,8 @@ public class Utils {
         let binDataCapacity = b64DataLen * 3 / 4
         var binData = Data(count: binDataCapacity)
         var binDataLen: size_t = 0
-        let ignore_cstr = ignore != nil ? (ignore! as NSString).cString(using: String.Encoding.isoLatin1.rawValue) : nil
+        let ignore_nsstr = ignore.flatMap({ NSString(string: $0) })
+        let ignore_cstr = ignore_nsstr?.cString(using: String.Encoding.isoLatin1.rawValue)
 
         let result = binData.withUnsafeMutableBytes { binPtr in
             b64Data.withUnsafeBytes { b64Ptr in
