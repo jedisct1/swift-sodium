@@ -1,5 +1,5 @@
 import Foundation
-import libsodium
+import Clibsodium
 
 public class KeyDerivation {
     public let BytesMin = Int(crypto_kdf_bytes_min())
