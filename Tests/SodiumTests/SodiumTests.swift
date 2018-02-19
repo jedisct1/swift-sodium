@@ -14,6 +14,30 @@ extension Data {
 }
 
 class SodiumTests: XCTestCase {
+    static let allTests = [
+        ("testAuth", testAuth),
+        ("testBase64", testBase64),
+        ("testBox", testBox),
+        ("testGenericHash", testGenericHash),
+        ("testKeyDerivation", testKeyDerivation),
+        ("testKeyDerivationContextTooLong", testKeyDerivationContextTooLong),
+        ("testKeyDerivationInputKeyTooLong", testKeyDerivationInputKeyTooLong),
+        ("testKeyDerivationInputKeyTooShort", testKeyDerivationInputKeyTooShort),
+        ("testKeyDerivationRegression", testKeyDerivationRegression),
+        ("testKeyDerivationSubKeyTooLong", testKeyDerivationSubKeyTooLong),
+        ("testKeyDerivationSubKeyTooShort", testKeyDerivationSubKeyTooShort),
+        ("testKeyExchange", testKeyExchange),
+        ("testPad", testPad),
+        ("testPwHash", testPwHash),
+        ("testRandomBytes", testRandomBytes),
+        ("testSecretBox", testSecretBox),
+        ("testSecretStream", testSecretStream),
+        ("testShortHash", testShortHash),
+        ("testSignature", testSignature),
+        ("testStream", testStream),
+        ("testUtils", testUtils),
+    ]
+
     let sodium = Sodium()
 
     override func setUp() {
