@@ -297,7 +297,8 @@
 				D85101031E22EF5B003DB2E8 /* ReadmeTests.swift */,
 				09A943D71A4EB5F500C8A04F /* Supporting Files */,
 			);
-			path = SodiumTests;
+			name = SodiumTests;
+			path = Tests/SodiumTests;
 			sourceTree = "<group>";
 		};
 		09A943D71A4EB5F500C8A04F /* Supporting Files */ = {
@@ -942,7 +943,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = SodiumTests/Info.plist;
+				INFOPLIST_FILE = Tests/SodiumTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.pureftpd.swiftsodium.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = SodiumTests;
@@ -955,7 +956,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = SodiumTests/Info.plist;
+				INFOPLIST_FILE = Tests/SodiumTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.pureftpd.swiftsodium.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = SodiumTests;
