@@ -2,6 +2,31 @@ import XCTest
 import Sodium
 
 class ReadmeTests : XCTestCase {
+    static let allTests = [
+        ("testAnonymousEncryptionSealedBoxes", testAnonymousEncryptionSealedBoxes),
+        ("testAttachedSignatures", testAttachedSignatures),
+        ("testAuth", testAuth),
+        ("testAuthenticatedEncryption", testAuthenticatedEncryption),
+        ("testBase64", testBase64),
+        ("testConstantTimeComparison", testConstantTimeComparison),
+        ("testConstantTimeHexdecimalEncoding", testConstantTimeHexdecimalEncoding),
+        ("testDetachedSignatures", testDetachedSignatures),
+        ("testDeterministicHashing", testDeterministicHashing),
+        ("testHexDecimalDecoding", testHexDecimalDecoding),
+        ("testKeyDerivation", testKeyDerivation),
+        ("testKeyedHashing", testKeyedHashing),
+        ("testKeyExchange", testKeyExchange),
+        ("testPadding", testPadding),
+        ("testPasswordHashing", testPasswordHashing),
+        ("testRandomNumberGeneration", testRandomNumberGeneration),
+        ("testSecretKeyAuthenticatedEncryption", testSecretKeyAuthenticatedEncryption),
+        ("testSecretStream", testSecretStream),
+        ("testShortOutputHashing", testShortOutputHashing),
+        ("testStream", testStream),
+        ("testStreaming", testStreaming),
+        ("testZeroingMemory", testZeroingMemory),
+    ]
+
     func testAuthenticatedEncryption() {
         let sodium = Sodium()
         let aliceKeyPair = sodium.box.keyPair()!

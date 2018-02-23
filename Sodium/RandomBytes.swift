@@ -1,5 +1,5 @@
 import Foundation
-import libsodium
+import Clibsodium
 
 public class RandomBytes {
     public let SeedBytes = Int(randombytes_seedbytes())

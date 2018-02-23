@@ -1,5 +1,5 @@
 import Foundation
-import libsodium
+import Clibsodium
 
 public class Auth {
     public let KeyBytes = Int(crypto_auth_keybytes())

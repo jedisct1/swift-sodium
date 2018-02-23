@@ -1,5 +1,5 @@
 import Foundation
-import libsodium
+import Clibsodium
 
 public class GenericHash {
     public let BytesMin = Int(crypto_generichash_bytes_min())

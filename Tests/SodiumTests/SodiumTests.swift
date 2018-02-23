@@ -14,6 +14,30 @@ extension Data {
 }
 
 class SodiumTests: XCTestCase {
+    static let allTests = [
+        ("testAuth", testAuth),
+        ("testBase64", testBase64),
+        ("testBox", testBox),
+        ("testGenericHash", testGenericHash),
+        ("testKeyDerivation", testKeyDerivation),
+        ("testKeyDerivationContextTooLong", testKeyDerivationContextTooLong),
+        ("testKeyDerivationInputKeyTooLong", testKeyDerivationInputKeyTooLong),
+        ("testKeyDerivationInputKeyTooShort", testKeyDerivationInputKeyTooShort),
+        ("testKeyDerivationRegression", testKeyDerivationRegression),
+        ("testKeyDerivationSubKeyTooLong", testKeyDerivationSubKeyTooLong),
+        ("testKeyDerivationSubKeyTooShort", testKeyDerivationSubKeyTooShort),
+        ("testKeyExchange", testKeyExchange),
+        ("testPad", testPad),
+        ("testPwHash", testPwHash),
+        ("testRandomBytes", testRandomBytes),
+        ("testSecretBox", testSecretBox),
+        ("testSecretStream", testSecretStream),
+        ("testShortHash", testShortHash),
+        ("testSignature", testSignature),
+        ("testStream", testStream),
+        ("testUtils", testUtils),
+    ]
+
     let sodium = Sodium()
 
     override func setUp() {
@@ -213,7 +237,7 @@ class SodiumTests: XCTestCase {
         let passwordLen = 4 + Int(sodium.randomBytes.uniform(upperBound: 64))
         let password = sodium.randomBytes.buf(length: passwordLen)!
         let hash = sodium.pwHash.str(passwd: password, opsLimit: sodium.pwHash.OpsLimitInteractive, memLimit: sodium.pwHash.MemLimitInteractive)
-        XCTAssertEqual(hash?.lengthOfBytes(using: String.Encoding.utf8), sodium.pwHash.StrBytes)
+        XCTAssertLessThanOrEqual(hash!.lengthOfBytes(using: String.Encoding.utf8), sodium.pwHash.StrBytes)
         let verify = sodium.pwHash.strVerify(hash: hash!, passwd: password)
         XCTAssertTrue(verify)
         let password2 = sodium.randomBytes.buf(length: passwordLen)!
