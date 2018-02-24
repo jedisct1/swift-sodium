@@ -1,5 +1,5 @@
 import Foundation
-import Clibsodium
+import libsodium
 
 public class SecretBox {
     public let KeyBytes = Int(crypto_secretbox_keybytes())

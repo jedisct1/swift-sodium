@@ -16,5 +16,3 @@ DerivedData
 Pods/
 build/
 xcuserdata
-.build
-Package.resolved

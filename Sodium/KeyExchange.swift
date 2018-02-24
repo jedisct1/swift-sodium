@@ -1,5 +1,5 @@
 import Foundation
-import Clibsodium
+import libsodium
 
 public class KeyExchange {
     public let PublicKeyBytes = Int(crypto_kx_publickeybytes())

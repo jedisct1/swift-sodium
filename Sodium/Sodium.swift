@@ -1,5 +1,5 @@
 import Foundation
-import Clibsodium
+import libsodium
 
 public class Sodium {
     public let box = Box()

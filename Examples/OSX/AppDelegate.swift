@@ -5,7 +5,7 @@ import Sodium
 class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var window: NSWindow!
 
-    func applicationDidFinishLaunching(_ notification: Notification) {
+    func applicationDidFinishLaunching(aNotification: NSNotification) {
         let sodium = Sodium()
         let aliceKeyPair = sodium.box.keyPair()!
         let bobKeyPair = sodium.box.keyPair()!
@@ -30,4 +30,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         print("Decrypted Message:\(String(describing: messageVerifiedAndDecryptedByBob!.toString()))")
 
     }
+
+    func applicationWillTerminate(aNotification: NSNotification) {
+
+    }
 }
+

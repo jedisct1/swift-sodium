@@ -1,5 +1,5 @@
 import Foundation
-import Clibsodium
+import libsodium
 
 public class SecretStream {
     public let xchacha20poly1305 = XChaCha20Poly1305()
