@@ -15,7 +15,7 @@ public class KeyDerivation {
 
      - Returns: The generated key.
      */
-    public func key() -> Key {
+    public func key() -> Key? {
         var k = Data(count: KeyBytes)
         k.withUnsafeMutableBytes { kPtr in
             crypto_kdf_keygen(kPtr)
