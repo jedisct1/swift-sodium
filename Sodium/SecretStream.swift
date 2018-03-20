@@ -22,7 +22,7 @@ public class SecretStream {
 
          - Returns: The generated key.
          */
-        public func key() -> Key {
+        public func key() -> Key? {
             var secretKey = Data(count: XChaCha20Poly1305.KeyBytes)
             secretKey.withUnsafeMutableBytes { secretKeyPtr in
                 crypto_secretstream_xchacha20poly1305_keygen(secretKeyPtr)

@@ -104,7 +104,7 @@ class ReadmeTests : XCTestCase {
     func testSecretKeyAuthenticatedEncryption() {
         let sodium = Sodium()
         let message = "My Test Message".data(using:.utf8)!
-        let secretKey = sodium.secretBox.key()
+        let secretKey = sodium.secretBox.key()!
         let encrypted: Data = sodium.secretBox.seal(message: message, secretKey: secretKey)!
         if sodium.secretBox.open(nonceAndAuthenticatedCipherText: encrypted, secretKey: secretKey) != nil {
             // authenticator is valid, decrypted contains the original message
@@ -213,7 +213,7 @@ class ReadmeTests : XCTestCase {
     func testStream() {
         let sodium = Sodium()
         let input = "test".data(using:.utf8)!
-        let key = sodium.stream.key()
+        let key = sodium.stream.key()!
         let (output, nonce) = sodium.stream.xor(input: input, secretKey: key)!
         let twice = sodium.stream.xor(input: output, nonce: nonce, secretKey: key)!
 
@@ -223,7 +223,7 @@ class ReadmeTests : XCTestCase {
     func testAuth() {
         let sodium = Sodium()
         let input = "test".data(using:.utf8)!
-        let key = sodium.auth.key()
+        let key = sodium.auth.key()!
         let tag = sodium.auth.tag(message: input, secretKey: key)!
         let tagIsValid = sodium.auth.verify(message: input, secretKey: key, tag: tag)
 
@@ -232,7 +232,7 @@ class ReadmeTests : XCTestCase {
 
     func testKeyDerivation() {
         let sodium = Sodium()
-        let secretKey = sodium.keyDerivation.key()
+        let secretKey = sodium.keyDerivation.key()!
 
         let subKey1 = sodium.keyDerivation.derive(secretKey: secretKey,
                                                   index: 0, length: 32,
@@ -249,7 +249,7 @@ class ReadmeTests : XCTestCase {
         let message2 = "Message 2".data(using:.utf8)!
         let message3 = "Message 3".data(using:.utf8)!
 
-        let secretkey = sodium.secretStream.xchacha20poly1305.key()
+        let secretkey = sodium.secretStream.xchacha20poly1305.key()!
 
         /* stream encryption */
 

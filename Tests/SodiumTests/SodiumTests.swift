@@ -93,7 +93,7 @@ class SodiumTests: XCTestCase {
 
     func testSecretBox() {
         let message = "My Test Message".toData()!
-        let secretKey = sodium.secretBox.key()
+        let secretKey = sodium.secretBox.key()!
 
         // test simple nonce + mac + message box
         let encrypted: Data = sodium.secretBox.seal(message: message, secretKey: secretKey)!
@@ -102,7 +102,7 @@ class SodiumTests: XCTestCase {
 
         XCTAssertNotEqual(sodium.secretBox.seal(message: message, secretKey: secretKey), encrypted, "Ciphertext of two encryption operations on the same plaintext shouldn't be equal. Make sure the nonce was used only once!")
 
-        XCTAssertNil(sodium.secretBox.open(nonceAndAuthenticatedCipherText: encrypted, secretKey: sodium.secretBox.key()), "Shouldn't be able to decrypt with a bad key")
+        XCTAssertNil(sodium.secretBox.open(nonceAndAuthenticatedCipherText: encrypted, secretKey: sodium.secretBox.key()!), "Shouldn't be able to decrypt with a bad key")
 
         // test (mac + message, nonce) box
         let (encrypted2, nonce2) = sodium.secretBox.seal(message: message, secretKey: secretKey)!
@@ -265,7 +265,7 @@ class SodiumTests: XCTestCase {
     }
 
     func testStream() {
-        let key = sodium.stream.key()
+        let key = sodium.stream.key()!
         let inputLen = Int(sodium.randomBytes.uniform(upperBound: 1024))
         let input = sodium.randomBytes.buf(length: inputLen)!
         let (output, nonce) = sodium.stream.xor(input: input, secretKey: key)!
@@ -281,7 +281,7 @@ class SodiumTests: XCTestCase {
         XCTAssertEqual(sodium.utils.bin2hex(tag)!, "b2a31b8d4e01afcab2ee545b5caf4e3d212a99d7b3a116a97cec8e83c32e107d")
         let verify = sodium.auth.verify(message: message, secretKey: key, tag: tag)
         XCTAssertTrue(verify)
-        let key2 = sodium.auth.key()
+        let key2 = sodium.auth.key()!
         let verify2 = sodium.auth.verify(message: message, secretKey: key2, tag: tag)
         XCTAssertFalse(verify2)
     }
@@ -298,22 +298,22 @@ class SodiumTests: XCTestCase {
     }
 
     func testKeyDerivationSubKeyTooShort() {
-        let secretKey = sodium.keyDerivation.key()
+        let secretKey = sodium.keyDerivation.key()!
         XCTAssertNil(sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: sodium.keyDerivation.BytesMin - 1, context: "TEST"))
     }
 
     func testKeyDerivationSubKeyTooLong() {
-        let secretKey = sodium.keyDerivation.key()
+        let secretKey = sodium.keyDerivation.key()!
         XCTAssertNil(sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: sodium.keyDerivation.BytesMax + 1, context: "TEST"))
     }
 
     func testKeyDerivationContextTooLong() {
-        let secretKey = sodium.keyDerivation.key()
+        let secretKey = sodium.keyDerivation.key()!
         XCTAssertNil(sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: sodium.keyDerivation.BytesMin, context: "TEST_SODIUM"))
     }
 
     func testKeyDerivation() {
-        let secretKey = sodium.keyDerivation.key()
+        let secretKey = sodium.keyDerivation.key()!
         let subKey1 = sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: sodium.keyDerivation.BytesMin, context: "TEST")!
         let subKey2 = sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: sodium.keyDerivation.BytesMin, context: "TEST")!
         let subKey3 = sodium.keyDerivation.derive(secretKey: secretKey, index: 0, length: sodium.keyDerivation.BytesMin, context: "TEST\0")!
@@ -337,7 +337,7 @@ class SodiumTests: XCTestCase {
     }
 
     func testSecretStream() {
-        let secretKey = sodium.secretStream.xchacha20poly1305.key()
+        let secretKey = sodium.secretStream.xchacha20poly1305.key()!
         XCTAssertEqual(secretKey.count, 32)
 
         let stream = sodium.secretStream.xchacha20poly1305.initPush(secretKey: secretKey)!

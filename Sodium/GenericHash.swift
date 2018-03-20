@@ -17,7 +17,7 @@ public class GenericHash {
 
      - Returns: The generated key.
      */
-    public func key() -> Key {
+    public func key() -> Key? {
         var k = Data(count: KeyBytes)
         k.withUnsafeMutableBytes { kPtr in
             crypto_generichash_keygen(kPtr)
