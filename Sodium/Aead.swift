@@ -145,7 +145,7 @@ public struct Aead {
          - Returns: The decrypted message.
          */
         public func decrypt(nonceAndAuthenticatedCipherText: Data, secretKey: Key, additionalData: Data? = nil) -> Data? {
-            if nonceAndAuthenticatedCipherText.count < ABytes + NonceBytes {
+            guard nonceAndAuthenticatedCipherText.count >= ABytes + NonceBytes else {
                 return nil
             }
             
@@ -165,7 +165,7 @@ public struct Aead {
          - Returns: The decrypted message.
          */
         public func decrypt(authenticatedCipherText: Data, secretKey: Key, nonce: Nonce, additionalData: Data? = nil) -> Data? {
-            guard authenticatedCipherText.count > ABytes else {
+            guard authenticatedCipherText.count >= ABytes else {
                 return nil
             }
             

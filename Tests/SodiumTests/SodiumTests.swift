@@ -420,5 +420,12 @@ class SodiumTests: XCTestCase {
         let decrypted4: Data = sodium.aead.xchacha20poly1305ietf.decrypt(nonceAndAuthenticatedCipherText: nonceAndAuthenticatedCipherTextWithAddData, secretKey: secretKey, additionalData: additionalData)!
         
         XCTAssertTrue(decrypted4 == message)
+        
+        // encrypt -> decrypt empty message
+        let emptyMessage = "".toData()!
+        let encryptedEmpty: Data = sodium.aead.xchacha20poly1305ietf.encrypt(message: emptyMessage, secretKey: secretKey, additionalData: additionalData)!
+        let decryptedEmpty: Data = sodium.aead.xchacha20poly1305ietf.decrypt(nonceAndAuthenticatedCipherText: encryptedEmpty, secretKey: secretKey, additionalData: additionalData)!
+        
+        XCTAssertTrue(decryptedEmpty == emptyMessage)
     }
 }
