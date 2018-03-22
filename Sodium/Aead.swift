@@ -57,7 +57,7 @@ public struct Aead {
             let nonce = nonceAndAuthenticatedCipherText.subdata(in: 0..<NonceBytes) as Nonce
             let authenticatedCipherText = nonceAndAuthenticatedCipherText.subdata(in: NonceBytes..<nonceAndAuthenticatedCipherText.count)
             
-            return decrypt(cipherText: authenticatedCipherText, additionalData: additionalData, nonce: nonce, secretKey: secretKey)
+            return decrypt(authenticatedCipherText: authenticatedCipherText, additionalData: additionalData, nonce: nonce, secretKey: secretKey)
         }
         
         public func encrypt(message: Data, additionalData: Data, nonce: Nonce, secretKey: Key) -> Data? {
@@ -104,7 +104,7 @@ public struct Aead {
             return authenticatedCipherText
         }
         
-        public func decrypt(cipherText: Data, additionalData: Data, nonce: Nonce, secretKey: Key) -> Data? {
+        public func decrypt(authenticatedCipherText: Data, additionalData: Data, nonce: Nonce, secretKey: Key) -> Data? {
             guard nonce.count == NonceBytes else {
                 return nil
             }
@@ -113,16 +113,16 @@ public struct Aead {
                 return nil
             }
             
-            guard cipherText.count > ABytes else {
+            guard authenticatedCipherText.count > ABytes else {
                 return nil
             }
             
-            var decrypted = Data(count: cipherText.count - ABytes)
+            var decrypted = Data(count: authenticatedCipherText.count - ABytes)
             var decryptedLen = Data()
     
             let result = decrypted.withUnsafeMutableBytes { decryptedPtr in
                 decryptedLen.withUnsafeMutableBytes { decryptedLen in
-                    cipherText.withUnsafeBytes { cipherTextPtr in
+                    authenticatedCipherText.withUnsafeBytes { cipherTextPtr in
                         additionalData.withUnsafeBytes { additionalDataPtr in
                             nonce.withUnsafeBytes { noncePtr in
                                 secretKey.withUnsafeBytes { secretKeyPtr in
@@ -133,7 +133,7 @@ public struct Aead {
                                         nil,
     
                                         UnsafePointer<UInt8>(cipherTextPtr),
-                                        UInt64(cipherText.count),
+                                        UInt64(authenticatedCipherText.count),
     
                                         UnsafePointer<UInt8>(additionalDataPtr),
                                         UInt64(additionalData.count),
