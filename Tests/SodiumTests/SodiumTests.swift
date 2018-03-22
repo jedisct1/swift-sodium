@@ -404,5 +404,12 @@ class SodiumTests: XCTestCase {
         
         XCTAssertNil(sodium.aead.xchacha20poly1305ietf.decrypt(authenticatedCipherText: encrypted, additionalData: additionalData, nonce: "invalid".toData()!, secretKey: secretKey))
         XCTAssertNil(sodium.aead.xchacha20poly1305ietf.decrypt(authenticatedCipherText: encrypted, additionalData: additionalData, nonce: nonce, secretKey: "invalid".toData()!))
+        
+        let encryptedWithNonce: Data = sodium.aead.xchacha20poly1305ietf.encrypt(message: message, additionalData: additionalData, secretKey: secretKey)!
+        let decrypted2: Data = sodium.aead.xchacha20poly1305ietf.decrypt(nonceAndAuthenticatedCipherText: encryptedWithNonce, additionalData: additionalData, secretKey: secretKey)!
+        
+        XCTAssertTrue(decrypted2 == message)
+        
+        XCTAssertNil(sodium.aead.xchacha20poly1305ietf.decrypt(nonceAndAuthenticatedCipherText: "invalid".toData()!, additionalData: additionalData, secretKey: secretKey))
     }
 }
