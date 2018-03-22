@@ -38,6 +38,28 @@ public struct Aead {
             return nonce
         }
         
+        public func encrypt(message: Data, additionalData: Data, secretKey: Key) -> Data? {
+            let nonce = self.nonce()
+            
+            guard let authenticatedCipherText: Data = encrypt(message: message, additionalData: additionalData, nonce: nonce, secretKey: secretKey) else {
+                return nil
+            }
+            var nonceAndAuthenticatedCipherText = nonce
+            nonceAndAuthenticatedCipherText.append(authenticatedCipherText)
+
+            return nonceAndAuthenticatedCipherText
+        }
+        
+        public func decrypt(nonceAndAuthenticatedCipherText: Data, additionalData: Data, secretKey: Key) -> Data? {
+            if nonceAndAuthenticatedCipherText.count < ABytes + NonceBytes {
+                return nil
+            }
+            let nonce = nonceAndAuthenticatedCipherText.subdata(in: 0..<NonceBytes) as Nonce
+            let authenticatedCipherText = nonceAndAuthenticatedCipherText.subdata(in: NonceBytes..<nonceAndAuthenticatedCipherText.count)
+            
+            return decrypt(cipherText: authenticatedCipherText, additionalData: additionalData, nonce: nonce, secretKey: secretKey)
+        }
+        
         public func encrypt(message: Data, additionalData: Data, nonce: Nonce, secretKey: Key) -> Data? {
             guard nonce.count == NonceBytes else {
                 return nil
@@ -47,10 +69,10 @@ public struct Aead {
                 return nil
             }
             
-            var cipherText = Data(count: message.count + ABytes)
+            var authenticatedCipherText = Data(count: message.count + ABytes)
             var cipherTextLen = Data()
     
-            let result = cipherText.withUnsafeMutableBytes { cipherTextPtr in
+            let result = authenticatedCipherText.withUnsafeMutableBytes { cipherTextPtr in
                 cipherTextLen.withUnsafeMutableBytes { cipherTextLen in
                     message.withUnsafeBytes { messagePtr in
                         additionalData.withUnsafeBytes { additionalDataPtr in
@@ -79,7 +101,7 @@ public struct Aead {
                 return nil
             }
     
-            return cipherText
+            return authenticatedCipherText
         }
         
         public func decrypt(cipherText: Data, additionalData: Data, nonce: Nonce, secretKey: Key) -> Data? {
