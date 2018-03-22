@@ -38,56 +38,68 @@ public struct Aead {
             return nonce
         }
         
-        public func encrypt(message: Data, additionalData: Data, secretKey: Key) -> Data? {
-            let nonce = self.nonce()
-            
-            guard let authenticatedCipherText: Data = encrypt(message: message, additionalData: additionalData, nonce: nonce, secretKey: secretKey) else {
+        public func encrypt(message: Data, secretKey: Key, additionalData: Data? = nil) -> Data? {
+            guard let (authenticatedCipherText, nonce): (Data, Nonce) = encrypt(message: message, secretKey: secretKey, additionalData: additionalData) else {
                 return nil
             }
+            
             var nonceAndAuthenticatedCipherText = nonce
             nonceAndAuthenticatedCipherText.append(authenticatedCipherText)
 
             return nonceAndAuthenticatedCipherText
         }
         
-        public func decrypt(nonceAndAuthenticatedCipherText: Data, additionalData: Data, secretKey: Key) -> Data? {
-            if nonceAndAuthenticatedCipherText.count < ABytes + NonceBytes {
-                return nil
-            }
-            let nonce = nonceAndAuthenticatedCipherText.subdata(in: 0..<NonceBytes) as Nonce
-            let authenticatedCipherText = nonceAndAuthenticatedCipherText.subdata(in: NonceBytes..<nonceAndAuthenticatedCipherText.count)
-            
-            return decrypt(authenticatedCipherText: authenticatedCipherText, additionalData: additionalData, nonce: nonce, secretKey: secretKey)
-        }
-        
-        public func encrypt(message: Data, additionalData: Data, nonce: Nonce, secretKey: Key) -> Data? {
-            guard nonce.count == NonceBytes else {
-                return nil
-            }
-            
+        public func encrypt(message: Data, secretKey: Key, additionalData: Data? = nil) -> (authenticatedCipherText: Data, nonce: Nonce)? {
             guard secretKey.count == KeyBytes else {
                 return nil
             }
             
             var authenticatedCipherText = Data(count: message.count + ABytes)
-            var cipherTextLen = Data()
+            var authenticatedCipherTextLen = Data()
+            let nonce = self.nonce()
+            var result: Int32 = -1
     
-            let result = authenticatedCipherText.withUnsafeMutableBytes { cipherTextPtr in
-                cipherTextLen.withUnsafeMutableBytes { cipherTextLen in
-                    message.withUnsafeBytes { messagePtr in
-                        additionalData.withUnsafeBytes { additionalDataPtr in
+            if let additionalData = additionalData {
+                result = authenticatedCipherText.withUnsafeMutableBytes { authenticatedCipherTextPtr in
+                    authenticatedCipherTextLen.withUnsafeMutableBytes { authenticatedCipherTextLenPtr in
+                        message.withUnsafeBytes { messagePtr in
+                            additionalData.withUnsafeBytes { additionalDataPtr in
+                                nonce.withUnsafeBytes { noncePtr in
+                                    secretKey.withUnsafeBytes { secretKeyPtr in
+                                        crypto_aead_xchacha20poly1305_ietf_encrypt(
+                                            UnsafeMutablePointer<UInt8>(authenticatedCipherTextPtr),
+                                            UnsafeMutablePointer<UInt64>(authenticatedCipherTextLenPtr),
+                                            
+                                            UnsafePointer<UInt8>(messagePtr),
+                                            UInt64(message.count),
+                                            
+                                            UnsafePointer<UInt8>(additionalDataPtr),
+                                            UInt64(additionalData.count),
+                                            
+                                            nil, noncePtr, secretKeyPtr
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                result = authenticatedCipherText.withUnsafeMutableBytes { authenticatedCipherTextPtr in
+                    authenticatedCipherTextLen.withUnsafeMutableBytes { authenticatedCipherTextLenPtr in
+                        message.withUnsafeBytes { messagePtr in
                             nonce.withUnsafeBytes { noncePtr in
                                 secretKey.withUnsafeBytes { secretKeyPtr in
                                     crypto_aead_xchacha20poly1305_ietf_encrypt(
-                                        UnsafeMutablePointer<UInt8>(cipherTextPtr),
-                                        UnsafeMutablePointer<UInt64>(cipherTextLen),
-    
+                                        UnsafeMutablePointer<UInt8>(authenticatedCipherTextPtr),
+                                        UnsafeMutablePointer<UInt64>(authenticatedCipherTextLenPtr),
+                                        
                                         UnsafePointer<UInt8>(messagePtr),
                                         UInt64(message.count),
-    
-                                        UnsafePointer<UInt8>(additionalDataPtr),
-                                        UInt64(additionalData.count),
-    
+                                        
+                                        nil,
+                                        0,
+
                                         nil, noncePtr, secretKeyPtr
                                     )
                                 }
@@ -101,43 +113,74 @@ public struct Aead {
                 return nil
             }
     
-            return authenticatedCipherText
+            return (authenticatedCipherText: authenticatedCipherText, nonce: nonce)
         }
         
-        public func decrypt(authenticatedCipherText: Data, additionalData: Data, nonce: Nonce, secretKey: Key) -> Data? {
-            guard nonce.count == NonceBytes else {
+        public func decrypt(nonceAndAuthenticatedCipherText: Data, secretKey: Key, additionalData: Data? = nil) -> Data? {
+            if nonceAndAuthenticatedCipherText.count < ABytes + NonceBytes {
                 return nil
             }
             
-            guard secretKey.count == KeyBytes else {
-                return nil
-            }
-            
+            let nonce = nonceAndAuthenticatedCipherText.subdata(in: 0..<NonceBytes) as Nonce
+            let authenticatedCipherText = nonceAndAuthenticatedCipherText.subdata(in: NonceBytes..<nonceAndAuthenticatedCipherText.count)
+
+            return decrypt(authenticatedCipherText: authenticatedCipherText, secretKey: secretKey, nonce: nonce, additionalData: additionalData)
+        }
+        
+        public func decrypt(authenticatedCipherText: Data, secretKey: Key, nonce: Nonce, additionalData: Data? = nil) -> Data? {
             guard authenticatedCipherText.count > ABytes else {
                 return nil
             }
             
-            var decrypted = Data(count: authenticatedCipherText.count - ABytes)
-            var decryptedLen = Data()
+            var message = Data(count: authenticatedCipherText.count - ABytes)
+            var messageLen = Data()
+            var result: Int32 = -1
     
-            let result = decrypted.withUnsafeMutableBytes { decryptedPtr in
-                decryptedLen.withUnsafeMutableBytes { decryptedLen in
-                    authenticatedCipherText.withUnsafeBytes { cipherTextPtr in
-                        additionalData.withUnsafeBytes { additionalDataPtr in
+            if let additionalData = additionalData {
+                result = message.withUnsafeMutableBytes { messagePtr in
+                    messageLen.withUnsafeMutableBytes { messageLen in
+                        authenticatedCipherText.withUnsafeBytes { cipherTextPtr in
+                            additionalData.withUnsafeBytes { additionalDataPtr in
+                                nonce.withUnsafeBytes { noncePtr in
+                                    secretKey.withUnsafeBytes { secretKeyPtr in
+                                        crypto_aead_xchacha20poly1305_ietf_decrypt(
+                                            UnsafeMutablePointer<UInt8>(messagePtr),
+                                            UnsafeMutablePointer<UInt64>(messageLen),
+                                            
+                                            nil,
+                                            
+                                            UnsafePointer<UInt8>(cipherTextPtr),
+                                            UInt64(authenticatedCipherText.count),
+                                            
+                                            UnsafePointer<UInt8>(additionalDataPtr),
+                                            UInt64(additionalData.count),
+                                            
+                                            noncePtr, secretKeyPtr
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                result = message.withUnsafeMutableBytes { messagePtr in
+                    messageLen.withUnsafeMutableBytes { messageLen in
+                        authenticatedCipherText.withUnsafeBytes { cipherTextPtr in
                             nonce.withUnsafeBytes { noncePtr in
                                 secretKey.withUnsafeBytes { secretKeyPtr in
                                     crypto_aead_xchacha20poly1305_ietf_decrypt(
-                                        UnsafeMutablePointer<UInt8>(decryptedPtr),
-                                        UnsafeMutablePointer<UInt64>(decryptedLen),
-    
+                                        UnsafeMutablePointer<UInt8>(messagePtr),
+                                        UnsafeMutablePointer<UInt64>(messageLen),
+                                        
                                         nil,
-    
+                                        
                                         UnsafePointer<UInt8>(cipherTextPtr),
                                         UInt64(authenticatedCipherText.count),
-    
-                                        UnsafePointer<UInt8>(additionalDataPtr),
-                                        UInt64(additionalData.count),
-    
+                                        
+                                        nil,
+                                        0,
+                                        
                                         noncePtr, secretKeyPtr
                                     )
                                 }
@@ -151,7 +194,7 @@ public struct Aead {
                 return nil
             }
     
-            return decrypted
+            return message
         }
     }
 }
