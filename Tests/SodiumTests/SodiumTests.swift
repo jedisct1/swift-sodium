@@ -396,6 +396,8 @@ class SodiumTests: XCTestCase {
         
         XCTAssertTrue(decrypted == message)
         
+        XCTAssertNil(sodium.aead.xchacha20poly1305ietf.decrypt(authenticatedCipherText: encrypted, additionalData: additionalData, nonce: nonce, secretKey: sodium.aead.xchacha20poly1305ietf.key()!), "Decrypt with different key")
+        
         XCTAssertNil(sodium.aead.xchacha20poly1305ietf.decrypt(authenticatedCipherText: encrypted, additionalData: "wrong".toData()!, nonce: nonce, secretKey: secretKey))
         XCTAssertNil(sodium.aead.xchacha20poly1305ietf.decrypt(authenticatedCipherText: "wrong".toData()!, additionalData: additionalData, nonce: nonce, secretKey: secretKey))
         
@@ -410,6 +412,7 @@ class SodiumTests: XCTestCase {
         
         XCTAssertTrue(decrypted2 == message)
         
+        XCTAssertNil(sodium.aead.xchacha20poly1305ietf.decrypt(nonceAndAuthenticatedCipherText: encryptedWithNonce, additionalData: additionalData, secretKey: sodium.aead.xchacha20poly1305ietf.key()!), "Decrypt with different key")
         XCTAssertNil(sodium.aead.xchacha20poly1305ietf.decrypt(nonceAndAuthenticatedCipherText: "invalid".toData()!, additionalData: additionalData, secretKey: secretKey))
     }
 }
