@@ -379,4 +379,24 @@ class SodiumTests: XCTestCase {
         sodium.utils.unpad(data: &data, blockSize: 16)!
         XCTAssertTrue(data.count == 4)
     }
+    
+    func testAead() {
+        print(sodium.aead.xchacha20poly1305ietf.NonceBytes)
+        
+        let message = "1".toData()!
+        let additionalData = "456".toData()!
+        let secretKey = sodium.aead.xchacha20poly1305ietf.key()!
+        XCTAssertEqual(secretKey.count, 32)
+        
+        let nonce = sodium.aead.xchacha20poly1305ietf.nonce()
+        XCTAssertEqual(nonce.count, 24)
+        
+        let encrypted: Data = sodium.aead.xchacha20poly1305ietf.encrypt(message: message, additionalData: additionalData, nonce: nonce, secretKey: secretKey)!
+        let decrypted: Data = sodium.aead.xchacha20poly1305ietf.decrypt(cipherText: encrypted, additionalData: additionalData, nonce: nonce, secretKey: secretKey)!
+        
+        XCTAssertTrue(decrypted == message)
+        
+        XCTAssertNil(sodium.aead.xchacha20poly1305ietf.decrypt(cipherText: encrypted, additionalData: "wrong".toData()!, nonce: nonce, secretKey: secretKey))
+        XCTAssertNil(sodium.aead.xchacha20poly1305ietf.decrypt(cipherText: "wrong".toData()!, additionalData: additionalData, nonce: nonce, secretKey: secretKey))
+    }
 }
