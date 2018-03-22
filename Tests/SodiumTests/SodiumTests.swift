@@ -381,8 +381,6 @@ class SodiumTests: XCTestCase {
     }
     
     func testAead() {
-        print(sodium.aead.xchacha20poly1305ietf.NonceBytes)
-        
         let message = "1".toData()!
         let additionalData = "456".toData()!
         let secretKey = sodium.aead.xchacha20poly1305ietf.key()!
