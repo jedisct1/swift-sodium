@@ -11,6 +11,7 @@ public struct Aead {
         
         public typealias Key = Data
         public typealias Nonce = Data
+        public typealias MAC = Data
         
         /**
          Generates a shared secret key.
@@ -38,6 +39,15 @@ public struct Aead {
             return nonce
         }
         
+        /**
+         Encrypts a message with a shared secret key.
+         
+         - Parameter message: The message to encrypt.
+         - Parameter secretKey: The shared secret key.
+         - Parameter additionalData: A typical use for these data is to authenticate version numbers, timestamps or monotonically increasing counters
+         
+         - Returns: A `Data` object containing the nonce and authenticated ciphertext.
+         */
         public func encrypt(message: Data, secretKey: Key, additionalData: Data? = nil) -> Data? {
             guard let (authenticatedCipherText, nonce): (Data, Nonce) = encrypt(message: message, secretKey: secretKey, additionalData: additionalData) else {
                 return nil
@@ -49,6 +59,15 @@ public struct Aead {
             return nonceAndAuthenticatedCipherText
         }
         
+        /**
+         Encrypts a message with a shared secret key.
+         
+         - Parameter message: The message to encrypt.
+         - Parameter secretKey: The shared secret key.
+         - Parameter additionalData: A typical use for these data is to authenticate version numbers, timestamps or monotonically increasing counters
+         
+         - Returns: The authenticated ciphertext and encryption nonce.
+         */
         public func encrypt(message: Data, secretKey: Key, additionalData: Data? = nil) -> (authenticatedCipherText: Data, nonce: Nonce)? {
             guard secretKey.count == KeyBytes else {
                 return nil
@@ -116,6 +135,15 @@ public struct Aead {
             return (authenticatedCipherText: authenticatedCipherText, nonce: nonce)
         }
         
+        /**
+         Decrypts a message with a shared secret key.
+         
+         - Parameter nonceAndAuthenticatedCipherText: A `Data` object containing the nonce and authenticated ciphertext.
+         - Parameter secretKey: The shared secret key.
+         - Parameter additionalData: Must be used same `Data` that was used to encrypt, if `Data` deferred will return nil
+         
+         - Returns: The decrypted message.
+         */
         public func decrypt(nonceAndAuthenticatedCipherText: Data, secretKey: Key, additionalData: Data? = nil) -> Data? {
             if nonceAndAuthenticatedCipherText.count < ABytes + NonceBytes {
                 return nil
@@ -127,6 +155,15 @@ public struct Aead {
             return decrypt(authenticatedCipherText: authenticatedCipherText, secretKey: secretKey, nonce: nonce, additionalData: additionalData)
         }
         
+        /**
+         Decrypts a message with a shared secret key.
+         
+         - Parameter authenticatedCipherText: A `Data` object containing authenticated ciphertext.
+         - Parameter secretKey: The shared secret key.
+         - Parameter additionalData: Must be used same `Data` that was used to encrypt, if `Data` deferred will return nil
+         
+         - Returns: The decrypted message.
+         */
         public func decrypt(authenticatedCipherText: Data, secretKey: Key, nonce: Nonce, additionalData: Data? = nil) -> Data? {
             guard authenticatedCipherText.count > ABytes else {
                 return nil
