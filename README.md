@@ -47,7 +47,7 @@ let message1 = "Message 1".data(using:.utf8)!
 let message2 = "Message 2".data(using:.utf8)!
 let message3 = "Message 3".data(using:.utf8)!
 
-let secretkey = sodium.secretStream.xchacha20poly1305.key()!
+let secretkey = sodium.secretStream.xchacha20poly1305.key()
 
 /* stream encryption */
 
@@ -80,7 +80,7 @@ A tag is attached to each message, and can be used to signal the end of a sub-se
 ```swift
 let sodium = Sodium()
 let message = "My Test Message".data(using:.utf8)!
-let secretKey = sodium.secretBox.key()!
+let secretKey = sodium.secretBox.key()
 let encrypted: Data = sodium.secretBox.seal(message: message, secretKey: secretKey)!
 if let decrypted = sodium.secretBox.open(nonceAndAuthenticatedCipherText: encrypted, secretKey: secretKey) {
     // authenticator is valid, decrypted contains the original message
@@ -276,7 +276,7 @@ Authentication tags are not signatures: the same key is used both for computing 
 ```swift
 let sodium = Sodium()
 let input = "test".data(using:.utf8)!
-let key = sodium.auth.key()!
+let key = sodium.auth.key()
 let tag = sodium.auth.tag(message: input, secretKey: key)!
 let tagIsValid = sodium.auth.verify(message: input, secretKey: key, tag: tag)
 ```
@@ -380,7 +380,7 @@ In order to generate a deterministic stream out of a seed, the `RandomBytes.dete
 ```swift
 let sodium = Sodium()
 let input = "test".data(using:.utf8)!
-let key = sodium.stream.key()!
+let key = sodium.stream.key()
 let (output, nonce) = sodium.stream.xor(input: input, secretKey: key)!
 let twice = sodium.stream.xor(input: output, nonce: nonce, secretKey: key)!
 
