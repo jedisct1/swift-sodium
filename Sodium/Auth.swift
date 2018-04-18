@@ -12,7 +12,7 @@ public class Auth {
 
      - Returns: The generated key.
      */
-    public func key() -> SecretKey? {
+    public func key() -> SecretKey {
         var secretKey = Data(count: KeyBytes)
         secretKey.withUnsafeMutableBytes { secretKeyPtr in
             crypto_auth_keygen(secretKeyPtr)
