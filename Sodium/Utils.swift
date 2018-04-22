@@ -25,7 +25,7 @@ public class Utils {
      - Returns: `true` if the bytes in `b1` match the bytes in `b2`. Otherwise, it returns false.
      */
     public func equals(_ b1: Data, _ b2: Data) -> Bool {
-        if b1.count != b2.count {
+        guard b1.count == b2.count else {
             return false
         }
         return b1.withUnsafeBytes { b1Ptr in
@@ -44,7 +44,7 @@ public class Utils {
      `1`  if `b1` is less than `b2` (considered as little-endian values)
      */
     public func compare(_ b1: Data, _ b2: Data) -> Int? {
-        if b1.count != b2.count {
+        guard b1.count == b2.count else {
             return nil
         }
         return b1.withUnsafeBytes { b1Ptr in
@@ -68,7 +68,7 @@ public class Utils {
 
         return hexData.withUnsafeMutableBytes { (hexPtr: UnsafeMutablePointer<Int8>) -> String? in
             bin.withUnsafeBytes { (binPtr: UnsafePointer<UInt8>) -> String? in
-                if sodium_bin2hex(hexPtr, hexDataLen, binPtr, bin.count) == nil {
+                guard nil != sodium_bin2hex(hexPtr, hexDataLen, binPtr, bin.count) else {
                     return nil
                 }
                 return String.init(validatingUTF8: hexPtr)
@@ -102,7 +102,7 @@ public class Utils {
                                ignore_cstr, &binDataLen, nil)
             }
         }
-        if result != 0 {
+        guard result == 0 else {
             return nil
         }
         binData.count = Int(binDataLen)
@@ -131,7 +131,7 @@ public class Utils {
 
         return b64Data.withUnsafeMutableBytes { (b64Ptr: UnsafeMutablePointer<Int8>) -> String? in
             bin.withUnsafeBytes { (binPtr: UnsafePointer<UInt8>) -> String? in
-                if sodium_bin2base64(b64Ptr, b64DataLen, binPtr, bin.count, variant.rawValue) == nil {
+                guard nil != sodium_bin2base64(b64Ptr, b64DataLen, binPtr, bin.count, variant.rawValue) else {
                     return nil
                 }
                 return String.init(validatingUTF8: b64Ptr)
@@ -165,7 +165,7 @@ public class Utils {
                                   ignore_cstr, &binDataLen, nil, variant.rawValue)
             }
         }
-        if  result != 0 {
+        guard result == 0 else {
             return nil
         }
         binData.count = Int(binDataLen)
@@ -187,7 +187,7 @@ public class Utils {
         let result = data.withUnsafeMutableBytes { dataPtr in
             sodium_pad(&paddedLen, dataPtr, dataCount, blockSize, dataCount + blockSize)
         }
-        if result != 0 {
+        guard result == 0 else {
             return nil
         }
         data.count = Int(paddedLen)
@@ -207,7 +207,7 @@ public class Utils {
         let result = data.withUnsafeMutableBytes { dataPtr in
             sodium_unpad(&unpaddedLen, dataPtr, dataLen, blockSize)
         }
-        if result != 0 {
+        guard result == 0 else {
             return nil
         }
         data.count = Int(unpaddedLen)

@@ -35,7 +35,7 @@ public class Sign {
                 crypto_sign_keypair(pkPtr, skPtr)
             }
         }
-        if result != 0 {
+        guard result == 0 else {
             return nil
         }
         return KeyPair(publicKey: pk, secretKey: sk)
@@ -49,7 +49,7 @@ public class Sign {
      - Returns: A key pair containing the secret key and public key.
      */
     public func keyPair(seed: Data) -> KeyPair? {
-        if seed.count != SeedBytes {
+        guard seed.count == SeedBytes else {
             return nil
         }
         var pk = Data(count: PublicKeyBytes)
@@ -62,7 +62,7 @@ public class Sign {
                 }
             }
         }
-        if result != 0 {
+        guard result == 0 else {
             return nil
         }
         return KeyPair(publicKey: pk, secretKey: sk)
@@ -77,7 +77,7 @@ public class Sign {
      - Returns: The signed message.
      */
     public func sign(message: Data, secretKey: SecretKey) -> Data? {
-        if secretKey.count != SecretKeyBytes {
+        guard secretKey.count == SecretKeyBytes else {
             return nil
         }
         var signedMessage = Data(count: message.count + Bytes)
@@ -92,7 +92,7 @@ public class Sign {
                 }
             }
         }
-        if result != 0 {
+        guard result == 0 else {
             return nil
         }
         return signedMessage
@@ -107,7 +107,7 @@ public class Sign {
      - Returns: The computed signature.
      */
     public func signature(message: Data, secretKey: SecretKey) -> Data? {
-        if secretKey.count != SecretKeyBytes {
+        guard secretKey.count == SecretKeyBytes else {
             return nil
         }
         var signature = Data(count: Bytes)
@@ -123,7 +123,7 @@ public class Sign {
             }
         }
 
-        if result != 0 {
+        guard result == 0 else {
             return nil
         }
 
@@ -155,7 +155,7 @@ public class Sign {
      - Returns: `true` if verification is successful.
      */
     public func verify(message: Data, publicKey: PublicKey, signature: Data) -> Bool {
-        if publicKey.count != PublicKeyBytes {
+        guard publicKey.count == PublicKeyBytes else {
             return false
         }
 
@@ -179,7 +179,7 @@ public class Sign {
      - Returns: The message data if verification is successful.
      */
     public func open(signedMessage: Data, publicKey: PublicKey) -> Data? {
-        if publicKey.count != PublicKeyBytes || signedMessage.count < Bytes {
+        guard publicKey.count == PublicKeyBytes, signedMessage.count >= Bytes else {
             return nil
         }
         var message = Data(count: signedMessage.count - Bytes)
@@ -195,7 +195,7 @@ public class Sign {
                 }
             }
         }
-        if result != 0 {
+        guard result == 0 else {
             return nil
         }
         return message

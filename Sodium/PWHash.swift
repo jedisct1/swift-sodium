@@ -42,7 +42,7 @@ public class PWHash {
                                   CUnsignedLongLong(opsLimit), size_t(memLimit))
             }
         }
-        if result != 0 {
+        guard result == 0 else {
             return nil
         }
         return String(data: output, encoding: .utf8)
@@ -102,7 +102,7 @@ public class PWHash {
      - Returns: The derived key data.
      */
     public func hash(outputLength: Int, passwd: Data, salt: Data, opsLimit: Int, memLimit: Int, alg: Alg = .Default) -> Data? {
-        if salt.count != SaltBytes {
+        guard salt.count == SaltBytes else {
             return nil
         }
         var output = Data(count: outputLength)
@@ -126,7 +126,7 @@ public class PWHash {
                 }
             }
         }
-        if result != 0 {
+        guard result == 0 else {
             return nil
         }
         return output

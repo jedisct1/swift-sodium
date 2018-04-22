@@ -37,16 +37,12 @@ public class KeyDerivation {
      - Note: Output keys must have a length between BytesMin and BytesMax bytes (inclusive), otherwise an error is returned. Context must be at most 8 characters long. If the specified context is shorter than 8 characters, it will be padded to 8 characters. The master key is KeyBytes long.
      */
     public func derive(secretKey: Data, index: UInt64, length: Int, context: String) -> Data? {
-        if length < BytesMin || length > BytesMax {
-            return nil
-        }
-        if secretKey.count != KeyBytes {
-            return nil
-        }
-        var contextBin = context.data(using: String.Encoding.utf8)!
-        if contextBin.count > ContextBytes {
-            return nil
-        }
+        guard (BytesMin...BytesMax).contains(length),
+              secretKey.count == KeyBytes,
+              var contextBin = context.data(using: .utf8),
+              contextBin.count <= ContextBytes
+        else { return nil }
+
         while contextBin.count < ContextBytes {
             contextBin += [0]
         }
@@ -60,7 +56,7 @@ public class KeyDerivation {
                 }
             }
         }
-        if result != 0 {
+        guard result == 0 else {
             return nil
         }
         return output

@@ -50,7 +50,7 @@ public class Stream {
      -  Returns: input XOR keystream(secretKey, nonce)
      */
     public func xor(input: Data, nonce: Nonce, secretKey: Key) -> Data? {
-        if secretKey.count != KeyBytes || nonce.count != NonceBytes {
+        guard secretKey.count == KeyBytes, nonce.count == NonceBytes else {
             return nil
         }
         var output = Data(count: input.count)
@@ -63,7 +63,7 @@ public class Stream {
                 }
             }
         }
-        if result != 0 {
+        guard result == 0 else {
             return nil
         }
         return output
