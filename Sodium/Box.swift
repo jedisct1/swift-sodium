@@ -79,9 +79,10 @@ public class Box {
      - Returns: A nonce.
      */
     public func nonce() -> Nonce {
-        var nonce = Data(count: NonceBytes)
+        let nonceLen = NonceBytes
+        var nonce = Data(count: nonceLen)
         nonce.withUnsafeMutableBytes { noncePtr in
-            randombytes_buf(noncePtr, nonce.count)
+            randombytes_buf(noncePtr, nonceLen)
         }
         return nonce
     }
