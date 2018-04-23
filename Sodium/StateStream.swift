@@ -6,14 +6,12 @@ protocol StateStream {
 }
 
 extension StateStream {
-    var rawState: UnsafeMutablePointer<UInt8> {
-        return UnsafeMutableRawPointer(state).bindMemory(
+    func free() {
+        let rawState = UnsafeMutableRawPointer(state).bindMemory(
             to: UInt8.self,
             capacity: capacity
         )
-    }
 
-    func free() {
         #if swift(>=4.1)
         rawState.deallocate()
         #else
