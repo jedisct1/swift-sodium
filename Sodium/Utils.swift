@@ -68,7 +68,7 @@ public class Utils {
 
         return hexData.withUnsafeMutableBytes { (hexPtr: UnsafeMutablePointer<Int8>) -> String? in
             bin.withUnsafeBytes { (binPtr: UnsafePointer<UInt8>) -> String? in
-                guard nil != sodium_bin2hex(hexPtr, hexDataLen, binPtr, bin.count) else {
+                guard sodium_bin2hex(hexPtr, hexDataLen, binPtr, bin.count) != nil else {
                     return nil
                 }
                 return String.init(validatingUTF8: hexPtr)
@@ -131,7 +131,7 @@ public class Utils {
 
         return b64Data.withUnsafeMutableBytes { (b64Ptr: UnsafeMutablePointer<Int8>) -> String? in
             bin.withUnsafeBytes { (binPtr: UnsafePointer<UInt8>) -> String? in
-                guard nil != sodium_bin2base64(b64Ptr, b64DataLen, binPtr, bin.count, variant.rawValue) else {
+                guard sodium_bin2base64(b64Ptr, b64DataLen, binPtr, bin.count, variant.rawValue) != nil else {
                     return nil
                 }
                 return String.init(validatingUTF8: b64Ptr)
