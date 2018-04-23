@@ -63,7 +63,7 @@ public class KeyExchange {
      - Returns: A key pair containing the secret key and public key.
      */
     public func keyPair(seed: Data) -> KeyPair? {
-        if seed.count != SeedBytes {
+        guard seed.count == SeedBytes else {
             return nil
         }
         var pk = Data(count: PublicKeyBytes)
@@ -76,7 +76,7 @@ public class KeyExchange {
                 }
             }
         }
-        if result != 0 {
+        guard result == 0 else {
             return nil
         }
         return KeyPair(publicKey: pk, secretKey: sk)
@@ -96,11 +96,10 @@ public class KeyExchange {
      - Note: `rx` on client side equals `tx` on server side and vice versa.
      */
     public func sessionKeyPair(publicKey: PublicKey, secretKey: SecretKey, otherPublicKey: PublicKey, side: Side) -> SessionKeyPair? {
-        if publicKey.count != PublicKeyBytes ||
-            secretKey.count != SecretKeyBytes ||
-            otherPublicKey.count != PublicKeyBytes {
-            return nil
-        }
+        guard publicKey.count == PublicKeyBytes,
+              secretKey.count == SecretKeyBytes,
+              otherPublicKey.count == PublicKeyBytes
+        else { return nil }
 
         var rx = Data(count: SessionKeyBytes)
         var tx = Data(count: SessionKeyBytes)
@@ -118,7 +117,7 @@ public class KeyExchange {
                 }
             }
         }
-        if result != 0 {
+        guard result == 0 else {
             return nil
         }
         return SessionKeyPair(rx: rx, tx: tx)

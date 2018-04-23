@@ -65,7 +65,7 @@ public class SecretStream {
             private var _header: Header
 
             init?(secretKey: Key) {
-                if secretKey.count != KeyBytes {
+                guard secretKey.count == KeyBytes else {
                     return nil
                 }
                 let rawState = UnsafeMutablePointer<UInt8>.allocate(capacity: crypto_secretstream_xchacha20poly1305_statebytes())
@@ -79,7 +79,7 @@ public class SecretStream {
                         crypto_secretstream_xchacha20poly1305_init_push(state, headerPtr, secretKeyPtr)
                     }
                 }
-                if result != 0 {
+                guard result == 0 else {
                     free()
                     return nil
                 }
@@ -114,7 +114,7 @@ public class SecretStream {
                         }
                     }
                 }
-                if result != 0 {
+                guard result == 0 else {
                     return nil
                 }
                 return cipherText
@@ -145,7 +145,7 @@ public class SecretStream {
             private var state: UnsafeMutablePointer<crypto_secretstream_xchacha20poly1305_state>?
 
             init?(secretKey: Key, header: Header) {
-                if header.count != HeaderBytes || secretKey.count != KeyBytes {
+                guard header.count == HeaderBytes, secretKey.count == KeyBytes else {
                     return nil
                 }
                 let rawState = UnsafeMutablePointer<UInt8>.allocate(capacity: crypto_secretstream_xchacha20poly1305_statebytes())
@@ -158,7 +158,7 @@ public class SecretStream {
                         crypto_secretstream_xchacha20poly1305_init_pull(state, headerPtr, secretKeyPtr)
                     }
                 }
-                if result != 0 {
+                guard result == 0 else {
                     free()
                     return nil
                 }
@@ -173,7 +173,7 @@ public class SecretStream {
              - Returns: The decrypted message, as well as the tag attached to it.
              */
             public func pull(cipherText: Data, ad: Data? = nil) -> (Data, Tag)? {
-                if cipherText.count < ABytes {
+                guard cipherText.count >= ABytes else {
                     return nil
                 }
                 var message = Data(count: cipherText.count - ABytes)
@@ -186,10 +186,7 @@ public class SecretStream {
                         }
                     }
                 }
-                if result != 0 {
-                    return nil
-                }
-                guard let tag = Tag.init(rawValue: _tag) else {
+                guard result == 0, let tag = Tag.init(rawValue: _tag) else {
                     return nil
                 }
                 return (message, tag)

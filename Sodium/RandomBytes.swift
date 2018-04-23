@@ -12,7 +12,7 @@ public class RandomBytes {
      - Returns: The generated data.
      */
     public func buf(length: Int) -> Data? {
-        if length < 0 {
+        guard length >= 0 else {
             return nil
         }
         var output = Data(count: length)
@@ -49,9 +49,11 @@ public class RandomBytes {
      - Returns: The generated data.
      */
     public func deterministic(length: Int, seed: Data) -> Data? {
-        if length < 0 || seed.count != SeedBytes || Int64(length) > 0x4000000000 as Int64 {
-            return nil
-        }
+        guard length >= 0,
+              seed.count == SeedBytes,
+              Int64(length) <= 0x4000000000 as Int64
+        else { return nil }
+
         var output = Data(count: length)
         output.withUnsafeMutableBytes { outputPtr in
             seed.withUnsafeBytes { seedPtr in

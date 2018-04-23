@@ -71,7 +71,7 @@ public class GenericHash {
                 }
             }
         }
-        if result != 0 {
+        guard result == 0 else {
             return nil
         }
         return output
@@ -185,7 +185,7 @@ public class GenericHash {
             let result = output.withUnsafeMutableBytes { outputPtr in
                 crypto_generichash_final(state!, outputPtr, outputLen)
             }
-            if result != 0 {
+            guard result == 0 else {
                 return nil
             }
             return output

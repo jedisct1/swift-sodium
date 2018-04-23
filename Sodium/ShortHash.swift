@@ -29,7 +29,7 @@ public class ShortHash {
      - Returns: The computed fingerprint.
      */
     public func hash(message: Data, key: Data) -> Data? {
-        if key.count != KeyBytes {
+        guard key.count == KeyBytes else {
             return nil
         }
         var output = Data(count: Bytes)
@@ -41,7 +41,7 @@ public class ShortHash {
                 }
             }
         }
-        if result != 0 {
+        guard result == 0 else {
             return nil
         }
         return output

@@ -29,7 +29,7 @@ public class Auth {
      - Returns: The computed authentication tag.
      */
     public func tag(message: Data, secretKey: SecretKey) -> Data? {
-        if secretKey.count != KeyBytes {
+        guard secretKey.count == KeyBytes else {
             return nil
         }
 
@@ -43,7 +43,7 @@ public class Auth {
                 }
             }
         }
-        if result != 0 {
+        guard result == 0 else {
             return nil
         }
         return tag
@@ -59,7 +59,7 @@ public class Auth {
      - Returns: `true` if the verification is successful.
      */
     public func verify(message: Data, secretKey: SecretKey, tag: Data) -> Bool {
-        if secretKey.count != KeyBytes {
+        guard secretKey.count == KeyBytes else {
             return false
         }
         return tag.withUnsafeBytes { tagPtr in
