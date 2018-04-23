@@ -1,7 +1,7 @@
 protocol StateStream {
     associatedtype State
 
-    var capacity: Int { get }
+    static var capacity: Int { get }
     var state: UnsafeMutablePointer<State> { get set }
 }
 
@@ -9,7 +9,7 @@ extension StateStream {
     func free() {
         let rawState = UnsafeMutableRawPointer(state).bindMemory(
             to: UInt8.self,
-            capacity: capacity
+            capacity: Self.capacity
         )
 
         #if swift(>=4.1)
