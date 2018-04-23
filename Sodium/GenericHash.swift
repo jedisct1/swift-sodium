@@ -126,7 +126,7 @@ public class GenericHash {
     public class Stream: StateStream {
         typealias State = crypto_generichash_state
         static var capacity = crypto_generichash_statebytes()
-        var state: UnsafeMutablePointer<State>
+        private var state: UnsafeMutablePointer<State>
 
         public var outputLength: Int = 0
 
@@ -145,6 +145,10 @@ public class GenericHash {
                 return nil
             }
             self.outputLength = outputLength
+        }
+
+        private func free() {
+            Stream.free(state)
         }
 
         deinit {

@@ -64,7 +64,7 @@ public class SecretStream {
             typealias State = crypto_secretstream_xchacha20poly1305_state
 
             static var capacity = crypto_secretstream_xchacha20poly1305_statebytes()
-            var state: UnsafeMutablePointer<State>
+            private var state: UnsafeMutablePointer<State>
 
             private var _header: Header
 
@@ -127,6 +127,10 @@ public class SecretStream {
                 crypto_secretstream_xchacha20poly1305_rekey(state)
             }
 
+            private func free() {
+                PushStream.free(state)
+            }
+
             deinit {
                 free()
             }
@@ -136,7 +140,7 @@ public class SecretStream {
             typealias State = crypto_secretstream_xchacha20poly1305_state
 
             static var capacity = crypto_secretstream_xchacha20poly1305_statebytes()
-            var state: UnsafeMutablePointer<State>
+            private var state: UnsafeMutablePointer<State>
 
             init?(secretKey: Key, header: Header) {
                 guard header.count == HeaderBytes, secretKey.count == KeyBytes else {
@@ -187,6 +191,10 @@ public class SecretStream {
              */
             public func rekey() {
                 crypto_secretstream_xchacha20poly1305_rekey(state)
+            }
+
+            private func free() {
+                PullStream.free(state)
             }
 
             deinit {
