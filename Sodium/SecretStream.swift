@@ -72,7 +72,7 @@ public class SecretStream {
                 guard secretKey.count == KeyBytes else {
                     return nil
                 }
-                state = PushStream.gen(capacity: capacity)
+                state = PushStream.generate()
                 _header = Data(count: HeaderBytes)
                 let result = secretKey.withUnsafeBytes { secretKeyPtr in
                     _header.withUnsafeMutableBytes { headerPtr in
@@ -142,7 +142,7 @@ public class SecretStream {
                 guard header.count == HeaderBytes, secretKey.count == KeyBytes else {
                     return nil
                 }
-                state = PushStream.gen(capacity: capacity)
+                state = PushStream.generate()
                 let result = secretKey.withUnsafeBytes { secretKeyPtr in
                     header.withUnsafeBytes { headerPtr in
                         crypto_secretstream_xchacha20poly1305_init_pull(state, headerPtr, secretKeyPtr)

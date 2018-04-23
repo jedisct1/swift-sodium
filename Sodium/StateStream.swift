@@ -19,8 +19,8 @@ extension StateStream {
         #endif
     }
 
-    static func gen(capacity bytes: Int) -> UnsafeMutablePointer<State> {
-        let rawState = UnsafeMutablePointer<UInt8>.allocate(capacity: bytes)
+    static func generate() -> UnsafeMutablePointer<State> {
+        let rawState = UnsafeMutablePointer<UInt8>.allocate(capacity: capacity)
 
         return UnsafeMutableRawPointer(rawState).bindMemory(
             to: State.self,

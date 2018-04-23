@@ -131,7 +131,7 @@ public class GenericHash {
         public var outputLength: Int = 0
 
         init?(key: Data?, outputLength: Int) {
-            state = Stream.gen(capacity: capacity)
+            state = Stream.generate()
             var result: Int32 = -1
             if let key = key {
                 result = key.withUnsafeBytes { keyPtr in
