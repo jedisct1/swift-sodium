@@ -60,19 +60,19 @@ public class SecretStream {
             return stream
         }
 
-        public class PushStream {
-            private var state: UnsafeMutablePointer<crypto_secretstream_xchacha20poly1305_state>?
+        public class PushStream: StateStream {
+            typealias State = crypto_secretstream_xchacha20poly1305_state
+
+            var capacity = crypto_secretstream_xchacha20poly1305_statebytes()
+            var state: UnsafeMutablePointer<State>
+
             private var _header: Header
 
             init?(secretKey: Key) {
                 guard secretKey.count == KeyBytes else {
                     return nil
                 }
-                let rawState = UnsafeMutablePointer<UInt8>.allocate(capacity: crypto_secretstream_xchacha20poly1305_statebytes())
-                state = UnsafeMutableRawPointer(rawState).bindMemory(to: crypto_secretstream_xchacha20poly1305_state.self, capacity: 1)
-                guard let state = state else {
-                    return nil
-                }
+                state = PushStream.gen(capacity: capacity)
                 _header = Data(count: HeaderBytes)
                 let result = secretKey.withUnsafeBytes { secretKeyPtr in
                     _header.withUnsafeMutableBytes { headerPtr in
@@ -110,7 +110,7 @@ public class SecretStream {
                 let result = cipherText.withUnsafeMutableBytes { cipherTextPtr in
                     _ad.withUnsafeBytes { adPtr in
                         message.withUnsafeBytes { messagePtr in
-                            crypto_secretstream_xchacha20poly1305_push(self.state!, cipherTextPtr, nil, messagePtr, CUnsignedLongLong(message.count), adPtr, CUnsignedLongLong(_ad.count), tag.rawValue)
+                            crypto_secretstream_xchacha20poly1305_push(state, cipherTextPtr, nil, messagePtr, CUnsignedLongLong(message.count), adPtr, CUnsignedLongLong(_ad.count), tag.rawValue)
                         }
                     }
                 }
@@ -127,32 +127,22 @@ public class SecretStream {
                 crypto_secretstream_xchacha20poly1305_rekey(state)
             }
 
-            private func free() {
-                guard let state = state else {
-                    return
-                }
-                let rawState = UnsafeMutableRawPointer(state).bindMemory(to: UInt8.self, capacity: crypto_secretstream_xchacha20poly1305_statebytes())
-                rawState.deallocate(capacity: 1)
-                self.state = nil
-            }
-
             deinit {
                 free()
             }
         }
 
-        public class PullStream {
-            private var state: UnsafeMutablePointer<crypto_secretstream_xchacha20poly1305_state>?
+        public class PullStream: StateStream {
+            typealias State = crypto_secretstream_xchacha20poly1305_state
+
+            var capacity = crypto_secretstream_xchacha20poly1305_statebytes()
+            var state: UnsafeMutablePointer<State>
 
             init?(secretKey: Key, header: Header) {
                 guard header.count == HeaderBytes, secretKey.count == KeyBytes else {
                     return nil
                 }
-                let rawState = UnsafeMutablePointer<UInt8>.allocate(capacity: crypto_secretstream_xchacha20poly1305_statebytes())
-                state = UnsafeMutableRawPointer(rawState).bindMemory(to: crypto_secretstream_xchacha20poly1305_state.self, capacity: 1)
-                guard let state = state else {
-                    return nil
-                }
+                state = PushStream.gen(capacity: capacity)
                 let result = secretKey.withUnsafeBytes { secretKeyPtr in
                     header.withUnsafeBytes { headerPtr in
                         crypto_secretstream_xchacha20poly1305_init_pull(state, headerPtr, secretKeyPtr)
@@ -182,7 +172,7 @@ public class SecretStream {
                 let result = cipherText.withUnsafeBytes { cipherTextPtr in
                     _ad.withUnsafeBytes { adPtr in
                         message.withUnsafeMutableBytes { messagePtr in
-                            crypto_secretstream_xchacha20poly1305_pull(state!, messagePtr, nil, &_tag, cipherTextPtr, CUnsignedLongLong(cipherText.count), adPtr, CUnsignedLongLong(_ad.count))
+                            crypto_secretstream_xchacha20poly1305_pull(state, messagePtr, nil, &_tag, cipherTextPtr, CUnsignedLongLong(cipherText.count), adPtr, CUnsignedLongLong(_ad.count))
                         }
                     }
                 }
@@ -197,15 +187,6 @@ public class SecretStream {
              */
             public func rekey() {
                 crypto_secretstream_xchacha20poly1305_rekey(state)
-            }
-
-            private func free() {
-                guard let state = state else {
-                    return
-                }
-                let rawState = UnsafeMutableRawPointer(state).bindMemory(to: UInt8.self, capacity: crypto_secretstream_xchacha20poly1305_statebytes())
-                rawState.deallocate(capacity: 1)
-                self.state = nil
             }
 
             deinit {
