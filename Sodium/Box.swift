@@ -233,8 +233,8 @@ public class Box {
         guard nonceAndAuthenticatedCipherText.count >= NonceBytes + MacBytes else {
             return nil
         }
-        let nonce = nonceAndAuthenticatedCipherText.subdata(in: 0..<NonceBytes) as Nonce
-        let authenticatedCipherText = nonceAndAuthenticatedCipherText.subdata(in: NonceBytes..<nonceAndAuthenticatedCipherText.count)
+        let nonce = nonceAndAuthenticatedCipherText[..<NonceBytes] as Nonce
+        let authenticatedCipherText = nonceAndAuthenticatedCipherText[NonceBytes...]
 
         return open(authenticatedCipherText: authenticatedCipherText, senderPublicKey: senderPublicKey, recipientSecretKey: recipientSecretKey, nonce: nonce)
     }
@@ -393,8 +393,8 @@ public class Box {
         guard nonceAndAuthenticatedCipherText.count >= NonceBytes + MacBytes else {
             return nil
         }
-        let nonce = nonceAndAuthenticatedCipherText.subdata(in: 0..<NonceBytes) as Nonce
-        let authenticatedCipherText = nonceAndAuthenticatedCipherText.subdata(in: NonceBytes..<nonceAndAuthenticatedCipherText.count)
+        let nonce = nonceAndAuthenticatedCipherText[..<NonceBytes] as Nonce
+        let authenticatedCipherText = nonceAndAuthenticatedCipherText[NonceBytes...]
 
         return  open(authenticatedCipherText: authenticatedCipherText, beforenm: beforenm, nonce: nonce)
     }

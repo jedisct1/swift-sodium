@@ -139,8 +139,8 @@ public class Sign {
      - Returns: `true` if verification is successful.
      */
     public func verify(signedMessage: Data, publicKey: PublicKey) -> Bool {
-        let signature = signedMessage.subdata(in: 0..<Bytes) as Data
-        let message = signedMessage.subdata(in: Bytes..<signedMessage.count) as Data
+        let signature = signedMessage[..<Bytes]
+        let message = signedMessage[Bytes...]
 
         return verify(message: message, publicKey: publicKey, signature: signature)
     }

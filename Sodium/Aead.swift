@@ -150,8 +150,8 @@ public struct Aead {
                 return nil
             }
             
-            let nonce = nonceAndAuthenticatedCipherText.subdata(in: 0..<NonceBytes) as Nonce
-            let authenticatedCipherText = nonceAndAuthenticatedCipherText.subdata(in: NonceBytes..<nonceAndAuthenticatedCipherText.count)
+            let nonce = nonceAndAuthenticatedCipherText[..<NonceBytes] as Nonce
+            let authenticatedCipherText = nonceAndAuthenticatedCipherText[NonceBytes...]
 
             return decrypt(authenticatedCipherText: authenticatedCipherText, secretKey: secretKey, nonce: nonce, additionalData: additionalData)
         }

@@ -136,8 +136,8 @@ public class SecretBox {
         guard nonceAndAuthenticatedCipherText.count >= MacBytes + NonceBytes else {
             return nil
         }
-        let nonce = nonceAndAuthenticatedCipherText.subdata(in: 0..<NonceBytes) as Nonce
-        let authenticatedCipherText = nonceAndAuthenticatedCipherText.subdata(in: NonceBytes..<nonceAndAuthenticatedCipherText.count)
+        let nonce = nonceAndAuthenticatedCipherText[..<NonceBytes] as Nonce
+        let authenticatedCipherText = nonceAndAuthenticatedCipherText[NonceBytes...]
 
         return open(authenticatedCipherText: authenticatedCipherText, secretKey: secretKey, nonce: nonce)
     }
