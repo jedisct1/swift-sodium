@@ -105,7 +105,7 @@ public class SecretStream {
              - Returns: The ciphertext.
              */
             public func push(message: Data, tag: Tag = .MESSAGE, ad: Data? = nil) -> Data? {
-                let _ad = ad == nil ? Data(count: 0) : ad!
+                let _ad = ad ?? Data(count: 0)
                 var cipherText = Data(count: message.count + ABytes)
                 let result = cipherText.withUnsafeMutableBytes { cipherTextPtr in
                     _ad.withUnsafeBytes { adPtr in
@@ -171,7 +171,7 @@ public class SecretStream {
                     return nil
                 }
                 var message = Data(count: cipherText.count - ABytes)
-                let _ad = ad == nil ? Data(count: 0) : ad!
+                let _ad = ad ?? Data(count: 0)
                 var _tag: UInt8 = 0
                 let result = cipherText.withUnsafeBytes { cipherTextPtr in
                     _ad.withUnsafeBytes { adPtr in
