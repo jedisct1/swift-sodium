@@ -63,7 +63,7 @@ public class SecretStream {
         public class PushStream: StateStream {
             typealias State = crypto_secretstream_xchacha20poly1305_state
 
-            static var capacity = crypto_secretstream_xchacha20poly1305_statebytes()
+            static let capacity = crypto_secretstream_xchacha20poly1305_statebytes()
             private var state: UnsafeMutablePointer<State>
 
             private var _header: Header
@@ -139,7 +139,7 @@ public class SecretStream {
         public class PullStream: StateStream {
             typealias State = crypto_secretstream_xchacha20poly1305_state
 
-            static var capacity = crypto_secretstream_xchacha20poly1305_statebytes()
+            static let capacity = crypto_secretstream_xchacha20poly1305_statebytes()
             private var state: UnsafeMutablePointer<State>
 
             init?(secretKey: Key, header: Header) {

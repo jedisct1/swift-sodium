@@ -125,7 +125,7 @@ public class GenericHash {
 
     public class Stream: StateStream {
         typealias State = crypto_generichash_state
-        static var capacity = crypto_generichash_statebytes()
+        static let capacity = crypto_generichash_statebytes()
         private var state: UnsafeMutablePointer<State>
 
         public var outputLength: Int = 0
