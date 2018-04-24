@@ -57,6 +57,8 @@
 		CFD847281BA8120900B1260F /* PWHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 097F20D91AF127480088C2FE /* PWHash.swift */; };
 		D2A274061F13AD9300958702 /* KeyDerivation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A274051F13AD9300958702 /* KeyDerivation.swift */; };
 		D85101041E22EF5B003DB2E8 /* ReadmeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D85101031E22EF5B003DB2E8 /* ReadmeTests.swift */; };
+		DD1E4D06208E744100BE7A3F /* StateStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1E4D05208E744100BE7A3F /* StateStream.swift */; };
+		DD1E4D07208E744100BE7A3F /* StateStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1E4D05208E744100BE7A3F /* StateStream.swift */; };
 		F87EEC402063C655006C830D /* Aead.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87EEC3F2063C655006C830D /* Aead.swift */; };
 /* End PBXBuildFile section */
 
@@ -192,6 +194,7 @@
 		D2A274051F13AD9300958702 /* KeyDerivation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyDerivation.swift; sourceTree = "<group>"; };
 		D85101031E22EF5B003DB2E8 /* ReadmeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadmeTests.swift; sourceTree = "<group>"; };
 		D85101051E22F77E003DB2E8 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		DD1E4D05208E744100BE7A3F /* StateStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateStream.swift; sourceTree = "<group>"; };
 		F87EEC3F2063C655006C830D /* Aead.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Aead.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -271,6 +274,7 @@
 				09A943E91A4EB70900C8A04F /* libsodium */,
 				09A943CC1A4EB5F500C8A04F /* Sodium.h */,
 				094F21E91A5017CA001C3141 /* Box.swift */,
+				DD1E4D05208E744100BE7A3F /* StateStream.swift */,
 				038365141A5A51D20081136D /* SecretBox.swift */,
 				0942982F1EDDAA3B001236B1 /* Stream.swift */,
 				095D80561A4ED0B4000B83F9 /* GenericHash.swift */,
@@ -670,6 +674,7 @@
 				095D805D1A4F4F72000B83F9 /* Utils.swift in Sources */,
 				091C7CDC1A50839D002E5351 /* Sign.swift in Sources */,
 				A0918C781E92489100C1DC33 /* Auth.swift in Sources */,
+				DD1E4D06208E744100BE7A3F /* StateStream.swift in Sources */,
 				094298301EDDAA3B001236B1 /* Stream.swift in Sources */,
 				D2A274061F13AD9300958702 /* KeyDerivation.swift in Sources */,
 				09A5AC121F74466700D3200B /* SecretStream.swift in Sources */,
@@ -721,6 +726,7 @@
 				90C75EE91AE3583E00F1E749 /* RandomBytes.swift in Sources */,
 				60C211E71EB73D3900882AD0 /* Auth.swift in Sources */,
 				094298311EDDAA3B001236B1 /* Stream.swift in Sources */,
+				DD1E4D07208E744100BE7A3F /* StateStream.swift in Sources */,
 				6096E7321F194FA800E6599F /* KeyDerivation.swift in Sources */,
 				098DAF041F76E35C00DFB1C3 /* SecretStream.swift in Sources */,
 				90C75EEA1AE3583E00F1E749 /* ShortHash.swift in Sources */,

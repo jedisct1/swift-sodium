@@ -123,16 +123,15 @@ public class GenericHash {
         return Stream(key: nil, outputLength: outputLength)
     }
 
-    public class Stream {
+    public class Stream: StateStream {
+        typealias State = crypto_generichash_state
+        static let capacity = crypto_generichash_statebytes()
+        private var state: UnsafeMutablePointer<State>
+
         public var outputLength: Int = 0
-        private var state: UnsafeMutablePointer<crypto_generichash_state>?
 
         init?(key: Data?, outputLength: Int) {
-            let rawState = UnsafeMutablePointer<UInt8>.allocate(capacity: crypto_generichash_statebytes())
-            state = UnsafeMutableRawPointer(rawState).bindMemory(to: crypto_generichash_state.self, capacity: 1)
-            guard let state = state else {
-                return nil
-            }
+            state = Stream.generate()
             var result: Int32 = -1
             if let key = key {
                 result = key.withUnsafeBytes { keyPtr in
@@ -141,7 +140,7 @@ public class GenericHash {
             } else {
                 result = crypto_generichash_init(state, nil, 0, outputLength)
             }
-            if result != 0 {
+            guard result == 0 else {
                 free()
                 return nil
             }
@@ -149,12 +148,7 @@ public class GenericHash {
         }
 
         private func free() {
-            guard let state = state else {
-                return
-            }
-            let rawState = UnsafeMutableRawPointer(state).bindMemory(to: UInt8.self, capacity: crypto_generichash_statebytes())
-            rawState.deallocate(capacity: 1)
-            self.state = nil
+            Stream.free(state)
         }
 
         deinit {
@@ -170,7 +164,7 @@ public class GenericHash {
          */
         public func update(input: Data) -> Bool {
             return input.withUnsafeBytes { inputPtr in
-                crypto_generichash_update(state!, inputPtr, CUnsignedLongLong(input.count)) == 0
+                crypto_generichash_update(state, inputPtr, CUnsignedLongLong(input.count)) == 0
             }
         }
 
@@ -183,7 +177,7 @@ public class GenericHash {
             let outputLen = outputLength
             var output = Data(count: outputLen)
             let result = output.withUnsafeMutableBytes { outputPtr in
-                crypto_generichash_final(state!, outputPtr, outputLen)
+                crypto_generichash_final(state, outputPtr, outputLen)
             }
             guard result == 0 else {
                 return nil
