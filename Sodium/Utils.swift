@@ -71,7 +71,7 @@ public class Utils {
                 guard sodium_bin2hex(hexPtr, hexDataLen, binPtr, bin.count) != nil else {
                     return nil
                 }
-                return String.init(validatingUTF8: hexPtr)
+                return String(validatingUTF8: hexPtr)
             }
         }
     }
@@ -134,7 +134,7 @@ public class Utils {
                 guard sodium_bin2base64(b64Ptr, b64DataLen, binPtr, bin.count, variant.rawValue) != nil else {
                     return nil
                 }
-                return String.init(validatingUTF8: b64Ptr)
+                return String(validatingUTF8: b64Ptr)
             }
         }
     }

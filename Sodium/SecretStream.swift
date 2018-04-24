@@ -180,7 +180,7 @@ public class SecretStream {
                         }
                     }
                 }
-                guard result == 0, let tag = Tag.init(rawValue: _tag) else {
+                guard result == 0, let tag = Tag(rawValue: _tag) else {
                     return nil
                 }
                 return (message, tag)

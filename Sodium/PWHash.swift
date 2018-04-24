@@ -4,7 +4,7 @@ import Clibsodium
 public class PWHash {
     public let SaltBytes = Int(crypto_pwhash_saltbytes())
     public let StrBytes = Int(crypto_pwhash_strbytes()) - (1 as Int)
-    public let StrPrefix = String.init(validatingUTF8: crypto_pwhash_strprefix())
+    public let StrPrefix = String(validatingUTF8: crypto_pwhash_strprefix())
     public let OpsLimitInteractive = Int(crypto_pwhash_opslimit_interactive())
     public let OpsLimitModerate = Int(crypto_pwhash_opslimit_moderate())
     public let OpsLimitSensitive = Int(crypto_pwhash_opslimit_sensitive())

@@ -4,7 +4,7 @@ import Clibsodium
 public class Stream {
     public let KeyBytes = Int(crypto_secretbox_keybytes())
     public let NonceBytes = Int(crypto_secretbox_noncebytes())
-    public let Primitive = String.init(validatingUTF8: crypto_stream_primitive())
+    public let Primitive = String(validatingUTF8: crypto_stream_primitive())
 
     public typealias Key = Data
     public typealias Nonce = Data

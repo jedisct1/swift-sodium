@@ -8,7 +8,7 @@ public class GenericHash {
     public let KeyBytesMin = Int(crypto_generichash_keybytes_min())
     public let KeyBytesMax = Int(crypto_generichash_keybytes_max())
     public let KeyBytes = Int(crypto_generichash_keybytes())
-    public let Primitive = String.init(validatingUTF8: crypto_generichash_primitive())
+    public let Primitive = String(validatingUTF8: crypto_generichash_primitive())
 
     public typealias Key = Data
 
