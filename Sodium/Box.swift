@@ -2,84 +2,13 @@ import Foundation
 import Clibsodium
 
 public class Box {
-    public let SeedBytes = Int(crypto_box_seedbytes())
-    public let PublicKeyBytes = Int(crypto_box_publickeybytes())
-    public let SecretKeyBytes = Int(crypto_box_secretkeybytes())
-    public let NonceBytes = Int(crypto_box_noncebytes())
     public let MacBytes = Int(crypto_box_macbytes())
     public let Primitive = String(validatingUTF8:crypto_box_primitive())
     public let BeforenmBytes = Int(crypto_box_beforenmbytes())
     public let SealBytes = Int(crypto_box_sealbytes())
 
-    public typealias PublicKey = Data
-    public typealias SecretKey = Data
-    public typealias Nonce = Data
     public typealias MAC = Data
     public typealias Beforenm = Data
-
-    public struct KeyPair {
-        public let publicKey: PublicKey
-        public let secretKey: SecretKey
-
-        public init(publicKey: PublicKey, secretKey: SecretKey) {
-            self.publicKey = publicKey
-            self.secretKey = secretKey
-        }
-    }
-
-
-    /**
-     Generates an encryption secret key and a corresponding public key.
-
-     - Returns: A key pair containing the secret key and public key.
-     */
-    public func keyPair() -> KeyPair? {
-        var pk = Data(count: PublicKeyBytes)
-        var sk = Data(count: SecretKeyBytes)
-        guard .SUCCESS == pk.withUnsafeMutableBytes({ pkPtr in
-            sk.withUnsafeMutableBytes { skPtr in
-                crypto_box_keypair(pkPtr, skPtr).exitCode
-            }
-        }) else { return nil }
-
-        return KeyPair(publicKey: pk, secretKey: sk)
-    }
-
-    /**
-     Generates an encryption secret key and a corresponding public key derived from a seed.
-
-     - Parameter seed: The value from which to derive the secret and public key.
-
-     - Returns: A key pair containing the secret key and public key.
-     */
-    public func keyPair(seed: Data) -> KeyPair? {
-        guard seed.count == SeedBytes else { return nil }
-        var pk = Data(count: PublicKeyBytes)
-        var sk = Data(count: SecretKeyBytes)
-        guard .SUCCESS == pk.withUnsafeMutableBytes({ pkPtr in
-            sk.withUnsafeMutableBytes { skPtr in
-                seed.withUnsafeBytes { seedPtr in
-                    crypto_box_seed_keypair(pkPtr, skPtr, seedPtr).exitCode
-                }
-            }
-        }) else { return nil }
-
-        return KeyPair(publicKey: pk, secretKey: sk)
-    }
-
-    /**
-     Generates a random nonce.
-
-     - Returns: A nonce.
-     */
-    public func nonce() -> Nonce {
-        let nonceLen = NonceBytes
-        var nonce = Data(count: nonceLen)
-        nonce.withUnsafeMutableBytes { noncePtr in
-            randombytes_buf(noncePtr, nonceLen)
-        }
-        return nonce
-    }
 
     /**
      Encrypts a message with a recipient's public key and a sender's secret key.
@@ -481,4 +410,37 @@ public class Box {
 
         return message
     }
+}
+
+extension Box: KeyPairGenerator {
+    public typealias PublicKey = Data
+    public typealias SecretKey = Data
+
+    public var SeedBytes: Int { return Int(crypto_box_seedbytes()) }
+    public var PublicKeyBytes: Int { return Int(crypto_box_publickeybytes()) }
+    public var SecretKeyBytes: Int { return Int(crypto_box_secretkeybytes()) }
+
+    static let newKeypair: (
+        _ pk: UnsafeMutablePointer<UInt8>,
+        _ sk: UnsafeMutablePointer<UInt8>
+    ) -> Int32 = crypto_box_keypair
+
+    static let keypairFromSeed: (
+        _ pk: UnsafeMutablePointer<UInt8>,
+        _ sk: UnsafeMutablePointer<UInt8>,
+        _ seed: UnsafePointer<UInt8>
+    ) -> Int32 = crypto_box_seed_keypair
+
+    public struct KeyPair: KeyPairProtocol {
+        public typealias PublicKey = Box.PublicKey
+        public typealias SecretKey = Box.SecretKey
+        public let publicKey: PublicKey
+        public let secretKey: SecretKey
+    }
+}
+
+extension Box: NonceGenerator {
+    public typealias Nonce = Data
+
+    public var NonceBytes: Int { return Int(crypto_box_noncebytes()) }
 }
