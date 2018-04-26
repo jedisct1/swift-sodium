@@ -39,10 +39,7 @@ public class SecretStream {
          calling the `header()` method of that returned object.
          */
         public func initPush(secretKey: Key) -> PushStream? {
-            guard let stream = PushStream(secretKey: secretKey) else {
-                return nil
-            }
-            return stream
+            return PushStream(secretKey: secretKey)
         }
 
         /**
@@ -54,10 +51,7 @@ public class SecretStream {
          - Returns: The stream to decrypt messages from.
          */
         public func initPull(secretKey: Key, header: Header) -> PullStream? {
-            guard let stream = PullStream(secretKey: secretKey, header: header) else {
-                return nil
-            }
-            return stream
+            return PullStream(secretKey: secretKey, header: header)
         }
 
         public class PushStream: StateStream {
