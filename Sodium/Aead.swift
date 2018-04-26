@@ -73,8 +73,8 @@ public struct Aead {
             var authenticatedCipherText = Data(count: message.count + ABytes)
             var authenticatedCipherTextLen = Data()
             let nonce = self.nonce()
-            let result: Int32
-    
+            let result: ExitCode
+
             if let additionalData = additionalData {
                 result = authenticatedCipherText.withUnsafeMutableBytes { authenticatedCipherTextPtr in
                     authenticatedCipherTextLen.withUnsafeMutableBytes { authenticatedCipherTextLenPtr in
@@ -85,15 +85,15 @@ public struct Aead {
                                         crypto_aead_xchacha20poly1305_ietf_encrypt(
                                             authenticatedCipherTextPtr,
                                             authenticatedCipherTextLenPtr,
-                                            
+
                                             messagePtr,
                                             UInt64(message.count),
-                                            
+
                                             additionalDataPtr,
                                             UInt64(additionalData.count),
-                                            
+
                                             nil, noncePtr, secretKeyPtr
-                                        )
+                                        ).exitCode
                                     }
                                 }
                             }
@@ -109,25 +109,22 @@ public struct Aead {
                                     crypto_aead_xchacha20poly1305_ietf_encrypt(
                                         authenticatedCipherTextPtr,
                                         authenticatedCipherTextLenPtr,
-                                        
+
                                         messagePtr,
                                         UInt64(message.count),
-                                        
+
                                         nil,
                                         0,
 
                                         nil, noncePtr, secretKeyPtr
-                                    )
+                                    ).exitCode
                                 }
                             }
                         }
                     }
                 }
             }
-    
-            guard result == 0 else {
-                return nil
-            }
+            guard result == .SUCCESS else { return nil }
     
             return (authenticatedCipherText: authenticatedCipherText, nonce: nonce)
         }
@@ -168,7 +165,7 @@ public struct Aead {
             
             var message = Data(count: authenticatedCipherText.count - ABytes)
             var messageLen = Data()
-            let result: Int32
+            let result: ExitCode
     
             if let additionalData = additionalData {
                 result = message.withUnsafeMutableBytes { messagePtr in
@@ -190,7 +187,7 @@ public struct Aead {
                                             UInt64(additionalData.count),
                                             
                                             noncePtr, secretKeyPtr
-                                        )
+                                        ).exitCode
                                     }
                                 }
                             }
@@ -216,7 +213,7 @@ public struct Aead {
                                         0,
                                         
                                         noncePtr, secretKeyPtr
-                                    )
+                                    ).exitCode
                                 }
                             }
                         }
@@ -224,7 +221,7 @@ public struct Aead {
                 }
             }
     
-            guard result == 0 else {
+            guard result == .SUCCESS else {
                 return nil
             }
     

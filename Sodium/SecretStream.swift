@@ -74,12 +74,11 @@ public class SecretStream {
                 }
                 state = PushStream.generate()
                 _header = Data(count: HeaderBytes)
-                let result = secretKey.withUnsafeBytes { secretKeyPtr in
+                guard .SUCCESS == secretKey.withUnsafeBytes({ secretKeyPtr in
                     _header.withUnsafeMutableBytes { headerPtr in
-                        crypto_secretstream_xchacha20poly1305_init_push(state, headerPtr, secretKeyPtr)
+                        crypto_secretstream_xchacha20poly1305_init_push(state, headerPtr, secretKeyPtr).exitCode
                     }
-                }
-                guard result == 0 else {
+                }) else {
                     free()
                     return nil
                 }
@@ -107,16 +106,14 @@ public class SecretStream {
             public func push(message: Data, tag: Tag = .MESSAGE, ad: Data? = nil) -> Data? {
                 let _ad = ad ?? Data(count: 0)
                 var cipherText = Data(count: message.count + ABytes)
-                let result = cipherText.withUnsafeMutableBytes { cipherTextPtr in
+                guard .SUCCESS == cipherText.withUnsafeMutableBytes({ cipherTextPtr in
                     _ad.withUnsafeBytes { adPtr in
                         message.withUnsafeBytes { messagePtr in
-                            crypto_secretstream_xchacha20poly1305_push(state, cipherTextPtr, nil, messagePtr, CUnsignedLongLong(message.count), adPtr, CUnsignedLongLong(_ad.count), tag.rawValue)
+                            crypto_secretstream_xchacha20poly1305_push(state, cipherTextPtr, nil, messagePtr, CUnsignedLongLong(message.count), adPtr, CUnsignedLongLong(_ad.count), tag.rawValue).exitCode
                         }
                     }
-                }
-                guard result == 0 else {
-                    return nil
-                }
+                }) else { return nil }
+
                 return cipherText
             }
 
@@ -147,12 +144,11 @@ public class SecretStream {
                     return nil
                 }
                 state = PushStream.generate()
-                let result = secretKey.withUnsafeBytes { secretKeyPtr in
+                guard .SUCCESS == secretKey.withUnsafeBytes({ secretKeyPtr in
                     header.withUnsafeBytes { headerPtr in
-                        crypto_secretstream_xchacha20poly1305_init_pull(state, headerPtr, secretKeyPtr)
+                        crypto_secretstream_xchacha20poly1305_init_pull(state, headerPtr, secretKeyPtr).exitCode
                     }
-                }
-                guard result == 0 else {
+                }) else {
                     free()
                     return nil
                 }
@@ -176,11 +172,11 @@ public class SecretStream {
                 let result = cipherText.withUnsafeBytes { cipherTextPtr in
                     _ad.withUnsafeBytes { adPtr in
                         message.withUnsafeMutableBytes { messagePtr in
-                            crypto_secretstream_xchacha20poly1305_pull(state, messagePtr, nil, &_tag, cipherTextPtr, CUnsignedLongLong(cipherText.count), adPtr, CUnsignedLongLong(_ad.count))
+                            crypto_secretstream_xchacha20poly1305_pull(state, messagePtr, nil, &_tag, cipherTextPtr, CUnsignedLongLong(cipherText.count), adPtr, CUnsignedLongLong(_ad.count)).exitCode
                         }
                     }
                 }
-                guard result == 0, let tag = Tag(rawValue: _tag) else {
+                guard result == .SUCCESS, let tag = Tag(rawValue: _tag) else {
                     return nil
                 }
                 return (message, tag)

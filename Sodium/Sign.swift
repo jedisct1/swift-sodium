@@ -30,14 +30,12 @@ public class Sign {
         var pk = Data(count: PublicKeyBytes)
         var sk = Data(count: SecretKeyBytes)
 
-        let result = pk.withUnsafeMutableBytes { pkPtr in
+        guard .SUCCESS == pk.withUnsafeMutableBytes({ pkPtr in
             sk.withUnsafeMutableBytes { skPtr in
-                crypto_sign_keypair(pkPtr, skPtr)
+                crypto_sign_keypair(pkPtr, skPtr).exitCode
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         return KeyPair(publicKey: pk, secretKey: sk)
     }
 
@@ -55,16 +53,14 @@ public class Sign {
         var pk = Data(count: PublicKeyBytes)
         var sk = Data(count: SecretKeyBytes)
 
-        let result = pk.withUnsafeMutableBytes { pkPtr in
+        guard .SUCCESS == pk.withUnsafeMutableBytes({ pkPtr in
             sk.withUnsafeMutableBytes { skPtr in
                 seed.withUnsafeBytes { seedPtr in
-                    crypto_sign_seed_keypair(pkPtr, skPtr, seedPtr)
+                    crypto_sign_seed_keypair(pkPtr, skPtr, seedPtr).exitCode
                 }
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         return KeyPair(publicKey: pk, secretKey: sk)
     }
 
@@ -82,19 +78,17 @@ public class Sign {
         }
         var signedMessage = Data(count: message.count + Bytes)
 
-        let result = signedMessage.withUnsafeMutableBytes { signedMessagePtr in
+        guard .SUCCESS == signedMessage.withUnsafeMutableBytes({ signedMessagePtr in
             message.withUnsafeBytes { messagePtr in
                 secretKey.withUnsafeBytes { secretKeyPtr in
                     crypto_sign(
                         signedMessagePtr, nil,
                         messagePtr, CUnsignedLongLong(message.count),
-                        secretKeyPtr)
+                        secretKeyPtr).exitCode
                 }
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         return signedMessage
     }
 
@@ -112,20 +106,16 @@ public class Sign {
         }
         var signature = Data(count: Bytes)
 
-        let result = signature.withUnsafeMutableBytes { signaturePtr in
+        guard .SUCCESS == signature.withUnsafeMutableBytes({ signaturePtr in
             message.withUnsafeBytes { messagePtr in
                 secretKey.withUnsafeBytes { secretKeyPtr in
                     crypto_sign_detached(
                         signaturePtr, nil,
                         messagePtr, CUnsignedLongLong(message.count),
-                        secretKeyPtr)
+                        secretKeyPtr).exitCode
                 }
             }
-        }
-
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
 
         return signature
     }
@@ -159,12 +149,12 @@ public class Sign {
             return false
         }
 
-        return signature.withUnsafeBytes { signaturePtr in
+        return .SUCCESS == signature.withUnsafeBytes { signaturePtr in
             message.withUnsafeBytes { messagePtr in
                 publicKey.withUnsafeBytes { publicKeyPtr in
                     crypto_sign_verify_detached(
                         signaturePtr,
-                        messagePtr, CUnsignedLongLong(message.count), publicKeyPtr) == 0
+                        messagePtr, CUnsignedLongLong(message.count), publicKeyPtr).exitCode
                 }
             }
         }
@@ -185,19 +175,17 @@ public class Sign {
         var message = Data(count: signedMessage.count - Bytes)
         var mlen: CUnsignedLongLong = 0
 
-        let result = message.withUnsafeMutableBytes { messagePtr in
+        guard .SUCCESS == message.withUnsafeMutableBytes({ messagePtr in
             signedMessage.withUnsafeBytes { signedMessagePtr in
                 publicKey.withUnsafeBytes { publicKeyPtr in
                     crypto_sign_open(
                         messagePtr, &mlen,
                         signedMessagePtr, CUnsignedLongLong(signedMessage.count),
-                        publicKeyPtr)
+                        publicKeyPtr).exitCode
                 }
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         return message
     }
 }

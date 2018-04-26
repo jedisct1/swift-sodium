@@ -36,14 +36,12 @@ public class Box {
     public func keyPair() -> KeyPair? {
         var pk = Data(count: PublicKeyBytes)
         var sk = Data(count: SecretKeyBytes)
-        let result = pk.withUnsafeMutableBytes { pkPtr in
+        guard .SUCCESS == pk.withUnsafeMutableBytes({ pkPtr in
             sk.withUnsafeMutableBytes { skPtr in
-                crypto_box_keypair(pkPtr, skPtr)
+                crypto_box_keypair(pkPtr, skPtr).exitCode
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         return KeyPair(publicKey: pk, secretKey: sk)
     }
 
@@ -60,16 +58,14 @@ public class Box {
         }
         var pk = Data(count: PublicKeyBytes)
         var sk = Data(count: SecretKeyBytes)
-        let result = pk.withUnsafeMutableBytes { pkPtr in
+        guard .SUCCESS == pk.withUnsafeMutableBytes({ pkPtr in
             sk.withUnsafeMutableBytes { skPtr in
                 seed.withUnsafeBytes { seedPtr in
-                    crypto_box_seed_keypair(pkPtr, skPtr, seedPtr)
+                    crypto_box_seed_keypair(pkPtr, skPtr, seedPtr).exitCode
                 }
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         return KeyPair(publicKey: pk, secretKey: sk)
     }
 
@@ -118,7 +114,7 @@ public class Box {
 
         var authenticatedCipherText = Data(count: message.count + MacBytes)
 
-        let result = authenticatedCipherText.withUnsafeMutableBytes { authenticatedCipherTextPtr in
+        guard .SUCCESS == authenticatedCipherText.withUnsafeMutableBytes({ authenticatedCipherTextPtr in
             message.withUnsafeBytes { messagePtr in
                 nonce.withUnsafeBytes { noncePtr in
                     recipientPublicKey.withUnsafeBytes { recipientPublicKeyPtr in
@@ -127,15 +123,13 @@ public class Box {
                                 authenticatedCipherTextPtr,
                                 messagePtr, CUnsignedLongLong(message.count),
                                 noncePtr,
-                                recipientPublicKeyPtr, senderSecretKeyPtr)
+                                recipientPublicKeyPtr, senderSecretKeyPtr).exitCode
                         }
                     }
                 }
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         return authenticatedCipherText
     }
 
@@ -156,7 +150,7 @@ public class Box {
         var authenticatedCipherText = Data(count: message.count + MacBytes)
         let nonce = self.nonce()
 
-        let result = authenticatedCipherText.withUnsafeMutableBytes { authenticatedCipherTextPtr in
+        guard .SUCCESS == authenticatedCipherText.withUnsafeMutableBytes({ authenticatedCipherTextPtr in
             message.withUnsafeBytes { messagePtr in
                 nonce.withUnsafeBytes { noncePtr in
                     recipientPublicKey.withUnsafeBytes { recipientPublicKeyPtr in
@@ -165,15 +159,13 @@ public class Box {
                                 authenticatedCipherTextPtr,
                                 messagePtr, CUnsignedLongLong(message.count),
                                 noncePtr,
-                                recipientPublicKeyPtr, senderSecretKeyPtr)
+                                recipientPublicKeyPtr, senderSecretKeyPtr).exitCode
                         }
                     }
                 }
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         return (authenticatedCipherText: authenticatedCipherText, nonce: nonce)
     }
 
@@ -194,7 +186,7 @@ public class Box {
         var authenticatedCipherText = Data(count: message.count)
         var mac = Data(count: MacBytes)
         let nonce = self.nonce()
-        let result =  authenticatedCipherText.withUnsafeMutableBytes { authenticatedCipherTextPtr in
+        guard .SUCCESS == authenticatedCipherText.withUnsafeMutableBytes({ authenticatedCipherTextPtr in
             mac.withUnsafeMutableBytes { macPtr in
                 message.withUnsafeBytes { messagePtr in
                     nonce.withUnsafeBytes { noncePtr in
@@ -204,16 +196,14 @@ public class Box {
                                     authenticatedCipherTextPtr, macPtr,
                                     messagePtr, CUnsignedLongLong(message.count),
                                     noncePtr,
-                                    recipientPublicKeyPtr, senderSecretKeyPtr)
+                                    recipientPublicKeyPtr, senderSecretKeyPtr).exitCode
                             }
                         }
                     }
                 }
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         return (authenticatedCipherText: authenticatedCipherText, nonce: nonce as Nonce, mac: mac as MAC)
     }
 
@@ -254,7 +244,7 @@ public class Box {
         else { return nil }
 
         var message = Data(count: authenticatedCipherText.count - MacBytes)
-        let result = message.withUnsafeMutableBytes { messagePtr in
+        guard .SUCCESS == message.withUnsafeMutableBytes({ messagePtr in
             authenticatedCipherText.withUnsafeBytes { authenticatedCipherTextPtr in
                 nonce.withUnsafeBytes { noncePtr in
                     senderPublicKey.withUnsafeBytes { senderPublicKeyPtr in
@@ -263,15 +253,13 @@ public class Box {
                                 messagePtr, authenticatedCipherTextPtr,
                                 CUnsignedLongLong(authenticatedCipherText.count),
                                 noncePtr,
-                                senderPublicKeyPtr, recipientSecretKeyPtr)
+                                senderPublicKeyPtr, recipientSecretKeyPtr).exitCode
                         }
                     }
                 }
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         return message
     }
 
@@ -295,7 +283,7 @@ public class Box {
 
         var message = Data(count: authenticatedCipherText.count)
 
-        let result = message.withUnsafeMutableBytes { messagePtr in
+        guard .SUCCESS == message.withUnsafeMutableBytes({ messagePtr in
             authenticatedCipherText.withUnsafeBytes { authenticatedCipherTextPtr in
                 mac.withUnsafeBytes { macPtr in
                     nonce.withUnsafeBytes { noncePtr in
@@ -305,16 +293,14 @@ public class Box {
                                     messagePtr, authenticatedCipherTextPtr, macPtr,
                                     CUnsignedLongLong(authenticatedCipherText.count),
                                     noncePtr,
-                                    senderPublicKeyPtr, recipientSecretKeyPtr)
+                                    senderPublicKeyPtr, recipientSecretKeyPtr).exitCode
                             }
                         }
                     }
                 }
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         return message
     }
 
@@ -330,16 +316,14 @@ public class Box {
      */
     public func beforenm(recipientPublicKey: PublicKey, senderSecretKey: SecretKey) -> Data? {
         var key = Data(count: BeforenmBytes)
-        let result = key.withUnsafeMutableBytes { keyPtr in
+        guard .SUCCESS == key.withUnsafeMutableBytes({ keyPtr in
             recipientPublicKey.withUnsafeBytes { recipientPublicKeyPtr in
                 senderSecretKey.withUnsafeBytes { senderSecretKeyPtr in
-                    crypto_box_beforenm(keyPtr, recipientPublicKeyPtr, senderSecretKeyPtr)
+                    crypto_box_beforenm(keyPtr, recipientPublicKeyPtr, senderSecretKeyPtr).exitCode
                 }
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         return key
     }
 
@@ -358,7 +342,7 @@ public class Box {
         var authenticatedCipherText = Data(count: message.count + MacBytes)
         let nonce = self.nonce()
 
-        let result = authenticatedCipherText.withUnsafeMutableBytes { authenticatedCipherTextPtr in
+        guard .SUCCESS == authenticatedCipherText.withUnsafeMutableBytes({ authenticatedCipherTextPtr in
             message.withUnsafeBytes { messagePtr in
                 nonce.withUnsafeBytes { noncePtr in
                     beforenm.withUnsafeBytes { beforenmPtr in
@@ -367,14 +351,12 @@ public class Box {
                             messagePtr,
                             CUnsignedLongLong(message.count),
                             noncePtr,
-                            beforenmPtr)
+                            beforenmPtr).exitCode
                     }
                 }
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         return (authenticatedCipherText: authenticatedCipherText, nonce: nonce)
     }
 
@@ -412,21 +394,19 @@ public class Box {
         else { return nil }
 
         var message = Data(count: authenticatedCipherText.count - MacBytes)
-        let result = message.withUnsafeMutableBytes { messagePtr in
+        guard .SUCCESS == message.withUnsafeMutableBytes({ messagePtr in
             authenticatedCipherText.withUnsafeBytes { authenticatedCipherTextPtr in
                 nonce.withUnsafeBytes { noncePtr in
                     beforenm.withUnsafeBytes { beforenmPtr in
                         crypto_box_open_easy_afternm(
                             messagePtr,
                             authenticatedCipherTextPtr, CUnsignedLongLong(authenticatedCipherText.count),
-                            noncePtr, beforenmPtr)
+                            noncePtr, beforenmPtr).exitCode
                     }
                 }
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         return message
     }
 
@@ -459,19 +439,17 @@ public class Box {
         }
         var anonymousCipherText = Data(count: SealBytes + message.count)
 
-        let result = anonymousCipherText.withUnsafeMutableBytes { anonymousCipherTextPtr in
+        guard .SUCCESS == anonymousCipherText.withUnsafeMutableBytes({ anonymousCipherTextPtr in
             message.withUnsafeBytes { messagePtr in
                 recipientPublicKey.withUnsafeBytes { recipientPublicKeyPtr in
                     crypto_box_seal(
                         anonymousCipherTextPtr,
                         messagePtr, CUnsignedLongLong(message.count),
-                        recipientPublicKeyPtr)
+                        recipientPublicKeyPtr).exitCode
                 }
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         return anonymousCipherText
     }
 
@@ -492,21 +470,19 @@ public class Box {
 
         var message = Data(count: anonymousCipherText.count - SealBytes)
 
-        let result = message.withUnsafeMutableBytes { messagePtr in
+        guard .SUCCESS == message.withUnsafeMutableBytes({ messagePtr in
             anonymousCipherText.withUnsafeBytes { anonymousCipherTextPtr in
                 recipientPublicKey.withUnsafeBytes { recipientPublicKeyPtr in
                     recipientSecretKey.withUnsafeBytes { recipientSecretKeyPtr in
                         crypto_box_seal_open(
                             messagePtr,
                             anonymousCipherTextPtr, CUnsignedLongLong(anonymousCipherText.count),
-                            recipientPublicKeyPtr, recipientSecretKeyPtr)
+                            recipientPublicKeyPtr, recipientSecretKeyPtr).exitCode
                     }
                 }
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         return message
     }
 }

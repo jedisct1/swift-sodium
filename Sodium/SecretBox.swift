@@ -67,21 +67,19 @@ public class SecretBox {
         var authenticatedCipherText = Data(count: message.count + MacBytes)
         let nonce = self.nonce()
 
-        let result = authenticatedCipherText.withUnsafeMutableBytes { authenticatedCipherTextPtr in
+        guard .SUCCESS == authenticatedCipherText.withUnsafeMutableBytes({ authenticatedCipherTextPtr in
             message.withUnsafeBytes { messagePtr in
                 nonce.withUnsafeBytes { noncePtr in
                     secretKey.withUnsafeBytes { secretKeyPtr in
                         crypto_secretbox_easy(
                             authenticatedCipherTextPtr,
                             messagePtr, UInt64(message.count),
-                            noncePtr, secretKeyPtr)
+                            noncePtr, secretKeyPtr).exitCode
                     }
                 }
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         return (authenticatedCipherText: authenticatedCipherText, nonce: nonce)
     }
 
@@ -101,7 +99,7 @@ public class SecretBox {
         var mac = Data(count: MacBytes)
         let nonce = self.nonce()
 
-        let result = cipherText.withUnsafeMutableBytes { cipherTextPtr in
+        guard .SUCCESS == cipherText.withUnsafeMutableBytes({ cipherTextPtr in
             mac.withUnsafeMutableBytes { macPtr in
                 message.withUnsafeBytes { messagePtr in
                     nonce.withUnsafeBytes { noncePtr in
@@ -109,15 +107,13 @@ public class SecretBox {
                             crypto_secretbox_detached(
                                 cipherTextPtr, macPtr,
                                 messagePtr, UInt64(message.count),
-                                noncePtr, secretKeyPtr)
+                                noncePtr, secretKeyPtr).exitCode
                         }
                     }
                 }
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         return (cipherText: cipherText, nonce: nonce, mac: mac)
     }
 
@@ -154,21 +150,19 @@ public class SecretBox {
         }
         var message = Data(count: authenticatedCipherText.count - MacBytes)
 
-        let result = message.withUnsafeMutableBytes { messagePtr in
+        guard .SUCCESS == message.withUnsafeMutableBytes({ messagePtr in
             authenticatedCipherText.withUnsafeBytes { authenticatedCipherTextPtr in
                 nonce.withUnsafeBytes { noncePtr in
                     secretKey.withUnsafeBytes { secretKeyPtr in
                         crypto_secretbox_open_easy(
                             messagePtr,
                             authenticatedCipherTextPtr, UInt64(authenticatedCipherText.count),
-                            noncePtr, secretKeyPtr)
+                            noncePtr, secretKeyPtr).exitCode
                     }
                 }
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         return message
     }
 
@@ -189,7 +183,7 @@ public class SecretBox {
 
         var message = Data(count: cipherText.count)
 
-        let result = message.withUnsafeMutableBytes { messagePtr in
+        guard .SUCCESS == message.withUnsafeMutableBytes({ messagePtr in
             cipherText.withUnsafeBytes { cipherTextPtr in
                 mac.withUnsafeBytes { macPtr in
                     nonce.withUnsafeBytes { noncePtr in
@@ -197,15 +191,13 @@ public class SecretBox {
                             crypto_secretbox_open_detached(
                                 messagePtr,
                                 cipherTextPtr, macPtr, UInt64(cipherText.count),
-                                noncePtr, secretKeyPtr)
+                                noncePtr, secretKeyPtr).exitCode
                         }
                     }
                 }
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         return message
     }
 }

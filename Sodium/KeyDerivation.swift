@@ -49,16 +49,14 @@ public class KeyDerivation {
 
         var output = Data(count: length)
 
-        let result = output.withUnsafeMutableBytes { outputPtr in
+        guard .SUCCESS == output.withUnsafeMutableBytes({ outputPtr in
             secretKey.withUnsafeBytes { secretKeyPtr in
                 contextBin.withUnsafeBytes { contextBinPtr in
-                    crypto_kdf_derive_from_key(outputPtr, length, index, contextBinPtr, secretKeyPtr)
+                    crypto_kdf_derive_from_key(outputPtr, length, index, contextBinPtr, secretKeyPtr).exitCode
                 }
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         return output
     }
 }

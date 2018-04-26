@@ -54,18 +54,16 @@ public class Stream {
             return nil
         }
         var output = Data(count: input.count)
-        let result = output.withUnsafeMutableBytes { outputPtr in
+        guard .SUCCESS == output.withUnsafeMutableBytes({ outputPtr in
             input.withUnsafeBytes { inputPtr in
                 nonce.withUnsafeBytes { noncePtr in
                     secretKey.withUnsafeBytes { secretKeyPtr in
-                        crypto_stream_xor(outputPtr, inputPtr, UInt64(input.count), noncePtr, secretKeyPtr)
+                        crypto_stream_xor(outputPtr, inputPtr, UInt64(input.count), noncePtr, secretKeyPtr).exitCode
                     }
                 }
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         return output
     }
 

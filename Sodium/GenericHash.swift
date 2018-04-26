@@ -48,7 +48,7 @@ public class GenericHash {
      */
     public func hash(message: Data, key: Data?, outputLength: Int) -> Data? {
         var output = Data(count: outputLength)
-        let result: Int32
+        let result: ExitCode
 
         if let key = key {
             result = output.withUnsafeMutableBytes { outputPtr in
@@ -57,7 +57,7 @@ public class GenericHash {
                         crypto_generichash(
                             outputPtr, outputLength,
                             messagePtr, CUnsignedLongLong(message.count),
-                            keyPtr, key.count)
+                            keyPtr, key.count).exitCode
                     }
                 }
             }
@@ -67,13 +67,12 @@ public class GenericHash {
                     crypto_generichash(
                         outputPtr, outputLength,
                         messagePtr, CUnsignedLongLong(message.count),
-                        nil, 0)
+                        nil, 0).exitCode
                 }
             }
         }
-        guard result == 0 else {
-            return nil
-        }
+        guard result == .SUCCESS else { return nil }
+
         return output
     }
 
@@ -132,15 +131,15 @@ public class GenericHash {
 
         init?(key: Data?, outputLength: Int) {
             state = Stream.generate()
-            var result: Int32 = -1
+            let result: ExitCode
             if let key = key {
                 result = key.withUnsafeBytes { keyPtr in
-                    crypto_generichash_init(state, keyPtr, key.count, outputLength)
+                    crypto_generichash_init(state, keyPtr, key.count, outputLength).exitCode
                 }
             } else {
-                result = crypto_generichash_init(state, nil, 0, outputLength)
+                result = crypto_generichash_init(state, nil, 0, outputLength).exitCode
             }
-            guard result == 0 else {
+            guard result == .SUCCESS else {
                 free()
                 return nil
             }
@@ -163,8 +162,8 @@ public class GenericHash {
          - Returns: `true` if the data was consumed successfully.
          */
         public func update(input: Data) -> Bool {
-            return input.withUnsafeBytes { inputPtr in
-                crypto_generichash_update(state, inputPtr, CUnsignedLongLong(input.count)) == 0
+            return .SUCCESS == input.withUnsafeBytes { inputPtr in
+                crypto_generichash_update(state, inputPtr, CUnsignedLongLong(input.count)).exitCode
             }
         }
 
@@ -176,12 +175,10 @@ public class GenericHash {
         public func final() -> Data? {
             let outputLen = outputLength
             var output = Data(count: outputLen)
-            let result = output.withUnsafeMutableBytes { outputPtr in
-                crypto_generichash_final(state, outputPtr, outputLen)
-            }
-            guard result == 0 else {
-                return nil
-            }
+            guard .SUCCESS == output.withUnsafeMutableBytes({ outputPtr in
+                crypto_generichash_final(state, outputPtr, outputLen).exitCode
+            }) else { return nil }
+
             return output
         }
     }

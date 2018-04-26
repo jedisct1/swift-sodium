@@ -57,14 +57,12 @@ public class KeyExchange {
         var publicKey = Data(count: PublicKeyBytes)
         var secretKey = Data(count: SecretKeyBytes)
 
-        let result = publicKey.withUnsafeMutableBytes { publicKeyPtr in
+        guard .SUCCESS == publicKey.withUnsafeMutableBytes({ publicKeyPtr in
             secretKey.withUnsafeMutableBytes { secretKeyPtr in
-                crypto_kx_keypair(publicKeyPtr, secretKeyPtr)
+                crypto_kx_keypair(publicKeyPtr, secretKeyPtr).exitCode
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         return KeyPair(publicKey: publicKey, secretKey: secretKey)
     }
 
@@ -82,16 +80,14 @@ public class KeyExchange {
         var pk = Data(count: PublicKeyBytes)
         var sk = Data(count: SecretKeyBytes)
 
-        let result = pk.withUnsafeMutableBytes { pkPtr in
+        guard .SUCCESS == pk.withUnsafeMutableBytes({ pkPtr in
             sk.withUnsafeMutableBytes { skPtr in
                 seed.withUnsafeBytes { seedPtr in
-                    crypto_kx_seed_keypair(pkPtr, skPtr, seedPtr)
+                    crypto_kx_seed_keypair(pkPtr, skPtr, seedPtr).exitCode
                 }
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         return KeyPair(publicKey: pk, secretKey: sk)
     }
 
@@ -117,20 +113,18 @@ public class KeyExchange {
         var rx = Data(count: SessionKeyBytes)
         var tx = Data(count: SessionKeyBytes)
 
-        let result = rx.withUnsafeMutableBytes { rxPtr in
+        guard .SUCCESS == rx.withUnsafeMutableBytes({ rxPtr in
             tx.withUnsafeMutableBytes { txPtr in
                 secretKey.withUnsafeBytes { secretKeyPtr in
                     publicKey.withUnsafeBytes { publicKeyPtr in
                         otherPublicKey.withUnsafeBytes { otherPublicKeyPtr in
-                            side.sessionKeys(rxPtr, txPtr, publicKeyPtr, secretKeyPtr, otherPublicKeyPtr)
+                            side.sessionKeys(rxPtr, txPtr, publicKeyPtr, secretKeyPtr, otherPublicKeyPtr).exitCode
                         }
                     }
                 }
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         return SessionKeyPair(rx: rx, tx: tx)
     }
 }

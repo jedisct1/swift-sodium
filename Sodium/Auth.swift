@@ -34,18 +34,16 @@ public class Auth {
         }
 
         var tag = Data(count: Bytes)
-        let result = tag.withUnsafeMutableBytes { tagPtr in
+        guard .SUCCESS == tag.withUnsafeMutableBytes({ tagPtr in
             message.withUnsafeBytes { messagePtr in
                 secretKey.withUnsafeBytes { secretKeyPtr in
                     crypto_auth( tagPtr,
                                  messagePtr, CUnsignedLongLong(message.count),
-                                 secretKeyPtr)
+                                 secretKeyPtr).exitCode
                 }
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         return tag
     }
 
@@ -62,12 +60,12 @@ public class Auth {
         guard secretKey.count == KeyBytes else {
             return false
         }
-        return tag.withUnsafeBytes { tagPtr in
+        return .SUCCESS == tag.withUnsafeBytes { tagPtr in
             message.withUnsafeBytes { messagePtr in
                 secretKey.withUnsafeBytes { secretKeyPtr in
                     crypto_auth_verify(
                         tagPtr,
-                        messagePtr, CUnsignedLongLong(message.count), secretKeyPtr) == 0
+                        messagePtr, CUnsignedLongLong(message.count), secretKeyPtr).exitCode
                 }
             }
         }

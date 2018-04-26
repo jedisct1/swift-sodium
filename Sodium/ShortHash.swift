@@ -34,16 +34,14 @@ public class ShortHash {
         }
         var output = Data(count: Bytes)
 
-        let result = output.withUnsafeMutableBytes { outputPtr in
+        guard .SUCCESS == output.withUnsafeMutableBytes({ outputPtr in
             message.withUnsafeBytes { messagePtr in
                 key.withUnsafeBytes { keyPtr in
-                    crypto_shorthash(outputPtr, messagePtr, CUnsignedLongLong(message.count), keyPtr)
+                    crypto_shorthash(outputPtr, messagePtr, CUnsignedLongLong(message.count), keyPtr).exitCode
                 }
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         return output
     }
 }

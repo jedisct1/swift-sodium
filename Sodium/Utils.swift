@@ -28,10 +28,10 @@ public class Utils {
         guard b1.count == b2.count else {
             return false
         }
-        return b1.withUnsafeBytes { b1Ptr in
+        return .SUCCESS == b1.withUnsafeBytes { b1Ptr in
             b2.withUnsafeBytes { b2Ptr in
-                Int(sodium_memcmp(
-                    UnsafeRawPointer(b1Ptr), UnsafeRawPointer(b2Ptr), b1.count)) == 0
+                sodium_memcmp(
+                    UnsafeRawPointer(b1Ptr), UnsafeRawPointer(b2Ptr), b1.count).exitCode
             }
         }
     }
@@ -95,16 +95,14 @@ public class Utils {
         let ignore_nsstr = ignore.flatMap({ NSString(string: $0) })
         let ignore_cstr = ignore_nsstr?.cString(using: String.Encoding.isoLatin1.rawValue)
 
-        let result = binData.withUnsafeMutableBytes { binPtr in
+        guard .SUCCESS == binData.withUnsafeMutableBytes({ binPtr in
             hexData.withUnsafeBytes { hexPtr in
                 sodium_hex2bin(binPtr, binDataCapacity,
                                hexPtr, hexDataLen,
-                               ignore_cstr, &binDataLen, nil)
+                               ignore_cstr, &binDataLen, nil).exitCode
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         binData.count = Int(binDataLen)
 
         return binData
@@ -158,16 +156,14 @@ public class Utils {
         let ignore_nsstr = ignore.flatMap({ NSString(string: $0) })
         let ignore_cstr = ignore_nsstr?.cString(using: String.Encoding.isoLatin1.rawValue)
 
-        let result = binData.withUnsafeMutableBytes { binPtr in
+        guard .SUCCESS == binData.withUnsafeMutableBytes({ binPtr in
             b64Data.withUnsafeBytes { b64Ptr in
                 sodium_base642bin(binPtr, binDataCapacity,
                                   b64Ptr, b64DataLen,
-                                  ignore_cstr, &binDataLen, nil, variant.rawValue)
+                                  ignore_cstr, &binDataLen, nil, variant.rawValue).exitCode
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         binData.count = Int(binDataLen)
 
         return binData
@@ -184,12 +180,10 @@ public class Utils {
         data.reserveCapacity(dataCount + blockSize)
         data.count = dataCount + blockSize
         var paddedLen: size_t = 0
-        let result = data.withUnsafeMutableBytes { dataPtr in
-            sodium_pad(&paddedLen, dataPtr, dataCount, blockSize, dataCount + blockSize)
-        }
-        guard result == 0 else {
-            return nil
-        }
+        guard .SUCCESS == data.withUnsafeMutableBytes({ dataPtr in
+            sodium_pad(&paddedLen, dataPtr, dataCount, blockSize, dataCount + blockSize).exitCode
+        }) else { return nil }
+
         data.count = Int(paddedLen)
 
         return ()
@@ -204,12 +198,10 @@ public class Utils {
     public func unpad(data: inout Data, blockSize: Int) -> ()? {
         var unpaddedLen: size_t = 0
         let dataLen = data.count
-        let result = data.withUnsafeMutableBytes { dataPtr in
-            sodium_unpad(&unpaddedLen, dataPtr, dataLen, blockSize)
-        }
-        guard result == 0 else {
-            return nil
-        }
+        guard .SUCCESS == data.withUnsafeMutableBytes({ dataPtr in
+            sodium_unpad(&unpaddedLen, dataPtr, dataLen, blockSize).exitCode
+        }) else { return nil }
+
         data.count = Int(unpaddedLen)
 
         return ()

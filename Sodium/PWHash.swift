@@ -43,16 +43,14 @@ public class PWHash {
      */
     public func str(passwd: Data, opsLimit: Int, memLimit: Int) -> String? {
         var output = Data(count: StrBytes)
-        let result = output.withUnsafeMutableBytes { outputPtr in
+        guard .SUCCESS == output.withUnsafeMutableBytes({ outputPtr in
             passwd.withUnsafeBytes { passwdPtr in
                 crypto_pwhash_str(outputPtr,
                                   passwdPtr, CUnsignedLongLong(passwd.count),
-                                  CUnsignedLongLong(opsLimit), size_t(memLimit))
+                                  CUnsignedLongLong(opsLimit), size_t(memLimit)).exitCode
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         return String(data: output, encoding: .utf8)
     }
 
@@ -68,10 +66,10 @@ public class PWHash {
         guard let hashData = (hash + "\0").data(using: .utf8, allowLossyConversion: false) else {
             return false
         }
-        return hashData.withUnsafeBytes { hashPtr in
+        return .SUCCESS == hashData.withUnsafeBytes { hashPtr in
             passwd.withUnsafeBytes { passwdPtr in
                 crypto_pwhash_str_verify(
-                    hashPtr, passwdPtr, CUnsignedLongLong(passwd.count)) == 0
+                    hashPtr, passwdPtr, CUnsignedLongLong(passwd.count)).exitCode
             }
         }
     }
@@ -114,20 +112,18 @@ public class PWHash {
             return nil
         }
         var output = Data(count: outputLength)
-        let result = passwd.withUnsafeBytes { passwdPtr in
+        guard .SUCCESS == passwd.withUnsafeBytes({ passwdPtr in
             salt.withUnsafeBytes { saltPtr in
                 output.withUnsafeMutableBytes { outputPtr in
                     crypto_pwhash(
                         outputPtr, CUnsignedLongLong(outputLength),
                         passwdPtr, CUnsignedLongLong(passwd.count),
                         saltPtr, CUnsignedLongLong(opsLimit),
-                        size_t(memLimit), alg.id)
+                        size_t(memLimit), alg.id).exitCode
                 }
             }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        }) else { return nil }
+
         return output
     }
 }
