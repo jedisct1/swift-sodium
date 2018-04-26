@@ -7,23 +7,8 @@ public class GenericHash {
     public let Bytes = Int(crypto_generichash_bytes())
     public let KeyBytesMin = Int(crypto_generichash_keybytes_min())
     public let KeyBytesMax = Int(crypto_generichash_keybytes_max())
-    public let KeyBytes = Int(crypto_generichash_keybytes())
+
     public let Primitive = String(validatingUTF8: crypto_generichash_primitive())
-
-    public typealias Key = Data
-
-    /**
-     Generates a secret key.
-
-     - Returns: The generated key.
-     */
-    public func key() -> Key {
-        var k = Data(count: KeyBytes)
-        k.withUnsafeMutableBytes { kPtr in
-            crypto_generichash_keygen(kPtr)
-        }
-        return k
-    }
 
     /**
      Computes a fixed-length fingerprint for an arbitrary long message. A key can also be specified. A message will always have the same fingerprint for a given key, but different keys used to hash the same message are very likely to produce distinct fingerprints.
@@ -182,4 +167,12 @@ public class GenericHash {
             return output
         }
     }
+}
+
+extension GenericHash: SecretKeyGenerator {
+    public var KeyBytes: Int { return Int(crypto_generichash_keybytes()) }
+    public typealias Key = Data
+
+    static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_generichash_keygen
+
 }
