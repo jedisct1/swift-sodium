@@ -55,7 +55,7 @@ public class Box {
      - Returns: A key pair containing the secret key and public key.
      */
     public func keyPair(seed: Data) -> KeyPair? {
-        if seed.count != SeedBytes {
+        guard seed.count == SeedBytes else {
             return nil
         }
         var pk = Data(count: PublicKeyBytes)
