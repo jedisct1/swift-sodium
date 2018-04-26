@@ -5,40 +5,8 @@ public struct Aead {
     public let xchacha20poly1305ietf = XChaCha20Poly1305Ietf()
     
     public class XChaCha20Poly1305Ietf {
-        public let KeyBytes = Int(crypto_aead_xchacha20poly1305_ietf_keybytes())
-        public let NonceBytes = Int(crypto_aead_xchacha20poly1305_ietf_npubbytes())
         public let ABytes = Int(crypto_aead_xchacha20poly1305_ietf_abytes())
-        
-        public typealias Key = Data
-        public typealias Nonce = Data
         public typealias MAC = Data
-        
-        /**
-         Generates a shared secret key.
-         
-         - Returns: The generated key.
-         */
-        public func key() -> Key? {
-            var secretKey = Data(count: KeyBytes)
-            secretKey.withUnsafeMutableBytes { secretKeyPtr in
-                crypto_aead_xchacha20poly1305_ietf_keygen(secretKeyPtr)
-            }
-            return secretKey
-        }
-        
-        /**
-         Generates an encryption nonce.
-         
-         - Returns: The generated nonce.
-         */
-        public func nonce() -> Nonce {
-            let nonceLen = NonceBytes
-            var nonce = Data(count: nonceLen)
-            nonce.withUnsafeMutableBytes { noncePtr in
-                randombytes_buf(noncePtr, nonceLen)
-            }
-            return nonce
-        }
         
         /**
          Encrypts a message with a shared secret key.
@@ -222,4 +190,16 @@ public struct Aead {
             return message
         }
     }
+}
+
+extension Aead.XChaCha20Poly1305Ietf: NonceGenerator {
+    public typealias Nonce = Data
+    public var NonceBytes: Int { return Int(crypto_aead_xchacha20poly1305_ietf_npubbytes()) }
+}
+
+extension Aead.XChaCha20Poly1305Ietf: SecretKeyGenerator {
+    public var KeyBytes: Int { return Int(crypto_aead_xchacha20poly1305_ietf_keybytes()) }
+    public typealias Key = Data
+
+    static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_aead_xchacha20poly1305_ietf_keygen
 }

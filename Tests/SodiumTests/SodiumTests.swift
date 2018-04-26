@@ -384,7 +384,7 @@ class SodiumTests: XCTestCase {
         let message = " I am message".toData()!
         let additionalData = "I am additionalData".toData()!
         
-        let secretKey = sodium.aead.xchacha20poly1305ietf.key()!
+        let secretKey = sodium.aead.xchacha20poly1305ietf.key()
         XCTAssertEqual(secretKey.count, 32)
         
         let (authenticatedCipherText, nonce) = sodium.aead.xchacha20poly1305ietf.encrypt(message: message, secretKey: secretKey)!
@@ -403,7 +403,7 @@ class SodiumTests: XCTestCase {
         XCTAssertNil(sodium.aead.xchacha20poly1305ietf.decrypt(authenticatedCipherText: authenticatedCipherText, secretKey: secretKey, nonce: nonceWithAdditionlData, additionalData: additionalData), "Decrypt using additionalData but encrypted without")
         XCTAssertNil(sodium.aead.xchacha20poly1305ietf.decrypt(authenticatedCipherText: authenticatedCipherTextWithAdditionalData, secretKey: secretKey, nonce: nonceWithAdditionlData), "Decrypt without additionalData but encrypted with additionalData")
         
-        XCTAssertNil(sodium.aead.xchacha20poly1305ietf.decrypt(authenticatedCipherText: authenticatedCipherText, secretKey: sodium.aead.xchacha20poly1305ietf.key()!, nonce: nonce), "Decrypt with different key")
+        XCTAssertNil(sodium.aead.xchacha20poly1305ietf.decrypt(authenticatedCipherText: authenticatedCipherText, secretKey: sodium.aead.xchacha20poly1305ietf.key(), nonce: nonce), "Decrypt with different key")
 
         XCTAssertNil(sodium.aead.xchacha20poly1305ietf.decrypt(authenticatedCipherText: authenticatedCipherTextWithAdditionalData, secretKey: secretKey, nonce: nonceWithAdditionlData, additionalData: "wrong".toData()!), "Decrypt with wrong additional data")
         XCTAssertNil(sodium.aead.xchacha20poly1305ietf.decrypt(authenticatedCipherText: "wrong".toData()!, secretKey: secretKey, nonce: nonce))
