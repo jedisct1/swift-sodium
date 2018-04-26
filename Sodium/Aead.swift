@@ -53,11 +53,7 @@ public struct Aead {
             guard let (authenticatedCipherText, nonce): (Data, Nonce) = encrypt(message: message, secretKey: secretKey, additionalData: additionalData) else {
                 return nil
             }
-            
-            var nonceAndAuthenticatedCipherText = nonce
-            nonceAndAuthenticatedCipherText.append(authenticatedCipherText)
-
-            return nonceAndAuthenticatedCipherText
+            return nonce + authenticatedCipherText
         }
         
         /**

@@ -49,10 +49,7 @@ public class SecretBox {
         guard let (authenticatedCipherText, nonce): (Data, Nonce) = seal(message: message, secretKey: secretKey) else {
             return nil
         }
-        var nonceAndAuthenticatedCipherText = nonce
-        nonceAndAuthenticatedCipherText.append(authenticatedCipherText)
-
-        return nonceAndAuthenticatedCipherText
+        return nonce + authenticatedCipherText
     }
 
     /**

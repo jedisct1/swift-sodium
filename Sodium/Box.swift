@@ -100,10 +100,7 @@ public class Box {
         guard let (authenticatedCipherText, nonce): (Data, Nonce) = seal(message: message, recipientPublicKey: recipientPublicKey, senderSecretKey: senderSecretKey) else {
             return nil
         }
-        var nonceAndAuthenticatedCipherText = nonce
-        nonceAndAuthenticatedCipherText.append(authenticatedCipherText)
-
-        return nonceAndAuthenticatedCipherText
+        return nonce + authenticatedCipherText
     }
 
     /**
@@ -445,10 +442,7 @@ public class Box {
         guard let (authenticatedCipherText, nonce): (Data, Nonce) = seal(message: message, beforenm: beforenm) else {
             return nil
         }
-        var nonceAndAuthenticatedCipherText = nonce
-        nonceAndAuthenticatedCipherText.append(authenticatedCipherText)
-
-        return nonceAndAuthenticatedCipherText
+        return nonce + authenticatedCipherText
     }
 
     /**
