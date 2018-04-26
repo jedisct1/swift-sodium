@@ -2,40 +2,8 @@ import Foundation
 import Clibsodium
 
 public class SecretBox {
-    public let KeyBytes = Int(crypto_secretbox_keybytes())
-    public let NonceBytes = Int(crypto_secretbox_noncebytes())
     public let MacBytes = Int(crypto_secretbox_macbytes())
-
-    public typealias Key = Data
-    public typealias Nonce = Data
     public typealias MAC = Data
-
-    /**
-     Generates a shared secret key.
-
-     - Returns: The generated key.
-     */
-    public func key() -> Key {
-        var k = Data(count: KeyBytes)
-        k.withUnsafeMutableBytes { kPtr in
-            crypto_secretbox_keygen(kPtr)
-        }
-        return k
-    }
-
-    /**
-     Generates an encryption nonce.
-
-     - Returns: The generated nonce.
-     */
-    public func nonce() -> Nonce {
-        let nonceLen = NonceBytes
-        var nonce = Data(count: nonceLen)
-        nonce.withUnsafeMutableBytes { noncePtr in
-            randombytes_buf(noncePtr, nonceLen)
-        }
-        return nonce
-    }
 
     /**
      Encrypts a message with a shared secret key.
@@ -194,4 +162,15 @@ public class SecretBox {
 
         return message
     }
+}
+
+extension SecretBox: NonceGenerator {
+    public var NonceBytes: Int { return Int(crypto_secretbox_noncebytes()) }
+    public typealias Nonce = Data
+}
+extension SecretBox: SecretKeyGenerator {
+    public typealias Key = Data
+    public var KeyBytes: Int { return Int(crypto_secretbox_keybytes()) }
+
+    static let keygen: (_ k: UnsafeMutablePointer<UInt8>) -> Void = crypto_secretbox_keygen
 }
