@@ -2,65 +2,8 @@ import Foundation
 import Clibsodium
 
 public class Sign {
-    public let SeedBytes = Int(crypto_sign_seedbytes())
-    public let PublicKeyBytes = Int(crypto_sign_publickeybytes())
-    public let SecretKeyBytes = Int(crypto_sign_secretkeybytes())
     public let Bytes = Int(crypto_sign_bytes())
     public let Primitive = String(validatingUTF8: crypto_sign_primitive())
-
-    public typealias PublicKey = Data
-    public typealias SecretKey = Data
-
-    public struct KeyPair {
-        public let publicKey: PublicKey
-        public let secretKey: SecretKey
-
-        public init(publicKey: PublicKey, secretKey: SecretKey) {
-            self.publicKey = publicKey
-            self.secretKey = secretKey
-        }
-    }
-
-    /**
-     Generates a signing secret key and a corresponding public key.
-
-     - Returns: A key pair containing the secret key and public key.
-     */
-    public func keyPair() -> KeyPair? {
-        var pk = Data(count: PublicKeyBytes)
-        var sk = Data(count: SecretKeyBytes)
-
-        guard .SUCCESS == pk.withUnsafeMutableBytes({ pkPtr in
-            sk.withUnsafeMutableBytes { skPtr in
-                crypto_sign_keypair(pkPtr, skPtr).exitCode
-            }
-        }) else { return nil }
-
-        return KeyPair(publicKey: pk, secretKey: sk)
-    }
-
-    /**
-     Generates a signing secret key and a corresponding public key derived from a seed.
-
-     - Parameter seed: The value from which to derive the secret and public key.
-
-     - Returns: A key pair containing the secret key and public key.
-     */
-    public func keyPair(seed: Data) -> KeyPair? {
-        guard seed.count == SeedBytes else { return nil }
-        var pk = Data(count: PublicKeyBytes)
-        var sk = Data(count: SecretKeyBytes)
-
-        guard .SUCCESS == pk.withUnsafeMutableBytes({ pkPtr in
-            sk.withUnsafeMutableBytes { skPtr in
-                seed.withUnsafeBytes { seedPtr in
-                    crypto_sign_seed_keypair(pkPtr, skPtr, seedPtr).exitCode
-                }
-            }
-        }) else { return nil }
-
-        return KeyPair(publicKey: pk, secretKey: sk)
-    }
 
     /**
      Signs a message with the sender's secret key
@@ -182,5 +125,32 @@ public class Sign {
         }) else { return nil }
 
         return message
+    }
+}
+
+extension Sign: KeyPairGenerator {
+    public typealias PublicKey = Data
+    public typealias SecretKey = Data
+
+    public var SeedBytes: Int { return Int(crypto_sign_seedbytes()) }
+    public var PublicKeyBytes: Int { return Int(crypto_sign_publickeybytes()) }
+    public var SecretKeyBytes: Int { return Int(crypto_sign_secretkeybytes()) }
+
+    static let newKeypair: (
+        _ pk: UnsafeMutablePointer<UInt8>,
+        _ sk: UnsafeMutablePointer<UInt8>
+    ) -> Int32 = crypto_sign_keypair
+
+    static let keypairFromSeed: (
+        _ pk: UnsafeMutablePointer<UInt8>,
+        _ sk: UnsafeMutablePointer<UInt8>,
+        _ seed: UnsafePointer<UInt8>
+    ) -> Int32 = crypto_sign_seed_keypair
+
+    public struct KeyPair: KeyPairProtocol {
+        public typealias PublicKey = Sign.PublicKey
+        public typealias SecretKey = Sign.SecretKey
+        public let publicKey: PublicKey
+        public let secretKey: SecretKey
     }
 }
