@@ -108,9 +108,7 @@ public class PWHash {
      - Returns: The derived key data.
      */
     public func hash(outputLength: Int, passwd: Data, salt: Data, opsLimit: Int, memLimit: Int, alg: Alg = .Default) -> Data? {
-        guard salt.count == SaltBytes else {
-            return nil
-        }
+        guard salt.count == SaltBytes else { return nil }
         var output = Data(count: outputLength)
         guard .SUCCESS == passwd.withUnsafeBytes({ passwdPtr in
             salt.withUnsafeBytes { saltPtr in

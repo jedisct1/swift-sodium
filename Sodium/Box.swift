@@ -53,9 +53,7 @@ public class Box {
      - Returns: A key pair containing the secret key and public key.
      */
     public func keyPair(seed: Data) -> KeyPair? {
-        guard seed.count == SeedBytes else {
-            return nil
-        }
+        guard seed.count == SeedBytes else { return nil }
         var pk = Data(count: PublicKeyBytes)
         var sk = Data(count: SecretKeyBytes)
         guard .SUCCESS == pk.withUnsafeMutableBytes({ pkPtr in
@@ -220,9 +218,7 @@ public class Box {
      - Returns: The decrypted message.
      */
     public func open(nonceAndAuthenticatedCipherText: Data, senderPublicKey: PublicKey, recipientSecretKey: SecretKey) -> Data? {
-        guard nonceAndAuthenticatedCipherText.count >= NonceBytes + MacBytes else {
-            return nil
-        }
+        guard nonceAndAuthenticatedCipherText.count >= NonceBytes + MacBytes else { return nil }
         let nonce = nonceAndAuthenticatedCipherText[..<NonceBytes] as Nonce
         let authenticatedCipherText = nonceAndAuthenticatedCipherText[NonceBytes...]
 
@@ -339,9 +335,7 @@ public class Box {
      - Returns: The authenticated ciphertext and encryption nonce.
      */
     public func seal(message: Data, beforenm: Beforenm) -> (authenticatedCipherText: Data, nonce: Nonce)? {
-        guard beforenm.count == BeforenmBytes else {
-            return nil
-        }
+        guard beforenm.count == BeforenmBytes else { return nil }
         var authenticatedCipherText = Data(count: message.count + MacBytes)
         let nonce = self.nonce()
 
@@ -372,9 +366,8 @@ public class Box {
      - Returns: The decrypted message.
      */
     public func open(nonceAndAuthenticatedCipherText: Data, beforenm: Beforenm) -> Data? {
-        guard nonceAndAuthenticatedCipherText.count >= NonceBytes + MacBytes else {
-            return nil
-        }
+        guard nonceAndAuthenticatedCipherText.count >= NonceBytes + MacBytes else { return nil }
+
         let nonce = nonceAndAuthenticatedCipherText[..<NonceBytes] as Nonce
         let authenticatedCipherText = nonceAndAuthenticatedCipherText[NonceBytes...]
 
@@ -439,9 +432,7 @@ public class Box {
      - Returns: The anonymous ciphertext.
      */
     public func seal(message: Data, recipientPublicKey: Box.PublicKey) -> Data? {
-        guard recipientPublicKey.count == PublicKeyBytes else {
-            return nil
-        }
+        guard recipientPublicKey.count == PublicKeyBytes else { return nil }
         var anonymousCipherText = Data(count: SealBytes + message.count)
 
         guard .SUCCESS == anonymousCipherText.withUnsafeMutableBytes({ anonymousCipherTextPtr in

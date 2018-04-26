@@ -29,9 +29,7 @@ public class Auth {
      - Returns: The computed authentication tag.
      */
     public func tag(message: Data, secretKey: SecretKey) -> Data? {
-        guard secretKey.count == KeyBytes else {
-            return nil
-        }
+        guard secretKey.count == KeyBytes else { return nil }
 
         var tag = Data(count: Bytes)
         guard .SUCCESS == tag.withUnsafeMutableBytes({ tagPtr in

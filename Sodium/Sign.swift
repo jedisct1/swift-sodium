@@ -47,9 +47,7 @@ public class Sign {
      - Returns: A key pair containing the secret key and public key.
      */
     public func keyPair(seed: Data) -> KeyPair? {
-        guard seed.count == SeedBytes else {
-            return nil
-        }
+        guard seed.count == SeedBytes else { return nil }
         var pk = Data(count: PublicKeyBytes)
         var sk = Data(count: SecretKeyBytes)
 
@@ -73,9 +71,7 @@ public class Sign {
      - Returns: The signed message.
      */
     public func sign(message: Data, secretKey: SecretKey) -> Data? {
-        guard secretKey.count == SecretKeyBytes else {
-            return nil
-        }
+        guard secretKey.count == SecretKeyBytes else { return nil }
         var signedMessage = Data(count: message.count + Bytes)
 
         guard .SUCCESS == signedMessage.withUnsafeMutableBytes({ signedMessagePtr in
@@ -101,9 +97,7 @@ public class Sign {
      - Returns: The computed signature.
      */
     public func signature(message: Data, secretKey: SecretKey) -> Data? {
-        guard secretKey.count == SecretKeyBytes else {
-            return nil
-        }
+        guard secretKey.count == SecretKeyBytes else { return nil }
         var signature = Data(count: Bytes)
 
         guard .SUCCESS == signature.withUnsafeMutableBytes({ signaturePtr in
@@ -172,6 +166,7 @@ public class Sign {
         guard publicKey.count == PublicKeyBytes, signedMessage.count >= Bytes else {
             return nil
         }
+
         var message = Data(count: signedMessage.count - Bytes)
         var mlen: CUnsignedLongLong = 0
 

@@ -69,10 +69,8 @@ public struct Aead {
          - Returns: The authenticated ciphertext and encryption nonce.
          */
         public func encrypt(message: Data, secretKey: Key, additionalData: Data? = nil) -> (authenticatedCipherText: Data, nonce: Nonce)? {
-            guard secretKey.count == KeyBytes else {
-                return nil
-            }
-            
+            guard secretKey.count == KeyBytes else { return nil }
+
             var authenticatedCipherText = Data(count: message.count + ABytes)
             var authenticatedCipherTextLen = Data()
             let nonce = self.nonce()
@@ -142,9 +140,7 @@ public struct Aead {
          - Returns: The decrypted message.
          */
         public func decrypt(nonceAndAuthenticatedCipherText: Data, secretKey: Key, additionalData: Data? = nil) -> Data? {
-            guard nonceAndAuthenticatedCipherText.count >= ABytes + NonceBytes else {
-                return nil
-            }
+            guard nonceAndAuthenticatedCipherText.count >= ABytes + NonceBytes else { return nil }
             
             let nonce = nonceAndAuthenticatedCipherText[..<NonceBytes] as Nonce
             let authenticatedCipherText = nonceAndAuthenticatedCipherText[NonceBytes...]
@@ -162,9 +158,7 @@ public struct Aead {
          - Returns: The decrypted message.
          */
         public func decrypt(authenticatedCipherText: Data, secretKey: Key, nonce: Nonce, additionalData: Data? = nil) -> Data? {
-            guard authenticatedCipherText.count >= ABytes else {
-                return nil
-            }
+            guard authenticatedCipherText.count >= ABytes else { return nil }
             
             var message = Data(count: authenticatedCipherText.count - ABytes)
             var messageLen = Data()
@@ -223,10 +217,7 @@ public struct Aead {
                     }
                 }
             }
-    
-            guard result == .SUCCESS else {
-                return nil
-            }
+            guard result == .SUCCESS else { return nil }
     
             return message
         }

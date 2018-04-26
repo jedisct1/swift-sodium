@@ -29,9 +29,7 @@ public class ShortHash {
      - Returns: The computed fingerprint.
      */
     public func hash(message: Data, key: Data) -> Data? {
-        guard key.count == KeyBytes else {
-            return nil
-        }
+        guard key.count == KeyBytes else { return nil }
         var output = Data(count: Bytes)
 
         guard .SUCCESS == output.withUnsafeMutableBytes({ outputPtr in

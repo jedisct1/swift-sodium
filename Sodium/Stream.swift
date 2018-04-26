@@ -50,9 +50,8 @@ public class Stream {
      -  Returns: input XOR keystream(secretKey, nonce)
      */
     public func xor(input: Data, nonce: Nonce, secretKey: Key) -> Data? {
-        guard secretKey.count == KeyBytes, nonce.count == NonceBytes else {
-            return nil
-        }
+        guard secretKey.count == KeyBytes, nonce.count == NonceBytes else { return nil }
+
         var output = Data(count: input.count)
         guard .SUCCESS == output.withUnsafeMutableBytes({ outputPtr in
             input.withUnsafeBytes { inputPtr in

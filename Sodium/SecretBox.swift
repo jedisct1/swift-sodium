@@ -62,9 +62,7 @@ public class SecretBox {
      - Returns: The authenticated ciphertext and encryption nonce.
      */
     public func seal(message: Data, secretKey: Key) -> (authenticatedCipherText: Data, nonce: Nonce)? {
-        guard secretKey.count == KeyBytes else {
-            return nil
-        }
+        guard secretKey.count == KeyBytes else { return nil }
         var authenticatedCipherText = Data(count: message.count + MacBytes)
         let nonce = self.nonce()
 
@@ -93,9 +91,8 @@ public class SecretBox {
      - Returns: The encrypted ciphertext, encryption nonce, and authentication tag.
      */
     public func seal(message: Data, secretKey: Key) -> (cipherText: Data, nonce: Nonce, mac: MAC)? {
-        guard secretKey.count == KeyBytes else {
-            return nil
-        }
+        guard secretKey.count == KeyBytes else { return nil }
+
         var cipherText = Data(count: message.count)
         var mac = Data(count: MacBytes)
         let nonce = self.nonce()
@@ -127,9 +124,7 @@ public class SecretBox {
      - Returns: The decrypted message.
      */
     public func open(nonceAndAuthenticatedCipherText: Data, secretKey: Key) -> Data? {
-        guard nonceAndAuthenticatedCipherText.count >= MacBytes + NonceBytes else {
-            return nil
-        }
+        guard nonceAndAuthenticatedCipherText.count >= MacBytes + NonceBytes else { return nil }
         let nonce = nonceAndAuthenticatedCipherText[..<NonceBytes] as Nonce
         let authenticatedCipherText = nonceAndAuthenticatedCipherText[NonceBytes...]
 
@@ -146,9 +141,7 @@ public class SecretBox {
      - Returns: The decrypted message.
      */
     public func open(authenticatedCipherText: Data, secretKey: Key, nonce: Nonce) -> Data? {
-        guard authenticatedCipherText.count >= MacBytes else {
-            return nil
-        }
+        guard authenticatedCipherText.count >= MacBytes else { return nil }
         var message = Data(count: authenticatedCipherText.count - MacBytes)
 
         guard .SUCCESS == message.withUnsafeMutableBytes({ messagePtr in

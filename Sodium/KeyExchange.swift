@@ -74,9 +74,7 @@ public class KeyExchange {
      - Returns: A key pair containing the secret key and public key.
      */
     public func keyPair(seed: Data) -> KeyPair? {
-        guard seed.count == SeedBytes else {
-            return nil
-        }
+        guard seed.count == SeedBytes else { return nil }
         var pk = Data(count: PublicKeyBytes)
         var sk = Data(count: SecretKeyBytes)
 

@@ -12,9 +12,7 @@ public class RandomBytes {
      - Returns: The generated data.
      */
     public func buf(length: Int) -> Data? {
-        guard length >= 0 else {
-            return nil
-        }
+        guard length >= 0 else { return nil }
         var output = Data(count: length)
         output.withUnsafeMutableBytes { outputPtr in
             randombytes_buf(outputPtr, length)

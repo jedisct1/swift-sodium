@@ -69,9 +69,8 @@ public class SecretStream {
             private var _header: Header
 
             init?(secretKey: Key) {
-                guard secretKey.count == KeyBytes else {
-                    return nil
-                }
+                guard secretKey.count == KeyBytes else { return nil }
+
                 state = PushStream.generate()
                 _header = Data(count: HeaderBytes)
                 guard .SUCCESS == secretKey.withUnsafeBytes({ secretKeyPtr in
@@ -163,9 +162,7 @@ public class SecretStream {
              - Returns: The decrypted message, as well as the tag attached to it.
              */
             public func pull(cipherText: Data, ad: Data? = nil) -> (Data, Tag)? {
-                guard cipherText.count >= ABytes else {
-                    return nil
-                }
+                guard cipherText.count >= ABytes else { return nil }
                 var message = Data(count: cipherText.count - ABytes)
                 let _ad = ad ?? Data(count: 0)
                 var _tag: UInt8 = 0

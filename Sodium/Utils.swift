@@ -44,9 +44,7 @@ public class Utils {
      `1`  if `b1` is less than `b2` (considered as little-endian values)
      */
     public func compare(_ b1: Data, _ b2: Data) -> Int? {
-        guard b1.count == b2.count else {
-            return nil
-        }
+        guard b1.count == b2.count else { return nil }
         return b1.withUnsafeBytes { b1Ptr in
             b2.withUnsafeBytes { b2Ptr in
                 Int(sodium_compare(
