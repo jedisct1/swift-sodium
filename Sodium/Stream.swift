@@ -2,39 +2,7 @@ import Foundation
 import Clibsodium
 
 public class Stream {
-    public let KeyBytes = Int(crypto_secretbox_keybytes())
-    public let NonceBytes = Int(crypto_secretbox_noncebytes())
     public let Primitive = String(validatingUTF8: crypto_stream_primitive())
-
-    public typealias Key = Data
-    public typealias Nonce = Data
-
-    /**
-     Generates a secret key.
-
-     - Returns: The generated key.
-     */
-    public func key() -> Key {
-        var k = Data(count: KeyBytes)
-        k.withUnsafeMutableBytes { kPtr in
-            crypto_stream_keygen(kPtr)
-        }
-        return k
-    }
-
-    /**
-     Generates a random nonce.
-
-     - Returns: The generated nonce.
-     */
-    public func nonce() -> Nonce {
-        let nonceLen = NonceBytes
-        var nonce = Data(count: nonceLen)
-        nonce.withUnsafeMutableBytes { noncePtr in
-            randombytes_buf(noncePtr, nonceLen)
-        }
-        return nonce
-    }
 
     /**
      XOR the input with a key stream derived from a secret key and a nonce.
@@ -90,4 +58,16 @@ public class Stream {
 
         return (output: output, nonce: nonce)
     }
+}
+
+extension Stream: NonceGenerator {
+    public typealias Nonce = Data
+    public var NonceBytes: Int { return Int(crypto_secretbox_noncebytes()) }
+}
+
+extension Stream: SecretKeyGenerator {
+    public typealias Key = Data
+    public var KeyBytes: Int { return Int(crypto_secretbox_keybytes()) }
+
+    static let keygen: (_ k: UnsafeMutablePointer<UInt8>) -> Void = crypto_stream_keygen
 }
