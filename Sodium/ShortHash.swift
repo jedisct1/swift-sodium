@@ -3,22 +3,6 @@ import Clibsodium
 
 public class ShortHash {
     public let Bytes = Int(crypto_shorthash_bytes())
-    public let KeyBytes = Int(crypto_shorthash_keybytes())
-
-    public typealias Key = Data
-
-    /**
-     Generates a secret key.
-
-     - Returns: The generated key.
-     */
-    public func key() -> Key {
-        var k = Data(count: KeyBytes)
-        k.withUnsafeMutableBytes { kPtr in
-            crypto_shorthash_keygen(kPtr)
-        }
-        return k
-    }
 
     /**
      Computes short but unpredictable (without knowing the secret key) values suitable for picking a list in a hash table for a given key.
@@ -42,4 +26,11 @@ public class ShortHash {
 
         return output
     }
+}
+
+extension ShortHash: SecretKeyGenerator {
+    public var KeyBytes: Int { return Int(crypto_shorthash_keybytes()) }
+    public typealias Key = Data
+
+    static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_shorthash_keygen
 }
