@@ -87,13 +87,13 @@ public struct Aead {
                                 nonce.withUnsafeBytes { noncePtr in
                                     secretKey.withUnsafeBytes { secretKeyPtr in
                                         crypto_aead_xchacha20poly1305_ietf_encrypt(
-                                            UnsafeMutablePointer<UInt8>(authenticatedCipherTextPtr),
-                                            UnsafeMutablePointer<UInt64>(authenticatedCipherTextLenPtr),
+                                            authenticatedCipherTextPtr,
+                                            authenticatedCipherTextLenPtr,
                                             
-                                            UnsafePointer<UInt8>(messagePtr),
+                                            messagePtr,
                                             UInt64(message.count),
                                             
-                                            UnsafePointer<UInt8>(additionalDataPtr),
+                                            additionalDataPtr,
                                             UInt64(additionalData.count),
                                             
                                             nil, noncePtr, secretKeyPtr
@@ -111,10 +111,10 @@ public struct Aead {
                             nonce.withUnsafeBytes { noncePtr in
                                 secretKey.withUnsafeBytes { secretKeyPtr in
                                     crypto_aead_xchacha20poly1305_ietf_encrypt(
-                                        UnsafeMutablePointer<UInt8>(authenticatedCipherTextPtr),
-                                        UnsafeMutablePointer<UInt64>(authenticatedCipherTextLenPtr),
+                                        authenticatedCipherTextPtr,
+                                        authenticatedCipherTextLenPtr,
                                         
-                                        UnsafePointer<UInt8>(messagePtr),
+                                        messagePtr,
                                         UInt64(message.count),
                                         
                                         nil,
@@ -182,15 +182,15 @@ public struct Aead {
                                 nonce.withUnsafeBytes { noncePtr in
                                     secretKey.withUnsafeBytes { secretKeyPtr in
                                         crypto_aead_xchacha20poly1305_ietf_decrypt(
-                                            UnsafeMutablePointer<UInt8>(messagePtr),
-                                            UnsafeMutablePointer<UInt64>(messageLen),
+                                            messagePtr,
+                                            messageLen,
                                             
                                             nil,
                                             
-                                            UnsafePointer<UInt8>(cipherTextPtr),
+                                            cipherTextPtr,
                                             UInt64(authenticatedCipherText.count),
                                             
-                                            UnsafePointer<UInt8>(additionalDataPtr),
+                                            additionalDataPtr,
                                             UInt64(additionalData.count),
                                             
                                             noncePtr, secretKeyPtr
@@ -208,12 +208,12 @@ public struct Aead {
                             nonce.withUnsafeBytes { noncePtr in
                                 secretKey.withUnsafeBytes { secretKeyPtr in
                                     crypto_aead_xchacha20poly1305_ietf_decrypt(
-                                        UnsafeMutablePointer<UInt8>(messagePtr),
-                                        UnsafeMutablePointer<UInt64>(messageLen),
+                                        messagePtr,
+                                        messageLen,
                                         
                                         nil,
                                         
-                                        UnsafePointer<UInt8>(cipherTextPtr),
+                                        cipherTextPtr,
                                         UInt64(authenticatedCipherText.count),
                                         
                                         nil,
