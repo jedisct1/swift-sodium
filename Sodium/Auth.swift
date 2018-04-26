@@ -2,23 +2,8 @@ import Foundation
 import Clibsodium
 
 public class Auth {
-    public let KeyBytes = Int(crypto_auth_keybytes())
     public let Bytes = Int(crypto_auth_bytes())
-
-    public typealias SecretKey = Data
-
-    /**
-     Generates a key to compute authentication tags.
-
-     - Returns: The generated key.
-     */
-    public func key() -> SecretKey {
-        var secretKey = Data(count: KeyBytes)
-        secretKey.withUnsafeMutableBytes { secretKeyPtr in
-            crypto_auth_keygen(secretKeyPtr)
-        }
-        return secretKey
-    }
+    public typealias SecretKey = Key
 
     /**
      Computes an authentication tag for a message using a key
@@ -68,4 +53,11 @@ public class Auth {
             }
         }
     }
+}
+
+extension Auth: SecretKeyGenerator {
+    public var KeyBytes: Int { return Int(crypto_auth_keybytes()) }
+    public typealias Key = Data
+
+    static let keygen: (_ k: UnsafeMutablePointer<UInt8>) -> Void = crypto_auth_keygen
 }
