@@ -46,9 +46,10 @@ public class SecretBox {
      - Returns: A `Data` object containing the nonce and authenticated ciphertext.
      */
     public func seal(message: Data, secretKey: Key) -> Data? {
-        guard let (authenticatedCipherText, nonce): (Data, Nonce) = seal(message: message, secretKey: secretKey) else {
-            return nil
-        }
+        guard let (authenticatedCipherText, nonce): (Data, Nonce) = seal(
+            message: message,
+            secretKey: secretKey
+        ) else { return nil }
         return nonce + authenticatedCipherText
     }
 

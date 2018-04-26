@@ -110,7 +110,10 @@ public class Box {
      - Returns: The authenticated ciphertext.
      */
     public func seal(message: Data, recipientPublicKey: PublicKey, senderSecretKey: SecretKey, nonce: Nonce) -> Data? {
-        guard recipientPublicKey.count == PublicKeyBytes, senderSecretKey.count == SecretKeyBytes, nonce.count == NonceBytes else { return nil }
+        guard recipientPublicKey.count == PublicKeyBytes,
+            senderSecretKey.count == SecretKeyBytes,
+            nonce.count == NonceBytes
+        else { return nil }
 
         var authenticatedCipherText = Data(count: message.count + MacBytes)
 
@@ -419,9 +422,11 @@ public class Box {
      - Returns: A `Data` object containing the encryption nonce and authenticated ciphertext.
      */
     public func seal(message: Data, beforenm: Beforenm) -> Data? {
-        guard let (authenticatedCipherText, nonce): (Data, Nonce) = seal(message: message, beforenm: beforenm) else {
-            return nil
-        }
+        guard let (authenticatedCipherText, nonce): (Data, Nonce) = seal(
+            message: message,
+            beforenm: beforenm
+        ) else { return nil }
+
         return nonce + authenticatedCipherText
     }
 

@@ -82,9 +82,13 @@ public class Stream {
      */
     public func xor(input: Data, secretKey: Key) -> (output:Data, nonce: Nonce)? {
         let nonce = self.nonce()
-        guard let output: Data = xor(input: input, nonce: nonce, secretKey: secretKey) else {
-            return nil
-        }
+
+        guard let output: Data = xor(
+            input: input,
+            nonce: nonce,
+            secretKey: secretKey
+        ) else { return nil }
+
         return (output: output, nonce: nonce)
     }
 }

@@ -50,9 +50,12 @@ public struct Aead {
          - Returns: A `Data` object containing the nonce and authenticated ciphertext.
          */
         public func encrypt(message: Data, secretKey: Key, additionalData: Data? = nil) -> Data? {
-            guard let (authenticatedCipherText, nonce): (Data, Nonce) = encrypt(message: message, secretKey: secretKey, additionalData: additionalData) else {
-                return nil
-            }
+            guard let (authenticatedCipherText, nonce): (Data, Nonce) = encrypt(
+                message: message,
+                secretKey: secretKey,
+                additionalData: additionalData
+            ) else { return nil }
+
             return nonce + authenticatedCipherText
         }
         
