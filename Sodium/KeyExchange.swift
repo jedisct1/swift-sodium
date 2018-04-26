@@ -33,6 +33,19 @@ public class KeyExchange {
     public enum Side {
         case CLIENT
         case SERVER
+
+        var sessionKeys: (
+            _ rx: UnsafeMutablePointer<UInt8>,
+            _ tx: UnsafeMutablePointer<UInt8>,
+            _ client_pk: UnsafePointer<UInt8>,
+            _ client_sk: UnsafePointer<UInt8>,
+            _ server_pk: UnsafePointer<UInt8>
+        ) -> Int32 {
+            switch self {
+            case .CLIENT: return crypto_kx_client_session_keys
+            case .SERVER: return crypto_kx_server_session_keys
+            }
+        }
     }
 
     /**
@@ -104,14 +117,12 @@ public class KeyExchange {
         var rx = Data(count: SessionKeyBytes)
         var tx = Data(count: SessionKeyBytes)
 
-        let session_keys = (side == .CLIENT) ? crypto_kx_client_session_keys : crypto_kx_server_session_keys
-
         let result = rx.withUnsafeMutableBytes { rxPtr in
             tx.withUnsafeMutableBytes { txPtr in
                 secretKey.withUnsafeBytes { secretKeyPtr in
                     publicKey.withUnsafeBytes { publicKeyPtr in
                         otherPublicKey.withUnsafeBytes { otherPublicKeyPtr in
-                            session_keys(rxPtr, txPtr, publicKeyPtr, secretKeyPtr, otherPublicKeyPtr)
+                            side.sessionKeys(rxPtr, txPtr, publicKeyPtr, secretKeyPtr, otherPublicKeyPtr)
                         }
                     }
                 }

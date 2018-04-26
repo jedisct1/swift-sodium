@@ -16,6 +16,14 @@ public class PWHash {
         case Default
         case Argon2I13
         case Argon2ID13
+
+        var id: Int32 {
+            switch self {
+            case .Default:    return crypto_pwhash_alg_default()
+            case .Argon2I13:  return crypto_pwhash_alg_argon2i13()
+            case .Argon2ID13: return crypto_pwhash_alg_argon2id13()
+            }
+        }
     }
 
     /**
@@ -106,15 +114,6 @@ public class PWHash {
             return nil
         }
         var output = Data(count: outputLength)
-        var algId: Int32
-        switch alg {
-        case .Default:
-            algId = crypto_pwhash_alg_default()
-        case .Argon2I13:
-            algId = crypto_pwhash_alg_argon2i13()
-        case .Argon2ID13:
-            algId = crypto_pwhash_alg_argon2id13()
-        }
         let result = passwd.withUnsafeBytes { passwdPtr in
             salt.withUnsafeBytes { saltPtr in
                 output.withUnsafeMutableBytes { outputPtr in
@@ -122,7 +121,7 @@ public class PWHash {
                         outputPtr, CUnsignedLongLong(outputLength),
                         passwdPtr, CUnsignedLongLong(passwd.count),
                         saltPtr, CUnsignedLongLong(opsLimit),
-                        size_t(memLimit), algId)
+                        size_t(memLimit), alg.id)
                 }
             }
         }
