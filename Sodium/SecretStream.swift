@@ -14,21 +14,7 @@ public class SecretStream {
             case REKEY = 0x02
             case FINAL = 0x03
         }
-        public typealias Key = Data
         public typealias Header = Data
-
-        /**
-         Generates a secret key.
-
-         - Returns: The generated key.
-         */
-        public func key() -> Key {
-            var secretKey = Data(count: XChaCha20Poly1305.KeyBytes)
-            secretKey.withUnsafeMutableBytes { secretKeyPtr in
-                crypto_secretstream_xchacha20poly1305_keygen(secretKeyPtr)
-            }
-            return secretKey
-        }
 
         /**
          Creates a new stream using the secret key `secretKey`
@@ -189,4 +175,12 @@ public class SecretStream {
             }
         }
     }
+}
+
+extension SecretStream.XChaCha20Poly1305: SecretKeyGenerator {
+    var KeyBytes: Int { return SecretStream.XChaCha20Poly1305.KeyBytes }
+    public typealias Key = Data
+
+    static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_secretstream_xchacha20poly1305_keygen
+
 }
