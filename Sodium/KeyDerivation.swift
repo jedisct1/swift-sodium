@@ -4,24 +4,9 @@ import Clibsodium
 public class KeyDerivation {
     public let BytesMin = Int(crypto_kdf_bytes_min())
     public let BytesMax = Int(crypto_kdf_bytes_max())
-    public let KeyBytes = Int(crypto_kdf_keybytes())
     public let ContextBytes = Int(crypto_kdf_contextbytes())
 
-    public typealias Key = Data
     public typealias SubKey = Data
-
-    /**
-     Generates a secret key.
-
-     - Returns: The generated key.
-     */
-    public func key() -> Key {
-        var k = Data(count: KeyBytes)
-        k.withUnsafeMutableBytes { kPtr in
-            crypto_kdf_keygen(kPtr)
-        }
-        return k
-    }
 
     /**
      Derives a subkey from the specified input key. Each index (from 0 to (2^64) - 1) yields a unique deterministic subkey.
@@ -59,4 +44,11 @@ public class KeyDerivation {
 
         return output
     }
+}
+
+extension KeyDerivation: SecretKeyGenerator {
+    public var KeyBytes: Int { return Int(crypto_kdf_keybytes()) }
+    public typealias Key = Data
+
+    static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_kdf_keygen
 }
