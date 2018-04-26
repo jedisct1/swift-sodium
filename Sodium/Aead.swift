@@ -77,7 +77,7 @@ public struct Aead {
             var authenticatedCipherText = Data(count: message.count + ABytes)
             var authenticatedCipherTextLen = Data()
             let nonce = self.nonce()
-            var result: Int32 = -1
+            let result: Int32
     
             if let additionalData = additionalData {
                 result = authenticatedCipherText.withUnsafeMutableBytes { authenticatedCipherTextPtr in
@@ -172,7 +172,7 @@ public struct Aead {
             
             var message = Data(count: authenticatedCipherText.count - ABytes)
             var messageLen = Data()
-            var result: Int32 = -1
+            let result: Int32
     
             if let additionalData = additionalData {
                 result = message.withUnsafeMutableBytes { messagePtr in

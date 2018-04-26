@@ -48,7 +48,7 @@ public class GenericHash {
      */
     public func hash(message: Data, key: Data?, outputLength: Int) -> Data? {
         var output = Data(count: outputLength)
-        var result: Int32 = -1
+        let result: Int32
 
         if let key = key {
             result = output.withUnsafeMutableBytes { outputPtr in
