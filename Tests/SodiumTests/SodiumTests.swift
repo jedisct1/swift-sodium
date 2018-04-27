@@ -55,25 +55,25 @@ class SodiumTests: XCTestCase {
 
         let encryptedMessageFromAliceToBob: Bytes = sodium.box.seal(message: message, recipientPublicKey: bobKeyPair.publicKey, senderSecretKey: aliceKeyPair.secretKey)!
         let decrypted = sodium.box.open(nonceAndAuthenticatedCipherText: encryptedMessageFromAliceToBob, senderPublicKey: bobKeyPair.publicKey, recipientSecretKey: aliceKeyPair.secretKey)
-        XCTAssertEqual(decrypted, message)
+        XCTAssertEqual(decrypted!, message)
 
         let (encryptedMessageFromAliceToBob2, nonce): (Bytes, Box.Nonce) = sodium.box.seal(message: message, recipientPublicKey: bobKeyPair.publicKey, senderSecretKey: aliceKeyPair.secretKey)!
         let decrypted2 = sodium.box.open(authenticatedCipherText: encryptedMessageFromAliceToBob2, senderPublicKey: aliceKeyPair.publicKey, recipientSecretKey: bobKeyPair.secretKey, nonce: nonce)
-        XCTAssertEqual(decrypted2, message)
+        XCTAssertEqual(decrypted2!, message)
 
         let (encryptedMessageFromAliceToBob3, nonce2, mac): (Bytes, Box.Nonce, Box.MAC) = sodium.box.seal(message: message, recipientPublicKey: bobKeyPair.publicKey, senderSecretKey: aliceKeyPair.secretKey)!
         let decrypted3 = sodium.box.open(authenticatedCipherText: encryptedMessageFromAliceToBob3, senderPublicKey: aliceKeyPair.publicKey, recipientSecretKey: bobKeyPair.secretKey, nonce: nonce2, mac: mac)
-        XCTAssertEqual(decrypted3, message)
+        XCTAssertEqual(decrypted3!, message)
 
         let userNonce = sodium.randomBytes.buf(length: sodium.box.NonceBytes)!
         let encryptedMessageFromAliceToBob4: Bytes = sodium.box.seal(message: message, recipientPublicKey: bobKeyPair.publicKey, senderSecretKey: aliceKeyPair.secretKey, nonce: userNonce)!
         let decrypted4 = sodium.box.open(authenticatedCipherText: encryptedMessageFromAliceToBob4, senderPublicKey: bobKeyPair.publicKey, recipientSecretKey: aliceKeyPair.secretKey, nonce: userNonce)
-        XCTAssertEqual(message, decrypted4)
+        XCTAssertEqual(message, decrypted4!)
 
         let encryptedMessageToBob: Bytes = sodium.box.seal(message: message, recipientPublicKey: bobKeyPair.publicKey)!
         let decrypted5 = sodium.box.open(anonymousCipherText: encryptedMessageToBob, recipientPublicKey: bobKeyPair.publicKey,
                                          recipientSecretKey: bobKeyPair.secretKey)
-        XCTAssertEqual(decrypted5, message)
+        XCTAssertEqual(decrypted5!, message)
 
         // beforenm tests
         // The two beforenm keys calculated by Alice and Bob separately should be identical
@@ -84,11 +84,11 @@ class SodiumTests: XCTestCase {
         // Make sure the encryption using beforenm works
         let encryptedMessageBeforenm: Bytes = sodium.box.seal(message: message, beforenm: aliceBeforenm)!
         let decryptedBeforenm = sodium.box.open(nonceAndAuthenticatedCipherText: encryptedMessageBeforenm, beforenm: aliceBeforenm)
-        XCTAssertEqual(decryptedBeforenm, message)
+        XCTAssertEqual(decryptedBeforenm!, message)
 
         let (encryptedMessageBeforenm2, nonceBeforenm): (Bytes, Box.Nonce) = sodium.box.seal(message: message, beforenm: aliceBeforenm)!
         let decryptedBeforenm2 = sodium.box.open(authenticatedCipherText: encryptedMessageBeforenm2, beforenm: aliceBeforenm, nonce: nonceBeforenm)
-        XCTAssertEqual(decryptedBeforenm2, message)
+        XCTAssertEqual(decryptedBeforenm2!, message)
     }
 
     func testSecretBox() {
@@ -100,21 +100,21 @@ class SodiumTests: XCTestCase {
         let decrypted = sodium.secretBox.open(nonceAndAuthenticatedCipherText: encrypted, secretKey: secretKey)!
         XCTAssertEqual(decrypted, message)
 
-        XCTAssertNotEqual(sodium.secretBox.seal(message: message, secretKey: secretKey), encrypted, "Ciphertext of two encryption operations on the same plaintext shouldn't be equal. Make sure the nonce was used only once!")
+        XCTAssertNotEqual(sodium.secretBox.seal(message: message, secretKey: secretKey)!, encrypted, "Ciphertext of two encryption operations on the same plaintext shouldn't be equal. Make sure the nonce was used only once!")
 
         XCTAssertNil(sodium.secretBox.open(nonceAndAuthenticatedCipherText: encrypted, secretKey: sodium.secretBox.key()), "Shouldn't be able to decrypt with a bad key")
 
         // test (mac + message, nonce) box
         let (encrypted2, nonce2) = sodium.secretBox.seal(message: message, secretKey: secretKey)!
         let decrypted2 = sodium.secretBox.open(authenticatedCipherText: encrypted2, secretKey: secretKey, nonce: nonce2)
-        XCTAssertEqual(decrypted2, message)
+        XCTAssertEqual(decrypted2!, message)
 
         XCTAssertNil(sodium.secretBox.open(authenticatedCipherText: encrypted2, secretKey: secretKey, nonce: sodium.secretBox.nonce()), "Shouldn't be able to decrypt with an invalid nonce")
 
         // test (message, nonce, mac) box
         let (encrypted3, nonce3, mac3) = sodium.secretBox.seal(message: message, secretKey: secretKey)!
         let decrypted3 = sodium.secretBox.open(cipherText: encrypted3, secretKey: secretKey, nonce: nonce3, mac: mac3)
-        XCTAssertEqual(decrypted3, message)
+        XCTAssertEqual(decrypted3!, message)
 
         let (encrypted4, nonce4, mac4) = sodium.secretBox.seal(message: message, secretKey: secretKey)!
         XCTAssertNil(sodium.secretBox.open(cipherText: encrypted4, secretKey: secretKey, nonce: nonce3, mac: mac4), "Shouldn't be able to decrypt with an invalid MAC")
