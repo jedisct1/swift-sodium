@@ -1,7 +1,18 @@
 import Foundation
 import Clibsodium
 
-public struct Utils {
+public struct Utils {}
+
+extension Utils {
+    public enum Base64Variant: CInt {
+        case ORIGINAL            = 1
+        case ORIGINAL_NO_PADDING = 3
+        case URLSAFE             = 5
+        case URLSAFE_NO_PADDING  = 7
+    }
+}
+
+extension Utils {
     /**
      Tries to effectively zero bytes in `data`, even if optimizations are being applied to the code.
 
@@ -89,15 +100,6 @@ extension Utils {
         binBytes = binBytes[..<binBytesLen].bytes
 
         return binBytes
-    }
-}
-
-extension Utils {
-    public enum Base64Variant: CInt {
-        case ORIGINAL            = 1
-        case ORIGINAL_NO_PADDING = 3
-        case URLSAFE             = 5
-        case URLSAFE_NO_PADDING  = 7
     }
 }
 

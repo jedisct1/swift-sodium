@@ -355,6 +355,7 @@ extension Box {
     }
 }
 
+
 extension Box: KeyPairGenerator {
     public typealias PublicKey = Bytes
     public typealias SecretKey = Bytes

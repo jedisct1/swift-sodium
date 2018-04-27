@@ -12,6 +12,32 @@ public struct GenericHash {
 }
 
 extension GenericHash {
+    public class Stream {
+        private var state: UnsafeMutablePointer<State>
+        public var outputLength: Int = 0
+
+        init?(key: Bytes?, outputLength: Int) {
+            state = Stream.generate()
+
+            guard .SUCCESS == crypto_generichash_init(
+                state,
+                key, key?.count ?? 0,
+                outputLength
+            ).exitCode else {
+                    free()
+                    return nil
+            }
+
+            self.outputLength = outputLength
+        }
+
+        deinit {
+            free()
+        }
+    }
+}
+
+extension GenericHash {
     /**
      Computes a fixed-length fingerprint for an arbitrary long message. A key can also be specified. A message will always have the same fingerprint for a given key, but different keys used to hash the same message are very likely to produce distinct fingerprints.
 
@@ -91,32 +117,6 @@ extension GenericHash {
      */
     public func initStream(outputLength: Int) -> Stream? {
         return Stream(key: nil, outputLength: outputLength)
-    }
-}
-
-extension GenericHash {
-    public class Stream {
-        private var state: UnsafeMutablePointer<State>
-        public var outputLength: Int = 0
-
-        init?(key: Bytes?, outputLength: Int) {
-            state = Stream.generate()
-
-            guard .SUCCESS == crypto_generichash_init(
-                state,
-                key, key?.count ?? 0,
-                outputLength
-            ).exitCode else {
-                free()
-                return nil
-            }
-
-            self.outputLength = outputLength
-        }
-
-        deinit {
-            free()
-        }
     }
 }
 

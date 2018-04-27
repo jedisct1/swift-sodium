@@ -23,6 +23,59 @@ extension SecretStream.XChaCha20Poly1305 {
     }
 }
 
+
+extension SecretStream.XChaCha20Poly1305 {
+    public class PushStream {
+        private var state: UnsafeMutablePointer<State>
+        private var _header: Header
+
+        init?(secretKey: Key) {
+            guard secretKey.count == KeyBytes else { return nil }
+
+            state = PushStream.generate()
+            _header = Bytes(count: HeaderBytes)
+            guard .SUCCESS == crypto_secretstream_xchacha20poly1305_init_push(
+                state,
+                &_header,
+                secretKey
+                ).exitCode else {
+                    free()
+                    return nil
+            }
+        }
+
+        deinit {
+            free()
+        }
+    }
+}
+
+extension SecretStream.XChaCha20Poly1305 {
+    public class PullStream {
+        private var state: UnsafeMutablePointer<State>
+
+        init?(secretKey: Key, header: Header) {
+            guard header.count == HeaderBytes, secretKey.count == KeyBytes else {
+                return nil
+            }
+            state = PushStream.generate()
+            guard .SUCCESS == crypto_secretstream_xchacha20poly1305_init_pull(
+                state,
+                header,
+                secretKey
+                ).exitCode else {
+                    free()
+                    return nil
+            }
+        }
+
+        deinit {
+            free()
+        }
+    }
+}
+
+
 extension SecretStream.XChaCha20Poly1305 {
     /**
      Creates a new stream using the secret key `secretKey`
@@ -49,36 +102,6 @@ extension SecretStream.XChaCha20Poly1305 {
     }
 }
 
-extension SecretStream.XChaCha20Poly1305 {
-    public class PushStream {
-        private var state: UnsafeMutablePointer<State>
-        private var _header: Header
-
-        init?(secretKey: Key) {
-            guard secretKey.count == KeyBytes else { return nil }
-
-            state = PushStream.generate()
-            _header = Bytes(count: HeaderBytes)
-            guard .SUCCESS == crypto_secretstream_xchacha20poly1305_init_push(
-                state,
-                &_header,
-                secretKey
-            ).exitCode else {
-                free()
-                return nil
-            }
-        }
-
-        deinit {
-            free()
-        }
-    }
-}
-
-extension SecretStream.XChaCha20Poly1305.PushStream: StateStream {
-    typealias State = crypto_secretstream_xchacha20poly1305_state
-    static let capacity = crypto_secretstream_xchacha20poly1305_statebytes()
-}
 
 extension SecretStream.XChaCha20Poly1305.PushStream {
     public typealias Header = SecretStream.XChaCha20Poly1305.Header
@@ -92,6 +115,7 @@ extension SecretStream.XChaCha20Poly1305.PushStream {
         return _header
     }
 }
+
 
 extension SecretStream.XChaCha20Poly1305.PushStream {
     public typealias Tag = SecretStream.XChaCha20Poly1305.Tag
@@ -130,40 +154,6 @@ extension SecretStream.XChaCha20Poly1305.PushStream {
     }
 }
 
-extension SecretStream.XChaCha20Poly1305.PushStream {
-    private func free() {
-        XChaCha20Poly1305.PushStream.free(state)
-    }
-}
-
-extension SecretStream.XChaCha20Poly1305 {
-    public class PullStream: StateStream {
-        typealias State = crypto_secretstream_xchacha20poly1305_state
-
-        static let capacity = crypto_secretstream_xchacha20poly1305_statebytes()
-        private var state: UnsafeMutablePointer<State>
-
-        init?(secretKey: Key, header: Header) {
-            guard header.count == HeaderBytes, secretKey.count == KeyBytes else {
-                return nil
-            }
-            state = PushStream.generate()
-            guard .SUCCESS == crypto_secretstream_xchacha20poly1305_init_pull(
-                state,
-                header,
-                secretKey
-            ).exitCode else {
-                free()
-                return nil
-            }
-        }
-
-        deinit {
-            free()
-        }
-    }
-}
-
 extension SecretStream.XChaCha20Poly1305.PullStream {
     public typealias Tag = SecretStream.XChaCha20Poly1305.Tag
     typealias XChaCha20Poly1305 = SecretStream.XChaCha20Poly1305
@@ -177,7 +167,7 @@ extension SecretStream.XChaCha20Poly1305.PullStream {
      - Returns: The decrypted message, as well as the tag attached to it.
      */
     public func pull(cipherText: Bytes, ad: Bytes? = nil) -> (Bytes, Tag)? {
-        guard cipherText.count >= ABytes else { return nil }
+        guard cipherText.count >= XChaCha20Poly1305.ABytes else { return nil }
         var message = Bytes(count: cipherText.count - XChaCha20Poly1305.ABytes)
         let _ad = ad ?? Bytes(count: 0)
         var _tag: UInt8 = 0
@@ -204,11 +194,19 @@ extension SecretStream.XChaCha20Poly1305.PullStream {
     }
 }
 
+
+extension SecretStream.XChaCha20Poly1305.PushStream {
+    private func free() {
+        XChaCha20Poly1305.PushStream.free(state)
+    }
+}
+
 extension SecretStream.XChaCha20Poly1305.PullStream {
     private func free() {
         XChaCha20Poly1305.PullStream.free(state)
     }
 }
+
 
 extension SecretStream.XChaCha20Poly1305: SecretKeyGenerator {
     var KeyBytes: Int { return SecretStream.XChaCha20Poly1305.KeyBytes }
@@ -216,4 +214,15 @@ extension SecretStream.XChaCha20Poly1305: SecretKeyGenerator {
 
     static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_secretstream_xchacha20poly1305_keygen
 
+}
+
+
+extension SecretStream.XChaCha20Poly1305.PushStream: StateStream {
+    typealias State = crypto_secretstream_xchacha20poly1305_state
+    static let capacity = crypto_secretstream_xchacha20poly1305_statebytes()
+}
+
+extension SecretStream.XChaCha20Poly1305.PullStream: StateStream {
+    typealias State = crypto_secretstream_xchacha20poly1305_state
+    static let capacity = crypto_secretstream_xchacha20poly1305_statebytes()
 }
