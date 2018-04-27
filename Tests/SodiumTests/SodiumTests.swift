@@ -133,17 +133,17 @@ class SodiumTests: XCTestCase {
         let h3 = sodium.utils.bin2hex(sodium.genericHash.hash(message: message, key: key, outputLength: sodium.genericHash.BytesMax)!)!
         XCTAssertEqual(h3, "cba85e39f2d03923b2f66aba99b204333edc34a8443ab1700f7920c7abcc6639963a953f35162a520b21072ab906457d21f1645e6e3985858ee95a84d0771f07")
 
-        let s1 = sodium.genericHash.initStream()!
+        var s1 = sodium.genericHash.initStream()!
         XCTAssertTrue(s1.update(input: message))
         let h4 = sodium.utils.bin2hex(s1.final()!)!
         XCTAssertEqual(h4, h1)
 
-        let s2 = sodium.genericHash.initStream(key: key, outputLength: sodium.genericHash.Bytes)!
+        var s2 = sodium.genericHash.initStream(key: key, outputLength: sodium.genericHash.Bytes)!
         XCTAssertTrue(s2.update(input: message))
         let h5 = sodium.utils.bin2hex(s2.final()!)!
         XCTAssertEqual(h5, h2)
 
-        let s3 = sodium.genericHash.initStream(key: key, outputLength: sodium.genericHash.BytesMax)!
+        var s3 = sodium.genericHash.initStream(key: key, outputLength: sodium.genericHash.BytesMax)!
         XCTAssertTrue(s3.update(input: message))
         let h6 = sodium.utils.bin2hex(s3.final()!)!
         XCTAssertEqual(h6, h3)
@@ -340,13 +340,13 @@ class SodiumTests: XCTestCase {
         let secretKey = sodium.secretStream.xchacha20poly1305.key()
         XCTAssertEqual(secretKey.count, 32)
 
-        let stream = sodium.secretStream.xchacha20poly1305.initPush(secretKey: secretKey)!
+        var stream = sodium.secretStream.xchacha20poly1305.initPush(secretKey: secretKey)!
         let header = stream.header()
         let encrypted1 = stream.push(message: "message 1".bytes)!
         let encrypted2 = stream.push(message: "message 2".bytes)!
         let encrypted3 = stream.push(message: "message 3".bytes, tag: .FINAL)!
 
-        let stream2 = sodium.secretStream.xchacha20poly1305.initPull(secretKey: secretKey, header: header)!
+        var stream2 = sodium.secretStream.xchacha20poly1305.initPull(secretKey: secretKey, header: header)!
         let (message1, tag1) = stream2.pull(cipherText: encrypted1)!
         let (message2, tag2) = stream2.pull(cipherText: encrypted2)!
         let (message3, tag3) = stream2.pull(cipherText: encrypted3)!

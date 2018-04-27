@@ -133,9 +133,9 @@ class ReadmeTests : XCTestCase {
         let message1 = "My Test ".bytes
         let message2 = "Message".bytes
         let key = "Secret key".bytes
-        let stream = sodium.genericHash.initStream(key: key)!
-        let _ = stream.update(input: message1)
-        let _ = stream.update(input: message2)
+        var stream = sodium.genericHash.initStream(key: key)!
+        stream.update(input: message1)
+        stream.update(input: message2)
         let h = stream.final()
 
         XCTAssertNotNil(h)
@@ -253,7 +253,7 @@ class ReadmeTests : XCTestCase {
 
         /* stream encryption */
 
-        let stream_enc = sodium.secretStream.xchacha20poly1305.initPush(secretKey: secretkey)!
+        var stream_enc = sodium.secretStream.xchacha20poly1305.initPush(secretKey: secretkey)!
         let header = stream_enc.header()
         let encrypted1 = stream_enc.push(message: message1)!
         let encrypted2 = stream_enc.push(message: message2)!
@@ -261,7 +261,7 @@ class ReadmeTests : XCTestCase {
 
         /* stream decryption */
 
-        let stream_dec = sodium.secretStream.xchacha20poly1305.initPull(secretKey: secretkey, header: header)!
+        var stream_dec = sodium.secretStream.xchacha20poly1305.initPull(secretKey: secretkey, header: header)!
         let (message1_dec, tag1) = stream_dec.pull(cipherText: encrypted1)!
         let (message2_dec, tag2) = stream_dec.pull(cipherText: encrypted2)!
         let (message3_dec, tag3) = stream_dec.pull(cipherText: encrypted3)!
