@@ -283,9 +283,9 @@ class ReadmeTests : XCTestCase {
         let data2 = sodium.utils.base642bin(b64, ignore: " \n")
         let data3 = sodium.utils.base642bin(b64_2, variant: .URLSAFE_NO_PADDING, ignore: " \n")
 
-        XCTAssertEqual(data1, "data".bytes)
-        XCTAssertEqual(data2, "data".bytes)
-        XCTAssertEqual(data3, "data".bytes)
+        XCTAssertEqual(data1!, "data".bytes)
+        XCTAssertEqual(data2!, "data".bytes)
+        XCTAssertEqual(data3!, "data".bytes)
     }
 
     func testPadding() {
