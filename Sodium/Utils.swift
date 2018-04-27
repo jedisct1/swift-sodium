@@ -177,16 +177,16 @@ public class Utils {
      - Parameter data: input/output buffer, will be modified in-place
      - Parameter blocksize: the block size
      */
-    public func unpad(data: inout Bytes, blockSize: Int) -> ()? {
+    public func unpad(bytes: inout Bytes, blockSize: Int) -> ()? {
         var unpaddedLen: size_t = 0
-        let dataLen = data.count
+        let bytesLen = bytes.count
         guard .SUCCESS == sodium_unpad(
             &unpaddedLen,
-            data, dataLen,
+            bytes, bytesLen,
             blockSize
         ).exitCode else { return nil }
 
-        data = data[..<unpaddedLen].bytes
+        bytes = bytes[..<unpaddedLen].bytes
 
         return ()
     }

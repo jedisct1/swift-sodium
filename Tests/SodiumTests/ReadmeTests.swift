@@ -296,6 +296,6 @@ class ReadmeTests : XCTestCase {
         sodium.utils.pad(data: &data, blockSize: 16)!
 
         // restore original size
-        sodium.utils.unpad(data: &data, blockSize: 16)!
+        sodium.utils.unpad(bytes: &data, blockSize: 16)!
     }
 }
