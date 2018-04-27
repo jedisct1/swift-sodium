@@ -1,0 +1,21 @@
+os: osx
+language: objective-c
+
+cache:
+  directories:
+    - $HOME/Library/Caches/Homebrew
+
+matrix:
+  include:
+    - osx_image: xcode9.3
+    - osx_image: xcode9.2
+    - osx_image: xcode9.1
+    - osx_image: xcode9
+
+
+script:
+  - swift test
+
+before_install:
+  - brew update
+  - brew install libsodium
