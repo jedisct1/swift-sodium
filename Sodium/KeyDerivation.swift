@@ -6,7 +6,7 @@ public class KeyDerivation {
     public let BytesMax = Int(crypto_kdf_bytes_max())
     public let ContextBytes = Int(crypto_kdf_contextbytes())
 
-    public typealias SubKey = Data
+    public typealias SubKey = Bytes
 
     /**
      Derives a subkey from the specified input key. Each index (from 0 to (2^64) - 1) yields a unique deterministic subkey.
@@ -21,10 +21,10 @@ public class KeyDerivation {
 
      - Note: Output keys must have a length between BytesMin and BytesMax bytes (inclusive), otherwise an error is returned. Context must be at most 8 characters long. If the specified context is shorter than 8 characters, it will be padded to 8 characters. The master key is KeyBytes long.
      */
-    public func derive(secretKey: Data, index: UInt64, length: Int, context: String) -> Data? {
+    public func derive(secretKey: Bytes, index: UInt64, length: Int, context: String) -> Bytes? {
+        var contextBin = Bytes(context.utf8).map(Int8.init)
         guard (BytesMin...BytesMax).contains(length),
               secretKey.count == KeyBytes,
-              var contextBin = context.data(using: .utf8),
               contextBin.count <= ContextBytes
         else { return nil }
 
@@ -32,15 +32,14 @@ public class KeyDerivation {
             contextBin += [0]
         }
 
-        var output = Data(count: length)
+        var output = Bytes(count: length)
 
-        guard .SUCCESS == output.withUnsafeMutableBytes({ outputPtr in
-            secretKey.withUnsafeBytes { secretKeyPtr in
-                contextBin.withUnsafeBytes { contextBinPtr in
-                    crypto_kdf_derive_from_key(outputPtr, length, index, contextBinPtr, secretKeyPtr).exitCode
-                }
-            }
-        }) else { return nil }
+        guard .SUCCESS == crypto_kdf_derive_from_key(
+            &output, length,
+            index,
+            contextBin,
+            secretKey
+        ).exitCode else { return nil }
 
         return output
     }
@@ -48,7 +47,7 @@ public class KeyDerivation {
 
 extension KeyDerivation: SecretKeyGenerator {
     public var KeyBytes: Int { return Int(crypto_kdf_keybytes()) }
-    public typealias Key = Data
+    public typealias Key = Bytes
 
     static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_kdf_keygen
 }

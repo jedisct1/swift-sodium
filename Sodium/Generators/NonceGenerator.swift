@@ -3,7 +3,7 @@ import Clibsodium
 
 protocol NonceGenerator {
     var NonceBytes: Int { get }
-    associatedtype Nonce where Nonce == Data
+    associatedtype Nonce where Nonce == Bytes
 }
 
 extension NonceGenerator {
@@ -13,10 +13,8 @@ extension NonceGenerator {
      - Returns: A nonce.
      */
     public func nonce() -> Nonce {
-        var nonce = Data(count: NonceBytes)
-        nonce.withUnsafeMutableBytes {
-            noncePtr in randombytes_buf(noncePtr, NonceBytes)
-        }
+        var nonce = Bytes(count: NonceBytes)
+        randombytes_buf(&nonce, NonceBytes)
         return nonce
     }
 }

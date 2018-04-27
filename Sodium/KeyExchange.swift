@@ -5,10 +5,10 @@ public class KeyExchange {
     public let SessionKeyBytes = Int(crypto_kx_sessionkeybytes())
 
     public struct SessionKeyPair {
-        public let rx: Data
-        public let tx: Data
+        public let rx: Bytes
+        public let tx: Bytes
 
-        public init(rx: Data, tx: Data) {
+        public init(rx: Bytes, tx: Bytes) {
             self.rx = rx
             self.tx = tx
         }
@@ -51,28 +51,24 @@ public class KeyExchange {
               otherPublicKey.count == PublicKeyBytes
         else { return nil }
 
-        var rx = Data(count: SessionKeyBytes)
-        var tx = Data(count: SessionKeyBytes)
+        var rx = Bytes(count: SessionKeyBytes)
+        var tx = Bytes(count: SessionKeyBytes)
 
-        guard .SUCCESS == rx.withUnsafeMutableBytes({ rxPtr in
-            tx.withUnsafeMutableBytes { txPtr in
-                secretKey.withUnsafeBytes { secretKeyPtr in
-                    publicKey.withUnsafeBytes { publicKeyPtr in
-                        otherPublicKey.withUnsafeBytes { otherPublicKeyPtr in
-                            side.sessionKeys(rxPtr, txPtr, publicKeyPtr, secretKeyPtr, otherPublicKeyPtr).exitCode
-                        }
-                    }
-                }
-            }
-        }) else { return nil }
+        guard .SUCCESS == side.sessionKeys (
+            &rx,
+            &tx,
+            publicKey,
+            secretKey,
+            otherPublicKey
+        ).exitCode else { return nil }
 
         return SessionKeyPair(rx: rx, tx: tx)
     }
 }
 
 extension KeyExchange: KeyPairGenerator {
-    public typealias PublicKey = Data
-    public typealias SecretKey = Data
+    public typealias PublicKey = Bytes
+    public typealias SecretKey = Bytes
 
     public var SeedBytes: Int { return Int(crypto_kx_seedbytes()) }
     public var PublicKeyBytes: Int { return Int(crypto_kx_publickeybytes()) }

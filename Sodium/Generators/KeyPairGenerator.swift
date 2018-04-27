@@ -4,10 +4,10 @@ protocol KeyPairGenerator {
     associatedtype KeyPair: KeyPairProtocol
 
     var PublicKeyBytes: Int { get }
-    associatedtype PublicKey where PublicKey == Data
+    associatedtype PublicKey where PublicKey == Bytes
 
     var SecretKeyBytes: Int { get }
-    associatedtype SecretKey where SecretKey == Data
+    associatedtype SecretKey where SecretKey == Bytes
 
     var SeedBytes: Int { get }
 
@@ -30,14 +30,10 @@ extension KeyPairGenerator {
      - Returns: A key pair containing the secret key and public key.
      */
     public func keyPair() -> KeyPair? {
-        var pk = Data(count: PublicKeyBytes)
-        var sk = Data(count: SecretKeyBytes)
+        var pk = Bytes(count: PublicKeyBytes)
+        var sk = Bytes(count: SecretKeyBytes)
 
-        guard .SUCCESS == pk.withUnsafeMutableBytes({ pkPtr in
-            sk.withUnsafeMutableBytes { skPtr in
-                Self.newKeypair(pkPtr, skPtr).exitCode
-            }
-        }) else { return nil }
+        guard .SUCCESS == Self.newKeypair(&pk, &sk).exitCode else { return nil }
 
         return KeyPair(publicKey: pk, secretKey: sk)
     }
@@ -49,18 +45,14 @@ extension KeyPairGenerator {
 
      - Returns: A key pair containing the secret key and public key.
      */
-    public func keyPair(seed: Data) -> KeyPair? {
+    public func keyPair(seed: Bytes) -> KeyPair? {
         guard seed.count == SeedBytes else { return nil }
-        var pk = Data(count: PublicKeyBytes)
-        var sk = Data(count: SecretKeyBytes)
+        var pk = Bytes(count: PublicKeyBytes)
+        var sk = Bytes(count: SecretKeyBytes)
 
-        guard .SUCCESS == pk.withUnsafeMutableBytes({ pkPtr in
-            sk.withUnsafeMutableBytes { skPtr in
-                seed.withUnsafeBytes { seedPtr in
-                    Self.keypairFromSeed(pkPtr, skPtr, seedPtr).exitCode
-                }
-            }
-        }) else { return nil }
+        guard .SUCCESS == Self.keypairFromSeed(&pk, &sk, seed).exitCode else {
+            return nil
+        }
 
         return KeyPair(publicKey: pk, secretKey: sk)
     }

@@ -2,7 +2,7 @@ import Foundation
 
 protocol SecretKeyGenerator {
     var KeyBytes: Int { get }
-    associatedtype Key where Key == Data
+    associatedtype Key where Key == Bytes
 
     static var keygen: (_ k: UnsafeMutablePointer<UInt8>) -> Void { get }
 }
@@ -14,8 +14,8 @@ extension SecretKeyGenerator {
      - Returns: The generated key.
      */
     public func key() -> Key {
-        var k = Data(count: KeyBytes)
-        k.withUnsafeMutableBytes { kPtr in Self.keygen(kPtr) }
+        var k = Bytes(count: KeyBytes)
+        Self.keygen(&k)
         return k
     }
 }

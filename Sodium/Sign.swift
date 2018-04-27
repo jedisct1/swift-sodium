@@ -13,20 +13,16 @@ public class Sign {
 
      - Returns: The signed message.
      */
-    public func sign(message: Data, secretKey: SecretKey) -> Data? {
+    public func sign(message: Bytes, secretKey: SecretKey) -> Bytes? {
         guard secretKey.count == SecretKeyBytes else { return nil }
-        var signedMessage = Data(count: message.count + Bytes)
+        var signedMessage = Array<UInt8>(count: message.count + Bytes)
 
-        guard .SUCCESS == signedMessage.withUnsafeMutableBytes({ signedMessagePtr in
-            message.withUnsafeBytes { messagePtr in
-                secretKey.withUnsafeBytes { secretKeyPtr in
-                    crypto_sign(
-                        signedMessagePtr, nil,
-                        messagePtr, CUnsignedLongLong(message.count),
-                        secretKeyPtr).exitCode
-                }
-            }
-        }) else { return nil }
+        guard .SUCCESS == crypto_sign (
+            &signedMessage,
+            nil,
+            message, UInt64(message.count),
+            secretKey
+        ).exitCode else { return nil }
 
         return signedMessage
     }
@@ -39,20 +35,16 @@ public class Sign {
 
      - Returns: The computed signature.
      */
-    public func signature(message: Data, secretKey: SecretKey) -> Data? {
+    public func signature(message: Bytes, secretKey: SecretKey) -> Bytes? {
         guard secretKey.count == SecretKeyBytes else { return nil }
-        var signature = Data(count: Bytes)
+        var signature = Array<UInt8>(count: Bytes)
 
-        guard .SUCCESS == signature.withUnsafeMutableBytes({ signaturePtr in
-            message.withUnsafeBytes { messagePtr in
-                secretKey.withUnsafeBytes { secretKeyPtr in
-                    crypto_sign_detached(
-                        signaturePtr, nil,
-                        messagePtr, CUnsignedLongLong(message.count),
-                        secretKeyPtr).exitCode
-                }
-            }
-        }) else { return nil }
+        guard .SUCCESS == crypto_sign_detached (
+            &signature,
+            nil,
+            message, UInt64(message.count),
+            secretKey
+        ).exitCode else { return nil }
 
         return signature
     }
@@ -65,9 +57,9 @@ public class Sign {
 
      - Returns: `true` if verification is successful.
      */
-    public func verify(signedMessage: Data, publicKey: PublicKey) -> Bool {
-        let signature = signedMessage[..<Bytes]
-        let message = signedMessage[Bytes...]
+    public func verify(signedMessage: Bytes, publicKey: PublicKey) -> Bool {
+        let signature = signedMessage[..<Bytes].bytes
+        let message = signedMessage[Bytes...].bytes
 
         return verify(message: message, publicKey: publicKey, signature: signature)
     }
@@ -81,20 +73,16 @@ public class Sign {
 
      - Returns: `true` if verification is successful.
      */
-    public func verify(message: Data, publicKey: PublicKey, signature: Data) -> Bool {
+    public func verify(message: Bytes, publicKey: PublicKey, signature: Bytes) -> Bool {
         guard publicKey.count == PublicKeyBytes else {
             return false
         }
 
-        return .SUCCESS == signature.withUnsafeBytes { signaturePtr in
-            message.withUnsafeBytes { messagePtr in
-                publicKey.withUnsafeBytes { publicKeyPtr in
-                    crypto_sign_verify_detached(
-                        signaturePtr,
-                        messagePtr, CUnsignedLongLong(message.count), publicKeyPtr).exitCode
-                }
-            }
-        }
+        return .SUCCESS == crypto_sign_verify_detached (
+            signature,
+            message, UInt64(message.count),
+            publicKey
+        ).exitCode
     }
 
     /**
@@ -105,32 +93,27 @@ public class Sign {
 
      - Returns: The message data if verification is successful.
      */
-    public func open(signedMessage: Data, publicKey: PublicKey) -> Data? {
+    public func open(signedMessage: Bytes, publicKey: PublicKey) -> Bytes? {
         guard publicKey.count == PublicKeyBytes, signedMessage.count >= Bytes else {
             return nil
         }
 
-        var message = Data(count: signedMessage.count - Bytes)
-        var mlen: CUnsignedLongLong = 0
+        var message = Array<UInt8>(count: signedMessage.count - Bytes)
+        var mlen: UInt64 = 0
 
-        guard .SUCCESS == message.withUnsafeMutableBytes({ messagePtr in
-            signedMessage.withUnsafeBytes { signedMessagePtr in
-                publicKey.withUnsafeBytes { publicKeyPtr in
-                    crypto_sign_open(
-                        messagePtr, &mlen,
-                        signedMessagePtr, CUnsignedLongLong(signedMessage.count),
-                        publicKeyPtr).exitCode
-                }
-            }
-        }) else { return nil }
+        guard .SUCCESS == crypto_sign_open (
+            &message, &mlen,
+            signedMessage, UInt64(signedMessage.count),
+            publicKey
+        ).exitCode else { return nil }
 
         return message
     }
 }
 
 extension Sign: KeyPairGenerator {
-    public typealias PublicKey = Data
-    public typealias SecretKey = Data
+    public typealias PublicKey = Bytes
+    public typealias SecretKey = Bytes
 
     public var SeedBytes: Int { return Int(crypto_sign_seedbytes()) }
     public var PublicKeyBytes: Int { return Int(crypto_sign_publickeybytes()) }

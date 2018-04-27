@@ -6,7 +6,7 @@ public struct Aead {
     
     public class XChaCha20Poly1305Ietf {
         public let ABytes = Int(crypto_aead_xchacha20poly1305_ietf_abytes())
-        public typealias MAC = Data
+        public typealias MAC = Bytes
         
         /**
          Encrypts a message with a shared secret key.
@@ -15,10 +15,10 @@ public struct Aead {
          - Parameter secretKey: The shared secret key.
          - Parameter additionalData: A typical use for these data is to authenticate version numbers, timestamps or monotonically increasing counters
          
-         - Returns: A `Data` object containing the nonce and authenticated ciphertext.
+         - Returns: A `Bytes` object containing the nonce and authenticated ciphertext.
          */
-        public func encrypt(message: Data, secretKey: Key, additionalData: Data? = nil) -> Data? {
-            guard let (authenticatedCipherText, nonce): (Data, Nonce) = encrypt(
+        public func encrypt(message: Bytes, secretKey: Key, additionalData: Bytes = Bytes()) -> Bytes? {
+            guard let (authenticatedCipherText, nonce): (Bytes, Nonce) = encrypt(
                 message: message,
                 secretKey: secretKey,
                 additionalData: additionalData
@@ -36,82 +36,37 @@ public struct Aead {
          
          - Returns: The authenticated ciphertext and encryption nonce.
          */
-        public func encrypt(message: Data, secretKey: Key, additionalData: Data? = nil) -> (authenticatedCipherText: Data, nonce: Nonce)? {
+        public func encrypt(message: Bytes, secretKey: Key, additionalData: Bytes = Bytes()) -> (authenticatedCipherText: Bytes, nonce: Nonce)? {
             guard secretKey.count == KeyBytes else { return nil }
 
-            var authenticatedCipherText = Data(count: message.count + ABytes)
-            var authenticatedCipherTextLen = Data()
+            var authenticatedCipherText = Bytes(count: message.count + ABytes)
+            var authenticatedCipherTextLen: UInt64 = 0
             let nonce = self.nonce()
-            let result: ExitCode
 
-            if let additionalData = additionalData {
-                result = authenticatedCipherText.withUnsafeMutableBytes { authenticatedCipherTextPtr in
-                    authenticatedCipherTextLen.withUnsafeMutableBytes { authenticatedCipherTextLenPtr in
-                        message.withUnsafeBytes { messagePtr in
-                            additionalData.withUnsafeBytes { additionalDataPtr in
-                                nonce.withUnsafeBytes { noncePtr in
-                                    secretKey.withUnsafeBytes { secretKeyPtr in
-                                        crypto_aead_xchacha20poly1305_ietf_encrypt(
-                                            authenticatedCipherTextPtr,
-                                            authenticatedCipherTextLenPtr,
-
-                                            messagePtr,
-                                            UInt64(message.count),
-
-                                            additionalDataPtr,
-                                            UInt64(additionalData.count),
-
-                                            nil, noncePtr, secretKeyPtr
-                                        ).exitCode
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            } else {
-                result = authenticatedCipherText.withUnsafeMutableBytes { authenticatedCipherTextPtr in
-                    authenticatedCipherTextLen.withUnsafeMutableBytes { authenticatedCipherTextLenPtr in
-                        message.withUnsafeBytes { messagePtr in
-                            nonce.withUnsafeBytes { noncePtr in
-                                secretKey.withUnsafeBytes { secretKeyPtr in
-                                    crypto_aead_xchacha20poly1305_ietf_encrypt(
-                                        authenticatedCipherTextPtr,
-                                        authenticatedCipherTextLenPtr,
-
-                                        messagePtr,
-                                        UInt64(message.count),
-
-                                        nil,
-                                        0,
-
-                                        nil, noncePtr, secretKeyPtr
-                                    ).exitCode
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            guard result == .SUCCESS else { return nil }
+            guard .SUCCESS == crypto_aead_xchacha20poly1305_ietf_encrypt (
+                &authenticatedCipherText, &authenticatedCipherTextLen,
+                message, UInt64(message.count),
+                additionalData, UInt64(additionalData.count),
+                nil, nonce, secretKey
+            ).exitCode else { return nil }
     
             return (authenticatedCipherText: authenticatedCipherText, nonce: nonce)
         }
-        
+
         /**
          Decrypts a message with a shared secret key.
          
-         - Parameter nonceAndAuthenticatedCipherText: A `Data` object containing the nonce and authenticated ciphertext.
+         - Parameter nonceAndAuthenticatedCipherText: A `Bytes` object containing the nonce and authenticated ciphertext.
          - Parameter secretKey: The shared secret key.
-         - Parameter additionalData: Must be used same `Data` that was used to encrypt, if `Data` deferred will return nil
+         - Parameter additionalData: Must be used same `Bytes` that was used to encrypt, if `Bytes` deferred will return nil
          
          - Returns: The decrypted message.
          */
-        public func decrypt(nonceAndAuthenticatedCipherText: Data, secretKey: Key, additionalData: Data? = nil) -> Data? {
+        public func decrypt(nonceAndAuthenticatedCipherText: Bytes, secretKey: Key, additionalData: Bytes = Bytes()) -> Bytes? {
             guard nonceAndAuthenticatedCipherText.count >= ABytes + NonceBytes else { return nil }
             
-            let nonce = nonceAndAuthenticatedCipherText[..<NonceBytes] as Nonce
-            let authenticatedCipherText = nonceAndAuthenticatedCipherText[NonceBytes...]
+            let nonce = nonceAndAuthenticatedCipherText[..<NonceBytes].bytes as Nonce
+            let authenticatedCipherText = nonceAndAuthenticatedCipherText[NonceBytes...].bytes
 
             return decrypt(authenticatedCipherText: authenticatedCipherText, secretKey: secretKey, nonce: nonce, additionalData: additionalData)
         }
@@ -119,73 +74,25 @@ public struct Aead {
         /**
          Decrypts a message with a shared secret key.
          
-         - Parameter authenticatedCipherText: A `Data` object containing authenticated ciphertext.
+         - Parameter authenticatedCipherText: A `Bytes` object containing authenticated ciphertext.
          - Parameter secretKey: The shared secret key.
-         - Parameter additionalData: Must be used same `Data` that was used to encrypt, if `Data` deferred will return nil
+         - Parameter additionalData: Must be used same `Bytes` that was used to encrypt, if `Bytes` deferred will return nil
          
          - Returns: The decrypted message.
          */
-        public func decrypt(authenticatedCipherText: Data, secretKey: Key, nonce: Nonce, additionalData: Data? = nil) -> Data? {
+        public func decrypt(authenticatedCipherText: Bytes, secretKey: Key, nonce: Nonce, additionalData: Bytes = Bytes()) -> Bytes? {
             guard authenticatedCipherText.count >= ABytes else { return nil }
             
-            var message = Data(count: authenticatedCipherText.count - ABytes)
-            var messageLen = Data()
-            let result: ExitCode
-    
-            if let additionalData = additionalData {
-                result = message.withUnsafeMutableBytes { messagePtr in
-                    messageLen.withUnsafeMutableBytes { messageLen in
-                        authenticatedCipherText.withUnsafeBytes { cipherTextPtr in
-                            additionalData.withUnsafeBytes { additionalDataPtr in
-                                nonce.withUnsafeBytes { noncePtr in
-                                    secretKey.withUnsafeBytes { secretKeyPtr in
-                                        crypto_aead_xchacha20poly1305_ietf_decrypt(
-                                            messagePtr,
-                                            messageLen,
-                                            
-                                            nil,
-                                            
-                                            cipherTextPtr,
-                                            UInt64(authenticatedCipherText.count),
-                                            
-                                            additionalDataPtr,
-                                            UInt64(additionalData.count),
-                                            
-                                            noncePtr, secretKeyPtr
-                                        ).exitCode
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            } else {
-                result = message.withUnsafeMutableBytes { messagePtr in
-                    messageLen.withUnsafeMutableBytes { messageLen in
-                        authenticatedCipherText.withUnsafeBytes { cipherTextPtr in
-                            nonce.withUnsafeBytes { noncePtr in
-                                secretKey.withUnsafeBytes { secretKeyPtr in
-                                    crypto_aead_xchacha20poly1305_ietf_decrypt(
-                                        messagePtr,
-                                        messageLen,
-                                        
-                                        nil,
-                                        
-                                        cipherTextPtr,
-                                        UInt64(authenticatedCipherText.count),
-                                        
-                                        nil,
-                                        0,
-                                        
-                                        noncePtr, secretKeyPtr
-                                    ).exitCode
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            guard result == .SUCCESS else { return nil }
+            var message = Bytes(count: authenticatedCipherText.count - ABytes)
+            var messageLen: UInt64 = 0
+
+            guard .SUCCESS == crypto_aead_xchacha20poly1305_ietf_decrypt (
+                &message, &messageLen,
+                nil,
+                authenticatedCipherText, UInt64(authenticatedCipherText.count),
+                additionalData, UInt64(additionalData.count),
+                nonce, secretKey
+            ).exitCode else { return nil }
     
             return message
         }
@@ -193,13 +100,13 @@ public struct Aead {
 }
 
 extension Aead.XChaCha20Poly1305Ietf: NonceGenerator {
-    public typealias Nonce = Data
+    public typealias Nonce = Bytes
     public var NonceBytes: Int { return Int(crypto_aead_xchacha20poly1305_ietf_npubbytes()) }
 }
 
 extension Aead.XChaCha20Poly1305Ietf: SecretKeyGenerator {
     public var KeyBytes: Int { return Int(crypto_aead_xchacha20poly1305_ietf_keybytes()) }
-    public typealias Key = Data
+    public typealias Key = Bytes
 
     static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_aead_xchacha20poly1305_ietf_keygen
 }

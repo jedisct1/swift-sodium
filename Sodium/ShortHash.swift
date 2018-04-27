@@ -12,17 +12,15 @@ public class ShortHash {
 
      - Returns: The computed fingerprint.
      */
-    public func hash(message: Data, key: Data) -> Data? {
+    public func hash(message: Bytes, key: Bytes) -> Bytes? {
         guard key.count == KeyBytes else { return nil }
-        var output = Data(count: Bytes)
+        var output = Array<UInt8>(count: Bytes)
 
-        guard .SUCCESS == output.withUnsafeMutableBytes({ outputPtr in
-            message.withUnsafeBytes { messagePtr in
-                key.withUnsafeBytes { keyPtr in
-                    crypto_shorthash(outputPtr, messagePtr, CUnsignedLongLong(message.count), keyPtr).exitCode
-                }
-            }
-        }) else { return nil }
+        guard .SUCCESS == crypto_shorthash (
+            &output,
+            message, UInt64(message.count),
+            key
+        ).exitCode else { return nil }
 
         return output
     }
@@ -30,7 +28,7 @@ public class ShortHash {
 
 extension ShortHash: SecretKeyGenerator {
     public var KeyBytes: Int { return Int(crypto_shorthash_keybytes()) }
-    public typealias Key = Data
+    public typealias Key = Bytes
 
     static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_shorthash_keygen
 }
