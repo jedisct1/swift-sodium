@@ -75,7 +75,7 @@ public struct Aead {
             }
             
             var authenticatedCipherText = Data(count: message.count + ABytes)
-            var authenticatedCipherTextLen = Data()
+            var authenticatedCipherTextLen = Data(count: 8)
             let nonce = self.nonce()
             var result: Int32 = -1
     
@@ -171,7 +171,7 @@ public struct Aead {
             }
             
             var message = Data(count: authenticatedCipherText.count - ABytes)
-            var messageLen = Data()
+            var messageLen = Data(count: 8)
             var result: Int32 = -1
     
             if let additionalData = additionalData {
