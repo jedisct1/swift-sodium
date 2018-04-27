@@ -9,7 +9,9 @@ public struct GenericHash {
     public let KeyBytesMax = Int(crypto_generichash_keybytes_max())
 
     public let Primitive = String(validatingUTF8: crypto_generichash_primitive())
+}
 
+extension GenericHash {
     /**
      Computes a fixed-length fingerprint for an arbitrary long message. A key can also be specified. A message will always have the same fingerprint for a given key, but different keys used to hash the same message are very likely to produce distinct fingerprints.
 
@@ -54,7 +56,9 @@ public struct GenericHash {
     public func hash(message: Bytes, outputLength: Int) -> Bytes? {
         return hash(message: message, key: nil, outputLength: outputLength)
     }
+}
 
+extension GenericHash {
     /**
      Initializes a `Stream` object to compute a fixed-length fingerprint for an incoming stream of data.arbitrary long message. Particular data will always have the same fingerprint for a given key, but different keys used to hash the same data are very likely to produce distinct fingerprints.
 
@@ -88,12 +92,11 @@ public struct GenericHash {
     public func initStream(outputLength: Int) -> Stream? {
         return Stream(key: nil, outputLength: outputLength)
     }
+}
 
-    public class Stream: StateStream {
-        typealias State = crypto_generichash_state
-        static let capacity = crypto_generichash_statebytes()
+extension GenericHash {
+    public class Stream {
         private var state: UnsafeMutablePointer<State>
-
         public var outputLength: Int = 0
 
         init?(key: Bytes?, outputLength: Int) {
@@ -111,44 +114,53 @@ public struct GenericHash {
             self.outputLength = outputLength
         }
 
-        private func free() {
-            Stream.free(state)
-        }
-
         deinit {
             free()
         }
-
-        /**
-         Updates the hash stream with incoming data to contribute to the computed fingerprint.
-
-         - Parameter input: The incoming stream data.
-
-         - Returns: `true` if the data was consumed successfully.
-         */
-        public func update(input: Bytes) -> Bool {
-            return .SUCCESS == crypto_generichash_update(
-                state,
-                input, UInt64(input.count)
-            ).exitCode
-        }
-
-        /**
-         Signals that the incoming stream of data is complete and triggers computation of the resulting fingerprint.
-
-         - Returns: The computed fingerprint.
-         */
-        public func final() -> Bytes? {
-            let outputLen = outputLength
-            var output = Array<UInt8>(count: outputLen)
-            guard .SUCCESS == crypto_generichash_final(
-                state,
-                &output, outputLen
-            ).exitCode else { return nil }
-
-            return output
-        }
     }
+}
+
+extension GenericHash.Stream {
+    /**
+     Updates the hash stream with incoming data to contribute to the computed fingerprint.
+
+     - Parameter input: The incoming stream data.
+
+     - Returns: `true` if the data was consumed successfully.
+     */
+    public func update(input: Bytes) -> Bool {
+        return .SUCCESS == crypto_generichash_update(
+            state,
+            input, UInt64(input.count)
+        ).exitCode
+    }
+
+    /**
+     Signals that the incoming stream of data is complete and triggers computation of the resulting fingerprint.
+
+     - Returns: The computed fingerprint.
+     */
+    public func final() -> Bytes? {
+        let outputLen = outputLength
+        var output = Array<UInt8>(count: outputLen)
+        guard .SUCCESS == crypto_generichash_final(
+            state,
+            &output, outputLen
+        ).exitCode else { return nil }
+
+        return output
+    }
+}
+
+extension GenericHash.Stream {
+    private func free() {
+        GenericHash.Stream.free(state)
+    }
+}
+
+extension GenericHash.Stream: StateStream {
+    typealias State = crypto_generichash_state
+    static let capacity = crypto_generichash_statebytes()
 }
 
 extension GenericHash: SecretKeyGenerator {

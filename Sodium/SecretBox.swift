@@ -4,7 +4,9 @@ import Clibsodium
 public struct SecretBox {
     public let MacBytes = Int(crypto_secretbox_macbytes())
     public typealias MAC = Bytes
+}
 
+extension SecretBox {
     /**
      Encrypts a message with a shared secret key.
 
@@ -69,7 +71,9 @@ public struct SecretBox {
 
         return (cipherText: cipherText, nonce: nonce, mac: mac)
     }
+}
 
+extension SecretBox {
     /**
      Decrypts a message with a shared secret key.
 
@@ -143,6 +147,7 @@ extension SecretBox: NonceGenerator {
     public var NonceBytes: Int { return Int(crypto_secretbox_noncebytes()) }
     public typealias Nonce = Bytes
 }
+
 extension SecretBox: SecretKeyGenerator {
     public typealias Key = Bytes
     public var KeyBytes: Int { return Int(crypto_secretbox_keybytes()) }

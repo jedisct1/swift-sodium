@@ -4,7 +4,9 @@ import Clibsodium
 public struct Sign {
     public let Bytes = Int(crypto_sign_bytes())
     public let Primitive = String(validatingUTF8: crypto_sign_primitive())
+}
 
+extension Sign {
     /**
      Signs a message with the sender's secret key
 
@@ -48,7 +50,9 @@ public struct Sign {
 
         return signature
     }
+}
 
+extension Sign {
     /**
      Verifies a signed message with the sender's public key.
 
@@ -84,7 +88,9 @@ public struct Sign {
             publicKey
         ).exitCode
     }
+}
 
+extension Sign {
     /**
      Extracts and returns the message data of a signed message if the signature is verified with the sender's secret key.
 

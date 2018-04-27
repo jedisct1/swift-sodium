@@ -4,7 +4,9 @@ import Clibsodium
 public struct Auth {
     public let Bytes = Int(crypto_auth_bytes())
     public typealias SecretKey = Key
+}
 
+extension Auth {
     /**
      Computes an authentication tag for a message using a key
 

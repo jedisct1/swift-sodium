@@ -3,7 +3,9 @@ import Clibsodium
 
 public struct ShortHash {
     public let Bytes = Int(crypto_shorthash_bytes())
+}
 
+extension ShortHash {
     /**
      Computes short but unpredictable (without knowing the secret key) values suitable for picking a list in a hash table for a given key.
 
