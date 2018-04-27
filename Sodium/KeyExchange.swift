@@ -2,29 +2,13 @@ import Foundation
 import Clibsodium
 
 public class KeyExchange {
-    public let PublicKeyBytes = Int(crypto_kx_publickeybytes())
-    public let SecretKeyBytes = Int(crypto_kx_secretkeybytes())
     public let SessionKeyBytes = Int(crypto_kx_sessionkeybytes())
-    public let SeedBytes = Int(crypto_kx_seedbytes())
-
-    public typealias PublicKey = Data
-    public typealias SecretKey = Data
-
-    public struct KeyPair {
-        public let publicKey: PublicKey
-        public let secretKey: SecretKey
-
-        public init(publicKey: PublicKey, secretKey: SecretKey) {
-            self.publicKey = publicKey
-            self.secretKey = secretKey
-        }
-    }
 
     public struct SessionKeyPair {
-        public let rx: Data
-        public let tx: Data
+        public let rx: Bytes
+        public let tx: Bytes
 
-        public init(rx: Data, tx: Data) {
+        public init(rx: Bytes, tx: Bytes) {
             self.rx = rx
             self.tx = tx
         }
@@ -33,53 +17,19 @@ public class KeyExchange {
     public enum Side {
         case CLIENT
         case SERVER
-    }
 
-    /**
-     Generates a key exchange secret key and a corresponding public key.
-
-     - Returns: A key pair containing the secret key and public key.
-     */
-    public func keyPair() -> KeyPair? {
-        var publicKey = Data(count: PublicKeyBytes)
-        var secretKey = Data(count: SecretKeyBytes)
-
-        let result = publicKey.withUnsafeMutableBytes { publicKeyPtr in
-            secretKey.withUnsafeMutableBytes { secretKeyPtr in
-                crypto_kx_keypair(publicKeyPtr, secretKeyPtr)
+        var sessionKeys: (
+            _ rx: UnsafeMutablePointer<UInt8>,
+            _ tx: UnsafeMutablePointer<UInt8>,
+            _ client_pk: UnsafePointer<UInt8>,
+            _ client_sk: UnsafePointer<UInt8>,
+            _ server_pk: UnsafePointer<UInt8>
+        ) -> Int32 {
+            switch self {
+            case .CLIENT: return crypto_kx_client_session_keys
+            case .SERVER: return crypto_kx_server_session_keys
             }
         }
-        guard result == 0 else {
-            return nil
-        }
-        return KeyPair(publicKey: publicKey, secretKey: secretKey)
-    }
-
-    /**
-     Generates a key exchange secret key and a corresponding public key derived from a seed.
-
-     - Parameter seed: The value from which to derive the secret and public key.
-
-     - Returns: A key pair containing the secret key and public key.
-     */
-    public func keyPair(seed: Data) -> KeyPair? {
-        guard seed.count == SeedBytes else {
-            return nil
-        }
-        var pk = Data(count: PublicKeyBytes)
-        var sk = Data(count: SecretKeyBytes)
-
-        let result = pk.withUnsafeMutableBytes { pkPtr in
-            sk.withUnsafeMutableBytes { skPtr in
-                seed.withUnsafeBytes { seedPtr in
-                    crypto_kx_seed_keypair(pkPtr, skPtr, seedPtr)
-                }
-            }
-        }
-        guard result == 0 else {
-            return nil
-        }
-        return KeyPair(publicKey: pk, secretKey: sk)
     }
 
     /**
@@ -101,25 +51,44 @@ public class KeyExchange {
               otherPublicKey.count == PublicKeyBytes
         else { return nil }
 
-        var rx = Data(count: SessionKeyBytes)
-        var tx = Data(count: SessionKeyBytes)
+        var rx = Bytes(count: SessionKeyBytes)
+        var tx = Bytes(count: SessionKeyBytes)
 
-        let session_keys = (side == .CLIENT) ? crypto_kx_client_session_keys : crypto_kx_server_session_keys
+        guard .SUCCESS == side.sessionKeys (
+            &rx,
+            &tx,
+            publicKey,
+            secretKey,
+            otherPublicKey
+        ).exitCode else { return nil }
 
-        let result = rx.withUnsafeMutableBytes { rxPtr in
-            tx.withUnsafeMutableBytes { txPtr in
-                secretKey.withUnsafeBytes { secretKeyPtr in
-                    publicKey.withUnsafeBytes { publicKeyPtr in
-                        otherPublicKey.withUnsafeBytes { otherPublicKeyPtr in
-                            session_keys(rxPtr, txPtr, publicKeyPtr, secretKeyPtr, otherPublicKeyPtr)
-                        }
-                    }
-                }
-            }
-        }
-        guard result == 0 else {
-            return nil
-        }
         return SessionKeyPair(rx: rx, tx: tx)
+    }
+}
+
+extension KeyExchange: KeyPairGenerator {
+    public typealias PublicKey = Bytes
+    public typealias SecretKey = Bytes
+
+    public var SeedBytes: Int { return Int(crypto_kx_seedbytes()) }
+    public var PublicKeyBytes: Int { return Int(crypto_kx_publickeybytes()) }
+    public var SecretKeyBytes: Int { return Int(crypto_kx_secretkeybytes()) }
+
+    static let newKeypair: (
+        _ pk: UnsafeMutablePointer<UInt8>,
+        _ sk: UnsafeMutablePointer<UInt8>
+    ) -> Int32 = crypto_kx_keypair
+
+    static let keypairFromSeed: (
+        _ pk: UnsafeMutablePointer<UInt8>,
+        _ sk: UnsafeMutablePointer<UInt8>,
+        _ seed: UnsafePointer<UInt8>
+    ) -> Int32 = crypto_kx_seed_keypair
+
+    public struct KeyPair: KeyPairProtocol {
+        public typealias PublicKey = KeyExchange.PublicKey
+        public typealias SecretKey = KeyExchange.SecretKey
+        public let publicKey: PublicKey
+        public let secretKey: SecretKey
     }
 }

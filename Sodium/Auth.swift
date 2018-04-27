@@ -2,23 +2,8 @@ import Foundation
 import Clibsodium
 
 public class Auth {
-    public let KeyBytes = Int(crypto_auth_keybytes())
     public let Bytes = Int(crypto_auth_bytes())
-
-    public typealias SecretKey = Data
-
-    /**
-     Generates a key to compute authentication tags.
-
-     - Returns: The generated key.
-     */
-    public func key() -> SecretKey {
-        var secretKey = Data(count: KeyBytes)
-        secretKey.withUnsafeMutableBytes { secretKeyPtr in
-            crypto_auth_keygen(secretKeyPtr)
-        }
-        return secretKey
-    }
+    public typealias SecretKey = Key
 
     /**
      Computes an authentication tag for a message using a key
@@ -28,24 +13,16 @@ public class Auth {
 
      - Returns: The computed authentication tag.
      */
-    public func tag(message: Data, secretKey: SecretKey) -> Data? {
-        guard secretKey.count == KeyBytes else {
-            return nil
-        }
+    public func tag(message: Bytes, secretKey: SecretKey) -> Bytes? {
+        guard secretKey.count == KeyBytes else { return nil }
 
-        var tag = Data(count: Bytes)
-        let result = tag.withUnsafeMutableBytes { tagPtr in
-            message.withUnsafeBytes { messagePtr in
-                secretKey.withUnsafeBytes { secretKeyPtr in
-                    crypto_auth( tagPtr,
-                                 messagePtr, CUnsignedLongLong(message.count),
-                                 secretKeyPtr)
-                }
-            }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        var tag = Array<UInt8>(count: Bytes)
+        guard .SUCCESS == crypto_auth (
+            &tag,
+            message, UInt64(message.count),
+            secretKey
+        ).exitCode else { return nil }
+
         return tag
     }
 
@@ -58,18 +35,21 @@ public class Auth {
 
      - Returns: `true` if the verification is successful.
      */
-    public func verify(message: Data, secretKey: SecretKey, tag: Data) -> Bool {
+    public func verify(message: Bytes, secretKey: SecretKey, tag: Bytes) -> Bool {
         guard secretKey.count == KeyBytes else {
             return false
         }
-        return tag.withUnsafeBytes { tagPtr in
-            message.withUnsafeBytes { messagePtr in
-                secretKey.withUnsafeBytes { secretKeyPtr in
-                    crypto_auth_verify(
-                        tagPtr,
-                        messagePtr, CUnsignedLongLong(message.count), secretKeyPtr) == 0
-                }
-            }
-        }
+        return .SUCCESS == crypto_auth_verify (
+            tag,
+            message, UInt64(message.count),
+            secretKey
+        ).exitCode
     }
+}
+
+extension Auth: SecretKeyGenerator {
+    public var KeyBytes: Int { return Int(crypto_auth_keybytes()) }
+    public typealias Key = Bytes
+
+    static let keygen: (_ k: UnsafeMutablePointer<UInt8>) -> Void = crypto_auth_keygen
 }

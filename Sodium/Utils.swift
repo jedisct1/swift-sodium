@@ -5,18 +5,15 @@ public class Utils {
     /**
      Tries to effectively zero bytes in `data`, even if optimizations are being applied to the code.
 
-     - Parameter data: The `Data` object to zero.
+     - Parameter data: The `Bytes` object to zero.
      */
-    public func zero(_ data: inout Data)  {
+    public func zero(_ data: inout Bytes)  {
         let count = data.count
-        data.withUnsafeMutableBytes { (dataPtr: UnsafeMutablePointer<UInt8>) in
-            let rawPtr = UnsafeMutableRawPointer(dataPtr)
-            sodium_memzero(rawPtr, count)
-        }
+        sodium_memzero(&data, count)
     }
 
     /**
-     Checks that two `Data` objects have the same content, without leaking information
+     Checks that two `Bytes` objects have the same content, without leaking information
      about the actual content of these objects.
 
      - Parameter b1: first object
@@ -24,35 +21,23 @@ public class Utils {
 
      - Returns: `true` if the bytes in `b1` match the bytes in `b2`. Otherwise, it returns false.
      */
-    public func equals(_ b1: Data, _ b2: Data) -> Bool {
+    public func equals(_ b1: Bytes, _ b2: Bytes) -> Bool {
         guard b1.count == b2.count else {
             return false
         }
-        return b1.withUnsafeBytes { b1Ptr in
-            b2.withUnsafeBytes { b2Ptr in
-                Int(sodium_memcmp(
-                    UnsafeRawPointer(b1Ptr), UnsafeRawPointer(b2Ptr), b1.count)) == 0
-            }
-        }
+        return .SUCCESS == sodium_memcmp(b1, b2, b1.count).exitCode
     }
 
     /**
-     Compares two `Data` objects without leaking information about the content of these objects.
+     Compares two `Bytes` objects without leaking information about the content of these objects.
 
      - Returns: `0` if the bytes in `b1` match the bytes in `b2`.
      `-1` if `b2` is less than `b1` (considered as little-endian values) and
      `1`  if `b1` is less than `b2` (considered as little-endian values)
      */
-    public func compare(_ b1: Data, _ b2: Data) -> Int? {
-        guard b1.count == b2.count else {
-            return nil
-        }
-        return b1.withUnsafeBytes { b1Ptr in
-            b2.withUnsafeBytes { b2Ptr in
-                Int(sodium_compare(
-                    b1Ptr, b2Ptr, b1.count))
-            }
-        }
+    public func compare(_ b1: Bytes, _ b2: Bytes) -> Int? {
+        guard b1.count == b2.count else { return nil }
+        return Int(sodium_compare(b1, b2, b1.count))
     }
 
     /**
@@ -62,18 +47,15 @@ public class Utils {
 
      - Returns: The encoded hexdecimal string.
      */
-    public func bin2hex(_ bin: Data) -> String? {
-        let hexDataLen = bin.count * 2 + 1
-        var hexData = Data(count: hexDataLen)
+    public func bin2hex(_ bin: Bytes) -> String? {
+        let hexBytesLen = bin.count * 2 + 1
+        var hexBytes = Bytes(count: hexBytesLen).map(Int8.init)
 
-        return hexData.withUnsafeMutableBytes { (hexPtr: UnsafeMutablePointer<Int8>) -> String? in
-            bin.withUnsafeBytes { (binPtr: UnsafePointer<UInt8>) -> String? in
-                guard sodium_bin2hex(hexPtr, hexDataLen, binPtr, bin.count) != nil else {
-                    return nil
-                }
-                return String.init(validatingUTF8: hexPtr)
-            }
+        guard sodium_bin2hex(&hexBytes, hexBytesLen, bin, bin.count) != nil else {
+            return nil
         }
+
+        return String(validatingUTF8: hexBytes)
     }
 
     /**
@@ -84,30 +66,24 @@ public class Utils {
 
      - Returns: The decoded data.
      */
-    public func hex2bin(_ hex: String, ignore: String? = nil) -> Data? {
-        guard let hexData = hex.data(using: .utf8, allowLossyConversion: false) else {
-            return nil
-        }
-        let hexDataLen = hexData.count
-        let binDataCapacity = hexDataLen / 2
-        var binData = Data(count: binDataCapacity)
-        var binDataLen: size_t = 0
+    public func hex2bin(_ hex: String, ignore: String? = nil) -> Bytes? {
+        let hexBytes = Bytes(hex.utf8)
+        let hexBytesLen = hexBytes.count
+        let binBytesCapacity = hexBytesLen / 2
+        var binBytes = Bytes(count: binBytesCapacity)
+        var binBytesLen: size_t = 0
         let ignore_nsstr = ignore.flatMap({ NSString(string: $0) })
         let ignore_cstr = ignore_nsstr?.cString(using: String.Encoding.isoLatin1.rawValue)
 
-        let result = binData.withUnsafeMutableBytes { binPtr in
-            hexData.withUnsafeBytes { hexPtr in
-                sodium_hex2bin(binPtr, binDataCapacity,
-                               hexPtr, hexDataLen,
-                               ignore_cstr, &binDataLen, nil)
-            }
-        }
-        guard result == 0 else {
-            return nil
-        }
-        binData.count = Int(binDataLen)
+        guard .SUCCESS == sodium_hex2bin(
+            &binBytes, binBytesCapacity,
+            hex, hexBytesLen,
+            ignore_cstr, &binBytesLen, nil
+        ).exitCode else { return nil }
 
-        return binData
+        binBytes = binBytes[..<binBytesLen].bytes
+
+        return binBytes
     }
 
     public enum Base64Variant: CInt {
@@ -125,18 +101,14 @@ public class Utils {
 
      - Returns: The encoded base64 string.
      */
-    public func bin2base64(_ bin: Data, variant: Base64Variant = .URLSAFE) -> String? {
-        let b64DataLen = sodium_base64_encoded_len(bin.count, variant.rawValue)
-        var b64Data = Data(count: b64DataLen)
+    public func bin2base64(_ bin: Bytes, variant: Base64Variant = .URLSAFE) -> String? {
+        let b64BytesLen = sodium_base64_encoded_len(bin.count, variant.rawValue)
+        var b64Bytes = Bytes(count: b64BytesLen).map(Int8.init)
 
-        return b64Data.withUnsafeMutableBytes { (b64Ptr: UnsafeMutablePointer<Int8>) -> String? in
-            bin.withUnsafeBytes { (binPtr: UnsafePointer<UInt8>) -> String? in
-                guard sodium_bin2base64(b64Ptr, b64DataLen, binPtr, bin.count, variant.rawValue) != nil else {
-                    return nil
-                }
-                return String.init(validatingUTF8: b64Ptr)
-            }
+        guard sodium_bin2base64(&b64Bytes, b64BytesLen, bin, bin.count, variant.rawValue) != nil else {
+            return nil
         }
+        return String(validatingUTF8: b64Bytes)
     }
 
     /*
@@ -147,30 +119,26 @@ public class Utils {
 
      - Returns: The decoded data.
      */
-    public func base642bin(_ b64: String, variant: Base64Variant = .URLSAFE, ignore: String? = nil) -> Data? {
-        guard let b64Data = b64.data(using: .utf8, allowLossyConversion: false) else {
-            return nil
-        }
-        let b64DataLen = b64Data.count
-        let binDataCapacity = b64DataLen * 3 / 4
-        var binData = Data(count: binDataCapacity)
-        var binDataLen: size_t = 0
+    public func base642bin(_ b64: String, variant: Base64Variant = .URLSAFE, ignore: String? = nil) -> Bytes? {
+        let b64Bytes = Bytes(b64.utf8).map(Int8.init)
+        let b64BytesLen = b64Bytes.count
+        let binBytesCapacity = b64BytesLen * 3 / 4
+        var binBytes = Bytes(count: binBytesCapacity)
+        var binBytesLen: size_t = 0
         let ignore_nsstr = ignore.flatMap({ NSString(string: $0) })
         let ignore_cstr = ignore_nsstr?.cString(using: String.Encoding.isoLatin1.rawValue)
 
-        let result = binData.withUnsafeMutableBytes { binPtr in
-            b64Data.withUnsafeBytes { b64Ptr in
-                sodium_base642bin(binPtr, binDataCapacity,
-                                  b64Ptr, b64DataLen,
-                                  ignore_cstr, &binDataLen, nil, variant.rawValue)
-            }
-        }
-        guard result == 0 else {
-            return nil
-        }
-        binData.count = Int(binDataLen)
+        guard .SUCCESS == sodium_base642bin(
+            &binBytes, binBytesCapacity,
+            b64Bytes, b64BytesLen,
+            ignore_cstr, &binBytesLen,
+            nil,
+            variant.rawValue
+        ).exitCode else { return nil }
 
-        return binData
+        binBytes = binBytes[..<binBytesLen].bytes
+
+        return binBytes
     }
 
     /*
@@ -179,19 +147,27 @@ public class Utils {
      - Parameter data: input/output buffer, will be modified in-place
      - Parameter blocksize: the block size
      */
-    public func pad(data: inout Data, blockSize: Int) -> ()? {
+    public func pad(data bytes: inout Bytes, blockSize: Int) -> ()? {
+        // we must use Data and not Bytes because we need to increase the
+        // count size before passing to `sodium_pad` without initilising bytes
+        var data = Data(bytes)
         let dataCount = data.count
         data.reserveCapacity(dataCount + blockSize)
         data.count = dataCount + blockSize
         var paddedLen: size_t = 0
-        let result = data.withUnsafeMutableBytes { dataPtr in
-            sodium_pad(&paddedLen, dataPtr, dataCount, blockSize, dataCount + blockSize)
-        }
-        guard result == 0 else {
-            return nil
-        }
-        data.count = Int(paddedLen)
+        guard .SUCCESS == data.withUnsafeMutableBytes({
+            dataPtr in sodium_pad(
+                &paddedLen,
+                dataPtr, dataCount,
+                blockSize,
+                dataCount + blockSize
+            ).exitCode
+        }) else { return nil }
 
+        data.count = paddedLen
+
+        // return the new bytes by argument
+        bytes = Bytes(data)
         return ()
     }
 
@@ -201,16 +177,16 @@ public class Utils {
      - Parameter data: input/output buffer, will be modified in-place
      - Parameter blocksize: the block size
      */
-    public func unpad(data: inout Data, blockSize: Int) -> ()? {
+    public func unpad(bytes: inout Bytes, blockSize: Int) -> ()? {
         var unpaddedLen: size_t = 0
-        let dataLen = data.count
-        let result = data.withUnsafeMutableBytes { dataPtr in
-            sodium_unpad(&unpaddedLen, dataPtr, dataLen, blockSize)
-        }
-        guard result == 0 else {
-            return nil
-        }
-        data.count = Int(unpaddedLen)
+        let bytesLen = bytes.count
+        guard .SUCCESS == sodium_unpad(
+            &unpaddedLen,
+            bytes, bytesLen,
+            blockSize
+        ).exitCode else { return nil }
+
+        bytes = bytes[..<unpaddedLen].bytes
 
         return ()
     }

@@ -2,71 +2,8 @@ import Foundation
 import Clibsodium
 
 public class Sign {
-    public let SeedBytes = Int(crypto_sign_seedbytes())
-    public let PublicKeyBytes = Int(crypto_sign_publickeybytes())
-    public let SecretKeyBytes = Int(crypto_sign_secretkeybytes())
     public let Bytes = Int(crypto_sign_bytes())
     public let Primitive = String(validatingUTF8: crypto_sign_primitive())
-
-    public typealias PublicKey = Data
-    public typealias SecretKey = Data
-
-    public struct KeyPair {
-        public let publicKey: PublicKey
-        public let secretKey: SecretKey
-
-        public init(publicKey: PublicKey, secretKey: SecretKey) {
-            self.publicKey = publicKey
-            self.secretKey = secretKey
-        }
-    }
-
-    /**
-     Generates a signing secret key and a corresponding public key.
-
-     - Returns: A key pair containing the secret key and public key.
-     */
-    public func keyPair() -> KeyPair? {
-        var pk = Data(count: PublicKeyBytes)
-        var sk = Data(count: SecretKeyBytes)
-
-        let result = pk.withUnsafeMutableBytes { pkPtr in
-            sk.withUnsafeMutableBytes { skPtr in
-                crypto_sign_keypair(pkPtr, skPtr)
-            }
-        }
-        guard result == 0 else {
-            return nil
-        }
-        return KeyPair(publicKey: pk, secretKey: sk)
-    }
-
-    /**
-     Generates a signing secret key and a corresponding public key derived from a seed.
-
-     - Parameter seed: The value from which to derive the secret and public key.
-
-     - Returns: A key pair containing the secret key and public key.
-     */
-    public func keyPair(seed: Data) -> KeyPair? {
-        guard seed.count == SeedBytes else {
-            return nil
-        }
-        var pk = Data(count: PublicKeyBytes)
-        var sk = Data(count: SecretKeyBytes)
-
-        let result = pk.withUnsafeMutableBytes { pkPtr in
-            sk.withUnsafeMutableBytes { skPtr in
-                seed.withUnsafeBytes { seedPtr in
-                    crypto_sign_seed_keypair(pkPtr, skPtr, seedPtr)
-                }
-            }
-        }
-        guard result == 0 else {
-            return nil
-        }
-        return KeyPair(publicKey: pk, secretKey: sk)
-    }
 
     /**
      Signs a message with the sender's secret key
@@ -76,25 +13,17 @@ public class Sign {
 
      - Returns: The signed message.
      */
-    public func sign(message: Data, secretKey: SecretKey) -> Data? {
-        guard secretKey.count == SecretKeyBytes else {
-            return nil
-        }
-        var signedMessage = Data(count: message.count + Bytes)
+    public func sign(message: Bytes, secretKey: SecretKey) -> Bytes? {
+        guard secretKey.count == SecretKeyBytes else { return nil }
+        var signedMessage = Array<UInt8>(count: message.count + Bytes)
 
-        let result = signedMessage.withUnsafeMutableBytes { signedMessagePtr in
-            message.withUnsafeBytes { messagePtr in
-                secretKey.withUnsafeBytes { secretKeyPtr in
-                    crypto_sign(
-                        signedMessagePtr, nil,
-                        messagePtr, CUnsignedLongLong(message.count),
-                        secretKeyPtr)
-                }
-            }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        guard .SUCCESS == crypto_sign (
+            &signedMessage,
+            nil,
+            message, UInt64(message.count),
+            secretKey
+        ).exitCode else { return nil }
+
         return signedMessage
     }
 
@@ -106,26 +35,16 @@ public class Sign {
 
      - Returns: The computed signature.
      */
-    public func signature(message: Data, secretKey: SecretKey) -> Data? {
-        guard secretKey.count == SecretKeyBytes else {
-            return nil
-        }
-        var signature = Data(count: Bytes)
+    public func signature(message: Bytes, secretKey: SecretKey) -> Bytes? {
+        guard secretKey.count == SecretKeyBytes else { return nil }
+        var signature = Array<UInt8>(count: Bytes)
 
-        let result = signature.withUnsafeMutableBytes { signaturePtr in
-            message.withUnsafeBytes { messagePtr in
-                secretKey.withUnsafeBytes { secretKeyPtr in
-                    crypto_sign_detached(
-                        signaturePtr, nil,
-                        messagePtr, CUnsignedLongLong(message.count),
-                        secretKeyPtr)
-                }
-            }
-        }
-
-        guard result == 0 else {
-            return nil
-        }
+        guard .SUCCESS == crypto_sign_detached (
+            &signature,
+            nil,
+            message, UInt64(message.count),
+            secretKey
+        ).exitCode else { return nil }
 
         return signature
     }
@@ -138,9 +57,9 @@ public class Sign {
 
      - Returns: `true` if verification is successful.
      */
-    public func verify(signedMessage: Data, publicKey: PublicKey) -> Bool {
-        let signature = signedMessage.subdata(in: 0..<Bytes) as Data
-        let message = signedMessage.subdata(in: Bytes..<signedMessage.count) as Data
+    public func verify(signedMessage: Bytes, publicKey: PublicKey) -> Bool {
+        let signature = signedMessage[..<Bytes].bytes
+        let message = signedMessage[Bytes...].bytes
 
         return verify(message: message, publicKey: publicKey, signature: signature)
     }
@@ -154,20 +73,16 @@ public class Sign {
 
      - Returns: `true` if verification is successful.
      */
-    public func verify(message: Data, publicKey: PublicKey, signature: Data) -> Bool {
+    public func verify(message: Bytes, publicKey: PublicKey, signature: Bytes) -> Bool {
         guard publicKey.count == PublicKeyBytes else {
             return false
         }
 
-        return signature.withUnsafeBytes { signaturePtr in
-            message.withUnsafeBytes { messagePtr in
-                publicKey.withUnsafeBytes { publicKeyPtr in
-                    crypto_sign_verify_detached(
-                        signaturePtr,
-                        messagePtr, CUnsignedLongLong(message.count), publicKeyPtr) == 0
-                }
-            }
-        }
+        return .SUCCESS == crypto_sign_verify_detached (
+            signature,
+            message, UInt64(message.count),
+            publicKey
+        ).exitCode
     }
 
     /**
@@ -178,26 +93,47 @@ public class Sign {
 
      - Returns: The message data if verification is successful.
      */
-    public func open(signedMessage: Data, publicKey: PublicKey) -> Data? {
+    public func open(signedMessage: Bytes, publicKey: PublicKey) -> Bytes? {
         guard publicKey.count == PublicKeyBytes, signedMessage.count >= Bytes else {
             return nil
         }
-        var message = Data(count: signedMessage.count - Bytes)
-        var mlen: CUnsignedLongLong = 0
 
-        let result = message.withUnsafeMutableBytes { messagePtr in
-            signedMessage.withUnsafeBytes { signedMessagePtr in
-                publicKey.withUnsafeBytes { publicKeyPtr in
-                    crypto_sign_open(
-                        messagePtr, &mlen,
-                        signedMessagePtr, CUnsignedLongLong(signedMessage.count),
-                        publicKeyPtr)
-                }
-            }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        var message = Array<UInt8>(count: signedMessage.count - Bytes)
+        var mlen: UInt64 = 0
+
+        guard .SUCCESS == crypto_sign_open (
+            &message, &mlen,
+            signedMessage, UInt64(signedMessage.count),
+            publicKey
+        ).exitCode else { return nil }
+
         return message
+    }
+}
+
+extension Sign: KeyPairGenerator {
+    public typealias PublicKey = Bytes
+    public typealias SecretKey = Bytes
+
+    public var SeedBytes: Int { return Int(crypto_sign_seedbytes()) }
+    public var PublicKeyBytes: Int { return Int(crypto_sign_publickeybytes()) }
+    public var SecretKeyBytes: Int { return Int(crypto_sign_secretkeybytes()) }
+
+    static let newKeypair: (
+        _ pk: UnsafeMutablePointer<UInt8>,
+        _ sk: UnsafeMutablePointer<UInt8>
+    ) -> Int32 = crypto_sign_keypair
+
+    static let keypairFromSeed: (
+        _ pk: UnsafeMutablePointer<UInt8>,
+        _ sk: UnsafeMutablePointer<UInt8>,
+        _ seed: UnsafePointer<UInt8>
+    ) -> Int32 = crypto_sign_seed_keypair
+
+    public struct KeyPair: KeyPairProtocol {
+        public typealias PublicKey = Sign.PublicKey
+        public typealias SecretKey = Sign.SecretKey
+        public let publicKey: PublicKey
+        public let secretKey: SecretKey
     }
 }

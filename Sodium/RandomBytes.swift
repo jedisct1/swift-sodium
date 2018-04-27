@@ -5,20 +5,16 @@ public class RandomBytes {
     public let SeedBytes = Int(randombytes_seedbytes())
 
     /**
-     Returns a `Data object of length `length` containing an unpredictable sequence of bytes.
+     Returns a `Bytes object of length `length` containing an unpredictable sequence of bytes.
 
      - Parameter length: The number of bytes to generate.
 
      - Returns: The generated data.
      */
-    public func buf(length: Int) -> Data? {
-        guard length >= 0 else {
-            return nil
-        }
-        var output = Data(count: length)
-        output.withUnsafeMutableBytes { outputPtr in
-            randombytes_buf(outputPtr, length)
-        }
+    public func buf(length: Int) -> Bytes? {
+        guard length >= 0 else { return nil }
+        var output = Bytes(count: length)
+        randombytes_buf(&output, length)
         return output
     }
 
@@ -48,18 +44,14 @@ public class RandomBytes {
 
      - Returns: The generated data.
      */
-    public func deterministic(length: Int, seed: Data) -> Data? {
+    public func deterministic(length: Int, seed: Bytes) -> Bytes? {
         guard length >= 0,
               seed.count == SeedBytes,
               Int64(length) <= 0x4000000000 as Int64
         else { return nil }
 
-        var output = Data(count: length)
-        output.withUnsafeMutableBytes { outputPtr in
-            seed.withUnsafeBytes { seedPtr in
-                randombytes_buf_deterministic(outputPtr, length, seedPtr)
-            }
-        }
+        var output = Bytes(count: length)
+        randombytes_buf_deterministic(&output, length, seed)
         return output
     }
 }

@@ -2,90 +2,13 @@ import Foundation
 import Clibsodium
 
 public class Box {
-    public let SeedBytes = Int(crypto_box_seedbytes())
-    public let PublicKeyBytes = Int(crypto_box_publickeybytes())
-    public let SecretKeyBytes = Int(crypto_box_secretkeybytes())
-    public let NonceBytes = Int(crypto_box_noncebytes())
     public let MacBytes = Int(crypto_box_macbytes())
-    public let Primitive = String.init(validatingUTF8:crypto_box_primitive())
+    public let Primitive = String(validatingUTF8:crypto_box_primitive())
     public let BeforenmBytes = Int(crypto_box_beforenmbytes())
     public let SealBytes = Int(crypto_box_sealbytes())
 
-    public typealias PublicKey = Data
-    public typealias SecretKey = Data
-    public typealias Nonce = Data
-    public typealias MAC = Data
-    public typealias Beforenm = Data
-
-    public struct KeyPair {
-        public let publicKey: PublicKey
-        public let secretKey: SecretKey
-
-        public init(publicKey: PublicKey, secretKey: SecretKey) {
-            self.publicKey = publicKey
-            self.secretKey = secretKey
-        }
-    }
-
-
-    /**
-     Generates an encryption secret key and a corresponding public key.
-
-     - Returns: A key pair containing the secret key and public key.
-     */
-    public func keyPair() -> KeyPair? {
-        var pk = Data(count: PublicKeyBytes)
-        var sk = Data(count: SecretKeyBytes)
-        let result = pk.withUnsafeMutableBytes { pkPtr in
-            sk.withUnsafeMutableBytes { skPtr in
-                crypto_box_keypair(pkPtr, skPtr)
-            }
-        }
-        guard result == 0 else {
-            return nil
-        }
-        return KeyPair(publicKey: pk, secretKey: sk)
-    }
-
-    /**
-     Generates an encryption secret key and a corresponding public key derived from a seed.
-
-     - Parameter seed: The value from which to derive the secret and public key.
-
-     - Returns: A key pair containing the secret key and public key.
-     */
-    public func keyPair(seed: Data) -> KeyPair? {
-        if seed.count != SeedBytes {
-            return nil
-        }
-        var pk = Data(count: PublicKeyBytes)
-        var sk = Data(count: SecretKeyBytes)
-        let result = pk.withUnsafeMutableBytes { pkPtr in
-            sk.withUnsafeMutableBytes { skPtr in
-                seed.withUnsafeBytes { seedPtr in
-                    crypto_box_seed_keypair(pkPtr, skPtr, seedPtr)
-                }
-            }
-        }
-        guard result == 0 else {
-            return nil
-        }
-        return KeyPair(publicKey: pk, secretKey: sk)
-    }
-
-    /**
-     Generates a random nonce.
-
-     - Returns: A nonce.
-     */
-    public func nonce() -> Nonce {
-        let nonceLen = NonceBytes
-        var nonce = Data(count: nonceLen)
-        nonce.withUnsafeMutableBytes { noncePtr in
-            randombytes_buf(noncePtr, nonceLen)
-        }
-        return nonce
-    }
+    public typealias MAC = Bytes
+    public typealias Beforenm = Bytes
 
     /**
      Encrypts a message with a recipient's public key and a sender's secret key.
@@ -94,16 +17,13 @@ public class Box {
      - Parameter recipientPublicKey: The recipient's public key.
      - Parameter senderSecretKey: The sender's secret key.
 
-     - Returns: A `Data` object containing the nonce and authenticated ciphertext.
+     - Returns: A `Bytes` object containing the nonce and authenticated ciphertext.
      */
-    public func seal(message: Data, recipientPublicKey: PublicKey, senderSecretKey: SecretKey) -> Data? {
-        guard let (authenticatedCipherText, nonce): (Data, Nonce) = seal(message: message, recipientPublicKey: recipientPublicKey, senderSecretKey: senderSecretKey) else {
+    public func seal(message: Bytes, recipientPublicKey: PublicKey, senderSecretKey: SecretKey) -> Bytes? {
+        guard let (authenticatedCipherText, nonce): (Bytes, Nonce) = seal(message: message, recipientPublicKey: recipientPublicKey, senderSecretKey: senderSecretKey) else {
             return nil
         }
-        var nonceAndAuthenticatedCipherText = nonce
-        nonceAndAuthenticatedCipherText.append(authenticatedCipherText)
-
-        return nonceAndAuthenticatedCipherText
+        return nonce + authenticatedCipherText
     }
 
     /**
@@ -116,29 +36,23 @@ public class Box {
 
      - Returns: The authenticated ciphertext.
      */
-    public func seal(message: Data, recipientPublicKey: PublicKey, senderSecretKey: SecretKey, nonce: Nonce) -> Data? {
-        guard recipientPublicKey.count == PublicKeyBytes, senderSecretKey.count == SecretKeyBytes, nonce.count == NonceBytes else { return nil }
+    public func seal(message: Bytes, recipientPublicKey: PublicKey, senderSecretKey: SecretKey, nonce: Nonce) -> Bytes? {
+        guard recipientPublicKey.count == PublicKeyBytes,
+            senderSecretKey.count == SecretKeyBytes,
+            nonce.count == NonceBytes
+        else { return nil }
 
-        var authenticatedCipherText = Data(count: message.count + MacBytes)
+        var authenticatedCipherText = Bytes(count: message.count + MacBytes)
 
-        let result = authenticatedCipherText.withUnsafeMutableBytes { authenticatedCipherTextPtr in
-            message.withUnsafeBytes { messagePtr in
-                nonce.withUnsafeBytes { noncePtr in
-                    recipientPublicKey.withUnsafeBytes { recipientPublicKeyPtr in
-                        senderSecretKey.withUnsafeBytes { senderSecretKeyPtr in
-                            crypto_box_easy(
-                                authenticatedCipherTextPtr,
-                                messagePtr, CUnsignedLongLong(message.count),
-                                noncePtr,
-                                recipientPublicKeyPtr, senderSecretKeyPtr)
-                        }
-                    }
-                }
-            }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        guard .SUCCESS == crypto_box_easy(
+            &authenticatedCipherText,
+            message,
+            CUnsignedLongLong(message.count),
+            nonce,
+            recipientPublicKey,
+            senderSecretKey
+        ).exitCode else { return nil }
+
         return authenticatedCipherText
     }
 
@@ -151,32 +65,23 @@ public class Box {
 
      - Returns: The authenticated ciphertext and encryption nonce.
      */
-    public func seal(message: Data, recipientPublicKey: PublicKey, senderSecretKey: SecretKey) -> (authenticatedCipherText: Data, nonce: Nonce)? {
+    public func seal(message: Bytes, recipientPublicKey: PublicKey, senderSecretKey: SecretKey) -> (authenticatedCipherText: Bytes, nonce: Nonce)? {
         guard recipientPublicKey.count == PublicKeyBytes,
               senderSecretKey.count == SecretKeyBytes
         else { return nil }
 
-        var authenticatedCipherText = Data(count: message.count + MacBytes)
+        var authenticatedCipherText = Bytes(count: message.count + MacBytes)
         let nonce = self.nonce()
 
-        let result = authenticatedCipherText.withUnsafeMutableBytes { authenticatedCipherTextPtr in
-            message.withUnsafeBytes { messagePtr in
-                nonce.withUnsafeBytes { noncePtr in
-                    recipientPublicKey.withUnsafeBytes { recipientPublicKeyPtr in
-                        senderSecretKey.withUnsafeBytes { senderSecretKeyPtr in
-                            crypto_box_easy(
-                                authenticatedCipherTextPtr,
-                                messagePtr, CUnsignedLongLong(message.count),
-                                noncePtr,
-                                recipientPublicKeyPtr, senderSecretKeyPtr)
-                        }
-                    }
-                }
-            }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        guard .SUCCESS == crypto_box_easy(
+            &authenticatedCipherText,
+            message,
+            CUnsignedLongLong(message.count),
+            nonce,
+            recipientPublicKey,
+            senderSecretKey
+        ).exitCode else { return nil }
+
         return (authenticatedCipherText: authenticatedCipherText, nonce: nonce)
     }
 
@@ -189,52 +94,40 @@ public class Box {
 
      - Returns: The authenticated ciphertext, encryption nonce, and authentication tag.
      */
-    public func seal(message: Data, recipientPublicKey: PublicKey, senderSecretKey: SecretKey) -> (authenticatedCipherText: Data, nonce: Nonce, mac: MAC)? {
+    public func seal(message: Bytes, recipientPublicKey: PublicKey, senderSecretKey: SecretKey) -> (authenticatedCipherText: Bytes, nonce: Nonce, mac: MAC)? {
         guard recipientPublicKey.count == PublicKeyBytes,
               senderSecretKey.count == SecretKeyBytes
         else { return nil }
 
-        var authenticatedCipherText = Data(count: message.count)
-        var mac = Data(count: MacBytes)
+        var authenticatedCipherText = Bytes(count: message.count)
+        var mac = Bytes(count: MacBytes)
         let nonce = self.nonce()
-        let result =  authenticatedCipherText.withUnsafeMutableBytes { authenticatedCipherTextPtr in
-            mac.withUnsafeMutableBytes { macPtr in
-                message.withUnsafeBytes { messagePtr in
-                    nonce.withUnsafeBytes { noncePtr in
-                        recipientPublicKey.withUnsafeBytes { recipientPublicKeyPtr in
-                            senderSecretKey.withUnsafeBytes { senderSecretKeyPtr in
-                                crypto_box_detached(
-                                    authenticatedCipherTextPtr, macPtr,
-                                    messagePtr, CUnsignedLongLong(message.count),
-                                    noncePtr,
-                                    recipientPublicKeyPtr, senderSecretKeyPtr)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        guard result == 0 else {
-            return nil
-        }
+
+        guard .SUCCESS == crypto_box_detached (
+            &authenticatedCipherText,
+            &mac,
+            message, CUnsignedLongLong(message.count),
+            nonce,
+            recipientPublicKey,
+            senderSecretKey
+        ).exitCode else { return nil }
+
         return (authenticatedCipherText: authenticatedCipherText, nonce: nonce as Nonce, mac: mac as MAC)
     }
 
     /**
      Decrypts a message with a sender's public key and the recipient's secret key.
 
-     - Parameter nonceAndAuthenticatedCipherText: A `Data` object containing the nonce and authenticated ciphertext.
+     - Parameter nonceAndAuthenticatedCipherText: A `Bytes` object containing the nonce and authenticated ciphertext.
      - Parameter senderPublicKey: The sender's public key.
      - Parameter recipientSecretKey: The recipient's secret key.
 
      - Returns: The decrypted message.
      */
-    public func open(nonceAndAuthenticatedCipherText: Data, senderPublicKey: PublicKey, recipientSecretKey: SecretKey) -> Data? {
-        guard nonceAndAuthenticatedCipherText.count >= NonceBytes + MacBytes else {
-            return nil
-        }
-        let nonce = nonceAndAuthenticatedCipherText.subdata(in: 0..<NonceBytes) as Nonce
-        let authenticatedCipherText = nonceAndAuthenticatedCipherText.subdata(in: NonceBytes..<nonceAndAuthenticatedCipherText.count)
+    public func open(nonceAndAuthenticatedCipherText: Bytes, senderPublicKey: PublicKey, recipientSecretKey: SecretKey) -> Bytes? {
+        guard nonceAndAuthenticatedCipherText.count >= NonceBytes + MacBytes else { return nil }
+        let nonce = nonceAndAuthenticatedCipherText[..<NonceBytes].bytes as Nonce
+        let authenticatedCipherText = nonceAndAuthenticatedCipherText[NonceBytes...].bytes
 
         return open(authenticatedCipherText: authenticatedCipherText, senderPublicKey: senderPublicKey, recipientSecretKey: recipientSecretKey, nonce: nonce)
     }
@@ -249,32 +142,23 @@ public class Box {
 
      - Returns: The decrypted message.
      */
-    public func open(authenticatedCipherText: Data, senderPublicKey: PublicKey, recipientSecretKey: SecretKey, nonce: Nonce) -> Data? {
+    public func open(authenticatedCipherText: Bytes, senderPublicKey: PublicKey, recipientSecretKey: SecretKey, nonce: Nonce) -> Bytes? {
         guard nonce.count == NonceBytes,
               authenticatedCipherText.count >= MacBytes,
               senderPublicKey.count == PublicKeyBytes,
               recipientSecretKey.count == SecretKeyBytes
         else { return nil }
 
-        var message = Data(count: authenticatedCipherText.count - MacBytes)
-        let result = message.withUnsafeMutableBytes { messagePtr in
-            authenticatedCipherText.withUnsafeBytes { authenticatedCipherTextPtr in
-                nonce.withUnsafeBytes { noncePtr in
-                    senderPublicKey.withUnsafeBytes { senderPublicKeyPtr in
-                        recipientSecretKey.withUnsafeBytes { recipientSecretKeyPtr in
-                            crypto_box_open_easy(
-                                messagePtr, authenticatedCipherTextPtr,
-                                CUnsignedLongLong(authenticatedCipherText.count),
-                                noncePtr,
-                                senderPublicKeyPtr, recipientSecretKeyPtr)
-                        }
-                    }
-                }
-            }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        var message = Bytes(count: authenticatedCipherText.count - MacBytes)
+
+        guard .SUCCESS == crypto_box_open_easy(
+            &message,
+            authenticatedCipherText, UInt64(authenticatedCipherText.count),
+            nonce,
+            senderPublicKey,
+            recipientSecretKey
+        ).exitCode else { return nil }
+
         return message
     }
 
@@ -289,35 +173,25 @@ public class Box {
 
      - Returns: The decrypted message.
      */
-    public func open(authenticatedCipherText: Data, senderPublicKey: PublicKey, recipientSecretKey: SecretKey, nonce: Nonce, mac: MAC) -> Data? {
+    public func open(authenticatedCipherText: Bytes, senderPublicKey: PublicKey, recipientSecretKey: SecretKey, nonce: Nonce, mac: MAC) -> Bytes? {
         guard nonce.count == NonceBytes,
               mac.count == MacBytes,
               senderPublicKey.count == PublicKeyBytes,
               recipientSecretKey.count == SecretKeyBytes
         else { return nil }
 
-        var message = Data(count: authenticatedCipherText.count)
+        var message = Bytes(count: authenticatedCipherText.count)
 
-        let result = message.withUnsafeMutableBytes { messagePtr in
-            authenticatedCipherText.withUnsafeBytes { authenticatedCipherTextPtr in
-                mac.withUnsafeBytes { macPtr in
-                    nonce.withUnsafeBytes { noncePtr in
-                        senderPublicKey.withUnsafeBytes { senderPublicKeyPtr in
-                            recipientSecretKey.withUnsafeBytes { recipientSecretKeyPtr in
-                                crypto_box_open_detached(
-                                    messagePtr, authenticatedCipherTextPtr, macPtr,
-                                    CUnsignedLongLong(authenticatedCipherText.count),
-                                    noncePtr,
-                                    senderPublicKeyPtr, recipientSecretKeyPtr)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        guard .SUCCESS == crypto_box_open_detached(
+            &message,
+            authenticatedCipherText,
+            mac,
+            UInt64(authenticatedCipherText.count),
+            nonce,
+            senderPublicKey,
+            recipientSecretKey
+        ).exitCode else { return nil }
+
         return message
     }
 
@@ -331,18 +205,14 @@ public class Box {
 
      - Returns: The computed shared secret key.
      */
-    public func beforenm(recipientPublicKey: PublicKey, senderSecretKey: SecretKey) -> Data? {
-        var key = Data(count: BeforenmBytes)
-        let result = key.withUnsafeMutableBytes { keyPtr in
-            recipientPublicKey.withUnsafeBytes { recipientPublicKeyPtr in
-                senderSecretKey.withUnsafeBytes { senderSecretKeyPtr in
-                    crypto_box_beforenm(keyPtr, recipientPublicKeyPtr, senderSecretKeyPtr)
-                }
-            }
-        }
-        guard result == 0 else {
-            return nil
-        }
+    public func beforenm(recipientPublicKey: PublicKey, senderSecretKey: SecretKey) -> Bytes? {
+        var key = Bytes(count: BeforenmBytes)
+        guard .SUCCESS == crypto_box_beforenm (
+            &key,
+            recipientPublicKey,
+            senderSecretKey
+        ).exitCode else { return nil }
+
         return key
     }
 
@@ -354,47 +224,34 @@ public class Box {
 
      - Returns: The authenticated ciphertext and encryption nonce.
      */
-    public func seal(message: Data, beforenm: Beforenm) -> (authenticatedCipherText: Data, nonce: Nonce)? {
-        guard beforenm.count == BeforenmBytes else {
-            return nil
-        }
-        var authenticatedCipherText = Data(count: message.count + MacBytes)
+    public func seal(message: Bytes, beforenm: Beforenm) -> (authenticatedCipherText: Bytes, nonce: Nonce)? {
+        guard beforenm.count == BeforenmBytes else { return nil }
+        var authenticatedCipherText = Bytes(count: message.count + MacBytes)
         let nonce = self.nonce()
 
-        let result = authenticatedCipherText.withUnsafeMutableBytes { authenticatedCipherTextPtr in
-            message.withUnsafeBytes { messagePtr in
-                nonce.withUnsafeBytes { noncePtr in
-                    beforenm.withUnsafeBytes { beforenmPtr in
-                        crypto_box_easy_afternm(
-                            authenticatedCipherTextPtr,
-                            messagePtr,
-                            CUnsignedLongLong(message.count),
-                            noncePtr,
-                            beforenmPtr)
-                    }
-                }
-            }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        guard .SUCCESS == crypto_box_easy_afternm (
+            &authenticatedCipherText,
+            message, UInt64(message.count),
+            nonce,
+            beforenm
+        ).exitCode else { return nil }
+
         return (authenticatedCipherText: authenticatedCipherText, nonce: nonce)
     }
 
     /**
      Decrypts a message with the shared secret key generated from a recipient's public key and a sender's secret key using `beforenm()`.
 
-     - Parameter nonceAndAuthenticatedCipherText: A `Data` object containing the nonce and authenticated ciphertext.
+     - Parameter nonceAndAuthenticatedCipherText: A `Bytes` object containing the nonce and authenticated ciphertext.
      - Parameter beforenm: The shared secret key.
 
      - Returns: The decrypted message.
      */
-    public func open(nonceAndAuthenticatedCipherText: Data, beforenm: Beforenm) -> Data? {
-        guard nonceAndAuthenticatedCipherText.count >= NonceBytes + MacBytes else {
-            return nil
-        }
-        let nonce = nonceAndAuthenticatedCipherText.subdata(in: 0..<NonceBytes) as Nonce
-        let authenticatedCipherText = nonceAndAuthenticatedCipherText.subdata(in: NonceBytes..<nonceAndAuthenticatedCipherText.count)
+    public func open(nonceAndAuthenticatedCipherText: Bytes, beforenm: Beforenm) -> Bytes? {
+        guard nonceAndAuthenticatedCipherText.count >= NonceBytes + MacBytes else { return nil }
+
+        let nonce = nonceAndAuthenticatedCipherText[..<NonceBytes].bytes as Nonce
+        let authenticatedCipherText = nonceAndAuthenticatedCipherText[NonceBytes...].bytes
 
         return  open(authenticatedCipherText: authenticatedCipherText, beforenm: beforenm, nonce: nonce)
     }
@@ -408,28 +265,21 @@ public class Box {
 
      - Returns: The decrypted message.
      */
-    public func open(authenticatedCipherText: Data, beforenm: Beforenm, nonce: Nonce) -> Data? {
+    public func open(authenticatedCipherText: Bytes, beforenm: Beforenm, nonce: Nonce) -> Bytes? {
         guard nonce.count == NonceBytes,
               authenticatedCipherText.count >= MacBytes,
               beforenm.count == BeforenmBytes
         else { return nil }
 
-        var message = Data(count: authenticatedCipherText.count - MacBytes)
-        let result = message.withUnsafeMutableBytes { messagePtr in
-            authenticatedCipherText.withUnsafeBytes { authenticatedCipherTextPtr in
-                nonce.withUnsafeBytes { noncePtr in
-                    beforenm.withUnsafeBytes { beforenmPtr in
-                        crypto_box_open_easy_afternm(
-                            messagePtr,
-                            authenticatedCipherTextPtr, CUnsignedLongLong(authenticatedCipherText.count),
-                            noncePtr, beforenmPtr)
-                    }
-                }
-            }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        var message = Bytes(count: authenticatedCipherText.count - MacBytes)
+
+        guard .SUCCESS == crypto_box_open_easy_afternm (
+            &message,
+            authenticatedCipherText, UInt64(authenticatedCipherText.count),
+            nonce,
+            beforenm
+        ).exitCode else { return nil }
+
         return message
     }
 
@@ -439,16 +289,15 @@ public class Box {
      - Parameter message: The message to encrypt.
      - Parameter beforenm: The shared secret key.
 
-     - Returns: A `Data` object containing the encryption nonce and authenticated ciphertext.
+     - Returns: A `Bytes` object containing the encryption nonce and authenticated ciphertext.
      */
-    public func seal(message: Data, beforenm: Beforenm) -> Data? {
-        guard let (authenticatedCipherText, nonce): (Data, Nonce) = seal(message: message, beforenm: beforenm) else {
-            return nil
-        }
-        var nonceAndAuthenticatedCipherText = nonce
-        nonceAndAuthenticatedCipherText.append(authenticatedCipherText)
+    public func seal(message: Bytes, beforenm: Beforenm) -> Bytes? {
+        guard let (authenticatedCipherText, nonce): (Bytes, Nonce) = seal(
+            message: message,
+            beforenm: beforenm
+        ) else { return nil }
 
-        return nonceAndAuthenticatedCipherText
+        return nonce + authenticatedCipherText
     }
 
     /**
@@ -459,60 +308,76 @@ public class Box {
 
      - Returns: The anonymous ciphertext.
      */
-    public func seal(message: Data, recipientPublicKey: Box.PublicKey) -> Data? {
-        guard recipientPublicKey.count == PublicKeyBytes else {
-            return nil
-        }
-        var anonymousCipherText = Data(count: SealBytes + message.count)
+    public func seal(message: Bytes, recipientPublicKey: Box.PublicKey) -> Bytes? {
+        guard recipientPublicKey.count == PublicKeyBytes else { return nil }
+        var anonymousCipherText = Bytes(count: SealBytes + message.count)
 
-        let result = anonymousCipherText.withUnsafeMutableBytes { anonymousCipherTextPtr in
-            message.withUnsafeBytes { messagePtr in
-                recipientPublicKey.withUnsafeBytes { recipientPublicKeyPtr in
-                    crypto_box_seal(
-                        anonymousCipherTextPtr,
-                        messagePtr, CUnsignedLongLong(message.count),
-                        recipientPublicKeyPtr)
-                }
-            }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        guard .SUCCESS == crypto_box_seal (
+            &anonymousCipherText,
+            message, UInt64(message.count),
+            recipientPublicKey
+        ).exitCode else { return nil }
+
         return anonymousCipherText
     }
 
     /**
      Decrypts a message with the recipient's public key and secret key.
 
-     - Parameter anonymousCipherText: A `Data` object containing the anonymous ciphertext.
+     - Parameter anonymousCipherText: A `Bytes` object containing the anonymous ciphertext.
      - Parameter senderPublicKey: The recipient's public key.
      - Parameter recipientSecretKey: The recipient's secret key.
 
      - Returns: The decrypted message.
      */
-    public func open(anonymousCipherText: Data, recipientPublicKey: PublicKey, recipientSecretKey: SecretKey) -> Data? {
+    public func open(anonymousCipherText: Bytes, recipientPublicKey: PublicKey, recipientSecretKey: SecretKey) -> Bytes? {
         guard recipientPublicKey.count == PublicKeyBytes,
               recipientSecretKey.count == SecretKeyBytes,
               anonymousCipherText.count >= SealBytes
         else { return nil }
 
-        var message = Data(count: anonymousCipherText.count - SealBytes)
+        var message = Bytes(count: anonymousCipherText.count - SealBytes)
 
-        let result = message.withUnsafeMutableBytes { messagePtr in
-            anonymousCipherText.withUnsafeBytes { anonymousCipherTextPtr in
-                recipientPublicKey.withUnsafeBytes { recipientPublicKeyPtr in
-                    recipientSecretKey.withUnsafeBytes { recipientSecretKeyPtr in
-                        crypto_box_seal_open(
-                            messagePtr,
-                            anonymousCipherTextPtr, CUnsignedLongLong(anonymousCipherText.count),
-                            recipientPublicKeyPtr, recipientSecretKeyPtr)
-                    }
-                }
-            }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        guard .SUCCESS == crypto_box_seal_open (
+            &message,
+            anonymousCipherText, UInt64(anonymousCipherText.count),
+            recipientPublicKey,
+            recipientSecretKey
+        ).exitCode else { return nil }
+
         return message
     }
+}
+
+extension Box: KeyPairGenerator {
+    public typealias PublicKey = Bytes
+    public typealias SecretKey = Bytes
+
+    public var SeedBytes: Int { return Int(crypto_box_seedbytes()) }
+    public var PublicKeyBytes: Int { return Int(crypto_box_publickeybytes()) }
+    public var SecretKeyBytes: Int { return Int(crypto_box_secretkeybytes()) }
+
+    static let newKeypair: (
+        _ pk: UnsafeMutablePointer<UInt8>,
+        _ sk: UnsafeMutablePointer<UInt8>
+    ) -> Int32 = crypto_box_keypair
+
+    static let keypairFromSeed: (
+        _ pk: UnsafeMutablePointer<UInt8>,
+        _ sk: UnsafeMutablePointer<UInt8>,
+        _ seed: UnsafePointer<UInt8>
+    ) -> Int32 = crypto_box_seed_keypair
+
+    public struct KeyPair: KeyPairProtocol {
+        public typealias PublicKey = Box.PublicKey
+        public typealias SecretKey = Box.SecretKey
+        public let publicKey: PublicKey
+        public let secretKey: SecretKey
+    }
+}
+
+extension Box: NonceGenerator {
+    public typealias Nonce = Bytes
+
+    public var NonceBytes: Int { return Int(crypto_box_noncebytes()) }
 }

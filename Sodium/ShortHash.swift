@@ -3,22 +3,6 @@ import Clibsodium
 
 public class ShortHash {
     public let Bytes = Int(crypto_shorthash_bytes())
-    public let KeyBytes = Int(crypto_shorthash_keybytes())
-
-    public typealias Key = Data
-
-    /**
-     Generates a secret key.
-
-     - Returns: The generated key.
-     */
-    public func key() -> Key {
-        var k = Data(count: KeyBytes)
-        k.withUnsafeMutableBytes { kPtr in
-            crypto_shorthash_keygen(kPtr)
-        }
-        return k
-    }
 
     /**
      Computes short but unpredictable (without knowing the secret key) values suitable for picking a list in a hash table for a given key.
@@ -28,22 +12,23 @@ public class ShortHash {
 
      - Returns: The computed fingerprint.
      */
-    public func hash(message: Data, key: Data) -> Data? {
-        guard key.count == KeyBytes else {
-            return nil
-        }
-        var output = Data(count: Bytes)
+    public func hash(message: Bytes, key: Bytes) -> Bytes? {
+        guard key.count == KeyBytes else { return nil }
+        var output = Array<UInt8>(count: Bytes)
 
-        let result = output.withUnsafeMutableBytes { outputPtr in
-            message.withUnsafeBytes { messagePtr in
-                key.withUnsafeBytes { keyPtr in
-                    crypto_shorthash(outputPtr, messagePtr, CUnsignedLongLong(message.count), keyPtr)
-                }
-            }
-        }
-        guard result == 0 else {
-            return nil
-        }
+        guard .SUCCESS == crypto_shorthash (
+            &output,
+            message, UInt64(message.count),
+            key
+        ).exitCode else { return nil }
+
         return output
     }
+}
+
+extension ShortHash: SecretKeyGenerator {
+    public var KeyBytes: Int { return Int(crypto_shorthash_keybytes()) }
+    public typealias Key = Bytes
+
+    static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_shorthash_keygen
 }
