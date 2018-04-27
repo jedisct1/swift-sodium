@@ -6,6 +6,10 @@ extension Array where Element == UInt8 {
     init (count bytes: Int) {
         self.init(repeating: 0, count: bytes)
     }
+
+    public var utf8String: String? {
+        return String(data: Data(bytes: self), encoding: .utf8)
+    }
 }
 
 extension ArraySlice where Element == UInt8 {
