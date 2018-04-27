@@ -17,7 +17,7 @@ public struct Aead {
          
          - Returns: A `Bytes` object containing the nonce and authenticated ciphertext.
          */
-        public func encrypt(message: Bytes, secretKey: Key, additionalData: Bytes = Bytes()) -> Bytes? {
+        public func encrypt(message: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> Bytes? {
             guard let (authenticatedCipherText, nonce): (Bytes, Nonce) = encrypt(
                 message: message,
                 secretKey: secretKey,
@@ -36,7 +36,7 @@ public struct Aead {
          
          - Returns: The authenticated ciphertext and encryption nonce.
          */
-        public func encrypt(message: Bytes, secretKey: Key, additionalData: Bytes = Bytes()) -> (authenticatedCipherText: Bytes, nonce: Nonce)? {
+        public func encrypt(message: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> (authenticatedCipherText: Bytes, nonce: Nonce)? {
             guard secretKey.count == KeyBytes else { return nil }
 
             var authenticatedCipherText = Bytes(count: message.count + ABytes)
@@ -46,7 +46,7 @@ public struct Aead {
             guard .SUCCESS == crypto_aead_xchacha20poly1305_ietf_encrypt (
                 &authenticatedCipherText, &authenticatedCipherTextLen,
                 message, UInt64(message.count),
-                additionalData, UInt64(additionalData.count),
+                additionalData, UInt64(additionalData?.count ?? 0),
                 nil, nonce, secretKey
             ).exitCode else { return nil }
     
@@ -62,7 +62,7 @@ public struct Aead {
          
          - Returns: The decrypted message.
          */
-        public func decrypt(nonceAndAuthenticatedCipherText: Bytes, secretKey: Key, additionalData: Bytes = Bytes()) -> Bytes? {
+        public func decrypt(nonceAndAuthenticatedCipherText: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> Bytes? {
             guard nonceAndAuthenticatedCipherText.count >= ABytes + NonceBytes else { return nil }
             
             let nonce = nonceAndAuthenticatedCipherText[..<NonceBytes].bytes as Nonce
@@ -80,7 +80,7 @@ public struct Aead {
          
          - Returns: The decrypted message.
          */
-        public func decrypt(authenticatedCipherText: Bytes, secretKey: Key, nonce: Nonce, additionalData: Bytes = Bytes()) -> Bytes? {
+        public func decrypt(authenticatedCipherText: Bytes, secretKey: Key, nonce: Nonce, additionalData: Bytes? = nil) -> Bytes? {
             guard authenticatedCipherText.count >= ABytes else { return nil }
             
             var message = Bytes(count: authenticatedCipherText.count - ABytes)
@@ -90,7 +90,7 @@ public struct Aead {
                 &message, &messageLen,
                 nil,
                 authenticatedCipherText, UInt64(authenticatedCipherText.count),
-                additionalData, UInt64(additionalData.count),
+                additionalData, UInt64(additionalData?.count ?? 0),
                 nonce, secretKey
             ).exitCode else { return nil }
     
