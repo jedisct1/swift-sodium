@@ -1,7 +1,7 @@
 import Foundation
 import Clibsodium
 
-public class PWHash {
+public struct PWHash {
     public let SaltBytes = Int(crypto_pwhash_saltbytes())
     public let StrBytes = Int(crypto_pwhash_strbytes()) - (1 as Int)
     public let StrPrefix = String(validatingUTF8: crypto_pwhash_strprefix())

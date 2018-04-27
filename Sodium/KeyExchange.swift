@@ -1,7 +1,7 @@
 import Foundation
 import Clibsodium
 
-public class KeyExchange {
+public struct KeyExchange {
     public let SessionKeyBytes = Int(crypto_kx_sessionkeybytes())
 
     public struct SessionKeyPair {

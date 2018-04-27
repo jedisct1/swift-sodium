@@ -1,7 +1,7 @@
 import Foundation
 import Clibsodium
 
-public class Utils {
+public struct Utils {
     /**
      Tries to effectively zero bytes in `data`, even if optimizations are being applied to the code.
 

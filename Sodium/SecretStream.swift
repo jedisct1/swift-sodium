@@ -1,7 +1,7 @@
 import Foundation
 import Clibsodium
 
-public class SecretStream {
+public struct SecretStream {
     public let xchacha20poly1305 = XChaCha20Poly1305()
 
     public class XChaCha20Poly1305 {

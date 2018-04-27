@@ -1,7 +1,7 @@
 import Foundation
 import Clibsodium
 
-public class RandomBytes {
+public struct RandomBytes {
     public let SeedBytes = Int(randombytes_seedbytes())
 
     /**

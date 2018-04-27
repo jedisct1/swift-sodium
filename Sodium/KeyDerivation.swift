@@ -1,7 +1,7 @@
 import Foundation
 import Clibsodium
 
-public class KeyDerivation {
+public struct KeyDerivation {
     public let BytesMin = Int(crypto_kdf_bytes_min())
     public let BytesMax = Int(crypto_kdf_bytes_max())
     public let ContextBytes = Int(crypto_kdf_contextbytes())

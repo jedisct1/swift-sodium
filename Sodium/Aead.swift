@@ -4,7 +4,7 @@ import Clibsodium
 public struct Aead {
     public let xchacha20poly1305ietf = XChaCha20Poly1305Ietf()
     
-    public class XChaCha20Poly1305Ietf {
+    public struct XChaCha20Poly1305Ietf {
         public let ABytes = Int(crypto_aead_xchacha20poly1305_ietf_abytes())
         public typealias MAC = Bytes
         

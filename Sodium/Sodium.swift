@@ -1,7 +1,7 @@
 import Foundation
 import Clibsodium
 
-public class Sodium {
+public struct Sodium {
     public let box = Box()
     public let secretBox = SecretBox()
     public let genericHash = GenericHash()

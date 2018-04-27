@@ -1,7 +1,7 @@
 import Foundation
 import Clibsodium
 
-public class GenericHash {
+public struct GenericHash {
     public let BytesMin = Int(crypto_generichash_bytes_min())
     public let BytesMax = Int(crypto_generichash_bytes_max())
     public let Bytes = Int(crypto_generichash_bytes())

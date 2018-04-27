@@ -1,7 +1,7 @@
 import Foundation
 import Clibsodium
 
-public class Auth {
+public struct Auth {
     public let Bytes = Int(crypto_auth_bytes())
     public typealias SecretKey = Key
 
