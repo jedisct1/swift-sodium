@@ -293,7 +293,7 @@ class ReadmeTests : XCTestCase {
         var data = "test".bytes
 
         // make data.count a multiple of 16
-        sodium.utils.pad(data: &data, blockSize: 16)!
+        sodium.utils.pad(bytes: &data, blockSize: 16)!
 
         // restore original size
         sodium.utils.unpad(bytes: &data, blockSize: 16)!

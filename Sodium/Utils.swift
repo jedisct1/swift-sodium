@@ -147,27 +147,21 @@ public class Utils {
      - Parameter data: input/output buffer, will be modified in-place
      - Parameter blocksize: the block size
      */
-    public func pad(data bytes: inout Bytes, blockSize: Int) -> ()? {
-        // we must use Data and not Bytes because we need to increase the
-        // count size before passing to `sodium_pad` without initilising bytes
-        var data = Data(bytes)
-        let dataCount = data.count
-        data.reserveCapacity(dataCount + blockSize)
-        data.count = dataCount + blockSize
+    public func pad(bytes: inout Bytes, blockSize: Int) -> ()? {
+        let bytesCount = bytes.count
+        bytes += Bytes(count: blockSize)
+
         var paddedLen: size_t = 0
-        guard .SUCCESS == data.withUnsafeMutableBytes({
-            dataPtr in sodium_pad(
-                &paddedLen,
-                dataPtr, dataCount,
-                blockSize,
-                dataCount + blockSize
-            ).exitCode
-        }) else { return nil }
 
-        data.count = paddedLen
+        guard .SUCCESS == sodium_pad(
+            &paddedLen,
+            &bytes, bytesCount,
+            blockSize,
+            bytesCount + blockSize
+        ).exitCode else { return nil }
 
-        // return the new bytes by argument
-        bytes = Bytes(data)
+        bytes = bytes[..<paddedLen].bytes
+
         return ()
     }
 
