@@ -22,7 +22,7 @@ extension Aead.XChaCha20Poly1305Ietf {
 
      - Returns: A `Bytes` object containing the nonce and authenticated ciphertext.
      */
-    public func encrypt(message: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> Bytes? {
+    public func encrypt(message: BytesRepresentable, secretKey: Key, additionalData: BytesRepresentable? = nil) -> Bytes? {
         guard let (authenticatedCipherText, nonce): (Bytes, Nonce) = encrypt(
             message: message,
             secretKey: secretKey,
@@ -41,9 +41,10 @@ extension Aead.XChaCha20Poly1305Ietf {
 
      - Returns: The authenticated ciphertext and encryption nonce.
      */
-    public func encrypt(message: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> (authenticatedCipherText: Bytes, nonce: Nonce)? {
+    public func encrypt(message: BytesRepresentable, secretKey: Key, additionalData: BytesRepresentable? = nil) -> (authenticatedCipherText: Bytes, nonce: Nonce)? {
         guard secretKey.count == KeyBytes else { return nil }
 
+        let (message, additionalData) = (message.bytes, additionalData?.bytes)
         var authenticatedCipherText = Bytes(count: message.count + ABytes)
         var authenticatedCipherTextLen: UInt64 = 0
         let nonce = self.nonce()
@@ -69,7 +70,9 @@ extension Aead.XChaCha20Poly1305Ietf {
      
      - Returns: The decrypted message.
      */
-    public func decrypt(nonceAndAuthenticatedCipherText: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> Bytes? {
+    public func decrypt(nonceAndAuthenticatedCipherText: BytesRepresentable, secretKey: Key, additionalData: BytesRepresentable? = nil) -> Bytes? {
+        let nonceAndAuthenticatedCipherText = nonceAndAuthenticatedCipherText.bytes
+        let additionalData = additionalData?.bytes
         guard nonceAndAuthenticatedCipherText.count >= ABytes + NonceBytes else { return nil }
         
         let nonce = nonceAndAuthenticatedCipherText[..<NonceBytes].bytes as Nonce
@@ -87,7 +90,9 @@ extension Aead.XChaCha20Poly1305Ietf {
      
      - Returns: The decrypted message.
      */
-    public func decrypt(authenticatedCipherText: Bytes, secretKey: Key, nonce: Nonce, additionalData: Bytes? = nil) -> Bytes? {
+    public func decrypt(authenticatedCipherText: BytesRepresentable, secretKey: Key, nonce: Nonce, additionalData: BytesRepresentable? = nil) -> Bytes? {
+        let authenticatedCipherText = authenticatedCipherText.bytes
+        let additionalData = additionalData?.bytes
         guard authenticatedCipherText.count >= ABytes else { return nil }
         
         var message = Bytes(count: authenticatedCipherText.count - ABytes)

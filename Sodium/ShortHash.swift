@@ -14,7 +14,8 @@ extension ShortHash {
 
      - Returns: The computed fingerprint.
      */
-    public func hash(message: Bytes, key: Bytes) -> Bytes? {
+    public func hash(message: BytesRepresentable, key: BytesRepresentable) -> Bytes? {
+        let (message, key) = (message.bytes, key.bytes)
         guard key.count == KeyBytes else { return nil }
         var output = Array<UInt8>(count: Bytes)
 

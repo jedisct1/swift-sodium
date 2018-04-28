@@ -120,8 +120,9 @@ extension SecretStream.XChaCha20Poly1305.PushStream {
 
      - Returns: The ciphertext.
      */
-    public mutating func push(message: Bytes, tag: Tag = .MESSAGE, ad: Bytes? = nil) -> Bytes? {
-        let _ad = ad ?? Bytes(count: 0)
+    public mutating func push(message: BytesRepresentable, tag: Tag = .MESSAGE, ad: BytesRepresentable? = nil) -> Bytes? {
+        let _ad = ad?.bytes ?? Bytes(count: 0)
+        let message = message.bytes
         var cipherText = Bytes(count: message.count + XChaCha20Poly1305.ABytes)
         guard .SUCCESS == crypto_secretstream_xchacha20poly1305_push(
             &state,
@@ -155,10 +156,11 @@ extension SecretStream.XChaCha20Poly1305.PullStream {
 
      - Returns: The decrypted message, as well as the tag attached to it.
      */
-    public mutating func pull(cipherText: Bytes, ad: Bytes? = nil) -> (Bytes, Tag)? {
+    public mutating func pull(cipherText: BytesRepresentable, ad: BytesRepresentable? = nil) -> (Bytes, Tag)? {
+        let cipherText = cipherText.bytes
         guard cipherText.count >= XChaCha20Poly1305.ABytes else { return nil }
         var message = Bytes(count: cipherText.count - XChaCha20Poly1305.ABytes)
-        let _ad = ad ?? Bytes(count: 0)
+        let _ad = ad?.bytes ?? Bytes(count: 0)
         var _tag: UInt8 = 0
         let result = crypto_secretstream_xchacha20poly1305_pull(
             &state,

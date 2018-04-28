@@ -16,9 +16,10 @@ extension GenericHash {
         private var state: State
         public var outputLength: Int = 0
 
-        init?(key: Bytes?, outputLength: Int) {
+        init?(key: BytesRepresentable?, outputLength: Int) {
             state = crypto_generichash_state()
 
+            let key = key?.bytes
             guard .SUCCESS == crypto_generichash_init(
                 &state,
                 key, key?.count ?? 0,
@@ -39,7 +40,7 @@ extension GenericHash {
 
      - Returns: The computed fingerprint.
      */
-    public func hash(message: Bytes, key: Bytes? = nil) -> Bytes? {
+    public func hash(message: BytesRepresentable, key: BytesRepresentable? = nil) -> Bytes? {
         return hash(message: message, key: key, outputLength: Bytes)
     }
 
@@ -52,9 +53,10 @@ extension GenericHash {
 
      - Returns: The computed fingerprint.
      */
-    public func hash(message: Bytes, key: Bytes?, outputLength: Int) -> Bytes? {
+    public func hash(message: BytesRepresentable, key: BytesRepresentable?, outputLength: Int) -> Bytes? {
         var output = Array<UInt8>(count: outputLength)
 
+        let (key, message) = (key?.bytes, message.bytes)
         guard .SUCCESS == crypto_generichash(
             &output, outputLength,
             message, UInt64(message.count),
@@ -72,7 +74,7 @@ extension GenericHash {
 
      - Returns: The computed fingerprint.
      */
-    public func hash(message: Bytes, outputLength: Int) -> Bytes? {
+    public func hash(message: BytesRepresentable, outputLength: Int) -> Bytes? {
         return hash(message: message, key: nil, outputLength: outputLength)
     }
 }
@@ -85,7 +87,7 @@ extension GenericHash {
 
      - Returns: The initialized `Stream`.
      */
-    public func initStream(key: Bytes? = nil) -> Stream? {
+    public func initStream(key: BytesRepresentable? = nil) -> Stream? {
         return Stream(key: key, outputLength: Bytes)
     }
 
@@ -97,7 +99,7 @@ extension GenericHash {
 
      - Returns: The initialized `Stream`.
      */
-    public func initStream(key: Bytes?, outputLength: Int) -> Stream? {
+    public func initStream(key: BytesRepresentable?, outputLength: Int) -> Stream? {
         return Stream(key: key, outputLength: outputLength)
     }
 
@@ -122,7 +124,8 @@ extension GenericHash.Stream {
      - Returns: `true` if the data was consumed successfully.
      */
     @discardableResult
-    public mutating func update(input: Bytes) -> Bool {
+    public mutating func update(input: BytesRepresentable) -> Bool {
+        let input = input.bytes
         return .SUCCESS == crypto_generichash_update(
             &state,
             input, UInt64(input.count)

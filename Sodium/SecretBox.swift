@@ -15,7 +15,7 @@ extension SecretBox {
 
      - Returns: A `Bytes` object containing the nonce and authenticated ciphertext.
      */
-    public func seal(message: Bytes, secretKey: Key) -> Bytes? {
+    public func seal(message: BytesRepresentable, secretKey: Key) -> Bytes? {
         guard let (authenticatedCipherText, nonce): (Bytes, Nonce) = seal(
             message: message,
             secretKey: secretKey
@@ -31,7 +31,8 @@ extension SecretBox {
 
      - Returns: The authenticated ciphertext and encryption nonce.
      */
-    public func seal(message: Bytes, secretKey: Key) -> (authenticatedCipherText: Bytes, nonce: Nonce)? {
+    public func seal(message: BytesRepresentable, secretKey: Key) -> (authenticatedCipherText: Bytes, nonce: Nonce)? {
+        let message = message.bytes
         guard secretKey.count == KeyBytes else { return nil }
         var authenticatedCipherText = Bytes(count: message.count + MacBytes)
         let nonce = self.nonce()
@@ -54,9 +55,10 @@ extension SecretBox {
 
      - Returns: The encrypted ciphertext, encryption nonce, and authentication tag.
      */
-    public func seal(message: Bytes, secretKey: Key) -> (cipherText: Bytes, nonce: Nonce, mac: MAC)? {
+    public func seal(message: BytesRepresentable, secretKey: Key) -> (cipherText: Bytes, nonce: Nonce, mac: MAC)? {
         guard secretKey.count == KeyBytes else { return nil }
 
+        let message = message.bytes
         var cipherText = Bytes(count: message.count)
         var mac = Bytes(count: MacBytes)
         let nonce = self.nonce()
@@ -82,7 +84,8 @@ extension SecretBox {
 
      - Returns: The decrypted message.
      */
-    public func open(nonceAndAuthenticatedCipherText: Bytes, secretKey: Key) -> Bytes? {
+    public func open(nonceAndAuthenticatedCipherText: BytesRepresentable, secretKey: Key) -> Bytes? {
+        let nonceAndAuthenticatedCipherText = nonceAndAuthenticatedCipherText.bytes
         guard nonceAndAuthenticatedCipherText.count >= MacBytes + NonceBytes else { return nil }
         let nonce = nonceAndAuthenticatedCipherText[..<NonceBytes].bytes as Nonce
         let authenticatedCipherText = nonceAndAuthenticatedCipherText[NonceBytes...].bytes
@@ -99,7 +102,8 @@ extension SecretBox {
 
      - Returns: The decrypted message.
      */
-    public func open(authenticatedCipherText: Bytes, secretKey: Key, nonce: Nonce) -> Bytes? {
+    public func open(authenticatedCipherText: BytesRepresentable, secretKey: Key, nonce: Nonce) -> Bytes? {
+        let authenticatedCipherText = authenticatedCipherText.bytes
         guard authenticatedCipherText.count >= MacBytes else { return nil }
         var message = Bytes(count: authenticatedCipherText.count - MacBytes)
 
@@ -122,12 +126,13 @@ extension SecretBox {
 
      - Returns: The decrypted message.
      */
-    public func open(cipherText: Bytes, secretKey: Key, nonce: Nonce, mac: MAC) -> Bytes? {
+    public func open(cipherText: BytesRepresentable, secretKey: Key, nonce: Nonce, mac: MAC) -> Bytes? {
         guard nonce.count == NonceBytes,
               mac.count == MacBytes,
               secretKey.count == KeyBytes
         else { return nil }
 
+        let cipherText = cipherText.bytes
         var message = Bytes(count: cipherText.count)
 
         guard .SUCCESS == crypto_secretbox_open_detached (

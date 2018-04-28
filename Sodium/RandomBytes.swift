@@ -46,7 +46,8 @@ extension RandomBytes {
 
      - Returns: The generated data.
      */
-    public func deterministic(length: Int, seed: Bytes) -> Bytes? {
+    public func deterministic(length: Int, seed: BytesRepresentable) -> Bytes? {
+        let seed = seed.bytes
         guard length >= 0,
               seed.count == SeedBytes,
               Int64(length) <= 0x4000000000 as Int64

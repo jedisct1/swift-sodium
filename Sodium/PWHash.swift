@@ -47,9 +47,9 @@ extension PWHash {
 
      - Returns: The generated string.
      */
-    public func str(passwd: Bytes, opsLimit: Int, memLimit: Int) -> String? {
+    public func str(passwd: BytesRepresentable, opsLimit: Int, memLimit: Int) -> String? {
         var output = Bytes(count: StrBytes).map(Int8.init)
-        let passwd = passwd.map(Int8.init)
+        let passwd = passwd.bytes.map(Int8.init)
 
         guard .SUCCESS == crypto_pwhash_str(
             &output,
@@ -69,9 +69,9 @@ extension PWHash {
 
      - Returns: `true` if the verification succeeds.
      */
-    public func strVerify(hash: String, passwd: Bytes) -> Bool {
+    public func strVerify(hash: String, passwd: BytesRepresentable) -> Bool {
         let hashBytes = Bytes((hash + "\0").utf8).map(Int8.init)
-        let passwd = passwd.map(Int8.init)
+        let passwd = passwd.bytes.map(Int8.init)
 
         return .SUCCESS == crypto_pwhash_str_verify(
             hashBytes,
@@ -113,10 +113,10 @@ extension PWHash {
 
      - Returns: The derived key data.
      */
-    public func hash(outputLength: Int, passwd: Bytes, salt: Bytes, opsLimit: Int, memLimit: Int, alg: Alg = .Default) -> Bytes? {
+    public func hash(outputLength: Int, passwd: BytesRepresentable, salt: Bytes, opsLimit: Int, memLimit: Int, alg: Alg = .Default) -> Bytes? {
         guard salt.count == SaltBytes else { return nil }
         var output = Bytes(count: outputLength)
-        let passwd = passwd.map(Int8.init)
+        let passwd = passwd.bytes.map(Int8.init)
 
         guard .SUCCESS == crypto_pwhash(
             &output, UInt64(outputLength),
