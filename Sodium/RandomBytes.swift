@@ -1,9 +1,11 @@
 import Foundation
 import Clibsodium
 
-public class RandomBytes {
+public struct RandomBytes {
     public let SeedBytes = Int(randombytes_seedbytes())
+}
 
+extension RandomBytes {
     /**
      Returns a `Bytes object of length `length` containing an unpredictable sequence of bytes.
 
@@ -44,7 +46,8 @@ public class RandomBytes {
 
      - Returns: The generated data.
      */
-    public func deterministic(length: Int, seed: Bytes) -> Bytes? {
+    public func deterministic(length: Int, seed: BytesRepresentable) -> Bytes? {
+        let seed = seed.bytes
         guard length >= 0,
               seed.count == SeedBytes,
               Int64(length) <= 0x4000000000 as Int64

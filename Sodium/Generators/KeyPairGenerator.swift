@@ -45,7 +45,8 @@ extension KeyPairGenerator {
 
      - Returns: A key pair containing the secret key and public key.
      */
-    public func keyPair(seed: Bytes) -> KeyPair? {
+    public func keyPair(seed: BytesRepresentable) -> KeyPair? {
+        let seed = seed.bytes
         guard seed.count == SeedBytes else { return nil }
         var pk = Bytes(count: PublicKeyBytes)
         var sk = Bytes(count: SecretKeyBytes)

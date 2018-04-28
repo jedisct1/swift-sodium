@@ -1,7 +1,18 @@
 import Foundation
 import Clibsodium
 
-public class Utils {
+public struct Utils {}
+
+extension Utils {
+    public enum Base64Variant: CInt {
+        case ORIGINAL            = 1
+        case ORIGINAL_NO_PADDING = 3
+        case URLSAFE             = 5
+        case URLSAFE_NO_PADDING  = 7
+    }
+}
+
+extension Utils {
     /**
      Tries to effectively zero bytes in `data`, even if optimizations are being applied to the code.
 
@@ -11,6 +22,9 @@ public class Utils {
         let count = data.count
         sodium_memzero(&data, count)
     }
+}
+
+extension Utils {
 
     /**
      Checks that two `Bytes` objects have the same content, without leaking information
@@ -39,7 +53,9 @@ public class Utils {
         guard b1.count == b2.count else { return nil }
         return Int(sodium_compare(b1, b2, b1.count))
     }
+}
 
+extension Utils {
     /**
      Converts bytes stored in `bin` into a hexadecimal string.
 
@@ -85,14 +101,9 @@ public class Utils {
 
         return binBytes
     }
+}
 
-    public enum Base64Variant: CInt {
-        case ORIGINAL            = 1
-        case ORIGINAL_NO_PADDING = 3
-        case URLSAFE             = 5
-        case URLSAFE_NO_PADDING  = 7
-    }
-
+extension Utils {
     /**
      Converts bytes stored in `bin` into a Base64 representation.
 
@@ -140,7 +151,9 @@ public class Utils {
 
         return binBytes
     }
+}
 
+extension Utils {
     /*
      Adds padding to `data` so that its length becomes a multiple of `blockSize`
 

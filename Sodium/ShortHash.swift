@@ -1,9 +1,11 @@
 import Foundation
 import Clibsodium
 
-public class ShortHash {
+public struct ShortHash {
     public let Bytes = Int(crypto_shorthash_bytes())
+}
 
+extension ShortHash {
     /**
      Computes short but unpredictable (without knowing the secret key) values suitable for picking a list in a hash table for a given key.
 
@@ -12,7 +14,8 @@ public class ShortHash {
 
      - Returns: The computed fingerprint.
      */
-    public func hash(message: Bytes, key: Bytes) -> Bytes? {
+    public func hash(message: BytesRepresentable, key: BytesRepresentable) -> Bytes? {
+        let (message, key) = (message.bytes, key.bytes)
         guard key.count == KeyBytes else { return nil }
         var output = Array<UInt8>(count: Bytes)
 

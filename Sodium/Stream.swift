@@ -1,9 +1,11 @@
 import Foundation
 import Clibsodium
 
-public class Stream {
+public struct Stream {
     public let Primitive = String(validatingUTF8: crypto_stream_primitive())
+}
 
+extension Stream {
     /**
      XOR the input with a key stream derived from a secret key and a nonce.
      Applying the same operation twice outputs the original input.
@@ -17,9 +19,10 @@ public class Stream {
 
      -  Returns: input XOR keystream(secretKey, nonce)
      */
-    public func xor(input: Bytes, nonce: Nonce, secretKey: Key) -> Bytes? {
+    public func xor(input: BytesRepresentable, nonce: Nonce, secretKey: Key) -> Bytes? {
         guard secretKey.count == KeyBytes, nonce.count == NonceBytes else { return nil }
 
+        let input = input.bytes
         var output = Bytes(count: input.count)
         guard .SUCCESS == crypto_stream_xor (
             &output,
@@ -44,9 +47,10 @@ public class Stream {
 
      -  Returns: (input XOR keystream(secretKey, nonce), nonce)
      */
-    public func xor(input: Bytes, secretKey: Key) -> (output:Bytes, nonce: Nonce)? {
+    public func xor(input: BytesRepresentable, secretKey: Key) -> (output:Bytes, nonce: Nonce)? {
         let nonce = self.nonce()
 
+        let input = input.bytes
         guard let output: Bytes = xor(
             input: input,
             nonce: nonce,

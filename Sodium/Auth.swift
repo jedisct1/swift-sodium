@@ -1,10 +1,12 @@
 import Foundation
 import Clibsodium
 
-public class Auth {
+public struct Auth {
     public let Bytes = Int(crypto_auth_bytes())
     public typealias SecretKey = Key
+}
 
+extension Auth {
     /**
      Computes an authentication tag for a message using a key
 
@@ -13,9 +15,10 @@ public class Auth {
 
      - Returns: The computed authentication tag.
      */
-    public func tag(message: Bytes, secretKey: SecretKey) -> Bytes? {
+    public func tag(message: BytesRepresentable, secretKey: SecretKey) -> Bytes? {
         guard secretKey.count == KeyBytes else { return nil }
 
+        let message = message.bytes
         var tag = Array<UInt8>(count: Bytes)
         guard .SUCCESS == crypto_auth (
             &tag,
@@ -35,10 +38,11 @@ public class Auth {
 
      - Returns: `true` if the verification is successful.
      */
-    public func verify(message: Bytes, secretKey: SecretKey, tag: Bytes) -> Bool {
+    public func verify(message: BytesRepresentable, secretKey: SecretKey, tag: BytesRepresentable) -> Bool {
         guard secretKey.count == KeyBytes else {
             return false
         }
+        let (tag, message) = (tag.bytes, message.bytes)
         return .SUCCESS == crypto_auth_verify (
             tag,
             message, UInt64(message.count),

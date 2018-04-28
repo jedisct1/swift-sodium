@@ -1,10 +1,12 @@
 import Foundation
 import Clibsodium
 
-public class Sign {
+public struct Sign {
     public let Bytes = Int(crypto_sign_bytes())
     public let Primitive = String(validatingUTF8: crypto_sign_primitive())
+}
 
+extension Sign {
     /**
      Signs a message with the sender's secret key
 
@@ -13,7 +15,8 @@ public class Sign {
 
      - Returns: The signed message.
      */
-    public func sign(message: Bytes, secretKey: SecretKey) -> Bytes? {
+    public func sign(message: BytesRepresentable, secretKey: SecretKey) -> Bytes? {
+        let message = message.bytes
         guard secretKey.count == SecretKeyBytes else { return nil }
         var signedMessage = Array<UInt8>(count: message.count + Bytes)
 
@@ -35,10 +38,11 @@ public class Sign {
 
      - Returns: The computed signature.
      */
-    public func signature(message: Bytes, secretKey: SecretKey) -> Bytes? {
+    public func signature(message: BytesRepresentable, secretKey: SecretKey) -> Bytes? {
         guard secretKey.count == SecretKeyBytes else { return nil }
         var signature = Array<UInt8>(count: Bytes)
 
+        let message = message.bytes
         guard .SUCCESS == crypto_sign_detached (
             &signature,
             nil,
@@ -48,7 +52,9 @@ public class Sign {
 
         return signature
     }
+}
 
+extension Sign {
     /**
      Verifies a signed message with the sender's public key.
 
@@ -57,7 +63,8 @@ public class Sign {
 
      - Returns: `true` if verification is successful.
      */
-    public func verify(signedMessage: Bytes, publicKey: PublicKey) -> Bool {
+    public func verify(signedMessage: BytesRepresentable, publicKey: PublicKey) -> Bool {
+        let signedMessage = signedMessage.bytes
         let signature = signedMessage[..<Bytes].bytes
         let message = signedMessage[Bytes...].bytes
 
@@ -73,18 +80,21 @@ public class Sign {
 
      - Returns: `true` if verification is successful.
      */
-    public func verify(message: Bytes, publicKey: PublicKey, signature: Bytes) -> Bool {
+    public func verify(message: BytesRepresentable, publicKey: PublicKey, signature: Bytes) -> Bool {
         guard publicKey.count == PublicKeyBytes else {
             return false
         }
 
+        let message = message.bytes
         return .SUCCESS == crypto_sign_verify_detached (
             signature,
             message, UInt64(message.count),
             publicKey
         ).exitCode
     }
+}
 
+extension Sign {
     /**
      Extracts and returns the message data of a signed message if the signature is verified with the sender's secret key.
 
@@ -93,7 +103,8 @@ public class Sign {
 
      - Returns: The message data if verification is successful.
      */
-    public func open(signedMessage: Bytes, publicKey: PublicKey) -> Bytes? {
+    public func open(signedMessage: BytesRepresentable, publicKey: PublicKey) -> Bytes? {
+        let signedMessage = signedMessage.bytes
         guard publicKey.count == PublicKeyBytes, signedMessage.count >= Bytes else {
             return nil
         }
