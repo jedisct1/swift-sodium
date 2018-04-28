@@ -92,13 +92,13 @@ class SodiumTests: XCTestCase {
     }
 
     func testSecretBox() {
-        let message = "My Test Message".bytes
+        let message = "My Test Message"
         let secretKey = sodium.secretBox.key()
 
         // test simple nonce + mac + message box
         let encrypted: Bytes = sodium.secretBox.seal(message: message, secretKey: secretKey)!
         let decrypted = sodium.secretBox.open(nonceAndAuthenticatedCipherText: encrypted, secretKey: secretKey)!
-        XCTAssertEqual(decrypted, message)
+        XCTAssertEqual(decrypted, message.bytes)
 
         XCTAssertNotEqual(sodium.secretBox.seal(message: message, secretKey: secretKey), encrypted, "Ciphertext of two encryption operations on the same plaintext shouldn't be equal. Make sure the nonce was used only once!")
 
@@ -106,15 +106,15 @@ class SodiumTests: XCTestCase {
 
         // test (mac + message, nonce) box
         let (encrypted2, nonce2) = sodium.secretBox.seal(message: message, secretKey: secretKey)!
-        let decrypted2 = sodium.secretBox.open(authenticatedCipherText: encrypted2, secretKey: secretKey, nonce: nonce2)
-        XCTAssertEqual(decrypted2, message)
+        let decrypted2 = sodium.secretBox.open(authenticatedCipherText: encrypted2, secretKey: secretKey, nonce: nonce2)!
+        XCTAssertEqual(decrypted2.bytes, message.bytes)
 
         XCTAssertNil(sodium.secretBox.open(authenticatedCipherText: encrypted2, secretKey: secretKey, nonce: sodium.secretBox.nonce()), "Shouldn't be able to decrypt with an invalid nonce")
 
         // test (message, nonce, mac) box
         let (encrypted3, nonce3, mac3) = sodium.secretBox.seal(message: message, secretKey: secretKey)!
-        let decrypted3 = sodium.secretBox.open(cipherText: encrypted3, secretKey: secretKey, nonce: nonce3, mac: mac3)
-        XCTAssertEqual(decrypted3, message)
+        let decrypted3 = sodium.secretBox.open(cipherText: encrypted3, secretKey: secretKey, nonce: nonce3, mac: mac3)!
+        XCTAssertEqual(decrypted3, message.bytes)
 
         let (encrypted4, nonce4, mac4) = sodium.secretBox.seal(message: message, secretKey: secretKey)!
         XCTAssertNil(sodium.secretBox.open(cipherText: encrypted4, secretKey: secretKey, nonce: nonce3, mac: mac4), "Shouldn't be able to decrypt with an invalid MAC")
@@ -181,14 +181,14 @@ class SodiumTests: XCTestCase {
     }
 
     func testShortHash() {
-        let message = "My Test Message".bytes
+        let message = "My Test Message"
         let key = sodium.utils.hex2bin("00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff", ignore: " ")!
         let h = sodium.utils.bin2hex(sodium.shortHash.hash(message: message, key: key)!)!
         XCTAssertEqual(h, "bb9be85c918015ea")
     }
 
     func testSignature() {
-        let message = "My Test Message".bytes
+        let message = "My Test Message"
         let keyPair = sodium.sign.keyPair(seed: sodium.utils.hex2bin("00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff 00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff", ignore: " ")!)!
         let signedMessage = sodium.sign.sign(message: message, secretKey: keyPair.secretKey)!
         XCTAssertEqual(sodium.utils.bin2hex(signedMessage)!, "ce8437d58a27c4d91426d35b24cfaf1e49f95b213c15eddb198f4a8d24c0fdd0df3e7f7a894f60ec15cff25b5f6f27399ce01db0e2649fc54c91cafb8dd48a094d792054657374204d657373616765")
@@ -200,7 +200,7 @@ class SodiumTests: XCTestCase {
         XCTAssertTrue(sodium.sign.verify(message: message, publicKey: keyPair.publicKey, signature: signature))
 
         let unsignedMessage = sodium.sign.open(signedMessage: signedMessage, publicKey: keyPair.publicKey)!
-        XCTAssertEqual(unsignedMessage, message)
+        XCTAssertEqual(unsignedMessage, message.bytes)
     }
 
     func testUtils() {
@@ -244,7 +244,7 @@ class SodiumTests: XCTestCase {
         let verify2 = sodium.pwHash.strVerify(hash: hash!, passwd: password2)
         XCTAssertFalse(verify2)
 
-        let password3 = "My Test Message".bytes
+        let password3 = "My Test Message"
         let salt = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16] as [UInt8]
         let hash2 = sodium.pwHash.hash(outputLength: 64, passwd: password3, salt: salt, opsLimit: sodium.pwHash.OpsLimitInteractive, memLimit: sodium.pwHash.MemLimitInteractive)
         XCTAssertEqual(sodium.utils.bin2hex(hash2!)!, "cc80dee6a19da46ed6ea11507dd709ce52519ddd1fd2d823ce85b9e9b4fd96d06583de2ca8bcc5998f3483a8a424c4e93ddb500968b0dbefb667d56d421d5a6c")
@@ -342,9 +342,9 @@ class SodiumTests: XCTestCase {
 
         var stream = sodium.secretStream.xchacha20poly1305.initPush(secretKey: secretKey)!
         let header = stream.header()
-        let encrypted1 = stream.push(message: "message 1".bytes)!
-        let encrypted2 = stream.push(message: "message 2".bytes)!
-        let encrypted3 = stream.push(message: "message 3".bytes, tag: .FINAL)!
+        let encrypted1 = stream.push(message: "message 1")!
+        let encrypted2 = stream.push(message: "message 2")!
+        let encrypted3 = stream.push(message: "message 3", tag: .FINAL)!
 
         var stream2 = sodium.secretStream.xchacha20poly1305.initPull(secretKey: secretKey, header: header)!
         let (message1, tag1) = stream2.pull(cipherText: encrypted1)!
@@ -381,8 +381,8 @@ class SodiumTests: XCTestCase {
     }
     
     func testAead() {
-        let message = " I am message".bytes
-        let additionalData = "I am additionalData".bytes
+        let message = " I am message"
+        let additionalData = "I am additionalData"
         
         let secretKey = sodium.aead.xchacha20poly1305ietf.key()
         XCTAssertEqual(secretKey.count, 32)
@@ -393,20 +393,20 @@ class SodiumTests: XCTestCase {
         
         let decrypted: Bytes = sodium.aead.xchacha20poly1305ietf.decrypt(authenticatedCipherText: authenticatedCipherText, secretKey: secretKey, nonce: nonce)!
         
-        XCTAssertTrue(decrypted == message)
+        XCTAssertTrue(decrypted == message.bytes)
         
         let (authenticatedCipherTextWithAdditionalData, nonceWithAdditionlData) = sodium.aead.xchacha20poly1305ietf.encrypt(message: message, secretKey: secretKey, additionalData: additionalData)!
         let decrypted2: Bytes = sodium.aead.xchacha20poly1305ietf.decrypt(authenticatedCipherText: authenticatedCipherTextWithAdditionalData, secretKey: secretKey, nonce: nonceWithAdditionlData, additionalData: additionalData)!
         
-        XCTAssertTrue(decrypted2 == message)
+        XCTAssertTrue(decrypted2 == message.bytes)
         
         XCTAssertNil(sodium.aead.xchacha20poly1305ietf.decrypt(authenticatedCipherText: authenticatedCipherText, secretKey: secretKey, nonce: nonceWithAdditionlData, additionalData: additionalData), "Decrypt using additionalData but encrypted without")
         XCTAssertNil(sodium.aead.xchacha20poly1305ietf.decrypt(authenticatedCipherText: authenticatedCipherTextWithAdditionalData, secretKey: secretKey, nonce: nonceWithAdditionlData), "Decrypt without additionalData but encrypted with additionalData")
         
         XCTAssertNil(sodium.aead.xchacha20poly1305ietf.decrypt(authenticatedCipherText: authenticatedCipherText, secretKey: sodium.aead.xchacha20poly1305ietf.key(), nonce: nonce), "Decrypt with different key")
 
-        XCTAssertNil(sodium.aead.xchacha20poly1305ietf.decrypt(authenticatedCipherText: authenticatedCipherTextWithAdditionalData, secretKey: secretKey, nonce: nonceWithAdditionlData, additionalData: "wrong".bytes), "Decrypt with wrong additional data")
-        XCTAssertNil(sodium.aead.xchacha20poly1305ietf.decrypt(authenticatedCipherText: "wrong".bytes, secretKey: secretKey, nonce: nonce))
+        XCTAssertNil(sodium.aead.xchacha20poly1305ietf.decrypt(authenticatedCipherText: authenticatedCipherTextWithAdditionalData, secretKey: secretKey, nonce: nonceWithAdditionlData, additionalData: "wrong"), "Decrypt with wrong additional data")
+        XCTAssertNil(sodium.aead.xchacha20poly1305ietf.decrypt(authenticatedCipherText: "wrong", secretKey: secretKey, nonce: nonce))
 
         XCTAssertNil(sodium.aead.xchacha20poly1305ietf.decrypt(authenticatedCipherText: authenticatedCipherText, secretKey: secretKey, nonce: "invalid".bytes))
         XCTAssertNil(sodium.aead.xchacha20poly1305ietf.decrypt(authenticatedCipherText: authenticatedCipherText, secretKey: "invalid".bytes, nonce: nonce))
@@ -414,18 +414,18 @@ class SodiumTests: XCTestCase {
         let nonceAndAuthenticatedCipherText: Bytes = sodium.aead.xchacha20poly1305ietf.encrypt(message: message, secretKey: secretKey)!
         let decrypted3: Bytes = sodium.aead.xchacha20poly1305ietf.decrypt(nonceAndAuthenticatedCipherText: nonceAndAuthenticatedCipherText, secretKey: secretKey)!
         
-        XCTAssertTrue(decrypted3 == message)
+        XCTAssertTrue(decrypted3 == message.bytes)
         
         let nonceAndAuthenticatedCipherTextWithAddData: Bytes = sodium.aead.xchacha20poly1305ietf.encrypt(message: message, secretKey: secretKey, additionalData: additionalData)!
         let decrypted4: Bytes = sodium.aead.xchacha20poly1305ietf.decrypt(nonceAndAuthenticatedCipherText: nonceAndAuthenticatedCipherTextWithAddData, secretKey: secretKey, additionalData: additionalData)!
         
-        XCTAssertTrue(decrypted4 == message)
+        XCTAssertTrue(decrypted4 == message.bytes)
         
         // encrypt -> decrypt empty message
-        let emptyMessage = "".bytes
+        let emptyMessage = ""
         let encryptedEmpty: Bytes = sodium.aead.xchacha20poly1305ietf.encrypt(message: emptyMessage, secretKey: secretKey, additionalData: additionalData)!
         let decryptedEmpty: Bytes = sodium.aead.xchacha20poly1305ietf.decrypt(nonceAndAuthenticatedCipherText: encryptedEmpty, secretKey: secretKey, additionalData: additionalData)!
         
-        XCTAssertTrue(decryptedEmpty == emptyMessage)
+        XCTAssertTrue(decryptedEmpty == emptyMessage.bytes)
     }
 }

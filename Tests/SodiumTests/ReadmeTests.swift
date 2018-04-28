@@ -31,7 +31,7 @@ class ReadmeTests : XCTestCase {
         let sodium = Sodium()
         let aliceKeyPair = sodium.box.keyPair()!
         let bobKeyPair = sodium.box.keyPair()!
-        let message = "My Test Message".bytes
+        let message = "My Test Message"
 
         let encryptedMessageFromAliceToBob: Bytes =
             sodium.box.seal(message: message,
@@ -49,7 +49,7 @@ class ReadmeTests : XCTestCase {
     func testAnonymousEncryptionSealedBoxes() {
         let sodium = Sodium()
         let bobKeyPair = sodium.box.keyPair()!
-        let message = "My Test Message".bytes
+        let message = "My Test Message"
 
         let encryptedMessageToBob =
             sodium.box.seal(message: message, recipientPublicKey: bobKeyPair.publicKey)!
@@ -81,7 +81,7 @@ class ReadmeTests : XCTestCase {
 
     func testDetachedSignatures() {
         let sodium = Sodium()
-        let message = "My Test Message".bytes
+        let message = "My Test Message"
         let keyPair = sodium.sign.keyPair()!
         let signature = sodium.sign.signature(message: message, secretKey: keyPair.secretKey)!
         if sodium.sign.verify(message: message,
@@ -93,7 +93,7 @@ class ReadmeTests : XCTestCase {
 
     func testAttachedSignatures() {
         let sodium = Sodium()
-        let message = "My Test Message".bytes
+        let message = "My Test Message"
         let keyPair = sodium.sign.keyPair()!
         let signedMessage = sodium.sign.sign(message: message, secretKey: keyPair.secretKey)!
         if sodium.sign.open(signedMessage: signedMessage, publicKey: keyPair.publicKey) != nil {
@@ -103,7 +103,7 @@ class ReadmeTests : XCTestCase {
 
     func testSecretKeyAuthenticatedEncryption() {
         let sodium = Sodium()
-        let message = "My Test Message".bytes
+        let message = "My Test Message"
         let secretKey = sodium.secretBox.key()
         let encrypted: Bytes = sodium.secretBox.seal(message: message, secretKey: secretKey)!
         if sodium.secretBox.open(nonceAndAuthenticatedCipherText: encrypted, secretKey: secretKey) != nil {
@@ -113,7 +113,7 @@ class ReadmeTests : XCTestCase {
 
     func testDeterministicHashing() {
         let sodium = Sodium()
-        let message = "My Test Message".bytes
+        let message = "My Test Message"
         let h = sodium.genericHash.hash(message: message)
 
         XCTAssertNotNil(h)
@@ -121,8 +121,8 @@ class ReadmeTests : XCTestCase {
 
     func testKeyedHashing() {
         let sodium = Sodium()
-        let message = "My Test Message".bytes
-        let key = "Secret key".bytes
+        let message = "My Test Message"
+        let key = "Secret key"
         let h = sodium.genericHash.hash(message: message, key: key)
 
         XCTAssertNotNil(h)
@@ -130,9 +130,9 @@ class ReadmeTests : XCTestCase {
 
     func testStreaming() {
         let sodium = Sodium()
-        let message1 = "My Test ".bytes
-        let message2 = "Message".bytes
-        let key = "Secret key".bytes
+        let message1 = "My Test "
+        let message2 = "Message"
+        let key = "Secret key"
         var stream = sodium.genericHash.initStream(key: key)!
         stream.update(input: message1)
         stream.update(input: message2)
@@ -143,7 +143,7 @@ class ReadmeTests : XCTestCase {
 
     func testShortOutputHashing() {
         let sodium = Sodium()
-        let message = "My Test Message".bytes
+        let message = "My Test Message"
         let key = sodium.randomBytes.buf(length: sodium.shortHash.KeyBytes)!
         let h = sodium.shortHash.hash(message: message, key: key)
 
@@ -159,7 +159,7 @@ class ReadmeTests : XCTestCase {
 
     func testPasswordHashing() {
         let sodium = Sodium()
-        let password = "Correct Horse Battery Staple".bytes
+        let password = "Correct Horse Battery Staple"
         let hashedStr = sodium.pwHash.str(passwd: password,
                                           opsLimit: sodium.pwHash.OpsLimitInteractive,
                                           memLimit: sodium.pwHash.MemLimitInteractive)!
@@ -212,17 +212,17 @@ class ReadmeTests : XCTestCase {
 
     func testStream() {
         let sodium = Sodium()
-        let input = "test".bytes
+        let input = "test"
         let key = sodium.stream.key()
         let (output, nonce) = sodium.stream.xor(input: input, secretKey: key)!
         let twice = sodium.stream.xor(input: output, nonce: nonce, secretKey: key)!
 
-        XCTAssertEqual(input, twice)
+        XCTAssertEqual(input.bytes, twice)
     }
 
     func testAuth() {
         let sodium = Sodium()
-        let input = "test".bytes
+        let input = "test"
         let key = sodium.auth.key()
         let tag = sodium.auth.tag(message: input, secretKey: key)!
         let tagIsValid = sodium.auth.verify(message: input, secretKey: key, tag: tag)
@@ -245,9 +245,9 @@ class ReadmeTests : XCTestCase {
 
     func testSecretStream() {
         let sodium = Sodium()
-        let message1 = "Message 1".bytes
-        let message2 = "Message 2".bytes
-        let message3 = "Message 3".bytes
+        let message1 = "Message 1"
+        let message2 = "Message 2"
+        let message3 = "Message 3"
 
         let secretkey = sodium.secretStream.xchacha20poly1305.key()
 
@@ -266,9 +266,9 @@ class ReadmeTests : XCTestCase {
         let (message2_dec, tag2) = stream_dec.pull(cipherText: encrypted2)!
         let (message3_dec, tag3) = stream_dec.pull(cipherText: encrypted3)!
 
-        XCTAssertEqual(message1, message1_dec)
-        XCTAssertEqual(message2, message2_dec)
-        XCTAssertEqual(message3, message3_dec)
+        XCTAssertEqual(message1.bytes, message1_dec)
+        XCTAssertEqual(message2.bytes, message2_dec)
+        XCTAssertEqual(message3.bytes, message3_dec)
         XCTAssertEqual(tag1, .MESSAGE)
         XCTAssertEqual(tag2, .MESSAGE)
         XCTAssertEqual(tag3, .FINAL)
