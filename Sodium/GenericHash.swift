@@ -12,7 +12,7 @@ public struct GenericHash {
 }
 
 extension GenericHash {
-    public struct Stream {
+    public class Stream {
         private var state: State
         public var outputLength: Int = 0
 
@@ -122,7 +122,7 @@ extension GenericHash.Stream {
      - Returns: `true` if the data was consumed successfully.
      */
     @discardableResult
-    public mutating func update(input: Bytes) -> Bool {
+    public func update(input: Bytes) -> Bool {
         return .SUCCESS == crypto_generichash_update(
             &state,
             input, UInt64(input.count)
@@ -134,7 +134,7 @@ extension GenericHash.Stream {
 
      - Returns: The computed fingerprint.
      */
-    public mutating func final() -> Bytes? {
+    public func final() -> Bytes? {
         let outputLen = outputLength
         var output = Array<UInt8>(count: outputLen)
         guard .SUCCESS == crypto_generichash_final(

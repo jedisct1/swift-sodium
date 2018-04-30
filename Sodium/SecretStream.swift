@@ -25,7 +25,7 @@ extension SecretStream.XChaCha20Poly1305 {
 
 
 extension SecretStream.XChaCha20Poly1305 {
-    public struct PushStream {
+    public class PushStream {
         private var state: State
         private var _header: Header
 
@@ -45,7 +45,7 @@ extension SecretStream.XChaCha20Poly1305 {
 }
 
 extension SecretStream.XChaCha20Poly1305 {
-    public struct PullStream {
+    public class PullStream {
         private var state: State
 
         init?(secretKey: Key, header: Header) {
@@ -120,7 +120,7 @@ extension SecretStream.XChaCha20Poly1305.PushStream {
 
      - Returns: The ciphertext.
      */
-    public mutating func push(message: Bytes, tag: Tag = .MESSAGE, ad: Bytes? = nil) -> Bytes? {
+    public func push(message: Bytes, tag: Tag = .MESSAGE, ad: Bytes? = nil) -> Bytes? {
         let _ad = ad ?? Bytes(count: 0)
         var cipherText = Bytes(count: message.count + XChaCha20Poly1305.ABytes)
         guard .SUCCESS == crypto_secretstream_xchacha20poly1305_push(
@@ -138,7 +138,7 @@ extension SecretStream.XChaCha20Poly1305.PushStream {
     /**
      Performs an explicit key rotation.
      */
-    public mutating func rekey() {
+    public func rekey() {
         crypto_secretstream_xchacha20poly1305_rekey(&state)
     }
 }
@@ -155,7 +155,7 @@ extension SecretStream.XChaCha20Poly1305.PullStream {
 
      - Returns: The decrypted message, as well as the tag attached to it.
      */
-    public mutating func pull(cipherText: Bytes, ad: Bytes? = nil) -> (Bytes, Tag)? {
+    public func pull(cipherText: Bytes, ad: Bytes? = nil) -> (Bytes, Tag)? {
         guard cipherText.count >= XChaCha20Poly1305.ABytes else { return nil }
         var message = Bytes(count: cipherText.count - XChaCha20Poly1305.ABytes)
         let _ad = ad ?? Bytes(count: 0)
@@ -178,7 +178,7 @@ extension SecretStream.XChaCha20Poly1305.PullStream {
     /**
      Performs an explicit key rotation.
      */
-    public mutating func rekey() {
+    public func rekey() {
         crypto_secretstream_xchacha20poly1305_rekey(&state)
     }
 }
