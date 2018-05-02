@@ -150,7 +150,7 @@ public class Utils {
             return nil
         }
         let b64DataLen = b64Data.count
-        let binDataCapacity = b64DataLen * 3 / 4
+        let binDataCapacity = b64DataLen * 3 / 4 + 1
         var binData = Data(count: binDataCapacity)
         var binDataLen: size_t = 0
         let ignore_nsstr = ignore.flatMap({ NSString(string: $0) })
