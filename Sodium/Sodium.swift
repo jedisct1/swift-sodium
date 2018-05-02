@@ -15,9 +15,10 @@ public class Sodium {
     public let stream = Stream()
     public let keyDerivation = KeyDerivation()
     public let secretStream = SecretStream()
+    public let aead = Aead()
 
     private static let once: Void = {
-        if sodium_init() < 0 {
+        guard sodium_init() >= 0 else {
             fatalError("Failed to initialize libsodium")
         }
     }()

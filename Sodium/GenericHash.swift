@@ -7,23 +7,8 @@ public class GenericHash {
     public let Bytes = Int(crypto_generichash_bytes())
     public let KeyBytesMin = Int(crypto_generichash_keybytes_min())
     public let KeyBytesMax = Int(crypto_generichash_keybytes_max())
-    public let KeyBytes = Int(crypto_generichash_keybytes())
-    public let Primitive = String.init(validatingUTF8: crypto_generichash_primitive())
 
-    public typealias Key = Data
-
-    /**
-     Generates a secret key.
-
-     - Returns: The generated key.
-     */
-    public func key() -> Key {
-        var k = Data(count: KeyBytes)
-        k.withUnsafeMutableBytes { kPtr in
-            crypto_generichash_keygen(kPtr)
-        }
-        return k
-    }
+    public let Primitive = String(validatingUTF8: crypto_generichash_primitive())
 
     /**
      Computes a fixed-length fingerprint for an arbitrary long message. A key can also be specified. A message will always have the same fingerprint for a given key, but different keys used to hash the same message are very likely to produce distinct fingerprints.
@@ -33,7 +18,7 @@ public class GenericHash {
 
      - Returns: The computed fingerprint.
      */
-    public func hash(message: Data, key: Data? = nil) -> Data? {
+    public func hash(message: Bytes, key: Bytes? = nil) -> Bytes? {
         return hash(message: message, key: key, outputLength: Bytes)
     }
 
@@ -46,34 +31,15 @@ public class GenericHash {
 
      - Returns: The computed fingerprint.
      */
-    public func hash(message: Data, key: Data?, outputLength: Int) -> Data? {
-        var output = Data(count: outputLength)
-        var result: Int32 = -1
+    public func hash(message: Bytes, key: Bytes?, outputLength: Int) -> Bytes? {
+        var output = Array<UInt8>(count: outputLength)
 
-        if let key = key {
-            result = output.withUnsafeMutableBytes { outputPtr in
-                message.withUnsafeBytes { messagePtr in
-                    key.withUnsafeBytes { keyPtr in
-                        crypto_generichash(
-                            outputPtr, output.count,
-                            messagePtr, CUnsignedLongLong(message.count),
-                            keyPtr, key.count)
-                    }
-                }
-            }
-        } else {
-            result = output.withUnsafeMutableBytes { outputPtr in
-                message.withUnsafeBytes { messagePtr in
-                    crypto_generichash(
-                        outputPtr, output.count,
-                        messagePtr, CUnsignedLongLong(message.count),
-                        nil, 0)
-                }
-            }
-        }
-        if result != 0 {
-            return nil
-        }
+        guard .SUCCESS == crypto_generichash(
+            &output, outputLength,
+            message, UInt64(message.count),
+            key, key?.count ?? 0
+        ).exitCode else { return nil }
+
         return output
     }
 
@@ -85,7 +51,7 @@ public class GenericHash {
 
      - Returns: The computed fingerprint.
      */
-    public func hash(message: Data, outputLength: Int) -> Data? {
+    public func hash(message: Bytes, outputLength: Int) -> Bytes? {
         return hash(message: message, key: nil, outputLength: outputLength)
     }
 
@@ -96,7 +62,7 @@ public class GenericHash {
 
      - Returns: The initialized `Stream`.
      */
-    public func initStream(key: Data? = nil) -> Stream? {
+    public func initStream(key: Bytes? = nil) -> Stream? {
         return Stream(key: key, outputLength: Bytes)
     }
 
@@ -108,7 +74,7 @@ public class GenericHash {
 
      - Returns: The initialized `Stream`.
      */
-    public func initStream(key: Data?, outputLength: Int) -> Stream? {
+    public func initStream(key: Bytes?, outputLength: Int) -> Stream? {
         return Stream(key: key, outputLength: outputLength)
     }
 
@@ -123,38 +89,30 @@ public class GenericHash {
         return Stream(key: nil, outputLength: outputLength)
     }
 
-    public class Stream {
-        public var outputLength: Int = 0
-        private var state: UnsafeMutablePointer<crypto_generichash_state>?
+    public class Stream: StateStream {
+        typealias State = crypto_generichash_state
+        static let capacity = crypto_generichash_statebytes()
+        private var state: UnsafeMutablePointer<State>
 
-        init?(key: Data?, outputLength: Int) {
-            let rawState = UnsafeMutablePointer<UInt8>.allocate(capacity: crypto_generichash_statebytes())
-            state = UnsafeMutableRawPointer(rawState).bindMemory(to: crypto_generichash_state.self, capacity: 1)
-            guard let state = state else {
-                return nil
-            }
-            var result: Int32 = -1
-            if let key = key {
-                result = key.withUnsafeBytes { keyPtr in
-                    crypto_generichash_init(state, keyPtr, key.count, outputLength)
-                }
-            } else {
-                result = crypto_generichash_init(state, nil, 0, outputLength)
-            }
-            if result != 0 {
+        public var outputLength: Int = 0
+
+        init?(key: Bytes?, outputLength: Int) {
+            state = Stream.generate()
+
+            guard .SUCCESS == crypto_generichash_init(
+                state,
+                key, key?.count ?? 0,
+                outputLength
+            ).exitCode else {
                 free()
                 return nil
             }
+
             self.outputLength = outputLength
         }
 
         private func free() {
-            guard let state = state else {
-                return
-            }
-            let rawState = UnsafeMutableRawPointer(state).bindMemory(to: UInt8.self, capacity: crypto_generichash_statebytes())
-            rawState.deallocate(capacity: 1)
-            self.state = nil
+            Stream.free(state)
         }
 
         deinit {
@@ -168,10 +126,11 @@ public class GenericHash {
 
          - Returns: `true` if the data was consumed successfully.
          */
-        public func update(input: Data) -> Bool {
-            return input.withUnsafeBytes { inputPtr in
-                crypto_generichash_update(state!, inputPtr, CUnsignedLongLong(input.count)) == 0
-            }
+        public func update(input: Bytes) -> Bool {
+            return .SUCCESS == crypto_generichash_update(
+                state,
+                input, UInt64(input.count)
+            ).exitCode
         }
 
         /**
@@ -179,15 +138,23 @@ public class GenericHash {
 
          - Returns: The computed fingerprint.
          */
-        public func final() -> Data? {
-            var output = Data(count: outputLength)
-            let result = output.withUnsafeMutableBytes { outputPtr in
-                crypto_generichash_final(state!, outputPtr, output.count)
-            }
-            if result != 0 {
-                return nil
-            }
+        public func final() -> Bytes? {
+            let outputLen = outputLength
+            var output = Array<UInt8>(count: outputLen)
+            guard .SUCCESS == crypto_generichash_final(
+                state,
+                &output, outputLen
+            ).exitCode else { return nil }
+
             return output
         }
     }
+}
+
+extension GenericHash: SecretKeyGenerator {
+    public var KeyBytes: Int { return Int(crypto_generichash_keybytes()) }
+    public typealias Key = Bytes
+
+    static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_generichash_keygen
+
 }
