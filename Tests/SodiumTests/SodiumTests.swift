@@ -71,8 +71,7 @@ class SodiumTests: XCTestCase {
         XCTAssertEqual(message, String(bytes: decrypted4)!)
 
         let encryptedMessageToBob: BytesContainer = sodium.box.seal(message: message, recipientPublicKey: bobKeyPair.publicKey)!
-        let decrypted5 = sodium.box.open(anonymousCipherText: encryptedMessageToBob, recipientPublicKey: bobKeyPair.publicKey,
-                                         recipientSecretKey: bobKeyPair.secretKey)!
+        let decrypted5 = sodium.box.open(anonymousCipherText: encryptedMessageToBob, recipientPublicKey: bobKeyPair.publicKey, recipientSecretKey: bobKeyPair.secretKey)!
         XCTAssertEqual(String(bytes: decrypted5)!, message)
 
         // beforenm tests
@@ -100,14 +99,14 @@ class SodiumTests: XCTestCase {
         let decrypted = sodium.secretBox.open(nonceAndAuthenticatedCipherText: encrypted, secretKey: secretKey)!
         XCTAssertEqual(String(bytes: decrypted)!, message)
 
-        XCTAssertNotEqual(sodium.secretBox.seal(message: message, secretKey: secretKey), encrypted, "Ciphertext of two encryption operations on the same plaintext shouldn't be equal. Make sure the nonce was used only once!")
+        XCTAssertNotEqual(sodium.secretBox.seal(message: message, secretKey: secretKey)!, encrypted, "Ciphertext of two encryption operations on the same plaintext shouldn't be equal. Make sure the nonce was used only once!")
 
         XCTAssertNil(sodium.secretBox.open(nonceAndAuthenticatedCipherText: encrypted, secretKey: sodium.secretBox.key()), "Shouldn't be able to decrypt with a bad key")
 
         // test (mac + message, nonce) box
         let (encrypted2, nonce2) = sodium.secretBox.seal(message: message, secretKey: secretKey)!
         let decrypted2 = sodium.secretBox.open(authenticatedCipherText: encrypted2, secretKey: secretKey, nonce: nonce2)!
-        XCTAssertEqual(decrypted2.bytes, message.bytes)
+        XCTAssertEqual(String(bytes: decrypted2)!, message)
 
         XCTAssertNil(sodium.secretBox.open(authenticatedCipherText: encrypted2, secretKey: secretKey, nonce: sodium.secretBox.nonce()), "Shouldn't be able to decrypt with an invalid nonce")
 

@@ -145,7 +145,7 @@ extension Utils {
     public func base642bin(_ b64: String, variant: Base64Variant = .URLSAFE, ignore: String? = nil) -> BytesContainer? {
         let b64Bytes = b64.utf8.map(Int8.init)
         let b64BytesLen = b64Bytes.count
-        let binBytesCapacity = b64BytesLen * 3 / 4
+        let binBytesCapacity = b64BytesLen * 3 / 4 + 1
         var bin = BytesContainer(count: binBytesCapacity)
         var binBytesLen: size_t = 0
         let ignore_nsstr = ignore.flatMap({ NSString(string: $0) })
