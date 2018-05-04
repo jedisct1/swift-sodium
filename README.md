@@ -43,9 +43,9 @@ That key can be generated using the `key()` method, derived from a password usin
 
 ```swift
 let sodium = Sodium()
-let message1 = "Message 1".bytes
-let message2 = "Message 2".bytes
-let message3 = "Message 3".bytes
+let message1 = "Message 1"
+let message2 = "Message 2"
+let message3 = "Message 3"
 
 let secretkey = sodium.secretStream.xchacha20poly1305.key()
 
@@ -79,9 +79,9 @@ A tag is attached to each message, and can be used to signal the end of a sub-se
 
 ```swift
 let sodium = Sodium()
-let message = "My Test Message".bytes
+let message = "My Test Message"
 let secretKey = sodium.secretBox.key()
-let encrypted: Bytes = sodium.secretBox.seal(message: message, secretKey: secretKey)!
+let encrypted: BytesContainer = sodium.secretBox.seal(message: message, secretKey: secretKey)!
 if let decrypted = sodium.secretBox.open(nonceAndAuthenticatedCipherText: encrypted, secretKey: secretKey) {
     // authenticator is valid, decrypted contains the original message
 }
@@ -98,12 +98,12 @@ With public-key cryptography, each peer has two keys: a secret key, that has to 
 ### Authenticated Encryption
 
 ```swift
-let sodium = Sodium(())!
+let sodium = Sodium()
 let aliceKeyPair = sodium.box.keyPair()!
 let bobKeyPair = sodium.box.keyPair()!
-let message = "My Test Message".bytes
+let message = "My Test Message"
 
-let encryptedMessageFromAliceToBob: Bytes =
+let encryptedMessageFromAliceToBob: BytesContainer =
     sodium.box.seal(message: message,
                     recipientPublicKey: bobKeyPair.publicKey,
                     senderSecretKey: aliceKeyPair.secretKey)!
@@ -129,7 +129,7 @@ The `Box` class also provides alternative functions and parameters to determinis
 ```swift
 let sodium = Sodium()
 let bobKeyPair = sodium.box.keyPair()!
-let message = "My Test Message".bytes
+let message = "My Test Message"
 
 let encryptedMessageToBob =
     sodium.box.seal(message: message, recipientPublicKey: bobKeyPair.publicKey)!
@@ -172,7 +172,7 @@ This can be especially useful to sign software updates.
 
 ```swift
 let sodium = Sodium()
-let message = "My Test Message".bytes
+let message = "My Test Message"
 let keyPair = sodium.sign.keyPair()!
 let signature = sodium.sign.signature(message: message, secretKey: keyPair.secretKey)!
 if sodium.sign.verify(message: message,
@@ -186,7 +186,7 @@ if sodium.sign.verify(message: message,
 
 ```swift
 let sodium = Sodium()
-let message = "My Test Message".bytes
+let message = "My Test Message"
 let keyPair = sodium.sign.keyPair()!
 let signedMessage = sodium.sign.sign(message: message, secretKey: keyPair.secretKey)!
 if let unsignedMessage = sodium.sign.open(signedMessage: signedMessage, publicKey: keyPair.publicKey) {
@@ -200,7 +200,7 @@ if let unsignedMessage = sodium.sign.open(signedMessage: signedMessage, publicKe
 
 ```swift
 let sodium = Sodium()
-let message = "My Test Message".bytes
+let message = "My Test Message"
 let h = sodium.genericHash.hash(message: message)
 ```
 
@@ -208,7 +208,7 @@ let h = sodium.genericHash.hash(message: message)
 
 ```swift
 let sodium = Sodium()
-let message = "My Test Message".bytes
+let message = "My Test Message"
 let key = "Secret key".bytes
 let h = sodium.genericHash.hash(message: message, key: key)
 ```
@@ -217,9 +217,9 @@ let h = sodium.genericHash.hash(message: message, key: key)
 
 ```swift
 let sodium = Sodium()
-let message1 = "My Test ".bytes
-let message2 = "Message".bytes
-let key = "Secret key".bytes
+let message1 = "My Test "
+let message2 = "Message"
+let key = "Secret key"
 var stream = sodium.genericHash.initStream(key: key)!
 stream.update(input: message1)
 stream.update(input: message2)
@@ -230,7 +230,7 @@ let h = stream.final()
 
 ```swift
 let sodium = Sodium()
-let message = "My Test Message".bytes
+let message = "My Test Message"
 let key = sodium.randomBytes.buf(length: sodium.shortHash.KeyBytes)!
 let h = sodium.shortHash.hash(message: message, key: key)
 ```
@@ -240,7 +240,7 @@ let h = sodium.shortHash.hash(message: message, key: key)
 ```swift
 let sodium = Sodium()
 let randomBytes = sodium.randomBytes.buf(length: 1000)!
-let seed = "0123456789abcdef0123456789abcdef".bytes
+let seed = "0123456789abcdef0123456789abcdef"
 let stream = sodium.randomBytes.deterministic(length: 1000, seed: seed)!
 ```
 
@@ -248,7 +248,7 @@ let stream = sodium.randomBytes.deterministic(length: 1000, seed: seed)!
 
 ```swift
 let sodium = Sodium()
-let password = "Correct Horse Battery Staple".bytes
+let password = "Correct Horse Battery Staple"
 let hashedStr = sodium.pwHash.str(passwd: password,
                                   opsLimit: sodium.pwHash.OpsLimitInteractive,
                                   memLimit: sodium.pwHash.MemLimitInteractive)!
@@ -275,7 +275,7 @@ Authentication tags are not signatures: the same key is used both for computing 
 
 ```swift
 let sodium = Sodium()
-let input = "test".bytes
+let input = "test"
 let key = sodium.auth.key()
 let tag = sodium.auth.tag(message: input, secretKey: key)!
 let tagIsValid = sodium.auth.verify(message: input, secretKey: key, tag: tag)
@@ -303,7 +303,7 @@ let subKey2 = sodium.keyDerivation.derive(secretKey: secretKey,
 
 ```swift
 let sodium = Sodium()
-var dataToZero = "Message".bytes
+var dataToZero = "Message".data(using:.utf8)!
 sodium.utils.zero(&dataToZero)
 ```
 
@@ -311,8 +311,8 @@ sodium.utils.zero(&dataToZero)
 
 ```swift
 let sodium = Sodium()
-let secret1 = "Secret key".bytes
-let secret2 = "Secret key".bytes
+let secret1 = BytesContainer("Secret key")
+let secret2 = BytesContainer("Secret key")
 let equality = sodium.utils.equals(secret1, secret2)
 ```
 
@@ -320,7 +320,7 @@ let equality = sodium.utils.equals(secret1, secret2)
 
 ```swift
 let sodium = Sodium()
-var bytes = "test".bytes
+var bytes = BytesContainer("test")
 
 // make bytes.count a multiple of 16
 sodium.utils.pad(bytes: &bytes, blockSize: 16)!
@@ -335,7 +335,7 @@ Padding can be useful to hide the length of a message before it is encrypted.
 
 ```swift
 let sodium = Sodium()
-let bytes = "Secret key".bytes
+let bytes = BytesContainer("Secret key")
 let hex = sodium.utils.bin2hex(bytes)
 ```
 
@@ -351,8 +351,8 @@ let data2 = sodium.utils.hex2bin("de:ad be:ef", ignore: " :")
 
 ```swift
 let sodium = Sodium()
-let b64 = sodium.utils.bin2base64("data".bytes)!
-let b64_2 = sodium.utils.bin2base64("data".bytes, variant: .URLSAFE_NO_PADDING)!
+let b64 = sodium.utils.bin2base64(BytesContainer("data"))!
+let b64_2 = sodium.utils.bin2base64(BytesContainer("data"), variant: .URLSAFE_NO_PADDING)!
 ```
 
 ### Base64 decoding
@@ -379,7 +379,7 @@ In order to generate a deterministic stream out of a seed, the `RandomBytes.dete
 
 ```swift
 let sodium = Sodium()
-let input = "test".bytes
+let input = "test"
 let key = sodium.stream.key()
 let (output, nonce) = sodium.stream.xor(input: input, secretKey: key)!
 let twice = sodium.stream.xor(input: output, nonce: nonce, secretKey: key)!
