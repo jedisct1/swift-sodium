@@ -54,7 +54,7 @@ extension RandomBytes {
         else { return nil }
 
         var output = BytesContainer(count: length)
-        randombytes_buf_deterministic(&output.bytes, length, seed.bytes)
+        randombytes_buf_deterministic(&output.bytes, length, seed)
         return output
     }
 }
