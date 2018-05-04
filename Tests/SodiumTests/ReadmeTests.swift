@@ -33,7 +33,7 @@ class ReadmeTests : XCTestCase {
         let bobKeyPair = sodium.box.keyPair()!
         let message = "My Test Message"
 
-        let encryptedMessageFromAliceToBob: Bytes =
+        let encryptedMessageFromAliceToBob: BytesContainer =
             sodium.box.seal(message: message,
                             recipientPublicKey: bobKeyPair.publicKey,
                             senderSecretKey: aliceKeyPair.secretKey)!
@@ -105,7 +105,7 @@ class ReadmeTests : XCTestCase {
         let sodium = Sodium()
         let message = "My Test Message"
         let secretKey = sodium.secretBox.key()
-        let encrypted: Bytes = sodium.secretBox.seal(message: message, secretKey: secretKey)!
+        let encrypted: BytesContainer = sodium.secretBox.seal(message: message, secretKey: secretKey)!
         if sodium.secretBox.open(nonceAndAuthenticatedCipherText: encrypted, secretKey: secretKey) != nil {
             // authenticator is valid, decrypted contains the original message
         }
@@ -180,14 +180,14 @@ class ReadmeTests : XCTestCase {
 
     func testZeroingMemory() {
         let sodium = Sodium()
-        var dataToZero = "Message".bytes
+        var dataToZero = BytesContainer("Message")
         sodium.utils.zero(&dataToZero)
     }
 
     func testConstantTimeComparison() {
         let sodium = Sodium()
-        let secret1 = "Secret key".bytes
-        let secret2 = "Secret key".bytes
+        let secret1 = BytesContainer("Secret key")
+        let secret2 = BytesContainer("Secret key")
         let equality = sodium.utils.equals(secret1, secret2)
 
         XCTAssertTrue(equality)
@@ -195,7 +195,7 @@ class ReadmeTests : XCTestCase {
 
     func testConstantTimeHexdecimalEncoding() {
         let sodium = Sodium()
-        let data = "Secret key".bytes
+        let data = BytesContainer("Secret key")
         let hex = sodium.utils.bin2hex(data)
 
         XCTAssertNotNil(hex)
@@ -217,7 +217,7 @@ class ReadmeTests : XCTestCase {
         let (output, nonce) = sodium.stream.xor(input: input, secretKey: key)!
         let twice = sodium.stream.xor(input: output, nonce: nonce, secretKey: key)!
 
-        XCTAssertEqual(input.bytes, twice)
+        XCTAssertEqual(input, String(bytes: twice)!)
     }
 
     func testAuth() {
@@ -266,9 +266,9 @@ class ReadmeTests : XCTestCase {
         let (message2_dec, tag2) = stream_dec.pull(cipherText: encrypted2)!
         let (message3_dec, tag3) = stream_dec.pull(cipherText: encrypted3)!
 
-        XCTAssertEqual(message1.bytes, message1_dec)
-        XCTAssertEqual(message2.bytes, message2_dec)
-        XCTAssertEqual(message3.bytes, message3_dec)
+        XCTAssertEqual(message1, String(bytes: message1_dec)!)
+        XCTAssertEqual(message2, String(bytes: message2_dec)!)
+        XCTAssertEqual(message3, String(bytes: message3_dec)!)
         XCTAssertEqual(tag1, .MESSAGE)
         XCTAssertEqual(tag2, .MESSAGE)
         XCTAssertEqual(tag3, .FINAL)
@@ -276,24 +276,24 @@ class ReadmeTests : XCTestCase {
 
     func testBase64() {
         let sodium = Sodium()
-        let b64 = sodium.utils.bin2base64("data".bytes)!
-        let b64_2 = sodium.utils.bin2base64("data".bytes, variant: .URLSAFE_NO_PADDING)!
+        let b64 = sodium.utils.bin2base64(BytesContainer("data"))!
+        let b64_2 = sodium.utils.bin2base64(BytesContainer("data"), variant: .URLSAFE_NO_PADDING)!
 
         let data1 = sodium.utils.base642bin(b64)
         let data2 = sodium.utils.base642bin(b64, ignore: " \n")
         let data3 = sodium.utils.base642bin(b64_2, variant: .URLSAFE_NO_PADDING, ignore: " \n")
 
-        XCTAssertEqual(data1, "data".bytes)
-        XCTAssertEqual(data2, "data".bytes)
-        XCTAssertEqual(data3, "data".bytes)
+        XCTAssertEqual(String(bytes: data1!)!, "data")
+        XCTAssertEqual(String(bytes: data2!)!, "data")
+        XCTAssertEqual(String(bytes: data3!)!, "data")
     }
 
     func testPadding() {
         let sodium = Sodium()
-        var data = "test".bytes
+        var data = BytesContainer("test")
 
         // make data.count a multiple of 16
-        sodium.utils.pad(data: &data, blockSize: 16)!
+        sodium.utils.pad(bytes: &data, blockSize: 16)!
 
         // restore original size
         sodium.utils.unpad(bytes: &data, blockSize: 16)!

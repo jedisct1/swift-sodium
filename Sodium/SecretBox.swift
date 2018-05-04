@@ -3,7 +3,7 @@ import Clibsodium
 
 public struct SecretBox {
     public let MacBytes = Int(crypto_secretbox_macbytes())
-    public typealias MAC = Bytes
+    public typealias MAC = BytesContainer
 }
 
 extension SecretBox {
@@ -15,8 +15,8 @@ extension SecretBox {
 
      - Returns: A `Bytes` object containing the nonce and authenticated ciphertext.
      */
-    public func seal(message: BytesRepresentable, secretKey: Key) -> Bytes? {
-        guard let (authenticatedCipherText, nonce): (Bytes, Nonce) = seal(
+    public func seal(message: BytesRepresentable, secretKey: Key) -> BytesContainer? {
+        guard let (authenticatedCipherText, nonce): (BytesContainer, Nonce) = seal(
             message: message,
             secretKey: secretKey
         ) else { return nil }
@@ -31,17 +31,17 @@ extension SecretBox {
 
      - Returns: The authenticated ciphertext and encryption nonce.
      */
-    public func seal(message: BytesRepresentable, secretKey: Key) -> (authenticatedCipherText: Bytes, nonce: Nonce)? {
+    public func seal(message: BytesRepresentable, secretKey: Key) -> (authenticatedCipherText: BytesContainer, nonce: Nonce)? {
         let message = message.bytes
         guard secretKey.count == KeyBytes else { return nil }
-        var authenticatedCipherText = Bytes(count: message.count + MacBytes)
+        var authenticatedCipherText = BytesContainer(count: message.count + MacBytes)
         let nonce = self.nonce()
 
         guard .SUCCESS == crypto_secretbox_easy (
-            &authenticatedCipherText,
+            &authenticatedCipherText.bytes,
             message, UInt64(message.count),
-            nonce,
-            secretKey
+            nonce.bytes,
+            secretKey.bytes
         ).exitCode else { return nil }
 
         return (authenticatedCipherText: authenticatedCipherText, nonce: nonce)
@@ -55,20 +55,20 @@ extension SecretBox {
 
      - Returns: The encrypted ciphertext, encryption nonce, and authentication tag.
      */
-    public func seal(message: BytesRepresentable, secretKey: Key) -> (cipherText: Bytes, nonce: Nonce, mac: MAC)? {
+    public func seal(message: BytesRepresentable, secretKey: Key) -> (cipherText: BytesContainer, nonce: Nonce, mac: MAC)? {
         guard secretKey.count == KeyBytes else { return nil }
 
         let message = message.bytes
-        var cipherText = Bytes(count: message.count)
-        var mac = Bytes(count: MacBytes)
+        var cipherText = BytesContainer(count: message.count)
+        var mac = BytesContainer(count: MacBytes)
         let nonce = self.nonce()
 
         guard .SUCCESS == crypto_secretbox_detached (
-            &cipherText,
-            &mac,
+            &cipherText.bytes,
+            &mac.bytes,
             message, UInt64(message.count),
-            nonce,
-            secretKey
+            nonce.bytes,
+            secretKey.bytes
         ).exitCode else { return nil }
 
         return (cipherText: cipherText, nonce: nonce, mac: mac)
@@ -84,11 +84,12 @@ extension SecretBox {
 
      - Returns: The decrypted message.
      */
-    public func open(nonceAndAuthenticatedCipherText: BytesRepresentable, secretKey: Key) -> Bytes? {
-        let nonceAndAuthenticatedCipherText = nonceAndAuthenticatedCipherText.bytes
+    public func open(nonceAndAuthenticatedCipherText: BytesRepresentable, secretKey: Key) -> BytesContainer? {
+        let nonceAndAuthenticatedCipherText = BytesContainer(nonceAndAuthenticatedCipherText)
+
         guard nonceAndAuthenticatedCipherText.count >= MacBytes + NonceBytes else { return nil }
-        let nonce = nonceAndAuthenticatedCipherText[..<NonceBytes].bytes as Nonce
-        let authenticatedCipherText = nonceAndAuthenticatedCipherText[NonceBytes...].bytes
+        let nonce = nonceAndAuthenticatedCipherText[..<NonceBytes] as Nonce
+        let authenticatedCipherText = nonceAndAuthenticatedCipherText[NonceBytes...]
 
         return open(authenticatedCipherText: authenticatedCipherText, secretKey: secretKey, nonce: nonce)
     }
@@ -102,16 +103,16 @@ extension SecretBox {
 
      - Returns: The decrypted message.
      */
-    public func open(authenticatedCipherText: BytesRepresentable, secretKey: Key, nonce: Nonce) -> Bytes? {
+    public func open(authenticatedCipherText: BytesRepresentable, secretKey: Key, nonce: Nonce) -> BytesContainer? {
         let authenticatedCipherText = authenticatedCipherText.bytes
         guard authenticatedCipherText.count >= MacBytes else { return nil }
-        var message = Bytes(count: authenticatedCipherText.count - MacBytes)
+        var message = BytesContainer(count: authenticatedCipherText.count - MacBytes)
 
         guard .SUCCESS == crypto_secretbox_open_easy (
-            &message,
+            &message.bytes,
             authenticatedCipherText, UInt64(authenticatedCipherText.count),
-            nonce,
-            secretKey
+            nonce.bytes,
+            secretKey.bytes
         ).exitCode else { return nil }
 
         return message
@@ -126,22 +127,22 @@ extension SecretBox {
 
      - Returns: The decrypted message.
      */
-    public func open(cipherText: BytesRepresentable, secretKey: Key, nonce: Nonce, mac: MAC) -> Bytes? {
+    public func open(cipherText: BytesRepresentable, secretKey: Key, nonce: Nonce, mac: MAC) -> BytesContainer? {
         guard nonce.count == NonceBytes,
               mac.count == MacBytes,
               secretKey.count == KeyBytes
         else { return nil }
 
         let cipherText = cipherText.bytes
-        var message = Bytes(count: cipherText.count)
+        var message = BytesContainer(count: cipherText.count)
 
         guard .SUCCESS == crypto_secretbox_open_detached (
-            &message,
+            &message.bytes,
             cipherText,
-            mac,
+            mac.bytes,
             UInt64(cipherText.count),
-            nonce,
-            secretKey
+            nonce.bytes,
+            secretKey.bytes
         ).exitCode else { return nil }
 
         return message
@@ -150,11 +151,11 @@ extension SecretBox {
 
 extension SecretBox: NonceGenerator {
     public var NonceBytes: Int { return Int(crypto_secretbox_noncebytes()) }
-    public typealias Nonce = Bytes
+    public typealias Nonce = BytesContainer
 }
 
 extension SecretBox: SecretKeyGenerator {
-    public typealias Key = Bytes
+    public typealias Key = BytesContainer
     public var KeyBytes: Int { return Int(crypto_secretbox_keybytes()) }
 
     static let keygen: (_ k: UnsafeMutablePointer<UInt8>) -> Void = crypto_secretbox_keygen

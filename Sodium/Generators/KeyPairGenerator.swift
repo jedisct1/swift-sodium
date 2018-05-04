@@ -4,10 +4,10 @@ protocol KeyPairGenerator {
     associatedtype KeyPair: KeyPairProtocol
 
     var PublicKeyBytes: Int { get }
-    associatedtype PublicKey where PublicKey == Bytes
+    associatedtype PublicKey where PublicKey == BytesContainer
 
     var SecretKeyBytes: Int { get }
-    associatedtype SecretKey where SecretKey == Bytes
+    associatedtype SecretKey where SecretKey == BytesContainer
 
     var SeedBytes: Int { get }
 
@@ -30,10 +30,10 @@ extension KeyPairGenerator {
      - Returns: A key pair containing the secret key and public key.
      */
     public func keyPair() -> KeyPair? {
-        var pk = Bytes(count: PublicKeyBytes)
-        var sk = Bytes(count: SecretKeyBytes)
+        var pk = BytesContainer(count: PublicKeyBytes)
+        var sk = BytesContainer(count: SecretKeyBytes)
 
-        guard .SUCCESS == Self.newKeypair(&pk, &sk).exitCode else { return nil }
+        guard .SUCCESS == Self.newKeypair(&pk.bytes, &sk.bytes).exitCode else { return nil }
 
         return KeyPair(publicKey: pk, secretKey: sk)
     }
@@ -48,10 +48,10 @@ extension KeyPairGenerator {
     public func keyPair(seed: BytesRepresentable) -> KeyPair? {
         let seed = seed.bytes
         guard seed.count == SeedBytes else { return nil }
-        var pk = Bytes(count: PublicKeyBytes)
-        var sk = Bytes(count: SecretKeyBytes)
+        var pk = BytesContainer(count: PublicKeyBytes)
+        var sk = BytesContainer(count: SecretKeyBytes)
 
-        guard .SUCCESS == Self.keypairFromSeed(&pk, &sk, seed).exitCode else {
+        guard .SUCCESS == Self.keypairFromSeed(&pk.bytes, &sk.bytes, seed).exitCode else {
             return nil
         }
 

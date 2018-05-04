@@ -75,8 +75,8 @@
 		DD35BB5720924D3A006BF351 /* KeyPairProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD35BB5520924D3A006BF351 /* KeyPairProtocol.swift */; };
 		DD35BB5A20925566006BF351 /* SecretKeyGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD35BB5920925566006BF351 /* SecretKeyGenerator.swift */; };
 		DD35BB5B20925566006BF351 /* SecretKeyGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD35BB5920925566006BF351 /* SecretKeyGenerator.swift */; };
-		DD35BB6320932A83006BF351 /* Bytes.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD35BB6220932A83006BF351 /* Bytes.swift */; };
-		DD35BB6420932A83006BF351 /* Bytes.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD35BB6220932A83006BF351 /* Bytes.swift */; };
+		DD35BB6320932A83006BF351 /* BytesContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD35BB6220932A83006BF351 /* BytesContainer.swift */; };
+		DD35BB6420932A83006BF351 /* BytesContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD35BB6220932A83006BF351 /* BytesContainer.swift */; };
 		DD92AD092094BD9100F7A743 /* Data+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD92AD082094BD9100F7A743 /* Data+Extension.swift */; };
 		DD92AD0A2094BD9100F7A743 /* Data+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD92AD082094BD9100F7A743 /* Data+Extension.swift */; };
 		DD92AD0C2094D06200F7A743 /* ArraySlice+BytesRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD92AD0B2094D06200F7A743 /* ArraySlice+BytesRepresentable.swift */; };
@@ -225,7 +225,7 @@
 		DD35BB5220924B6F006BF351 /* KeyPairGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyPairGenerator.swift; sourceTree = "<group>"; };
 		DD35BB5520924D3A006BF351 /* KeyPairProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyPairProtocol.swift; sourceTree = "<group>"; };
 		DD35BB5920925566006BF351 /* SecretKeyGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretKeyGenerator.swift; sourceTree = "<group>"; };
-		DD35BB6220932A83006BF351 /* Bytes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bytes.swift; sourceTree = "<group>"; };
+		DD35BB6220932A83006BF351 /* BytesContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BytesContainer.swift; sourceTree = "<group>"; };
 		DD92AD082094BD9100F7A743 /* Data+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Extension.swift"; sourceTree = "<group>"; };
 		DD92AD0B2094D06200F7A743 /* ArraySlice+BytesRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArraySlice+BytesRepresentable.swift"; sourceTree = "<group>"; };
 		F87EEC3F2063C655006C830D /* Aead.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Aead.swift; sourceTree = "<group>"; };
@@ -307,7 +307,7 @@
 				09A943E91A4EB70900C8A04F /* libsodium */,
 				09A943CC1A4EB5F500C8A04F /* Sodium.h */,
 				094F21E91A5017CA001C3141 /* Box.swift */,
-				DD35BB6220932A83006BF351 /* Bytes.swift */,
+				DD35BB6220932A83006BF351 /* BytesContainer.swift */,
 				DD1FE6532094BA3D007907E3 /* BytesRepresentable.swift */,
 				DD1FE64C2094B82C007907E3 /* BytesRepresentables */,
 				DD35BB58209252BF006BF351 /* Generators */,
@@ -743,7 +743,7 @@
 				094298301EDDAA3B001236B1 /* Stream.swift in Sources */,
 				DD1FE64E2094B888007907E3 /* String+Extension.swift in Sources */,
 				D2A274061F13AD9300958702 /* KeyDerivation.swift in Sources */,
-				DD35BB6320932A83006BF351 /* Bytes.swift in Sources */,
+				DD35BB6320932A83006BF351 /* BytesContainer.swift in Sources */,
 				09A5AC121F74466700D3200B /* SecretStream.swift in Sources */,
 				DD35BB5020924A35006BF351 /* NonceGenerator.swift in Sources */,
 				091C7CDA1A507E95002E5351 /* ShortHash.swift in Sources */,
@@ -807,7 +807,7 @@
 				DD1E4D07208E744100BE7A3F /* StateStream.swift in Sources */,
 				DD1FE64F2094B888007907E3 /* String+Extension.swift in Sources */,
 				DD1E4D1020922C9E00BE7A3F /* ExitCode.swift in Sources */,
-				DD35BB6420932A83006BF351 /* Bytes.swift in Sources */,
+				DD35BB6420932A83006BF351 /* BytesContainer.swift in Sources */,
 				6096E7321F194FA800E6599F /* KeyDerivation.swift in Sources */,
 				098DAF041F76E35C00DFB1C3 /* SecretStream.swift in Sources */,
 				90C75EEA1AE3583E00F1E749 /* ShortHash.swift in Sources */,

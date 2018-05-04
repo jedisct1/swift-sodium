@@ -7,10 +7,10 @@ public struct KeyExchange {
 
 extension KeyExchange {
     public struct SessionKeyPair {
-        public let rx: Bytes
-        public let tx: Bytes
+        public let rx: BytesContainer
+        public let tx: BytesContainer
 
-        public init(rx: Bytes, tx: Bytes) {
+        public init(rx: BytesContainer, tx: BytesContainer) {
             self.rx = rx
             self.tx = tx
         }
@@ -57,15 +57,15 @@ extension KeyExchange {
               otherPublicKey.count == PublicKeyBytes
         else { return nil }
 
-        var rx = Bytes(count: SessionKeyBytes)
-        var tx = Bytes(count: SessionKeyBytes)
+        var rx = BytesContainer(count: SessionKeyBytes)
+        var tx = BytesContainer(count: SessionKeyBytes)
 
         guard .SUCCESS == side.sessionKeys (
-            &rx,
-            &tx,
-            publicKey,
-            secretKey,
-            otherPublicKey
+            &rx.bytes,
+            &tx.bytes,
+            publicKey.bytes,
+            secretKey.bytes,
+            otherPublicKey.bytes
         ).exitCode else { return nil }
 
         return SessionKeyPair(rx: rx, tx: tx)
@@ -73,8 +73,8 @@ extension KeyExchange {
 }
 
 extension KeyExchange: KeyPairGenerator {
-    public typealias PublicKey = Bytes
-    public typealias SecretKey = Bytes
+    public typealias PublicKey = BytesContainer
+    public typealias SecretKey = BytesContainer
 
     public var SeedBytes: Int { return Int(crypto_kx_seedbytes()) }
     public var PublicKeyBytes: Int { return Int(crypto_kx_publickeybytes()) }

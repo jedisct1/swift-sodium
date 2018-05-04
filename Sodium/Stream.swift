@@ -19,16 +19,16 @@ extension Stream {
 
      -  Returns: input XOR keystream(secretKey, nonce)
      */
-    public func xor(input: BytesRepresentable, nonce: Nonce, secretKey: Key) -> Bytes? {
+    public func xor(input: BytesRepresentable, nonce: Nonce, secretKey: Key) -> BytesContainer? {
         guard secretKey.count == KeyBytes, nonce.count == NonceBytes else { return nil }
 
         let input = input.bytes
-        var output = Bytes(count: input.count)
+        var output = BytesContainer(count: input.count)
         guard .SUCCESS == crypto_stream_xor (
-            &output,
+            &output.bytes,
             input, UInt64(input.count),
-            nonce,
-            secretKey
+            nonce.bytes,
+            secretKey.bytes
         ).exitCode else { return nil }
 
         return output
@@ -47,11 +47,10 @@ extension Stream {
 
      -  Returns: (input XOR keystream(secretKey, nonce), nonce)
      */
-    public func xor(input: BytesRepresentable, secretKey: Key) -> (output:Bytes, nonce: Nonce)? {
+    public func xor(input: BytesRepresentable, secretKey: Key) -> (output:BytesContainer, nonce: Nonce)? {
         let nonce = self.nonce()
 
-        let input = input.bytes
-        guard let output: Bytes = xor(
+        guard let output: BytesContainer = xor(
             input: input,
             nonce: nonce,
             secretKey: secretKey
@@ -62,12 +61,12 @@ extension Stream {
 }
 
 extension Stream: NonceGenerator {
-    public typealias Nonce = Bytes
+    public typealias Nonce = BytesContainer
     public var NonceBytes: Int { return Int(crypto_secretbox_noncebytes()) }
 }
 
 extension Stream: SecretKeyGenerator {
-    public typealias Key = Bytes
+    public typealias Key = BytesContainer
     public var KeyBytes: Int { return Int(crypto_secretbox_keybytes()) }
 
     static let keygen: (_ k: UnsafeMutablePointer<UInt8>) -> Void = crypto_stream_keygen

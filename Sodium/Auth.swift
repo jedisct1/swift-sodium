@@ -15,15 +15,15 @@ extension Auth {
 
      - Returns: The computed authentication tag.
      */
-    public func tag(message: BytesRepresentable, secretKey: SecretKey) -> Bytes? {
+    public func tag(message: BytesRepresentable, secretKey: SecretKey) -> BytesContainer? {
         guard secretKey.count == KeyBytes else { return nil }
 
         let message = message.bytes
-        var tag = Array<UInt8>(count: Bytes)
+        var tag = BytesContainer(count: Bytes)
         guard .SUCCESS == crypto_auth (
-            &tag,
+            &tag.bytes,
             message, UInt64(message.count),
-            secretKey
+            secretKey.bytes
         ).exitCode else { return nil }
 
         return tag
@@ -46,14 +46,14 @@ extension Auth {
         return .SUCCESS == crypto_auth_verify (
             tag,
             message, UInt64(message.count),
-            secretKey
+            secretKey.bytes
         ).exitCode
     }
 }
 
 extension Auth: SecretKeyGenerator {
     public var KeyBytes: Int { return Int(crypto_auth_keybytes()) }
-    public typealias Key = Bytes
+    public typealias Key = BytesContainer
 
     static let keygen: (_ k: UnsafeMutablePointer<UInt8>) -> Void = crypto_auth_keygen
 }

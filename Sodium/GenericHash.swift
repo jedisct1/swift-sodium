@@ -40,7 +40,7 @@ extension GenericHash {
 
      - Returns: The computed fingerprint.
      */
-    public func hash(message: BytesRepresentable, key: BytesRepresentable? = nil) -> Bytes? {
+    public func hash(message: BytesRepresentable, key: BytesRepresentable? = nil) -> BytesContainer? {
         return hash(message: message, key: key, outputLength: Bytes)
     }
 
@@ -53,12 +53,12 @@ extension GenericHash {
 
      - Returns: The computed fingerprint.
      */
-    public func hash(message: BytesRepresentable, key: BytesRepresentable?, outputLength: Int) -> Bytes? {
-        var output = Array<UInt8>(count: outputLength)
+    public func hash(message: BytesRepresentable, key: BytesRepresentable?, outputLength: Int) -> BytesContainer? {
+        var output = BytesContainer(count: outputLength)
 
         let (key, message) = (key?.bytes, message.bytes)
         guard .SUCCESS == crypto_generichash(
-            &output, outputLength,
+            &output.bytes, outputLength,
             message, UInt64(message.count),
             key, key?.count ?? 0
         ).exitCode else { return nil }
@@ -74,7 +74,7 @@ extension GenericHash {
 
      - Returns: The computed fingerprint.
      */
-    public func hash(message: BytesRepresentable, outputLength: Int) -> Bytes? {
+    public func hash(message: BytesRepresentable, outputLength: Int) -> BytesContainer? {
         return hash(message: message, key: nil, outputLength: outputLength)
     }
 }
@@ -137,12 +137,12 @@ extension GenericHash.Stream {
 
      - Returns: The computed fingerprint.
      */
-    public mutating func final() -> Bytes? {
+    public mutating func final() -> BytesContainer? {
         let outputLen = outputLength
-        var output = Array<UInt8>(count: outputLen)
+        var output = BytesContainer(count: outputLen)
         guard .SUCCESS == crypto_generichash_final(
             &state,
-            &output, outputLen
+            &output.bytes, outputLen
         ).exitCode else { return nil }
 
         return output
@@ -156,7 +156,7 @@ extension GenericHash.Stream: StateStream {
 
 extension GenericHash: SecretKeyGenerator {
     public var KeyBytes: Int { return Int(crypto_generichash_keybytes()) }
-    public typealias Key = Bytes
+    public typealias Key = BytesContainer
 
     static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_generichash_keygen
 

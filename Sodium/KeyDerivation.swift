@@ -6,7 +6,7 @@ public struct KeyDerivation {
     public let BytesMax = Int(crypto_kdf_bytes_max())
     public let ContextBytes = Int(crypto_kdf_contextbytes())
 
-    public typealias SubKey = Bytes
+    public typealias SubKey = BytesContainer
 }
 
 extension KeyDerivation {
@@ -23,8 +23,8 @@ extension KeyDerivation {
 
      - Note: Output keys must have a length between BytesMin and BytesMax bytes (inclusive), otherwise an error is returned. Context must be at most 8 characters long. If the specified context is shorter than 8 characters, it will be padded to 8 characters. The master key is KeyBytes long.
      */
-    public func derive(secretKey: Bytes, index: UInt64, length: Int, context: String) -> Bytes? {
-        var contextBin = Bytes(context.utf8).map(Int8.init)
+    public func derive(secretKey: BytesContainer, index: UInt64, length: Int, context: String) -> BytesContainer? {
+        var contextBin = context.utf8.map(Int8.init)
         guard (BytesMin...BytesMax).contains(length),
               secretKey.count == KeyBytes,
               contextBin.count <= ContextBytes
@@ -34,13 +34,13 @@ extension KeyDerivation {
             contextBin += [0]
         }
 
-        var output = Bytes(count: length)
+        var output = BytesContainer(count: length)
 
         guard .SUCCESS == crypto_kdf_derive_from_key(
-            &output, length,
+            &output.bytes, length,
             index,
             contextBin,
-            secretKey
+            secretKey.bytes
         ).exitCode else { return nil }
 
         return output
@@ -49,7 +49,7 @@ extension KeyDerivation {
 
 extension KeyDerivation: SecretKeyGenerator {
     public var KeyBytes: Int { return Int(crypto_kdf_keybytes()) }
-    public typealias Key = Bytes
+    public typealias Key = BytesContainer
 
     static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_kdf_keygen
 }

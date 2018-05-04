@@ -48,7 +48,7 @@ extension PWHash {
      - Returns: The generated string.
      */
     public func str(passwd: BytesRepresentable, opsLimit: Int, memLimit: Int) -> String? {
-        var output = Bytes(count: StrBytes).map(Int8.init)
+        var output = BytesContainer(count: StrBytes).map(Int8.init)
         let passwd = passwd.bytes.map(Int8.init)
 
         guard .SUCCESS == crypto_pwhash_str(
@@ -70,7 +70,7 @@ extension PWHash {
      - Returns: `true` if the verification succeeds.
      */
     public func strVerify(hash: String, passwd: BytesRepresentable) -> Bool {
-        let hashBytes = Bytes((hash + "\0").utf8).map(Int8.init)
+        let hashBytes = (hash + "\0").utf8.map(Int8.init)
         let passwd = passwd.bytes.map(Int8.init)
 
         return .SUCCESS == crypto_pwhash_str_verify(
@@ -89,7 +89,7 @@ extension PWHash {
      - Returns: `true` if the password hash should be updated.
      */
     public func strNeedsRehash(hash: String, opsLimit: Int, memLimit: Int) -> Bool {
-        let hashBytes = Bytes((hash + "\0").utf8).map(Int8.init)
+        let hashBytes = (hash + "\0").utf8.map(Int8.init)
         return .SUCCESS != crypto_pwhash_str_needs_rehash(
             hashBytes,
             UInt64(opsLimit),
@@ -113,15 +113,15 @@ extension PWHash {
 
      - Returns: The derived key data.
      */
-    public func hash(outputLength: Int, passwd: BytesRepresentable, salt: Bytes, opsLimit: Int, memLimit: Int, alg: Alg = .Default) -> Bytes? {
+    public func hash(outputLength: Int, passwd: BytesRepresentable, salt: BytesContainer, opsLimit: Int, memLimit: Int, alg: Alg = .Default) -> BytesContainer? {
         guard salt.count == SaltBytes else { return nil }
-        var output = Bytes(count: outputLength)
+        var output = BytesContainer(count: outputLength)
         let passwd = passwd.bytes.map(Int8.init)
 
         guard .SUCCESS == crypto_pwhash(
-            &output, UInt64(outputLength),
+            &output.bytes, UInt64(outputLength),
             passwd, UInt64(passwd.count),
-            salt,
+            salt.bytes,
             UInt64(opsLimit),
             size_t(memLimit),
             alg.id

@@ -14,13 +14,13 @@ extension ShortHash {
 
      - Returns: The computed fingerprint.
      */
-    public func hash(message: BytesRepresentable, key: BytesRepresentable) -> Bytes? {
+    public func hash(message: BytesRepresentable, key: BytesRepresentable) -> BytesContainer? {
         let (message, key) = (message.bytes, key.bytes)
         guard key.count == KeyBytes else { return nil }
-        var output = Array<UInt8>(count: Bytes)
+        var output = BytesContainer(count: Bytes)
 
         guard .SUCCESS == crypto_shorthash (
-            &output,
+            &output.bytes,
             message, UInt64(message.count),
             key
         ).exitCode else { return nil }
@@ -31,7 +31,7 @@ extension ShortHash {
 
 extension ShortHash: SecretKeyGenerator {
     public var KeyBytes: Int { return Int(crypto_shorthash_keybytes()) }
-    public typealias Key = Bytes
+    public typealias Key = BytesContainer
 
     static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_shorthash_keygen
 }

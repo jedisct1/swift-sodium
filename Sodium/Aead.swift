@@ -8,7 +8,7 @@ public struct Aead {
 extension Aead {
     public struct XChaCha20Poly1305Ietf {
         public let ABytes = Int(crypto_aead_xchacha20poly1305_ietf_abytes())
-        public typealias MAC = Bytes
+        public typealias MAC = BytesContainer
     }
 }
 
@@ -22,8 +22,8 @@ extension Aead.XChaCha20Poly1305Ietf {
 
      - Returns: A `Bytes` object containing the nonce and authenticated ciphertext.
      */
-    public func encrypt(message: BytesRepresentable, secretKey: Key, additionalData: BytesRepresentable? = nil) -> Bytes? {
-        guard let (authenticatedCipherText, nonce): (Bytes, Nonce) = encrypt(
+    public func encrypt(message: BytesRepresentable, secretKey: Key, additionalData: BytesRepresentable? = nil) -> BytesContainer? {
+        guard let (authenticatedCipherText, nonce): (BytesContainer, Nonce) = encrypt(
             message: message,
             secretKey: secretKey,
             additionalData: additionalData
@@ -41,19 +41,19 @@ extension Aead.XChaCha20Poly1305Ietf {
 
      - Returns: The authenticated ciphertext and encryption nonce.
      */
-    public func encrypt(message: BytesRepresentable, secretKey: Key, additionalData: BytesRepresentable? = nil) -> (authenticatedCipherText: Bytes, nonce: Nonce)? {
+    public func encrypt(message: BytesRepresentable, secretKey: Key, additionalData: BytesRepresentable? = nil) -> (authenticatedCipherText: BytesContainer, nonce: Nonce)? {
         guard secretKey.count == KeyBytes else { return nil }
 
         let (message, additionalData) = (message.bytes, additionalData?.bytes)
-        var authenticatedCipherText = Bytes(count: message.count + ABytes)
+        var authenticatedCipherText = BytesContainer(count: message.count + ABytes)
         var authenticatedCipherTextLen: UInt64 = 0
         let nonce = self.nonce()
 
         guard .SUCCESS == crypto_aead_xchacha20poly1305_ietf_encrypt (
-            &authenticatedCipherText, &authenticatedCipherTextLen,
+            &authenticatedCipherText.bytes, &authenticatedCipherTextLen,
             message, UInt64(message.count),
             additionalData, UInt64(additionalData?.count ?? 0),
-            nil, nonce, secretKey
+            nil, nonce.bytes, secretKey.bytes
         ).exitCode else { return nil }
 
         return (authenticatedCipherText: authenticatedCipherText, nonce: nonce)
@@ -70,13 +70,13 @@ extension Aead.XChaCha20Poly1305Ietf {
      
      - Returns: The decrypted message.
      */
-    public func decrypt(nonceAndAuthenticatedCipherText: BytesRepresentable, secretKey: Key, additionalData: BytesRepresentable? = nil) -> Bytes? {
-        let nonceAndAuthenticatedCipherText = nonceAndAuthenticatedCipherText.bytes
-        let additionalData = additionalData?.bytes
+    public func decrypt(nonceAndAuthenticatedCipherText: BytesRepresentable, secretKey: Key, additionalData: BytesRepresentable? = nil) -> BytesContainer? {
+        let nonceAndAuthenticatedCipherText = BytesContainer(nonceAndAuthenticatedCipherText)
+        let additionalData = additionalData.flatMap(BytesContainer.init)
         guard nonceAndAuthenticatedCipherText.count >= ABytes + NonceBytes else { return nil }
-        
-        let nonce = nonceAndAuthenticatedCipherText[..<NonceBytes].bytes as Nonce
-        let authenticatedCipherText = nonceAndAuthenticatedCipherText[NonceBytes...].bytes
+
+        let nonce = nonceAndAuthenticatedCipherText[..<NonceBytes] as Nonce
+        let authenticatedCipherText = nonceAndAuthenticatedCipherText[NonceBytes...]
 
         return decrypt(authenticatedCipherText: authenticatedCipherText, secretKey: secretKey, nonce: nonce, additionalData: additionalData)
     }
@@ -90,20 +90,20 @@ extension Aead.XChaCha20Poly1305Ietf {
      
      - Returns: The decrypted message.
      */
-    public func decrypt(authenticatedCipherText: BytesRepresentable, secretKey: Key, nonce: Nonce, additionalData: BytesRepresentable? = nil) -> Bytes? {
+    public func decrypt(authenticatedCipherText: BytesRepresentable, secretKey: Key, nonce: Nonce, additionalData: BytesRepresentable? = nil) -> BytesContainer? {
         let authenticatedCipherText = authenticatedCipherText.bytes
         let additionalData = additionalData?.bytes
         guard authenticatedCipherText.count >= ABytes else { return nil }
         
-        var message = Bytes(count: authenticatedCipherText.count - ABytes)
+        var message = BytesContainer(count: authenticatedCipherText.count - ABytes)
         var messageLen: UInt64 = 0
 
         guard .SUCCESS == crypto_aead_xchacha20poly1305_ietf_decrypt (
-            &message, &messageLen,
+            &message.bytes, &messageLen,
             nil,
             authenticatedCipherText, UInt64(authenticatedCipherText.count),
             additionalData, UInt64(additionalData?.count ?? 0),
-            nonce, secretKey
+            nonce.bytes, secretKey.bytes
         ).exitCode else { return nil }
 
         return message
@@ -111,13 +111,13 @@ extension Aead.XChaCha20Poly1305Ietf {
 }
 
 extension Aead.XChaCha20Poly1305Ietf: NonceGenerator {
-    public typealias Nonce = Bytes
+    public typealias Nonce = BytesContainer
     public var NonceBytes: Int { return Int(crypto_aead_xchacha20poly1305_ietf_npubbytes()) }
 }
 
 extension Aead.XChaCha20Poly1305Ietf: SecretKeyGenerator {
     public var KeyBytes: Int { return Int(crypto_aead_xchacha20poly1305_ietf_keybytes()) }
-    public typealias Key = Bytes
+    public typealias Key = BytesContainer
 
     static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_aead_xchacha20poly1305_ietf_keygen
 }

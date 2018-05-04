@@ -10,7 +10,7 @@ extension SecretStream {
         public static let ABytes = Int(crypto_secretstream_xchacha20poly1305_abytes())
         public static let HeaderBytes = Int(crypto_secretstream_xchacha20poly1305_headerbytes())
         public static let KeyBytes = Int(crypto_secretstream_xchacha20poly1305_keybytes())
-        public typealias Header = Bytes
+        public typealias Header = BytesContainer
     }
 }
 
@@ -34,11 +34,11 @@ extension SecretStream.XChaCha20Poly1305 {
 
             state = crypto_secretstream_xchacha20poly1305_state()
 
-            _header = Bytes(count: HeaderBytes)
+            _header = BytesContainer(count: HeaderBytes)
             guard .SUCCESS == crypto_secretstream_xchacha20poly1305_init_push(
                 &state,
-                &_header,
-                secretKey
+                &_header.bytes,
+                secretKey.bytes
             ).exitCode else { return nil }
         }
     }
@@ -57,8 +57,8 @@ extension SecretStream.XChaCha20Poly1305 {
 
             guard .SUCCESS == crypto_secretstream_xchacha20poly1305_init_pull(
                 &state,
-                header,
-                secretKey
+                header.bytes,
+                secretKey.bytes
             ).exitCode else { return nil }
         }
     }
@@ -120,16 +120,16 @@ extension SecretStream.XChaCha20Poly1305.PushStream {
 
      - Returns: The ciphertext.
      */
-    public mutating func push(message: BytesRepresentable, tag: Tag = .MESSAGE, ad: BytesRepresentable? = nil) -> Bytes? {
-        let _ad = ad?.bytes ?? Bytes(count: 0)
+    public mutating func push(message: BytesRepresentable, tag: Tag = .MESSAGE, ad: BytesRepresentable? = nil) -> BytesContainer? {
+        let _ad = ad.flatMap(BytesContainer.init) ?? BytesContainer(count: 0)
         let message = message.bytes
-        var cipherText = Bytes(count: message.count + XChaCha20Poly1305.ABytes)
+        var cipherText = BytesContainer(count: message.count + XChaCha20Poly1305.ABytes)
         guard .SUCCESS == crypto_secretstream_xchacha20poly1305_push(
             &state,
-            &cipherText,
+            &cipherText.bytes,
             nil,
             message, UInt64(message.count),
-            _ad, UInt64(_ad.count),
+            _ad.bytes, UInt64(_ad.count),
             tag.rawValue
         ).exitCode else { return nil }
 
@@ -156,19 +156,19 @@ extension SecretStream.XChaCha20Poly1305.PullStream {
 
      - Returns: The decrypted message, as well as the tag attached to it.
      */
-    public mutating func pull(cipherText: BytesRepresentable, ad: BytesRepresentable? = nil) -> (Bytes, Tag)? {
+    public mutating func pull(cipherText: BytesRepresentable, ad: BytesRepresentable? = nil) -> (BytesContainer, Tag)? {
         let cipherText = cipherText.bytes
         guard cipherText.count >= XChaCha20Poly1305.ABytes else { return nil }
-        var message = Bytes(count: cipherText.count - XChaCha20Poly1305.ABytes)
-        let _ad = ad?.bytes ?? Bytes(count: 0)
+        var message = BytesContainer(count: cipherText.count - XChaCha20Poly1305.ABytes)
+        let _ad = ad.flatMap(BytesContainer.init) ?? BytesContainer(count: 0)
         var _tag: UInt8 = 0
         let result = crypto_secretstream_xchacha20poly1305_pull(
             &state,
-            &message,
+            &message.bytes,
             nil,
             &_tag,
             cipherText, UInt64(cipherText.count),
-            _ad, UInt64(_ad.count)
+            _ad.bytes, UInt64(_ad.count)
         ).exitCode
 
         guard result == .SUCCESS, let tag = Tag(rawValue: _tag) else {
@@ -187,7 +187,7 @@ extension SecretStream.XChaCha20Poly1305.PullStream {
 
 extension SecretStream.XChaCha20Poly1305: SecretKeyGenerator {
     var KeyBytes: Int { return SecretStream.XChaCha20Poly1305.KeyBytes }
-    public typealias Key = Bytes
+    public typealias Key = BytesContainer
 
     static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_secretstream_xchacha20poly1305_keygen
 

@@ -18,9 +18,9 @@ extension Utils {
 
      - Parameter data: The `Bytes` object to zero.
      */
-    public func zero(_ data: inout Bytes)  {
+    public func zero(_ data: inout BytesContainer)  {
         let count = data.count
-        sodium_memzero(&data, count)
+        sodium_memzero(&data.bytes, count)
     }
 }
 
@@ -35,11 +35,11 @@ extension Utils {
 
      - Returns: `true` if the bytes in `b1` match the bytes in `b2`. Otherwise, it returns false.
      */
-    public func equals(_ b1: Bytes, _ b2: Bytes) -> Bool {
+    public func equals(_ b1: BytesContainer, _ b2: BytesContainer) -> Bool {
         guard b1.count == b2.count else {
             return false
         }
-        return .SUCCESS == sodium_memcmp(b1, b2, b1.count).exitCode
+        return .SUCCESS == sodium_memcmp(b1.bytes, b2.bytes, b1.count).exitCode
     }
 
     /**
@@ -49,9 +49,9 @@ extension Utils {
      `-1` if `b2` is less than `b1` (considered as little-endian values) and
      `1`  if `b1` is less than `b2` (considered as little-endian values)
      */
-    public func compare(_ b1: Bytes, _ b2: Bytes) -> Int? {
+    public func compare(_ b1: BytesContainer, _ b2: BytesContainer) -> Int? {
         guard b1.count == b2.count else { return nil }
-        return Int(sodium_compare(b1, b2, b1.count))
+        return Int(sodium_compare(b1.bytes, b2.bytes, b1.count))
     }
 }
 
@@ -63,11 +63,11 @@ extension Utils {
 
      - Returns: The encoded hexdecimal string.
      */
-    public func bin2hex(_ bin: Bytes) -> String? {
+    public func bin2hex(_ bin: BytesContainer) -> String? {
         let hexBytesLen = bin.count * 2 + 1
-        var hexBytes = Bytes(count: hexBytesLen).map(Int8.init)
+        var hexBytes = BytesContainer(count: hexBytesLen).map(Int8.init)
 
-        guard sodium_bin2hex(&hexBytes, hexBytesLen, bin, bin.count) != nil else {
+        guard sodium_bin2hex(&hexBytes, hexBytesLen, bin.bytes, bin.count) != nil else {
             return nil
         }
 
@@ -82,22 +82,22 @@ extension Utils {
 
      - Returns: The decoded data.
      */
-    public func hex2bin(_ hex: String, ignore: String? = nil) -> Bytes? {
-        let hexBytes = Bytes(hex.utf8)
+    public func hex2bin(_ hex: String, ignore: String? = nil) -> BytesContainer? {
+        let hexBytes = BytesContainer(bytes: hex.utf8)
         let hexBytesLen = hexBytes.count
         let binBytesCapacity = hexBytesLen / 2
-        var binBytes = Bytes(count: binBytesCapacity)
+        var binBytes = BytesContainer(count: binBytesCapacity)
         var binBytesLen: size_t = 0
         let ignore_nsstr = ignore.flatMap({ NSString(string: $0) })
         let ignore_cstr = ignore_nsstr?.cString(using: String.Encoding.isoLatin1.rawValue)
 
         guard .SUCCESS == sodium_hex2bin(
-            &binBytes, binBytesCapacity,
+            &binBytes.bytes, binBytesCapacity,
             hex, hexBytesLen,
             ignore_cstr, &binBytesLen, nil
         ).exitCode else { return nil }
 
-        binBytes = binBytes[..<binBytesLen].bytes
+        binBytes = binBytes[..<binBytesLen]
 
         return binBytes
     }
@@ -112,11 +112,11 @@ extension Utils {
 
      - Returns: The encoded base64 string.
      */
-    public func bin2base64(_ bin: Bytes, variant: Base64Variant = .URLSAFE) -> String? {
+    public func bin2base64(_ bin: BytesContainer, variant: Base64Variant = .URLSAFE) -> String? {
         let b64BytesLen = sodium_base64_encoded_len(bin.count, variant.rawValue)
-        var b64Bytes = Bytes(count: b64BytesLen).map(Int8.init)
+        var b64Bytes = BytesContainer(count: b64BytesLen).map(Int8.init)
 
-        guard sodium_bin2base64(&b64Bytes, b64BytesLen, bin, bin.count, variant.rawValue) != nil else {
+        guard sodium_bin2base64(&b64Bytes, b64BytesLen, bin.bytes, bin.count, variant.rawValue) != nil else {
             return nil
         }
         return String(validatingUTF8: b64Bytes)
@@ -130,26 +130,26 @@ extension Utils {
 
      - Returns: The decoded data.
      */
-    public func base642bin(_ b64: String, variant: Base64Variant = .URLSAFE, ignore: String? = nil) -> Bytes? {
-        let b64Bytes = Bytes(b64.utf8).map(Int8.init)
+    public func base642bin(_ b64: String, variant: Base64Variant = .URLSAFE, ignore: String? = nil) -> BytesContainer? {
+        let b64Bytes = b64.utf8.map(Int8.init)
         let b64BytesLen = b64Bytes.count
         let binBytesCapacity = b64BytesLen * 3 / 4
-        var binBytes = Bytes(count: binBytesCapacity)
+        var bin = BytesContainer(count: binBytesCapacity)
         var binBytesLen: size_t = 0
         let ignore_nsstr = ignore.flatMap({ NSString(string: $0) })
         let ignore_cstr = ignore_nsstr?.cString(using: String.Encoding.isoLatin1.rawValue)
 
         guard .SUCCESS == sodium_base642bin(
-            &binBytes, binBytesCapacity,
+            &bin.bytes, binBytesCapacity,
             b64Bytes, b64BytesLen,
             ignore_cstr, &binBytesLen,
             nil,
             variant.rawValue
         ).exitCode else { return nil }
 
-        binBytes = binBytes[..<binBytesLen].bytes
+        bin = bin[..<binBytesLen]
 
-        return binBytes
+        return bin
     }
 }
 
@@ -160,27 +160,33 @@ extension Utils {
      - Parameter data: input/output buffer, will be modified in-place
      - Parameter blocksize: the block size
      */
-    public func pad(data bytes: inout Bytes, blockSize: Int) -> ()? {
-        // we must use Data and not Bytes because we need to increase the
-        // count size before passing to `sodium_pad` without initilising bytes
-        var data = Data(bytes)
-        let dataCount = data.count
-        data.reserveCapacity(dataCount + blockSize)
-        data.count = dataCount + blockSize
+    public func pad(data: inout Data, blockSize: Int) -> ()? {
+        var bytes = BytesContainer(data)
+        guard let _ = pad(bytes: &bytes, blockSize: blockSize) else { return nil }
+        data = Data(bytes)
+        return ()
+    }
+    /*
+     Adds padding to `bytes` so that its length becomes a multiple of `blockSize`
+
+     - Parameter data: input/output buffer, will be modified in-place
+     - Parameter blocksize: the block size
+     */
+    public func pad(bytes: inout BytesContainer, blockSize: Int) -> ()? {
+        let bytesCount = bytes.count
+        bytes = bytes + BytesContainer(count: blockSize)
+
         var paddedLen: size_t = 0
-        guard .SUCCESS == data.withUnsafeMutableBytes({
-            dataPtr in sodium_pad(
-                &paddedLen,
-                dataPtr, dataCount,
-                blockSize,
-                dataCount + blockSize
-            ).exitCode
-        }) else { return nil }
 
-        data.count = paddedLen
+        guard .SUCCESS == sodium_pad(
+            &paddedLen,
+            &bytes.bytes, bytesCount,
+            blockSize,
+            bytesCount + blockSize
+        ).exitCode else { return nil }
 
-        // return the new bytes by argument
-        bytes = Bytes(data)
+        bytes = bytes[..<paddedLen]
+
         return ()
     }
 
@@ -190,16 +196,29 @@ extension Utils {
      - Parameter data: input/output buffer, will be modified in-place
      - Parameter blocksize: the block size
      */
-    public func unpad(bytes: inout Bytes, blockSize: Int) -> ()? {
+    public func unpad(data: inout Data, blockSize: Int) -> ()? {
+        var bytes = BytesContainer(data)
+        guard let _ = unpad(bytes: &bytes, blockSize: blockSize) else { return nil }
+        data = Data(bytes)
+        return ()
+    }
+
+    /*
+     Removes padding from `bytes` to restore its original size
+
+     - Parameter data: input/output buffer, will be modified in-place
+     - Parameter blocksize: the block size
+     */
+    public func unpad(bytes: inout BytesContainer, blockSize: Int) -> ()? {
         var unpaddedLen: size_t = 0
         let bytesLen = bytes.count
         guard .SUCCESS == sodium_unpad(
             &unpaddedLen,
-            bytes, bytesLen,
+            bytes.bytes, bytesLen,
             blockSize
         ).exitCode else { return nil }
 
-        bytes = bytes[..<unpaddedLen].bytes
+        bytes = bytes[..<unpaddedLen]
 
         return ()
     }

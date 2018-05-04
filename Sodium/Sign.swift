@@ -15,16 +15,16 @@ extension Sign {
 
      - Returns: The signed message.
      */
-    public func sign(message: BytesRepresentable, secretKey: SecretKey) -> Bytes? {
+    public func sign(message: BytesRepresentable, secretKey: SecretKey) -> BytesContainer? {
         let message = message.bytes
         guard secretKey.count == SecretKeyBytes else { return nil }
-        var signedMessage = Array<UInt8>(count: message.count + Bytes)
+        var signedMessage = BytesContainer(count: message.count + Bytes)
 
         guard .SUCCESS == crypto_sign (
-            &signedMessage,
+            &signedMessage.bytes,
             nil,
             message, UInt64(message.count),
-            secretKey
+            secretKey.bytes
         ).exitCode else { return nil }
 
         return signedMessage
@@ -38,16 +38,16 @@ extension Sign {
 
      - Returns: The computed signature.
      */
-    public func signature(message: BytesRepresentable, secretKey: SecretKey) -> Bytes? {
+    public func signature(message: BytesRepresentable, secretKey: SecretKey) -> BytesContainer? {
         guard secretKey.count == SecretKeyBytes else { return nil }
-        var signature = Array<UInt8>(count: Bytes)
+        var signature = BytesContainer(count: Bytes)
 
         let message = message.bytes
         guard .SUCCESS == crypto_sign_detached (
-            &signature,
+            &signature.bytes,
             nil,
             message, UInt64(message.count),
-            secretKey
+            secretKey.bytes
         ).exitCode else { return nil }
 
         return signature
@@ -64,9 +64,9 @@ extension Sign {
      - Returns: `true` if verification is successful.
      */
     public func verify(signedMessage: BytesRepresentable, publicKey: PublicKey) -> Bool {
-        let signedMessage = signedMessage.bytes
-        let signature = signedMessage[..<Bytes].bytes
-        let message = signedMessage[Bytes...].bytes
+        let signedMessage = BytesContainer(signedMessage)
+        let signature = signedMessage[..<Bytes]
+        let message = signedMessage[Bytes...]
 
         return verify(message: message, publicKey: publicKey, signature: signature)
     }
@@ -80,16 +80,16 @@ extension Sign {
 
      - Returns: `true` if verification is successful.
      */
-    public func verify(message: BytesRepresentable, publicKey: PublicKey, signature: Bytes) -> Bool {
+    public func verify(message: BytesRepresentable, publicKey: PublicKey, signature: BytesContainer) -> Bool {
         guard publicKey.count == PublicKeyBytes else {
             return false
         }
 
         let message = message.bytes
         return .SUCCESS == crypto_sign_verify_detached (
-            signature,
+            signature.bytes,
             message, UInt64(message.count),
-            publicKey
+            publicKey.bytes
         ).exitCode
     }
 }
@@ -103,19 +103,19 @@ extension Sign {
 
      - Returns: The message data if verification is successful.
      */
-    public func open(signedMessage: BytesRepresentable, publicKey: PublicKey) -> Bytes? {
+    public func open(signedMessage: BytesRepresentable, publicKey: PublicKey) -> BytesContainer? {
         let signedMessage = signedMessage.bytes
         guard publicKey.count == PublicKeyBytes, signedMessage.count >= Bytes else {
             return nil
         }
 
-        var message = Array<UInt8>(count: signedMessage.count - Bytes)
+        var message = BytesContainer(count: signedMessage.count - Bytes)
         var mlen: UInt64 = 0
 
         guard .SUCCESS == crypto_sign_open (
-            &message, &mlen,
+            &message.bytes, &mlen,
             signedMessage, UInt64(signedMessage.count),
-            publicKey
+            publicKey.bytes
         ).exitCode else { return nil }
 
         return message
@@ -123,8 +123,8 @@ extension Sign {
 }
 
 extension Sign: KeyPairGenerator {
-    public typealias PublicKey = Bytes
-    public typealias SecretKey = Bytes
+    public typealias PublicKey = BytesContainer
+    public typealias SecretKey = BytesContainer
 
     public var SeedBytes: Int { return Int(crypto_sign_seedbytes()) }
     public var PublicKeyBytes: Int { return Int(crypto_sign_publickeybytes()) }

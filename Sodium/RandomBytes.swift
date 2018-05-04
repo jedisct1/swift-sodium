@@ -13,10 +13,10 @@ extension RandomBytes {
 
      - Returns: The generated data.
      */
-    public func buf(length: Int) -> Bytes? {
+    public func buf(length: Int) -> BytesContainer? {
         guard length >= 0 else { return nil }
-        var output = Bytes(count: length)
-        randombytes_buf(&output, length)
+        var output = BytesContainer(count: length)
+        randombytes_buf(&output.bytes, length)
         return output
     }
 
@@ -46,15 +46,15 @@ extension RandomBytes {
 
      - Returns: The generated data.
      */
-    public func deterministic(length: Int, seed: BytesRepresentable) -> Bytes? {
+    public func deterministic(length: Int, seed: BytesRepresentable) -> BytesContainer? {
         let seed = seed.bytes
         guard length >= 0,
               seed.count == SeedBytes,
               Int64(length) <= 0x4000000000 as Int64
         else { return nil }
 
-        var output = Bytes(count: length)
-        randombytes_buf_deterministic(&output, length, seed)
+        var output = BytesContainer(count: length)
+        randombytes_buf_deterministic(&output.bytes, length, seed.bytes)
         return output
     }
 }
