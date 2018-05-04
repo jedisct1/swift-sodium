@@ -16,7 +16,19 @@ extension Utils {
     /**
      Tries to effectively zero bytes in `data`, even if optimizations are being applied to the code.
 
-     - Parameter data: The `Bytes` object to zero.
+     - Parameter data: The `Data` object to zero.
+     */
+    public func zero(_ data: inout Data)  {
+        let count = data.count
+        data.withUnsafeMutableBytes {
+            dataPtr in sodium_memzero(dataPtr, count)
+        }
+    }
+
+    /**
+     Tries to effectively zero bytes in `data`, even if optimizations are being applied to the code.
+
+     - Parameter data: The `BytesContainer` object to zero.
      */
     public func zero(_ data: inout BytesContainer)  {
         let count = data.count
