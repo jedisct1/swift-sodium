@@ -1,3 +1,4 @@
+#if swift(>=4.1)
 extension ArraySlice: BytesRepresentable where Element == UInt8 {
     public var bytes: [UInt8] { return Array(self) }
 
@@ -5,3 +6,4 @@ extension ArraySlice: BytesRepresentable where Element == UInt8 {
         self.init(bytes)
     }
 }
+#endif
