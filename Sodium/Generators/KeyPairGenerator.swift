@@ -1,6 +1,6 @@
 import Foundation
 
-protocol KeyPairGenerator {
+public protocol KeyPairGenerator {
     associatedtype KeyPair: KeyPairProtocol
 
     var PublicKeyBytes: Int { get }

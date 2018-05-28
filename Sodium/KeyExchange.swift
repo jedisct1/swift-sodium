@@ -74,12 +74,12 @@ extension KeyExchange: KeyPairGenerator {
     public var PublicKeyBytes: Int { return Int(crypto_kx_publickeybytes()) }
     public var SecretKeyBytes: Int { return Int(crypto_kx_secretkeybytes()) }
 
-    static let newKeypair: (
+    public static let newKeypair: (
         _ pk: UnsafeMutablePointer<UInt8>,
         _ sk: UnsafeMutablePointer<UInt8>
     ) -> Int32 = crypto_kx_keypair
 
-    static let keypairFromSeed: (
+    public static let keypairFromSeed: (
         _ pk: UnsafeMutablePointer<UInt8>,
         _ sk: UnsafeMutablePointer<UInt8>,
         _ seed: UnsafePointer<UInt8>
@@ -90,5 +90,10 @@ extension KeyExchange: KeyPairGenerator {
         public typealias SecretKey = KeyExchange.SecretKey
         public let publicKey: PublicKey
         public let secretKey: SecretKey
+
+        public init(publicKey: PublicKey, secretKey: SecretKey) {
+            self.publicKey = publicKey
+            self.secretKey = secretKey
+        }
     }
 }

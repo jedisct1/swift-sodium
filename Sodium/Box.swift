@@ -357,12 +357,12 @@ extension Box: KeyPairGenerator {
     public var PublicKeyBytes: Int { return Int(crypto_box_publickeybytes()) }
     public var SecretKeyBytes: Int { return Int(crypto_box_secretkeybytes()) }
 
-    static let newKeypair: (
+    public static let newKeypair: (
         _ pk: UnsafeMutablePointer<UInt8>,
         _ sk: UnsafeMutablePointer<UInt8>
     ) -> Int32 = crypto_box_keypair
 
-    static let keypairFromSeed: (
+    public static let keypairFromSeed: (
         _ pk: UnsafeMutablePointer<UInt8>,
         _ sk: UnsafeMutablePointer<UInt8>,
         _ seed: UnsafePointer<UInt8>
@@ -373,6 +373,11 @@ extension Box: KeyPairGenerator {
         public typealias SecretKey = Box.SecretKey
         public let publicKey: PublicKey
         public let secretKey: SecretKey
+
+        public init(publicKey: PublicKey, secretKey: SecretKey) {
+            self.publicKey = publicKey
+            self.secretKey = secretKey
+        }
     }
 }
 
