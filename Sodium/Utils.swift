@@ -64,10 +64,11 @@ public class Utils {
      */
     public func bin2hex(_ bin: Data) -> String? {
         var hexData = Data(count: bin.count * 2 + 1)
-
+        let hexDataCount = hexData.count
+        let binCount = bin.count
         return hexData.withUnsafeMutableBytes { (hexPtr: UnsafeMutablePointer<Int8>) -> String? in
             bin.withUnsafeBytes { (binPtr: UnsafePointer<UInt8>) -> String? in
-                if sodium_bin2hex(hexPtr, hexData.count, binPtr, bin.count) == nil {
+                if sodium_bin2hex(hexPtr, hexDataCount, binPtr, binCount) == nil {
                     return nil
                 }
                 return String.init(validatingUTF8: hexPtr)
@@ -125,10 +126,12 @@ public class Utils {
      */
     public func bin2base64(_ bin: Data, variant: Base64Variant = .URLSAFE) -> String? {
         var b64Data = Data(count: sodium_base64_encoded_len(bin.count, variant.rawValue))
+        let b64DataCount = b64Data.count
+        let binCount = bin.count
 
         return b64Data.withUnsafeMutableBytes { (b64Ptr: UnsafeMutablePointer<Int8>) -> String? in
             bin.withUnsafeBytes { (binPtr: UnsafePointer<UInt8>) -> String? in
-                if sodium_bin2base64(b64Ptr, b64Data.count, binPtr, bin.count, variant.rawValue) == nil {
+                if sodium_bin2base64(b64Ptr, b64DataCount, binPtr, binCount, variant.rawValue) == nil {
                     return nil
                 }
                 return String.init(validatingUTF8: b64Ptr)
@@ -199,8 +202,9 @@ public class Utils {
      */
     public func unpad(data: inout Data, blockSize: Int) -> ()? {
         var unpaddedLen: size_t = 0
+        let dataCount = data.count
         let result = data.withUnsafeMutableBytes { dataPtr in
-            sodium_unpad(&unpaddedLen, dataPtr, data.count, blockSize)
+            sodium_unpad(&unpaddedLen, dataPtr, dataCount, blockSize)
         }
         if result != 0 {
             return nil
