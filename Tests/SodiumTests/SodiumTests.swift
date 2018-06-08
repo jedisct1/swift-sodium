@@ -374,7 +374,7 @@ class SodiumTests: XCTestCase {
 
     func testPad() {
         var data = "test".bytes
-        sodium.utils.pad(data: &data, blockSize: 16)!
+        sodium.utils.pad(bytes: &data, blockSize: 16)!
         XCTAssertTrue(data.count % 16 == 0)
         sodium.utils.unpad(bytes: &data, blockSize: 16)!
         XCTAssertTrue(data.count == 4)
