@@ -1,9 +1,11 @@
 import Foundation
 import Clibsodium
 
-public class KeyExchange {
+public struct KeyExchange {
     public let SessionKeyBytes = Int(crypto_kx_sessionkeybytes())
+}
 
+extension KeyExchange {
     public struct SessionKeyPair {
         public let rx: Bytes
         public let tx: Bytes
@@ -13,7 +15,9 @@ public class KeyExchange {
             self.tx = tx
         }
     }
+}
 
+extension KeyExchange {
     public enum Side {
         case CLIENT
         case SERVER
@@ -31,7 +35,9 @@ public class KeyExchange {
             }
         }
     }
+}
 
+extension KeyExchange {
     /**
      Using this function, two parties can securely compute a set of shared keys using their peer's public key and their own secret key.
      See [libsodium.org/doc/key_exchange](https://download.libsodium.org/doc/key_exchange) for more details.

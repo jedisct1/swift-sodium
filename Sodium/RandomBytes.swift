@@ -1,9 +1,11 @@
 import Foundation
 import Clibsodium
 
-public class RandomBytes {
+public struct RandomBytes {
     public let SeedBytes = Int(randombytes_seedbytes())
+}
 
+extension RandomBytes {
     /**
      Returns a `Bytes object of length `length` containing an unpredictable sequence of bytes.
 
