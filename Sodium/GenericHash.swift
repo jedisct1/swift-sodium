@@ -13,26 +13,19 @@ public struct GenericHash {
 
 extension GenericHash {
     public class Stream {
-        private var state: UnsafeMutablePointer<State>
+        private var state: State
         public var outputLength: Int = 0
 
         init?(key: Bytes?, outputLength: Int) {
-            state = Stream.generate()
+            state = crypto_generichash_state()
 
             guard .SUCCESS == crypto_generichash_init(
-                state,
+                &state,
                 key, key?.count ?? 0,
                 outputLength
-            ).exitCode else {
-                    free()
-                    return nil
-            }
+            ).exitCode else { return nil }
 
             self.outputLength = outputLength
-        }
-
-        deinit {
-            free()
         }
     }
 }
@@ -128,9 +121,10 @@ extension GenericHash.Stream {
 
      - Returns: `true` if the data was consumed successfully.
      */
+    @discardableResult
     public func update(input: Bytes) -> Bool {
         return .SUCCESS == crypto_generichash_update(
-            state,
+            &state,
             input, UInt64(input.count)
         ).exitCode
     }
@@ -144,17 +138,11 @@ extension GenericHash.Stream {
         let outputLen = outputLength
         var output = Array<UInt8>(count: outputLen)
         guard .SUCCESS == crypto_generichash_final(
-            state,
+            &state,
             &output, outputLen
         ).exitCode else { return nil }
 
         return output
-    }
-}
-
-extension GenericHash.Stream {
-    private func free() {
-        GenericHash.Stream.free(state)
     }
 }
 

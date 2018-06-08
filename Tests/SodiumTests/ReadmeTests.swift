@@ -134,8 +134,8 @@ class ReadmeTests : XCTestCase {
         let message2 = "Message".bytes
         let key = "Secret key".bytes
         let stream = sodium.genericHash.initStream(key: key)!
-        let _ = stream.update(input: message1)
-        let _ = stream.update(input: message2)
+        stream.update(input: message1)
+        stream.update(input: message2)
         let h = stream.final()
 
         XCTAssertNotNil(h)

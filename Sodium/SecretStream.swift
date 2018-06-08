@@ -26,51 +26,40 @@ extension SecretStream.XChaCha20Poly1305 {
 
 extension SecretStream.XChaCha20Poly1305 {
     public class PushStream {
-        private var state: UnsafeMutablePointer<State>
+        private var state: State
         private var _header: Header
 
         init?(secretKey: Key) {
             guard secretKey.count == KeyBytes else { return nil }
 
-            state = PushStream.generate()
+            state = crypto_secretstream_xchacha20poly1305_state()
+
             _header = Bytes(count: HeaderBytes)
             guard .SUCCESS == crypto_secretstream_xchacha20poly1305_init_push(
-                state,
+                &state,
                 &_header,
                 secretKey
-                ).exitCode else {
-                    free()
-                    return nil
-            }
-        }
-
-        deinit {
-            free()
+            ).exitCode else { return nil }
         }
     }
 }
 
 extension SecretStream.XChaCha20Poly1305 {
     public class PullStream {
-        private var state: UnsafeMutablePointer<State>
+        private var state: State
 
         init?(secretKey: Key, header: Header) {
             guard header.count == HeaderBytes, secretKey.count == KeyBytes else {
                 return nil
             }
-            state = PushStream.generate()
+
+            state = crypto_secretstream_xchacha20poly1305_state()
+
             guard .SUCCESS == crypto_secretstream_xchacha20poly1305_init_pull(
-                state,
+                &state,
                 header,
                 secretKey
-                ).exitCode else {
-                    free()
-                    return nil
-            }
-        }
-
-        deinit {
-            free()
+            ).exitCode else { return nil }
         }
     }
 }
@@ -135,7 +124,7 @@ extension SecretStream.XChaCha20Poly1305.PushStream {
         let _ad = ad ?? Bytes(count: 0)
         var cipherText = Bytes(count: message.count + XChaCha20Poly1305.ABytes)
         guard .SUCCESS == crypto_secretstream_xchacha20poly1305_push(
-            state,
+            &state,
             &cipherText,
             nil,
             message, UInt64(message.count),
@@ -150,7 +139,7 @@ extension SecretStream.XChaCha20Poly1305.PushStream {
      Performs an explicit key rotation.
      */
     public func rekey() {
-        crypto_secretstream_xchacha20poly1305_rekey(state)
+        crypto_secretstream_xchacha20poly1305_rekey(&state)
     }
 }
 
@@ -172,7 +161,7 @@ extension SecretStream.XChaCha20Poly1305.PullStream {
         let _ad = ad ?? Bytes(count: 0)
         var _tag: UInt8 = 0
         let result = crypto_secretstream_xchacha20poly1305_pull(
-            state,
+            &state,
             &message,
             nil,
             &_tag,
@@ -190,23 +179,9 @@ extension SecretStream.XChaCha20Poly1305.PullStream {
      Performs an explicit key rotation.
      */
     public func rekey() {
-        crypto_secretstream_xchacha20poly1305_rekey(state)
+        crypto_secretstream_xchacha20poly1305_rekey(&state)
     }
 }
-
-
-extension SecretStream.XChaCha20Poly1305.PushStream {
-    private func free() {
-        XChaCha20Poly1305.PushStream.free(state)
-    }
-}
-
-extension SecretStream.XChaCha20Poly1305.PullStream {
-    private func free() {
-        XChaCha20Poly1305.PullStream.free(state)
-    }
-}
-
 
 extension SecretStream.XChaCha20Poly1305: SecretKeyGenerator {
     var KeyBytes: Int { return SecretStream.XChaCha20Poly1305.KeyBytes }
