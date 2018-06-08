@@ -438,7 +438,7 @@ class SodiumTests: XCTestCase {
         let pair2 = sodium.box.keyPair()
         let shared1 = sodium.advanced.scalarMult(n: pair1!.secretKey, p: pair2!.publicKey)
         let shared2 = sodium.advanced.scalarMult(n: pair2!.secretKey, p: pair1!.publicKey)
-        XCTAssertEqual(shared1, shared2)
+        XCTAssertEqual(shared1!, shared2!)
     }
     
     func testAdvancedEd25519ToCurve25519() {
@@ -450,20 +450,20 @@ class SodiumTests: XCTestCase {
         let sk2 = sodium.advanced.toCurve25519(sk: signPair2!.secretKey)
         let shared1 = sodium.advanced.scalarMult(n: sk1!, p: pk2!)
         let shared2 = sodium.advanced.scalarMult(n: sk2!, p: pk1!)
-        XCTAssertEqual(shared1, shared2)
+        XCTAssertEqual(shared1!, shared2!)
     }
     
     func testAdvancedSha2() {
         let hash1 = sodium.advanced.SHA256("abc".bytes)!
         let expected1 = [UInt8](Data(base64Encoded: "ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=")!)
         XCTAssertEqual(hash1, expected1)
-        let hash2 = sodium.advanced.SHA256("".bytes)
+        let hash2 = sodium.advanced.SHA256("".bytes)!
         let expected2 = [UInt8](Data(base64Encoded: "47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=")!)
         XCTAssertEqual(hash2, expected2)
-        let hash3 = sodium.advanced.SHA512("abc".bytes)
+        let hash3 = sodium.advanced.SHA512("abc".bytes)!
         let expected3 = [UInt8](Data(base64Encoded: "3a81oZNherrMQXNJriBBMRLm+k6JqX6iCp7u5ktV05ohkpkqJ0/BqDa6PCOj/uu9RU1EI2Q86A4qmslPpUyknw==")!)
         XCTAssertEqual(hash3, expected3)
-        let hash4 = sodium.advanced.SHA512("".bytes)
+        let hash4 = sodium.advanced.SHA512("".bytes)!
         let expected4 = [UInt8](Data(base64Encoded: "z4PhNX7vuL3xVChQ1m2AB9Yg5AULVxXcg/SpIdNs6c5H0NE8XYXysP+DGNKHfuwvY7kxvUdBeoGlODJ6+SfaPg==")!)
         XCTAssertEqual(hash4, expected4)
     }
