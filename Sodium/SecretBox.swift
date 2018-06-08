@@ -30,18 +30,35 @@ public class SecretBox {
      - Returns: The authenticated ciphertext and encryption nonce.
      */
     public func seal(message: Bytes, secretKey: Key) -> (authenticatedCipherText: Bytes, nonce: Nonce)? {
+        
+        let nonce = self.nonce()
+        guard let authenticatedCipherText = seal(message: message, secretKey: secretKey, nonce: nonce) else {
+            return nil
+        }
+        return (authenticatedCipherText: authenticatedCipherText, nonce: nonce)
+    }
+    
+    /**
+     Encrypts a message with a shared secret key.
+     
+     - Parameter message: The message to encrypt.
+     - Parameter secretKey: The shared secret key.
+     - Parameter nonce: A nonce
+     
+     - Returns: The authenticated ciphertext and encryption nonce.
+     */
+    public func seal(message: Bytes, secretKey: Key, nonce: Nonce) -> Bytes? {
         guard secretKey.count == KeyBytes else { return nil }
         var authenticatedCipherText = Bytes(count: message.count + MacBytes)
-        let nonce = self.nonce()
 
         guard .SUCCESS == crypto_secretbox_easy (
             &authenticatedCipherText,
             message, UInt64(message.count),
             nonce,
             secretKey
-        ).exitCode else { return nil }
-
-        return (authenticatedCipherText: authenticatedCipherText, nonce: nonce)
+            ).exitCode else { return nil }
+        
+        return authenticatedCipherText
     }
 
     /**

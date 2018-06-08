@@ -16,6 +16,7 @@ public class Sodium {
     public let keyDerivation = KeyDerivation()
     public let secretStream = SecretStream()
     public let aead = Aead()
+    public let advanced = Advanced()
 
     private static let once: Void = {
         guard sodium_init() >= 0 else {
