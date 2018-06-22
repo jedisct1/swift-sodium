@@ -181,9 +181,8 @@ public class SecretStream {
 }
 
 extension SecretStream.XChaCha20Poly1305: SecretKeyGenerator {
-    var KeyBytes: Int { return SecretStream.XChaCha20Poly1305.KeyBytes }
+    public var KeyBytes: Int { return SecretStream.XChaCha20Poly1305.KeyBytes }
     public typealias Key = Bytes
 
-    static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_secretstream_xchacha20poly1305_keygen
-
+    public static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_secretstream_xchacha20poly1305_keygen
 }

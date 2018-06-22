@@ -1,7 +1,7 @@
 import Foundation
 import Clibsodium
 
-protocol NonceGenerator {
+public protocol NonceGenerator {
     var NonceBytes: Int { get }
     associatedtype Nonce where Nonce == Bytes
 }

@@ -1,6 +1,6 @@
 import Foundation
 
-protocol SecretKeyGenerator {
+public protocol SecretKeyGenerator {
     var KeyBytes: Int { get }
     associatedtype Key where Key == Bytes
 

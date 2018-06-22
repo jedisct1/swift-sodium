@@ -147,5 +147,5 @@ extension SecretBox: SecretKeyGenerator {
     public typealias Key = Bytes
     public var KeyBytes: Int { return Int(crypto_secretbox_keybytes()) }
 
-    static let keygen: (_ k: UnsafeMutablePointer<UInt8>) -> Void = crypto_secretbox_keygen
+    public static let keygen: (_ k: UnsafeMutablePointer<UInt8>) -> Void = crypto_secretbox_keygen
 }

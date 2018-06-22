@@ -108,5 +108,5 @@ extension Aead.XChaCha20Poly1305Ietf: SecretKeyGenerator {
     public var KeyBytes: Int { return Int(crypto_aead_xchacha20poly1305_ietf_keybytes()) }
     public typealias Key = Bytes
 
-    static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_aead_xchacha20poly1305_ietf_keygen
+    public static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_aead_xchacha20poly1305_ietf_keygen
 }
