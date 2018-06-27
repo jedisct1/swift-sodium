@@ -55,6 +55,9 @@
 		90C75EEC1AE3583E00F1E749 /* Sodium.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D80541A4ECCD7000B83F9 /* Sodium.swift */; };
 		90C75EED1AE3583E00F1E749 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D805C1A4F4F72000B83F9 /* Utils.swift */; };
 		A0918C781E92489100C1DC33 /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0918C771E92489100C1DC33 /* Auth.swift */; };
+		B2BF08A220CA31F300C3AC8A /* Advanced.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BF08A120CA31F200C3AC8A /* Advanced.swift */; };
+		B2BF08A320CA346000C3AC8A /* Advanced.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BF08A120CA31F200C3AC8A /* Advanced.swift */; };
+		B2BF08A420CA346600C3AC8A /* Aead.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87EEC3F2063C655006C830D /* Aead.swift */; };
 		CFD847281BA8120900B1260F /* PWHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 097F20D91AF127480088C2FE /* PWHash.swift */; };
 		D2A274061F13AD9300958702 /* KeyDerivation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A274051F13AD9300958702 /* KeyDerivation.swift */; };
 		D85101041E22EF5B003DB2E8 /* ReadmeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D85101031E22EF5B003DB2E8 /* ReadmeTests.swift */; };
@@ -203,6 +206,7 @@
 		90C75E941AE3571900F1E749 /* Sodium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Sodium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		90C75EAD1AE357CB00F1E749 /* libsodium-osx.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libsodium-osx.a"; sourceTree = "<group>"; };
 		A0918C771E92489100C1DC33 /* Auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Auth.swift; sourceTree = "<group>"; };
+		B2BF08A120CA31F200C3AC8A /* Advanced.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Advanced.swift; sourceTree = "<group>"; };
 		D208E6BD1ECC7A69006D2137 /* sodium_lib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sodium_lib.h; sourceTree = "<group>"; };
 		D2A274051F13AD9300958702 /* KeyDerivation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyDerivation.swift; sourceTree = "<group>"; };
 		D85101031E22EF5B003DB2E8 /* ReadmeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadmeTests.swift; sourceTree = "<group>"; };
@@ -311,6 +315,7 @@
 				D2A274051F13AD9300958702 /* KeyDerivation.swift */,
 				09A5AC111F74466700D3200B /* SecretStream.swift */,
 				F87EEC3F2063C655006C830D /* Aead.swift */,
+				B2BF08A120CA31F200C3AC8A /* Advanced.swift */,
 			);
 			path = Sodium;
 			sourceTree = "<group>";
@@ -703,6 +708,7 @@
 				7D6373E21E7B5E0800F04E72 /* KeyExchange.swift in Sources */,
 				095D80551A4ECCD7000B83F9 /* Sodium.swift in Sources */,
 				097F20DA1AF127480088C2FE /* PWHash.swift in Sources */,
+				B2BF08A220CA31F300C3AC8A /* Advanced.swift in Sources */,
 				DD1E4D0F20922C9E00BE7A3F /* ExitCode.swift in Sources */,
 				038365151A5A51D20081136D /* SecretBox.swift in Sources */,
 				095D805D1A4F4F72000B83F9 /* Utils.swift in Sources */,
@@ -773,10 +779,12 @@
 				DD1E4D1020922C9E00BE7A3F /* ExitCode.swift in Sources */,
 				DD35BB6420932A83006BF351 /* Bytes.swift in Sources */,
 				6096E7321F194FA800E6599F /* KeyDerivation.swift in Sources */,
+				B2BF08A420CA346600C3AC8A /* Aead.swift in Sources */,
 				098DAF041F76E35C00DFB1C3 /* SecretStream.swift in Sources */,
 				90C75EEA1AE3583E00F1E749 /* ShortHash.swift in Sources */,
 				90C75EEB1AE3583E00F1E749 /* Sign.swift in Sources */,
 				DD35BB5B20925566006BF351 /* SecretKeyGenerator.swift in Sources */,
+				B2BF08A320CA346000C3AC8A /* Advanced.swift in Sources */,
 				90C75EEC1AE3583E00F1E749 /* Sodium.swift in Sources */,
 				90C75EED1AE3583E00F1E749 /* Utils.swift in Sources */,
 			);
