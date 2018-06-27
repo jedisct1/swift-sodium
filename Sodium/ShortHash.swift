@@ -32,5 +32,5 @@ extension ShortHash: SecretKeyGenerator {
     public var KeyBytes: Int { return Int(crypto_shorthash_keybytes()) }
     public typealias Key = Bytes
 
-    static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_shorthash_keygen
+    public static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_shorthash_keygen
 }

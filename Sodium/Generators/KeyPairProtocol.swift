@@ -1,6 +1,6 @@
 import Foundation
 
-protocol KeyPairProtocol {
+public protocol KeyPairProtocol {
     associatedtype PublicKey where PublicKey == Bytes
     associatedtype SecretKey where SecretKey == Bytes
     var publicKey: PublicKey { get }
