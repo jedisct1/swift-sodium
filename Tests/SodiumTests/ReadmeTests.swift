@@ -19,6 +19,7 @@ class ReadmeTests : XCTestCase {
         ("testPadding", testPadding),
         ("testPasswordHashing", testPasswordHashing),
         ("testRandomNumberGeneration", testRandomNumberGeneration),
+        ("testSignKeyConversion", testSignKeyConversion),
         ("testSecretKeyAuthenticatedEncryption", testSecretKeyAuthenticatedEncryption),
         ("testSecretStream", testSecretStream),
         ("testShortOutputHashing", testShortOutputHashing),
@@ -99,6 +100,23 @@ class ReadmeTests : XCTestCase {
         if sodium.sign.open(signedMessage: signedMessage, publicKey: keyPair.publicKey) != nil {
             // signature is valid
         }
+    }
+    
+    func testSignKeyConversion() {
+        let sodium = Sodium()
+        let signingKeyPair = sodium.sign.keyPair()!
+        let encryptionKeyPair = sodium.sign.convertEd25519KeyPairToCurve25519(keyPair: signingKeyPair)!
+        
+        XCTAssertNotNil(encryptionKeyPair)
+        
+        let message = "My Test Message".bytes
+        let cipherText = sodium.box.seal(message: message, recipientPublicKey: encryptionKeyPair.publicKey)
+        
+        XCTAssertNotNil(cipherText)
+        
+        let plainText = sodium.box.open(anonymousCipherText: cipherText!, recipientPublicKey: encryptionKeyPair.publicKey, recipientSecretKey: encryptionKeyPair.secretKey)
+        
+        XCTAssertEqual(plainText, "My Test Message".bytes)
     }
 
     func testSecretKeyAuthenticatedEncryption() {

@@ -194,6 +194,14 @@ if let unsignedMessage = sodium.sign.open(signedMessage: signedMessage, publicKe
 }
 ```
 
+### Key Conversion
+```swift
+let sodium = Sodium()
+let signingKeyPair = sodium.sign.keyPair()!
+let encryptionKeyPair = sodium.sign.convertEd25519KeyPairToCurve25519(signingKeyPair)!
+// can now be used for sodium.box operations
+```
+
 ## Hashing
 
 ### Deterministic hashing
