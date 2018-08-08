@@ -13,7 +13,7 @@ public struct GenericHash {
 
 extension GenericHash {
     public class Stream {
-        private var state: State
+        private var state: crypto_generichash_state
         public var outputLength: Int = 0
 
         init?(key: Bytes?, outputLength: Int) {
@@ -144,11 +144,6 @@ extension GenericHash.Stream {
 
         return output
     }
-}
-
-extension GenericHash.Stream: StateStream {
-    typealias State = crypto_generichash_state
-    static let capacity = crypto_generichash_statebytes()
 }
 
 extension GenericHash: SecretKeyGenerator {

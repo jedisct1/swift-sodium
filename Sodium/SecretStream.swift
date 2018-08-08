@@ -26,7 +26,7 @@ extension SecretStream.XChaCha20Poly1305 {
 
 extension SecretStream.XChaCha20Poly1305 {
     public class PushStream {
-        private var state: State
+        private var state: crypto_secretstream_xchacha20poly1305_state
         private var _header: Header
 
         init?(secretKey: Key) {
@@ -46,7 +46,7 @@ extension SecretStream.XChaCha20Poly1305 {
 
 extension SecretStream.XChaCha20Poly1305 {
     public class PullStream {
-        private var state: State
+        private var state: crypto_secretstream_xchacha20poly1305_state
 
         init?(secretKey: Key, header: Header) {
             guard header.count == HeaderBytes, secretKey.count == KeyBytes else {
@@ -190,13 +190,3 @@ extension SecretStream.XChaCha20Poly1305: SecretKeyGenerator {
     public static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_secretstream_xchacha20poly1305_keygen
 }
 
-
-extension SecretStream.XChaCha20Poly1305.PushStream: StateStream {
-    typealias State = crypto_secretstream_xchacha20poly1305_state
-    static let capacity = crypto_secretstream_xchacha20poly1305_statebytes()
-}
-
-extension SecretStream.XChaCha20Poly1305.PullStream: StateStream {
-    typealias State = crypto_secretstream_xchacha20poly1305_state
-    static let capacity = crypto_secretstream_xchacha20poly1305_statebytes()
-}
