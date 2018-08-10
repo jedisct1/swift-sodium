@@ -4,9 +4,9 @@
 
 # Swift-Sodium
 
-Swift-Sodium provides a safe and easy to use interface to perform common cryptographic operations on iOS and OSX.
+Swift-Sodium provides a safe and easy to use interface to perform common cryptographic operations on iOS and macOS.
 
-It leverages the [Sodium](https://download.libsodium.org/doc/) library, and although Swift is the primary target, the framework can also be used in Objective C applications.
+It leverages the [Sodium](https://download.libsodium.org/doc/) library, and although Swift is the primary target, the framework can also be used in Objective-C applications.
 
 ## Please help!
 
