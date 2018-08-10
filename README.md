@@ -1,4 +1,4 @@
-# Sodium [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+# Sodium [![Build Status](https://travis-ci.org/jedisct1/swift-sodium.svg?branch=master)](https://travis-ci.org/jedisct1/swift-sodium) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 [![Make a donation to support this project](https://img.shields.io/badge/donate-PayPal-green.svg?style=flat)](https://www.libsodium.org/donate)
 
