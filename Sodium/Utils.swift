@@ -88,8 +88,7 @@ extension Utils {
         let binBytesCapacity = hexBytesLen / 2
         var binBytes = Bytes(count: binBytesCapacity)
         var binBytesLen: size_t = 0
-        let ignore_nsstr = ignore.flatMap({ NSString(string: $0) })
-        let ignore_cstr = ignore_nsstr?.cString(using: String.Encoding.isoLatin1.rawValue)
+		let ignore_cstr = ignore?.cString(using: .isoLatin1)
 
         guard .SUCCESS == sodium_hex2bin(
             &binBytes, binBytesCapacity,
