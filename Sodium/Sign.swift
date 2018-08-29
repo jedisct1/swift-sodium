@@ -1,10 +1,12 @@
 import Foundation
 import Clibsodium
 
-public class Sign {
+public struct Sign {
     public let Bytes = Int(crypto_sign_bytes())
     public let Primitive = String(validatingUTF8: crypto_sign_primitive())
+}
 
+extension Sign {
     /**
      Signs a message with the sender's secret key
 
@@ -48,7 +50,9 @@ public class Sign {
 
         return signature
     }
+}
 
+extension Sign {
     /**
      Verifies a signed message with the sender's public key.
 
@@ -84,7 +88,9 @@ public class Sign {
             publicKey
         ).exitCode
     }
+}
 
+extension Sign {
     /**
      Extracts and returns the message data of a signed message if the signature is verified with the sender's secret key.
 
@@ -119,12 +125,12 @@ extension Sign: KeyPairGenerator {
     public var PublicKeyBytes: Int { return Int(crypto_sign_publickeybytes()) }
     public var SecretKeyBytes: Int { return Int(crypto_sign_secretkeybytes()) }
 
-    static let newKeypair: (
+    public static let newKeypair: (
         _ pk: UnsafeMutablePointer<UInt8>,
         _ sk: UnsafeMutablePointer<UInt8>
     ) -> Int32 = crypto_sign_keypair
 
-    static let keypairFromSeed: (
+    public static let keypairFromSeed: (
         _ pk: UnsafeMutablePointer<UInt8>,
         _ sk: UnsafeMutablePointer<UInt8>,
         _ seed: UnsafePointer<UInt8>
@@ -135,5 +141,10 @@ extension Sign: KeyPairGenerator {
         public typealias SecretKey = Sign.SecretKey
         public let publicKey: PublicKey
         public let secretKey: SecretKey
+
+        public init(publicKey: PublicKey, secretKey: SecretKey) {
+            self.publicKey = publicKey
+            self.secretKey = secretKey
+        }
     }
 }

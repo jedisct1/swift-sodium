@@ -1,9 +1,11 @@
 import Foundation
 import Clibsodium
 
-public class KeyExchange {
+public struct KeyExchange {
     public let SessionKeyBytes = Int(crypto_kx_sessionkeybytes())
+}
 
+extension KeyExchange {
     public struct SessionKeyPair {
         public let rx: Bytes
         public let tx: Bytes
@@ -13,7 +15,9 @@ public class KeyExchange {
             self.tx = tx
         }
     }
+}
 
+extension KeyExchange {
     public enum Side {
         case CLIENT
         case SERVER
@@ -31,7 +35,9 @@ public class KeyExchange {
             }
         }
     }
+}
 
+extension KeyExchange {
     /**
      Using this function, two parties can securely compute a set of shared keys using their peer's public key and their own secret key.
      See [libsodium.org/doc/key_exchange](https://download.libsodium.org/doc/key_exchange) for more details.
@@ -74,12 +80,12 @@ extension KeyExchange: KeyPairGenerator {
     public var PublicKeyBytes: Int { return Int(crypto_kx_publickeybytes()) }
     public var SecretKeyBytes: Int { return Int(crypto_kx_secretkeybytes()) }
 
-    static let newKeypair: (
+    public static let newKeypair: (
         _ pk: UnsafeMutablePointer<UInt8>,
         _ sk: UnsafeMutablePointer<UInt8>
     ) -> Int32 = crypto_kx_keypair
 
-    static let keypairFromSeed: (
+    public static let keypairFromSeed: (
         _ pk: UnsafeMutablePointer<UInt8>,
         _ sk: UnsafeMutablePointer<UInt8>,
         _ seed: UnsafePointer<UInt8>
@@ -90,5 +96,10 @@ extension KeyExchange: KeyPairGenerator {
         public typealias SecretKey = KeyExchange.SecretKey
         public let publicKey: PublicKey
         public let secretKey: SecretKey
+
+        public init(publicKey: PublicKey, secretKey: SecretKey) {
+            self.publicKey = publicKey
+            self.secretKey = secretKey
+        }
     }
 }

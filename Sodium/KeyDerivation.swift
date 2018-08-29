@@ -1,13 +1,15 @@
 import Foundation
 import Clibsodium
 
-public class KeyDerivation {
+public struct KeyDerivation {
     public let BytesMin = Int(crypto_kdf_bytes_min())
     public let BytesMax = Int(crypto_kdf_bytes_max())
     public let ContextBytes = Int(crypto_kdf_contextbytes())
 
     public typealias SubKey = Bytes
+}
 
+extension KeyDerivation {
     /**
      Derives a subkey from the specified input key. Each index (from 0 to (2^64) - 1) yields a unique deterministic subkey.
      The sequence of subkeys is likely unique for a given context.
@@ -49,5 +51,5 @@ extension KeyDerivation: SecretKeyGenerator {
     public var KeyBytes: Int { return Int(crypto_kdf_keybytes()) }
     public typealias Key = Bytes
 
-    static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_kdf_keygen
+    public static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_kdf_keygen
 }

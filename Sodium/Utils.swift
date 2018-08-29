@@ -1,7 +1,18 @@
 import Foundation
 import Clibsodium
 
-public class Utils {
+public struct Utils {}
+
+extension Utils {
+    public enum Base64Variant: CInt {
+        case ORIGINAL            = 1
+        case ORIGINAL_NO_PADDING = 3
+        case URLSAFE             = 5
+        case URLSAFE_NO_PADDING  = 7
+    }
+}
+
+extension Utils {
     /**
      Tries to effectively zero bytes in `data`, even if optimizations are being applied to the code.
 
@@ -11,6 +22,9 @@ public class Utils {
         let count = data.count
         sodium_memzero(&data, count)
     }
+}
+
+extension Utils {
 
     /**
      Checks that two `Bytes` objects have the same content, without leaking information
@@ -39,7 +53,9 @@ public class Utils {
         guard b1.count == b2.count else { return nil }
         return Int(sodium_compare(b1, b2, b1.count))
     }
+}
 
+extension Utils {
     /**
      Converts bytes stored in `bin` into a hexadecimal string.
 
@@ -72,8 +88,7 @@ public class Utils {
         let binBytesCapacity = hexBytesLen / 2
         var binBytes = Bytes(count: binBytesCapacity)
         var binBytesLen: size_t = 0
-        let ignore_nsstr = ignore.flatMap({ NSString(string: $0) })
-        let ignore_cstr = ignore_nsstr?.cString(using: String.Encoding.isoLatin1.rawValue)
+		let ignore_cstr = ignore?.cString(using: .isoLatin1)
 
         guard .SUCCESS == sodium_hex2bin(
             &binBytes, binBytesCapacity,
@@ -85,14 +100,9 @@ public class Utils {
 
         return binBytes
     }
+}
 
-    public enum Base64Variant: CInt {
-        case ORIGINAL            = 1
-        case ORIGINAL_NO_PADDING = 3
-        case URLSAFE             = 5
-        case URLSAFE_NO_PADDING  = 7
-    }
-
+extension Utils {
     /**
      Converts bytes stored in `bin` into a Base64 representation.
 
@@ -140,34 +150,30 @@ public class Utils {
 
         return binBytes
     }
+}
 
+extension Utils {
     /*
      Adds padding to `data` so that its length becomes a multiple of `blockSize`
 
      - Parameter data: input/output buffer, will be modified in-place
      - Parameter blocksize: the block size
      */
-    public func pad(data bytes: inout Bytes, blockSize: Int) -> ()? {
-        // we must use Data and not Bytes because we need to increase the
-        // count size before passing to `sodium_pad` without initilising bytes
-        var data = Data(bytes)
-        let dataCount = data.count
-        data.reserveCapacity(dataCount + blockSize)
-        data.count = dataCount + blockSize
+    public func pad(bytes: inout Bytes, blockSize: Int) -> ()? {
+        let bytesCount = bytes.count
+        bytes += Bytes(count: blockSize)
+
         var paddedLen: size_t = 0
-        guard .SUCCESS == data.withUnsafeMutableBytes({
-            dataPtr in sodium_pad(
-                &paddedLen,
-                dataPtr, dataCount,
-                blockSize,
-                dataCount + blockSize
-            ).exitCode
-        }) else { return nil }
 
-        data.count = paddedLen
+        guard .SUCCESS == sodium_pad(
+            &paddedLen,
+            &bytes, bytesCount,
+            blockSize,
+            bytesCount + blockSize
+        ).exitCode else { return nil }
 
-        // return the new bytes by argument
-        bytes = Bytes(data)
+        bytes = bytes[..<paddedLen].bytes
+
         return ()
     }
 

@@ -1,10 +1,12 @@
 import Foundation
 import Clibsodium
 
-public class Auth {
+public struct Auth {
     public let Bytes = Int(crypto_auth_bytes())
     public typealias SecretKey = Key
+}
 
+extension Auth {
     /**
      Computes an authentication tag for a message using a key
 
@@ -51,5 +53,5 @@ extension Auth: SecretKeyGenerator {
     public var KeyBytes: Int { return Int(crypto_auth_keybytes()) }
     public typealias Key = Bytes
 
-    static let keygen: (_ k: UnsafeMutablePointer<UInt8>) -> Void = crypto_auth_keygen
+    public static let keygen: (_ k: UnsafeMutablePointer<UInt8>) -> Void = crypto_auth_keygen
 }

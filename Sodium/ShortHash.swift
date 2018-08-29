@@ -1,9 +1,11 @@
 import Foundation
 import Clibsodium
 
-public class ShortHash {
+public struct ShortHash {
     public let Bytes = Int(crypto_shorthash_bytes())
+}
 
+extension ShortHash {
     /**
      Computes short but unpredictable (without knowing the secret key) values suitable for picking a list in a hash table for a given key.
 
@@ -30,5 +32,5 @@ extension ShortHash: SecretKeyGenerator {
     public var KeyBytes: Int { return Int(crypto_shorthash_keybytes()) }
     public typealias Key = Bytes
 
-    static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_shorthash_keygen
+    public static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_shorthash_keygen
 }

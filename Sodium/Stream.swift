@@ -1,9 +1,11 @@
 import Foundation
 import Clibsodium
 
-public class Stream {
+public struct Stream {
     public let Primitive = String(validatingUTF8: crypto_stream_primitive())
+}
 
+extension Stream {
     /**
      XOR the input with a key stream derived from a secret key and a nonce.
      Applying the same operation twice outputs the original input.
@@ -66,5 +68,5 @@ extension Stream: SecretKeyGenerator {
     public typealias Key = Bytes
     public var KeyBytes: Int { return Int(crypto_secretbox_keybytes()) }
 
-    static let keygen: (_ k: UnsafeMutablePointer<UInt8>) -> Void = crypto_stream_keygen
+    public static let keygen: (_ k: UnsafeMutablePointer<UInt8>) -> Void = crypto_stream_keygen
 }

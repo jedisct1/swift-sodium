@@ -1,7 +1,7 @@
 import Foundation
 import Clibsodium
 
-public class PWHash {
+public struct PWHash {
     public let SaltBytes = Int(crypto_pwhash_saltbytes())
     public let StrBytes = Int(crypto_pwhash_strbytes()) - (1 as Int)
     public let StrPrefix = String(validatingUTF8: crypto_pwhash_strprefix())
@@ -11,21 +11,27 @@ public class PWHash {
     public let MemLimitInteractive = Int(crypto_pwhash_memlimit_interactive())
     public let MemLimitModerate = Int(crypto_pwhash_memlimit_moderate())
     public let MemLimitSensitive = Int(crypto_pwhash_memlimit_sensitive())
+}
 
+extension PWHash {
     public enum Alg {
         case Default
         case Argon2I13
         case Argon2ID13
+    }
+}
 
-        var id: Int32 {
-            switch self {
-            case .Default:    return crypto_pwhash_alg_default()
-            case .Argon2I13:  return crypto_pwhash_alg_argon2i13()
-            case .Argon2ID13: return crypto_pwhash_alg_argon2id13()
-            }
+extension PWHash.Alg {
+    var id: Int32 {
+        switch self {
+        case .Default:    return crypto_pwhash_alg_default()
+        case .Argon2I13:  return crypto_pwhash_alg_argon2i13()
+        case .Argon2ID13: return crypto_pwhash_alg_argon2id13()
         }
     }
+}
 
+extension PWHash {
     /**
      Generates an ASCII encoded string, which includes:
 
@@ -90,7 +96,9 @@ public class PWHash {
             size_t(memLimit)
         ).exitCode
     }
+}
 
+extension PWHash {
     /**
      Derives a key from a password and a salt using the Argon2 password hashing function.
 
