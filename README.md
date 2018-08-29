@@ -1,7 +1,5 @@
 # Sodium [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
-[![Make a donation to support this project](https://img.shields.io/badge/donate-PayPal-green.svg?style=flat)](https://www.libsodium.org/donate)
-
 # Swift-Sodium
 
 Swift-Sodium provides a safe and easy to use interface to perform common cryptographic operations on iOS and OSX.
