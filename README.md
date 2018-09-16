@@ -29,6 +29,35 @@ script.
 
 Running these scripts on Xcode 9.3.1 (`9E501`) on the revision `9c6b2e0cebbb2d6f88f8b30b541186eb84b452d1` of libsodium generates files identical to the ones present in this repository.
 
+## Extension and Data Type 
+
+Please make sure to create a new file with the name `Bytes.swift` and copy paste the following into it.
+
+```swift
+import Foundation
+
+public typealias Bytes = Array<UInt8>
+
+extension Array where Element == UInt8 {
+init (count bytes: Int) {
+self.init(repeating: 0, count: bytes)
+}
+
+public var utf8String: String? {
+return String(data: Data(bytes: self), encoding: .utf8)
+}
+}
+
+extension ArraySlice where Element == UInt8 {
+var bytes: Bytes { return Bytes(self) }
+}
+
+public extension String {
+var bytes: Bytes { return Bytes(self.utf8) }
+}
+```
+
+
 ## Secret-key cryptography
 
 Messages are encrypted and decrypted using the same secret key.
@@ -79,7 +108,7 @@ let message = "My Test Message".bytes
 let secretKey = sodium.secretBox.key()
 let encrypted: Bytes = sodium.secretBox.seal(message: message, secretKey: secretKey)!
 if let decrypted = sodium.secretBox.open(nonceAndAuthenticatedCipherText: encrypted, secretKey: secretKey) {
-    // authenticator is valid, decrypted contains the original message
+// authenticator is valid, decrypted contains the original message
 }
 ```
 
@@ -94,20 +123,24 @@ With public-key cryptography, each peer has two keys: a secret key, that has to 
 ### Authenticated Encryption
 
 ```swift
-let sodium = Sodium(())!
+let sodium = Sodium()
 let aliceKeyPair = sodium.box.keyPair()!
 let bobKeyPair = sodium.box.keyPair()!
 let message = "My Test Message".bytes
 
-let encryptedMessageFromAliceToBob: Bytes =
-    sodium.box.seal(message: message,
-                    recipientPublicKey: bobKeyPair.publicKey,
-                    senderSecretKey: aliceKeyPair.secretKey)!
+print("Original Message: \(message.utf8String!)")
 
-let messageVerifiedAndDecryptedByBob =
-    sodium.box.open(nonceAndAuthenticatedCipherText: encryptedMessageFromAliceToBob,
-                    senderPublicKey: aliceKeyPair.publicKey,
-                    recipientSecretKey: bobKeyPair.secretKey)
+let encryptedMessageFromAliceToBob: Data =
+sodium.box.seal(message: Data(message),
+recipientPublicKey: bobKeyPair.publicKey,
+senderSecretKey: aliceKeyPair.secretKey)!
+
+let messageVerifiedAndDecryptedByBob = sodium.box.open(nonceAndAuthenticatedCipherText:
+encryptedMessageFromAliceToBob,
+senderPublicKey: aliceKeyPair.publicKey,
+recipientSecretKey: bobKeyPair.secretKey)
+
+print("Decrypted Message: \(String(decoding: messageVerifiedAndDecryptedByBob!, as: UTF8.self))")
 ```
 
 This operation encrypts and sends a message to someone using their public key.
@@ -128,12 +161,12 @@ let bobKeyPair = sodium.box.keyPair()!
 let message = "My Test Message".bytes
 
 let encryptedMessageToBob =
-    sodium.box.seal(message: message, recipientPublicKey: bobKeyPair.publicKey)!
+sodium.box.seal(message: message, recipientPublicKey: bobKeyPair.publicKey)!
 
 let messageDecryptedByBob =
-    sodium.box.open(anonymousCipherText: encryptedMessageToBob,
-                    recipientPublicKey: bobKeyPair.publicKey,
-                    recipientSecretKey: bobKeyPair.secretKey)
+sodium.box.open(anonymousCipherText: encryptedMessageToBob,
+recipientPublicKey: bobKeyPair.publicKey,
+recipientSecretKey: bobKeyPair.secretKey)
 ```
 
 `seal()` generates an ephemeral keypair, uses the ephemeral secret key in the encryption process, combines the ephemeral public key with the ciphertext, then destroys the keypair.
@@ -148,9 +181,9 @@ let aliceKeyPair = sodium.keyExchange.keyPair()!
 let bobKeyPair = sodium.keyExchange.keyPair()!
 
 let sessionKeyPairForAlice = sodium.keyExchange.sessionKeyPair(publicKey: aliceKeyPair.publicKey,
-    secretKey: aliceKeyPair.secretKey, otherPublicKey: bobKeyPair.publicKey, side: .CLIENT)!
+secretKey: aliceKeyPair.secretKey, otherPublicKey: bobKeyPair.publicKey, side: .CLIENT)!
 let sessionKeyPairForBob = sodium.keyExchange.sessionKeyPair(publicKey: bobKeyPair.publicKey,
-    secretKey: bobKeyPair.secretKey, otherPublicKey: aliceKeyPair.publicKey, side: .SERVER)!
+secretKey: bobKeyPair.secretKey, otherPublicKey: aliceKeyPair.publicKey, side: .SERVER)!
 
 let aliceToBobKeyEquality = sodium.utils.equals(sessionKeyPairForAlice.tx, sessionKeyPairForBob.rx) // true
 let bobToAliceKeyEquality = sodium.utils.equals(sessionKeyPairForAlice.rx, sessionKeyPairForBob.tx) // true
@@ -172,9 +205,9 @@ let message = "My Test Message".bytes
 let keyPair = sodium.sign.keyPair()!
 let signature = sodium.sign.signature(message: message, secretKey: keyPair.secretKey)!
 if sodium.sign.verify(message: message,
-                      publicKey: keyPair.publicKey,
-                      signature: signature) {
-    // signature is valid
+publicKey: keyPair.publicKey,
+signature: signature) {
+// signature is valid
 }
 ```
 
@@ -186,7 +219,7 @@ let message = "My Test Message".bytes
 let keyPair = sodium.sign.keyPair()!
 let signedMessage = sodium.sign.sign(message: message, secretKey: keyPair.secretKey)!
 if let unsignedMessage = sodium.sign.open(signedMessage: signedMessage, publicKey: keyPair.publicKey) {
-    // signature is valid
+// signature is valid
 }
 ```
 
@@ -246,20 +279,20 @@ let stream = sodium.randomBytes.deterministic(length: 1000, seed: seed)!
 let sodium = Sodium()
 let password = "Correct Horse Battery Staple".bytes
 let hashedStr = sodium.pwHash.str(passwd: password,
-                                  opsLimit: sodium.pwHash.OpsLimitInteractive,
-                                  memLimit: sodium.pwHash.MemLimitInteractive)!
+opsLimit: sodium.pwHash.OpsLimitInteractive,
+memLimit: sodium.pwHash.MemLimitInteractive)!
 
 if sodium.pwHash.strVerify(hash: hashedStr, passwd: password) {
-    // Password matches the given hash string
+// Password matches the given hash string
 } else {
-    // Password doesn't match the given hash string
+// Password doesn't match the given hash string
 }
 
 if sodium.pwHash.strNeedsRehash(hash: hashedStr,
-                                opsLimit: sodium.pwHash.OpsLimitInteractive,
-                                memLimit: sodium.pwHash.MemLimitInteractive) {
-    // Previously hashed password should be recomputed because the way it was
-    // hashed doesn't match the current algorithm and the given parameters.
+opsLimit: sodium.pwHash.OpsLimitInteractive,
+memLimit: sodium.pwHash.MemLimitInteractive) {
+// Previously hashed password should be recomputed because the way it was
+// hashed doesn't match the current algorithm and the given parameters.
 }
 ```
 
@@ -286,11 +319,11 @@ let sodium = Sodium()
 let secretKey = sodium.keyDerivation.keygen()!
 
 let subKey1 = sodium.keyDerivation.derive(secretKey: secretKey,
-                                          index: 0, length: 32,
-                                          context: "Context!")
+index: 0, length: 32,
+context: "Context!")
 let subKey2 = sodium.keyDerivation.derive(secretKey: secretKey,
-                                          index: 1, length: 32,
-                                          context: "Context!")
+index: 1, length: 32,
+context: "Context!")
 ```
 
 ## Utilities
