@@ -7,7 +7,7 @@ s.homepage = 'https://github.com/jedisct1/swift-sodium'
 s.social_media_url = 'https://twitter.com/jedisct1'
 s.authors = { 'Frank Denis' => '' }
 s.source = { :git => 'https://github.com/jedisct1/swift-sodium.git',
-             :tag => '0.6' }
+             :tag => '0.7' }
 
 s.ios.deployment_target = '8.0'
 s.osx.deployment_target = '10.10'
