@@ -33,7 +33,10 @@ extension Aead.XChaCha20Poly1305Ietf {
     }
 
     /**
-     Encrypts a message with a shared secret key.
+     Encrypts a message with a shared secret key and a specified nonce that
+     should NEVER be reused with this key. If your use case does not REQUIRE
+     choosing the nonce value, use encrypt(message:secretKey:additionalData:)
+     instead.
 
      - Parameter message: The message to encrypt.
      - Parameter secretKey: The shared secret key.
