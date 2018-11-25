@@ -37,16 +37,18 @@ extension Aead.XChaCha20Poly1305Ietf {
 
      - Parameter message: The message to encrypt.
      - Parameter secretKey: The shared secret key.
+     - Parameter nonce: The nonce, NEVER reuse with the same secretKey.
      - Parameter additionalData: A typical use for these data is to authenticate version numbers, timestamps or monotonically increasing counters
 
-     - Returns: The authenticated ciphertext and encryption nonce.
+     - Returns: The authenticated ciphertext.
      */
-    public func encrypt(message: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> (authenticatedCipherText: Bytes, nonce: Nonce)? {
-        guard secretKey.count == KeyBytes else { return nil }
+    public func encrypt(message: Bytes, secretKey: Key, nonce: Nonce, additionalData: Bytes? = nil) -> Bytes? {
+        guard secretKey.count == KeyBytes,
+            nonce.count == NonceBytes
+        else { return nil }
 
         var authenticatedCipherText = Bytes(count: message.count + ABytes)
         var authenticatedCipherTextLen: UInt64 = 0
-        let nonce = self.nonce()
 
         guard .SUCCESS == crypto_aead_xchacha20poly1305_ietf_encrypt (
             &authenticatedCipherText, &authenticatedCipherTextLen,
@@ -54,6 +56,27 @@ extension Aead.XChaCha20Poly1305Ietf {
             additionalData, UInt64(additionalData?.count ?? 0),
             nil, nonce, secretKey
         ).exitCode else { return nil }
+
+        return authenticatedCipherText
+    }
+
+    /**
+     Encrypts a message with a shared secret key.
+
+     - Parameter message: The message to encrypt.
+     - Parameter secretKey: The shared secret key.
+     - Parameter additionalData: A typical use for these data is to authenticate version numbers, timestamps or monotonically increasing counters
+
+     - Returns: The authenticated ciphertext and encryption nonce.
+     */
+    public func encrypt(message: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> (authenticatedCipherText: Bytes, nonce: Nonce)? {
+        let nonce = self.nonce()
+        guard let authenticatedCipherText = encrypt(
+            message: message,
+            secretKey: secretKey,
+            nonce: nonce,
+            additionalData: additionalData
+        ) else { return nil }
 
         return (authenticatedCipherText: authenticatedCipherText, nonce: nonce)
     }
