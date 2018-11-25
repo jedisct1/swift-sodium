@@ -420,7 +420,25 @@ class SodiumTests: XCTestCase {
         let decrypted4: Bytes = sodium.aead.xchacha20poly1305ietf.decrypt(nonceAndAuthenticatedCipherText: nonceAndAuthenticatedCipherTextWithAddData, secretKey: secretKey, additionalData: additionalData)!
         
         XCTAssertTrue(decrypted4 == message)
-        
+
+        let nonce1 = sodium.randomBytes.buf(length: sodium.aead.xchacha20poly1305ietf.NonceBytes)!
+        let authenticatedCipherText2: Bytes = sodium.aead.xchacha20poly1305ietf.encrypt(message: message, secretKey: secretKey, nonce: nonce1)!
+        let decrypted5: Bytes = sodium.aead.xchacha20poly1305ietf.decrypt(authenticatedCipherText: authenticatedCipherText2, secretKey: secretKey, nonce: nonce1)!
+
+        XCTAssertTrue(decrypted5 == message)
+
+        let nonce2 = sodium.randomBytes.buf(length: sodium.aead.xchacha20poly1305ietf.NonceBytes)!
+        let authenticatedCipherTextWithAddData: Bytes = sodium.aead.xchacha20poly1305ietf.encrypt(message: message, secretKey: secretKey, nonce: nonce2, additionalData: additionalData)!
+        let decrypted6: Bytes = sodium.aead.xchacha20poly1305ietf.decrypt(authenticatedCipherText: authenticatedCipherTextWithAddData, secretKey: secretKey, nonce: nonce2, additionalData: additionalData)!
+
+        XCTAssertTrue(decrypted6 == message)
+
+        // encrypt with incorrect nonce-length
+        let badNonce = sodium.randomBytes.buf(length: sodium.aead.xchacha20poly1305ietf.NonceBytes + 1)!
+        let authenticatedCipherTextFromBadNonce: Bytes? = sodium.aead.xchacha20poly1305ietf.encrypt(message: message, secretKey: secretKey, nonce: badNonce, additionalData: additionalData)
+
+        XCTAssertNil(authenticatedCipherTextFromBadNonce)
+
         // encrypt -> decrypt empty message
         let emptyMessage = "".bytes
         let encryptedEmpty: Bytes = sodium.aead.xchacha20poly1305ietf.encrypt(message: emptyMessage, secretKey: secretKey, additionalData: additionalData)!
