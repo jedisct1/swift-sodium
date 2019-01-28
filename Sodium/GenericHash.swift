@@ -13,19 +13,25 @@ public struct GenericHash {
 
 extension GenericHash {
     public class Stream {
-        private var state: crypto_generichash_state
+        private var opaqueState: OpaquePointer?
+        private var state: UnsafeMutableRawPointer!
         public var outputLength: Int = 0
 
         init?(key: Bytes?, outputLength: Int) {
-            state = crypto_generichash_state()
+            state = sodium_malloc(crypto_generichash_statebytes())
+            opaqueState = OpaquePointer(state)
 
             guard .SUCCESS == crypto_generichash_init(
-                &state,
+                opaqueState,
                 key, key?.count ?? 0,
                 outputLength
             ).exitCode else { return nil }
 
             self.outputLength = outputLength
+        }
+
+        deinit {
+            sodium_free(state)
         }
     }
 }
@@ -124,7 +130,7 @@ extension GenericHash.Stream {
     @discardableResult
     public func update(input: Bytes) -> Bool {
         return .SUCCESS == crypto_generichash_update(
-            &state,
+            opaqueState,
             input, UInt64(input.count)
         ).exitCode
     }
@@ -138,7 +144,7 @@ extension GenericHash.Stream {
         let outputLen = outputLength
         var output = Array<UInt8>(count: outputLen)
         guard .SUCCESS == crypto_generichash_final(
-            &state,
+            opaqueState,
             &output, outputLen
         ).exitCode else { return nil }
 
