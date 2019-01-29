@@ -13,26 +13,45 @@ public struct GenericHash {
 
 extension GenericHash {
     public class Stream {
-        private var opaqueState: OpaquePointer?
+    #if compiler(>=5)
+        private var opaqueState: OpaquePointer
         private var state: UnsafeMutableRawPointer!
+    #else
+        private var state: crypto_generichash_state
+    #endif
+
         public var outputLength: Int = 0
 
         init?(key: Bytes?, outputLength: Int) {
+
+        #if compiler(>=5)
             state = sodium_malloc(crypto_generichash_statebytes())
-            opaqueState = OpaquePointer(state)
+            guard let opaqueState = OpaquePointer(state) else { return nil }
+            self.opaqueState = opaqueState
 
             guard .SUCCESS == crypto_generichash_init(
                 opaqueState,
                 key, key?.count ?? 0,
                 outputLength
             ).exitCode else { return nil }
+        #else
+            state = crypto_generichash_state()
+
+            guard .SUCCESS == crypto_generichash_init(
+                &state,
+                key, key?.count ?? 0,
+                outputLength
+            ).exitCode else { return nil }
+        #endif
 
             self.outputLength = outputLength
         }
 
+    #if compiler(>=5)
         deinit {
             sodium_free(state)
         }
+    #endif
     }
 }
 
@@ -129,10 +148,17 @@ extension GenericHash.Stream {
      */
     @discardableResult
     public func update(input: Bytes) -> Bool {
+    #if compiler(>=5)
         return .SUCCESS == crypto_generichash_update(
             opaqueState,
             input, UInt64(input.count)
         ).exitCode
+    #else
+        return .SUCCESS == crypto_generichash_update(
+            &state,
+            input, UInt64(input.count)
+        ).exitCode
+    #endif
     }
 
     /**
@@ -143,10 +169,17 @@ extension GenericHash.Stream {
     public func final() -> Bytes? {
         let outputLen = outputLength
         var output = Array<UInt8>(count: outputLen)
+    #if compiler(>=5)
         guard .SUCCESS == crypto_generichash_final(
             opaqueState,
             &output, outputLen
         ).exitCode else { return nil }
+    #else
+        guard .SUCCESS == crypto_generichash_final(
+            &state,
+            &output, outputLen
+        ).exitCode else { return nil }
+    #endif
 
         return output
     }
