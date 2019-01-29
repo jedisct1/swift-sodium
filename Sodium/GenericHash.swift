@@ -20,7 +20,7 @@ extension GenericHash {
         init?(key: Bytes?, outputLength: Int) {
             state = UnsafeMutableRawBufferPointer.allocate(byteCount: crypto_generichash_statebytes(), alignment: 64)
             guard state.baseAddress != nil else { return nil }
-            opaqueState = UnsafeMutablePointer.init(OpaquePointer(state.baseAddress!))
+            opaqueState = UnsafeMutablePointer(OpaquePointer(state.baseAddress!))
             guard .SUCCESS == crypto_generichash_init(
                 opaqueState,
                 key, key?.count ?? 0,
