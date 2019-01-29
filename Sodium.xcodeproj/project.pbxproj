@@ -19,6 +19,7 @@
 		095D805D1A4F4F72000B83F9 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D805C1A4F4F72000B83F9 /* Utils.swift */; };
 		097F20DA1AF127480088C2FE /* PWHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 097F20D91AF127480088C2FE /* PWHash.swift */; };
 		098DAF041F76E35C00DFB1C3 /* SecretStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A5AC111F74466700D3200B /* SecretStream.swift */; };
+		09A030FF2201096E0028A416 /* libsodium-watchos.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 09A030FE2201096E0028A416 /* libsodium-watchos.a */; };
 		09A5AC121F74466700D3200B /* SecretStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A5AC111F74466700D3200B /* SecretStream.swift */; };
 		09A943D31A4EB5F500C8A04F /* Sodium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09A943C71A4EB5F500C8A04F /* Sodium.framework */; };
 		09A943DA1A4EB5F500C8A04F /* SodiumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A943D91A4EB5F500C8A04F /* SodiumTests.swift */; };
@@ -58,7 +59,6 @@
 		CFD847281BA8120900B1260F /* PWHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 097F20D91AF127480088C2FE /* PWHash.swift */; };
 		D2A274061F13AD9300958702 /* KeyDerivation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A274051F13AD9300958702 /* KeyDerivation.swift */; };
 		D85101041E22EF5B003DB2E8 /* ReadmeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D85101031E22EF5B003DB2E8 /* ReadmeTests.swift */; };
-		D87D512E2164462E006D2C03 /* libsodium-watchOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D87D512D2164462E006D2C03 /* libsodium-watchOS.a */; };
 		D87D515921647597006D2C03 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D87D515721647597006D2C03 /* Interface.storyboard */; };
 		D87D515B21647598006D2C03 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D87D515A21647598006D2C03 /* Assets.xcassets */; };
 		D87D516221647598006D2C03 /* Example Watch Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = D87D516121647598006D2C03 /* Example Watch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -206,6 +206,7 @@
 		095D805A1A4F35CA000B83F9 /* RandomBytes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomBytes.swift; sourceTree = "<group>"; };
 		095D805C1A4F4F72000B83F9 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		097F20D91AF127480088C2FE /* PWHash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PWHash.swift; sourceTree = "<group>"; };
+		09A030FE2201096E0028A416 /* libsodium-watchos.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libsodium-watchos.a"; sourceTree = "<group>"; };
 		09A5AC111F74466700D3200B /* SecretStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretStream.swift; sourceTree = "<group>"; };
 		09A943C71A4EB5F500C8A04F /* Sodium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Sodium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		09A943CB1A4EB5F500C8A04F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -291,7 +292,6 @@
 		D2A274051F13AD9300958702 /* KeyDerivation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyDerivation.swift; sourceTree = "<group>"; };
 		D85101031E22EF5B003DB2E8 /* ReadmeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadmeTests.swift; sourceTree = "<group>"; };
 		D85101051E22F77E003DB2E8 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		D87D512D2164462E006D2C03 /* libsodium-watchOS.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libsodium-watchOS.a"; sourceTree = "<group>"; };
 		D87D515521647597006D2C03 /* Example Watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example Watch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D87D515821647597006D2C03 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
 		D87D515A21647598006D2C03 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -364,7 +364,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D87D512E2164462E006D2C03 /* libsodium-watchOS.a in Frameworks */,
+				09A030FF2201096E0028A416 /* libsodium-watchos.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -459,9 +459,9 @@
 			isa = PBXGroup;
 			children = (
 				60CB27B71EB370540079CA46 /* module.modulemap */,
-				90C75EAD1AE357CB00F1E749 /* libsodium-osx.a */,
 				09A943EA1A4EB76F00C8A04F /* libsodium-ios.a */,
-				D87D512D2164462E006D2C03 /* libsodium-watchOS.a */,
+				90C75EAD1AE357CB00F1E749 /* libsodium-osx.a */,
+				09A030FE2201096E0028A416 /* libsodium-watchos.a */,
 				09BB142A1E75CA6F00659F17 /* crypto_aead_xchacha20poly1305.h */,
 				09BB142B1E75CA6F00659F17 /* crypto_box_curve25519xchacha20poly1305.h */,
 				09BB142C1E75CA6F00659F17 /* crypto_kdf_blake2b.h */,
