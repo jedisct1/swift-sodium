@@ -68,9 +68,9 @@ class ReadmeTests : XCTestCase {
 		let bobKeyPair = sodium.keyExchange.keyPair()!
 
 		let sessionKeyPairForAlice = sodium.keyExchange.sessionKeyPair(publicKey: aliceKeyPair.publicKey,
-																	   secretKey: aliceKeyPair.secretKey, otherPublicKey: bobKeyPair.publicKey, side: .CLIENT)!
+																	   secretKey: aliceKeyPair.secretKey, otherPublicKey: bobKeyPair.publicKey, side: .client)!
 		let sessionKeyPairForBob = sodium.keyExchange.sessionKeyPair(publicKey: bobKeyPair.publicKey,
-																	 secretKey: bobKeyPair.secretKey, otherPublicKey: aliceKeyPair.publicKey, side: .SERVER)!
+																	 secretKey: bobKeyPair.secretKey, otherPublicKey: aliceKeyPair.publicKey, side: .server)!
 
 		let aliceToBobKeyEquality = sodium.utils.equals(sessionKeyPairForAlice.tx, sessionKeyPairForBob.rx) // true
 		let bobToAliceKeyEquality = sodium.utils.equals(sessionKeyPairForAlice.rx, sessionKeyPairForBob.tx) // true
@@ -257,7 +257,7 @@ class ReadmeTests : XCTestCase {
         let header = stream_enc.header()
         let encrypted1 = stream_enc.push(message: message1)!
         let encrypted2 = stream_enc.push(message: message2)!
-        let encrypted3 = stream_enc.push(message: message3, tag: .FINAL)!
+        let encrypted3 = stream_enc.push(message: message3, tag: .final)!
 
         /* stream decryption */
 
@@ -269,19 +269,19 @@ class ReadmeTests : XCTestCase {
         XCTAssertEqual(message1, message1_dec)
         XCTAssertEqual(message2, message2_dec)
         XCTAssertEqual(message3, message3_dec)
-        XCTAssertEqual(tag1, .MESSAGE)
-        XCTAssertEqual(tag2, .MESSAGE)
-        XCTAssertEqual(tag3, .FINAL)
+        XCTAssertEqual(tag1, .message)
+        XCTAssertEqual(tag2, .message)
+        XCTAssertEqual(tag3, .final)
     }
 
     func testBase64() {
         let sodium = Sodium()
         let b64 = sodium.utils.bin2base64("data".bytes)!
-        let b64_2 = sodium.utils.bin2base64("data".bytes, variant: .URLSAFE_NO_PADDING)!
+        let b64_2 = sodium.utils.bin2base64("data".bytes, variant: .urlSafeNoPadding)!
 
         let data1 = sodium.utils.base642bin(b64)
         let data2 = sodium.utils.base642bin(b64, ignore: " \n")
-        let data3 = sodium.utils.base642bin(b64_2, variant: .URLSAFE_NO_PADDING, ignore: " \n")
+        let data3 = sodium.utils.base642bin(b64_2, variant: .urlSafeNoPadding, ignore: " \n")
 
         XCTAssertEqual(data1!, "data".bytes)
         XCTAssertEqual(data2!, "data".bytes)

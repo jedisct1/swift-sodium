@@ -36,7 +36,7 @@ extension SecretBox {
         var authenticatedCipherText = Bytes(count: message.count + MacBytes)
         let nonce = self.nonce()
 
-        guard .SUCCESS == crypto_secretbox_easy (
+        guard .success == crypto_secretbox_easy (
             &authenticatedCipherText,
             message, UInt64(message.count),
             nonce,
@@ -61,7 +61,7 @@ extension SecretBox {
         var mac = Bytes(count: MacBytes)
         let nonce = self.nonce()
 
-        guard .SUCCESS == crypto_secretbox_detached (
+        guard .success == crypto_secretbox_detached (
             &cipherText,
             &mac,
             message, UInt64(message.count),
@@ -103,7 +103,7 @@ extension SecretBox {
         guard authenticatedCipherText.count >= MacBytes else { return nil }
         var message = Bytes(count: authenticatedCipherText.count - MacBytes)
 
-        guard .SUCCESS == crypto_secretbox_open_easy (
+        guard .success == crypto_secretbox_open_easy (
             &message,
             authenticatedCipherText, UInt64(authenticatedCipherText.count),
             nonce,
@@ -130,7 +130,7 @@ extension SecretBox {
 
         var message = Bytes(count: cipherText.count)
 
-        guard .SUCCESS == crypto_secretbox_open_detached (
+        guard .success == crypto_secretbox_open_detached (
             &message,
             cipherText,
             mac,

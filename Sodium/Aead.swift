@@ -48,7 +48,7 @@ extension Aead.XChaCha20Poly1305Ietf {
         var authenticatedCipherTextLen: UInt64 = 0
         let nonce = self.nonce()
 
-        guard .SUCCESS == crypto_aead_xchacha20poly1305_ietf_encrypt (
+        guard .success == crypto_aead_xchacha20poly1305_ietf_encrypt (
             &authenticatedCipherText, &authenticatedCipherTextLen,
             message, UInt64(message.count),
             additionalData, UInt64(additionalData?.count ?? 0),
@@ -93,7 +93,7 @@ extension Aead.XChaCha20Poly1305Ietf {
         var message = Bytes(count: authenticatedCipherText.count - ABytes)
         var messageLen: UInt64 = 0
 
-        guard .SUCCESS == crypto_aead_xchacha20poly1305_ietf_decrypt (
+        guard .success == crypto_aead_xchacha20poly1305_ietf_decrypt (
             &message, &messageLen,
             nil,
             authenticatedCipherText, UInt64(authenticatedCipherText.count),

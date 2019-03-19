@@ -5,10 +5,10 @@ public struct Utils {}
 
 extension Utils {
     public enum Base64Variant: CInt {
-        case ORIGINAL            = 1
-        case ORIGINAL_NO_PADDING = 3
-        case URLSAFE             = 5
-        case URLSAFE_NO_PADDING  = 7
+        case original           = 1
+        case originalNoPadding  = 3
+        case urlSafe            = 5
+        case urlSafeNoPadding   = 7
     }
 }
 
@@ -39,7 +39,7 @@ extension Utils {
         guard b1.count == b2.count else {
             return false
         }
-        return .SUCCESS == sodium_memcmp(b1, b2, b1.count).exitCode
+        return .success == sodium_memcmp(b1, b2, b1.count).exitCode
     }
 
     /**
@@ -90,7 +90,7 @@ extension Utils {
         var binBytesLen: size_t = 0
 		let ignore_cstr = ignore?.cString(using: .isoLatin1)
 
-        guard .SUCCESS == sodium_hex2bin(
+        guard .success == sodium_hex2bin(
             &binBytes, binBytesCapacity,
             hex, hexBytesLen,
             ignore_cstr, &binBytesLen, nil
@@ -111,7 +111,7 @@ extension Utils {
 
      - Returns: The encoded base64 string.
      */
-    public func bin2base64(_ bin: Bytes, variant: Base64Variant = .URLSAFE) -> String? {
+    public func bin2base64(_ bin: Bytes, variant: Base64Variant = .urlSafe) -> String? {
         let b64BytesLen = sodium_base64_encoded_len(bin.count, variant.rawValue)
         var b64Bytes = Bytes(count: b64BytesLen).map(Int8.init)
 
@@ -129,7 +129,7 @@ extension Utils {
 
      - Returns: The decoded data.
      */
-    public func base642bin(_ b64: String, variant: Base64Variant = .URLSAFE, ignore: String? = nil) -> Bytes? {
+    public func base642bin(_ b64: String, variant: Base64Variant = .urlSafe, ignore: String? = nil) -> Bytes? {
         let b64Bytes = Bytes(b64.utf8).map(Int8.init)
         let b64BytesLen = b64Bytes.count
         let binBytesCapacity = b64BytesLen * 3 / 4 + 1
@@ -138,7 +138,7 @@ extension Utils {
         let ignore_nsstr = ignore.flatMap({ NSString(string: $0) })
         let ignore_cstr = ignore_nsstr?.cString(using: String.Encoding.isoLatin1.rawValue)
 
-        guard .SUCCESS == sodium_base642bin(
+        guard .success == sodium_base642bin(
             &binBytes, binBytesCapacity,
             b64Bytes, b64BytesLen,
             ignore_cstr, &binBytesLen,
@@ -165,7 +165,7 @@ extension Utils {
 
         var paddedLen: size_t = 0
 
-        guard .SUCCESS == sodium_pad(
+        guard .success == sodium_pad(
             &paddedLen,
             &bytes, bytesCount,
             blockSize,
@@ -186,7 +186,7 @@ extension Utils {
     public func unpad(bytes: inout Bytes, blockSize: Int) -> ()? {
         var unpaddedLen: size_t = 0
         let bytesLen = bytes.count
-        guard .SUCCESS == sodium_unpad(
+        guard .success == sodium_unpad(
             &unpaddedLen,
             bytes, bytesLen,
             blockSize

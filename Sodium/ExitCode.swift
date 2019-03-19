@@ -1,11 +1,11 @@
 enum ExitCode {
-    case SUCCESS
-    case FAILURE
+    case success
+    case failure
 
     init (from int: Int32) {
         switch int {
-        case 0:  self = .SUCCESS
-        default: self = .FAILURE
+        case 0:  self = .success
+        default: self = .failure
         }
     }
 }

@@ -15,18 +15,18 @@ public struct PWHash {
 
 extension PWHash {
     public enum Alg {
-        case Default
-        case Argon2I13
-        case Argon2ID13
+        case `default`
+        case argon2I13
+        case argon2ID13
     }
 }
 
 extension PWHash.Alg {
     var id: Int32 {
         switch self {
-        case .Default:    return crypto_pwhash_alg_default()
-        case .Argon2I13:  return crypto_pwhash_alg_argon2i13()
-        case .Argon2ID13: return crypto_pwhash_alg_argon2id13()
+        case .`default`:    return crypto_pwhash_alg_default()
+        case .argon2I13:  return crypto_pwhash_alg_argon2i13()
+        case .argon2ID13: return crypto_pwhash_alg_argon2id13()
         }
     }
 }
@@ -51,7 +51,7 @@ extension PWHash {
         var output = Bytes(count: StrBytes).map(Int8.init)
         let passwd = passwd.map(Int8.init)
 
-        guard .SUCCESS == crypto_pwhash_str(
+        guard .success == crypto_pwhash_str(
             &output,
             passwd, UInt64(passwd.count),
             UInt64(opsLimit),
@@ -73,7 +73,7 @@ extension PWHash {
         let hashBytes = Bytes((hash + "\0").utf8).map(Int8.init)
         let passwd = passwd.map(Int8.init)
 
-        return .SUCCESS == crypto_pwhash_str_verify(
+        return .success == crypto_pwhash_str_verify(
             hashBytes,
             passwd, UInt64(passwd.count)
         ).exitCode
@@ -90,7 +90,7 @@ extension PWHash {
      */
     public func strNeedsRehash(hash: String, opsLimit: Int, memLimit: Int) -> Bool {
         let hashBytes = Bytes((hash + "\0").utf8).map(Int8.init)
-        return .SUCCESS != crypto_pwhash_str_needs_rehash(
+        return .success != crypto_pwhash_str_needs_rehash(
             hashBytes,
             UInt64(opsLimit),
             size_t(memLimit)
@@ -109,16 +109,16 @@ extension PWHash {
      - Parameter salt: Unpredicatable salt data.  Must have a fixed length of `SaltBytes`.
      - Parameter opsLimit: Represents a maximum amount of computations to perform. Raising this number will make the function require more CPU cycles to compute a key.
      - Parameter memLimit: The maximum amount of RAM that the function will use, in bytes.
-     - Parameter alg: The algorithm identifier (`.Default`, `.Argon2I13`, `.Argon2ID13`).
+     - Parameter alg: The algorithm identifier (`.eefault`, `.argon2I13`, `.argon2ID13`).
 
      - Returns: The derived key data.
      */
-    public func hash(outputLength: Int, passwd: Bytes, salt: Bytes, opsLimit: Int, memLimit: Int, alg: Alg = .Default) -> Bytes? {
+    public func hash(outputLength: Int, passwd: Bytes, salt: Bytes, opsLimit: Int, memLimit: Int, alg: Alg = .`default`) -> Bytes? {
         guard salt.count == SaltBytes else { return nil }
         var output = Bytes(count: outputLength)
         let passwd = passwd.map(Int8.init)
 
-        guard .SUCCESS == crypto_pwhash(
+        guard .success == crypto_pwhash(
             &output, UInt64(outputLength),
             passwd, UInt64(passwd.count),
             salt,

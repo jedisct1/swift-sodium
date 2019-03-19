@@ -33,7 +33,7 @@ extension KeyPairGenerator {
         var pk = Bytes(count: PublicKeyBytes)
         var sk = Bytes(count: SecretKeyBytes)
 
-        guard .SUCCESS == Self.newKeypair(&pk, &sk).exitCode else { return nil }
+        guard .success == Self.newKeypair(&pk, &sk).exitCode else { return nil }
 
         return KeyPair(publicKey: pk, secretKey: sk)
     }
@@ -50,7 +50,7 @@ extension KeyPairGenerator {
         var pk = Bytes(count: PublicKeyBytes)
         var sk = Bytes(count: SecretKeyBytes)
 
-        guard .SUCCESS == Self.keypairFromSeed(&pk, &sk, seed).exitCode else {
+        guard .success == Self.keypairFromSeed(&pk, &sk, seed).exitCode else {
             return nil
         }
 

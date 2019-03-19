@@ -36,7 +36,7 @@ extension KeyDerivation {
 
         var output = Bytes(count: length)
 
-        guard .SUCCESS == crypto_kdf_derive_from_key(
+        guard .success == crypto_kdf_derive_from_key(
             &output, length,
             index,
             contextBin,

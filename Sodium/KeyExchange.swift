@@ -19,8 +19,8 @@ extension KeyExchange {
 
 extension KeyExchange {
     public enum Side {
-        case CLIENT
-        case SERVER
+        case client
+        case server
 
         var sessionKeys: (
             _ rx: UnsafeMutablePointer<UInt8>,
@@ -30,8 +30,8 @@ extension KeyExchange {
             _ server_pk: UnsafePointer<UInt8>
         ) -> Int32 {
             switch self {
-            case .CLIENT: return crypto_kx_client_session_keys
-            case .SERVER: return crypto_kx_server_session_keys
+            case .client: return crypto_kx_client_session_keys
+            case .server: return crypto_kx_server_session_keys
             }
         }
     }
@@ -60,7 +60,7 @@ extension KeyExchange {
         var rx = Bytes(count: SessionKeyBytes)
         var tx = Bytes(count: SessionKeyBytes)
 
-        guard .SUCCESS == side.sessionKeys (
+        guard .success == side.sessionKeys (
             &rx,
             &tx,
             publicKey,
