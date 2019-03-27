@@ -8,7 +8,7 @@ extension String {
 
 extension Dictionary {
     func toData() -> Data? {
-        return NSKeyedArchiver.archivedData(withRootObject: self) as Data?
+        return try! NSKeyedArchiver.archivedData(withRootObject: self, requiringSecureCoding: false) as Data?
     }
 }
 
@@ -18,6 +18,7 @@ extension Data {
     }
 
     func toDictionary() -> [String: AnyObject]? {
+        #error("Please update this to use unarchivedObjectOfClass: fromData:")
         return NSKeyedUnarchiver.unarchiveObject(with: self) as? [String: AnyObject]
     }
 }

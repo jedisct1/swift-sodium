@@ -14,13 +14,13 @@ public struct GenericHash {
 extension GenericHash {
     public class Stream {
         private var state: UnsafeMutableRawBufferPointer
-        private var opaqueState: UnsafeMutablePointer<crypto_generichash_state>
+        private var opaqueState: OpaquePointer
         public var outputLength: Int = 0
 
         init?(key: Bytes?, outputLength: Int) {
             state = UnsafeMutableRawBufferPointer.allocate(byteCount: crypto_generichash_statebytes(), alignment: 64)
             guard state.baseAddress != nil else { return nil }
-            opaqueState = UnsafeMutablePointer(OpaquePointer(state.baseAddress!))
+            opaqueState = OpaquePointer(state.baseAddress!)
             guard .SUCCESS == crypto_generichash_init(
                 opaqueState,
                 key, key?.count ?? 0,
