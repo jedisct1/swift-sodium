@@ -8,7 +8,7 @@ extension String {
 
 extension Dictionary {
     func toData() -> Data? {
-        if #available(iOS 11.0, *) {
+        if #available(iOS 11.0, macOS 10.13, *) {
             return try? NSKeyedArchiver.archivedData(withRootObject: self, requiringSecureCoding: false)
         } else {
             return NSKeyedArchiver.archivedData(withRootObject: self)
