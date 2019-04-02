@@ -10,7 +10,7 @@ s.source = { :git => 'https://github.com/jedisct1/swift-sodium.git',
              :tag => '0.7.0' }
 
 s.ios.deployment_target = '8.0'
-s.osx.deployment_target = '10.10'
+s.osx.deployment_target = '10.11'
 s.watchos.deployment_target = '5.0'
 
 s.ios.vendored_library    = 'Sodium/libsodium/libsodium-ios.a'
