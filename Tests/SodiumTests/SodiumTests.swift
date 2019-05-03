@@ -33,6 +33,7 @@ class SodiumTests: XCTestCase {
         ("testSecretBox", testSecretBox),
         ("testSecretStream", testSecretStream),
         ("testShortHash", testShortHash),
+        ("testHMAC", testHMAC),
         ("testSignature", testSignature),
         ("testStream", testStream),
         ("testUtils", testUtils),
@@ -185,6 +186,33 @@ class SodiumTests: XCTestCase {
         let key = sodium.utils.hex2bin("00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff", ignore: " ")!
         let h = sodium.utils.bin2hex(sodium.shortHash.hash(message: message, key: key)!)!
         XCTAssertEqual(h, "bb9be85c918015ea")
+    }
+
+    func testHMAC() {
+        let message = "My Test Message".bytes
+        let key = sodium.utils.hex2bin("00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff 00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff", ignore: " ")!
+
+        let hmacsha256 = sodium.hmac.authenticate(message: message, key: key, alg: .sha256)!
+        XCTAssertTrue(sodium.hmac.verify(hmac: hmacsha256, message: message, key: key, alg: .sha256))
+        let multiPartSHA256 = sodium.hmac.initMultiPartHMAC(key: key, alg: .sha256)!
+        XCTAssertTrue(multiPartSHA256.update(message: message))
+        let multiPartHMACSHA256 = multiPartSHA256.final()!
+        XCTAssertTrue(sodium.hmac.verify(hmac: multiPartHMACSHA256, message: message, key: key, alg: .sha256))
+
+        let hmacsha512 = sodium.hmac.authenticate(message: message, key: key, alg: .sha512)!
+        XCTAssertTrue(sodium.hmac.verify(hmac: hmacsha512, message: message, key: key, alg: .sha512))
+        let multiPartSHA512 = sodium.hmac.initMultiPartHMAC(key: key, alg: .sha512)!
+        XCTAssertTrue(multiPartSHA512.update(message: message))
+        let multiPartHMACSHA512 = multiPartSHA512.final()!
+        XCTAssertTrue(sodium.hmac.verify(hmac: multiPartHMACSHA512, message: message, key: key, alg: .sha512))
+
+        let hmacsha512256 = sodium.hmac.authenticate(message: message, key: key, alg: .sha512256)!
+        XCTAssertTrue(sodium.hmac.verify(hmac: hmacsha512256, message: message, key: key, alg: .sha512256))
+        let multiPartSHA512256 = sodium.hmac.initMultiPartHMAC(key: key, alg: .sha512256)!
+        XCTAssertTrue(multiPartSHA512256.update(message: message))
+        let multiPartHMACSHA512256 = multiPartSHA512256.final()!
+        XCTAssertTrue(sodium.hmac.verify(hmac: multiPartHMACSHA512256, message: message, key: key, alg: .sha512256))
+
     }
 
     func testSignature() {

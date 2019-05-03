@@ -8,6 +8,7 @@ public struct Sodium {
     public let pwHash = PWHash()
     public let randomBytes = RandomBytes()
     public let shortHash = ShortHash()
+    public let hmac = HMAC()
     public let sign = Sign()
     public let utils = Utils()
     public let keyExchange = KeyExchange()

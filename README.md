@@ -268,6 +268,8 @@ if sodium.pwHash.strNeedsRehash(hash: hashedStr,
 
 ## Authentication tags
 
+### Single-part messages
+
 The `sodium.auth.tag()` function computes an authentication tag (HMAC) using a message and a key. Parties knowing the key can then verify the authenticity of the message using the same parameters and the `sodium.auth.verify()` function.
 
 Authentication tags are not signatures: the same key is used both for computing and verifying a tag. Therefore, verifiers can also compute tags for arbitrary messages.
@@ -278,6 +280,29 @@ let input = "test".bytes
 let key = sodium.auth.key()
 let tag = sodium.auth.tag(message: input, secretKey: key)!
 let tagIsValid = sodium.auth.verify(message: input, secretKey: key, tag: tag)
+```
+
+Note: This method uses SHA-512-256 for hashing. SHA-256, SHA-512 and also SHA-512-256 are available via the `sodium.hmac.authenticate()` function.
+
+### Multi-part messages
+
+Instead of providing the whole message at a time it is possible to split the message into several parts that can then be passed into the HMAC calculation over time. This can be useful especially when dealing with streaming data.
+
+```swift
+let sodium = Sodium()
+let key = sodium.hmac.key(alg: .sha256)!
+let multiPart = sodium.hmac.initMultiPartHMAC(key: key, alg: .sha256)!
+
+let inputPart1 = "This is a".bytes
+multiPart.update(message: inputPart1)
+
+let inputPart2 = "multi-part message".bytes
+multiPart.update(message: inputPart2)
+
+let hmac = multiPart.final()!
+let completeMessage = "This is a multi-part message".bytes
+
+let hmacIsValid = sodium.hmac.verify(hmac: hmac, message: completeMessage, key: key, alg: .sha256)
 ```
 
 ## Key derivation
