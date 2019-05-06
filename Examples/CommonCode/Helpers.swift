@@ -8,7 +8,11 @@ extension String {
 
 extension Dictionary {
     func toData() -> Data? {
-        return NSKeyedArchiver.archivedData(withRootObject: self) as Data?
+        if #available(iOS 11.0, macOS 10.13, *) {
+            return try? NSKeyedArchiver.archivedData(withRootObject: self, requiringSecureCoding: false)
+        } else {
+            return NSKeyedArchiver.archivedData(withRootObject: self)
+        }
     }
 }
 
@@ -18,6 +22,10 @@ extension Data {
     }
 
     func toDictionary() -> [String: AnyObject]? {
-        return NSKeyedUnarchiver.unarchiveObject(with: self) as? [String: AnyObject]
+        if #available(iOS 9.0, *) {
+            return try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(self) as? [String: AnyObject]
+        } else {
+            return NSKeyedUnarchiver.unarchiveObject(with: self) as? [String: AnyObject]
+        }
     }
 }
