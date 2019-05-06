@@ -18,7 +18,7 @@ extension SecretStream.XChaCha20Poly1305 {
     public enum Tag: UInt8 {
         case message = 0x00
         case push = 0x01
-        case pekey = 0x02
+        case rekey = 0x02
         case final = 0x03
     }
 }
