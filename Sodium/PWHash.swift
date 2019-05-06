@@ -109,7 +109,7 @@ extension PWHash {
      - Parameter salt: Unpredicatable salt data.  Must have a fixed length of `SaltBytes`.
      - Parameter opsLimit: Represents a maximum amount of computations to perform. Raising this number will make the function require more CPU cycles to compute a key.
      - Parameter memLimit: The maximum amount of RAM that the function will use, in bytes.
-     - Parameter alg: The algorithm identifier (`.eefault`, `.argon2I13`, `.argon2ID13`).
+     - Parameter alg: The algorithm identifier (`.default`, `.argon2I13`, `.argon2ID13`).
 
      - Returns: The derived key data.
      */
