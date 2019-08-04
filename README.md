@@ -90,6 +90,8 @@ This API encrypts a message. The decryption process check that they haven't been
 
 Messages encrypted that way are independent: if multiple messages are sent that way, the recipient cannot detect if some messages have been duplicated, deleted or reordered without including additional data to each message.
 
+Optionally, `SecretBox` provides the ability to utilize a user-defined nonce via `seal(message: secretKey: nonce:)`.
+
 ## Public-key Cryptography
 
 With public-key cryptography, each peer has two keys: a secret key, that has to remain secret, and a public key that anyone can use to send an encrypted message to that peer. That public key can be only be used to encrypt a message. The related secret is required to decrypt it.
