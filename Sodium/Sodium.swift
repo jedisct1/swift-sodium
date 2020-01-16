@@ -1,5 +1,5 @@
 import Foundation
-import Sodium.Clibsodium
+import Clibsodium
 
 public struct Sodium {
     public let box = Box()

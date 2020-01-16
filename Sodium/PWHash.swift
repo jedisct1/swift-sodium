@@ -1,5 +1,5 @@
 import Foundation
-import Sodium.Clibsodium
+import Clibsodium
 
 public struct PWHash {
     public let SaltBytes = Int(crypto_pwhash_saltbytes())

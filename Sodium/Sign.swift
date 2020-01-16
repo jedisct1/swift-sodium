@@ -1,5 +1,5 @@
 import Foundation
-import Sodium.Clibsodium
+import Clibsodium
 
 public struct Sign {
     public let Bytes = Int(crypto_sign_bytes())
