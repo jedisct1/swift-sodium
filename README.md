@@ -1,4 +1,4 @@
-# Swift-Sodium [![Build Status](https://travis-ci.org/jedisct1/swift-sodium.svg?branch=master)](https://travis-ci.org/jedisct1/swift-sodium) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+# Swift-Sodium [![Build Status](https://travis-ci.com/jedisct1/swift-sodium.svg?branch=master)](https://travis-ci.com/jedisct1/swift-sodium) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 Swift-Sodium provides a safe and easy to use interface to perform common cryptographic operations on iOS and macOS.
 
