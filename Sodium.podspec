@@ -21,10 +21,8 @@ s.watchos.vendored_library = 'Sodium/libsodium/libsodium-watchos.a'
 s.source_files = 'Sodium/**/*.{swift,h}'
 s.private_header_files = 'Sodium/libsodium/*.h'
 
-s.preserve_paths = 'Sodium/libsodium/module.modulemap'
-s.pod_target_xcconfig = {
-	'SWIFT_INCLUDE_PATHS' => '$(PODS_TARGET_SRCROOT)/Sodium/libsodium',
-}
+s.preserve_paths = 'Sodium/Sodium.modulemap'
+s.module_map = 'Sodium/Sodium.modulemap'
 
 s.requires_arc = true
 end
