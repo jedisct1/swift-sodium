@@ -11,6 +11,8 @@ matrix:
 
 script:
   - swift test
+  - pod lib lint
+  - xcodebuild test -scheme Sodium_iOS -destination 'platform=iOS Simulator,name=iPhone 8,OS=latest' -sdk iphonesimulator | xcpretty
 
 before_install:
   - brew update
