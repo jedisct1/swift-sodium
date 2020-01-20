@@ -1,5 +1,9 @@
 import Foundation
+#if SWIFT_PACKAGE
+import Clibsodium
+#else
 import Sodium.Clibsodium
+#endif
 
 public struct RandomBytes {
     public let SeedBytes = Int(randombytes_seedbytes())

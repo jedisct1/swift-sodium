@@ -1,5 +1,9 @@
 import Foundation
+#if SWIFT_PACKAGE
+import Clibsodium
+#else
 import Sodium.Clibsodium
+#endif
 
 public struct ShortHash {
     public let Bytes = Int(crypto_shorthash_bytes())

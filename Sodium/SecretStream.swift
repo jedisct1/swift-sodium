@@ -1,5 +1,9 @@
 import Foundation
+#if SWIFT_PACKAGE
+import Clibsodium
+#else
 import Sodium.Clibsodium
+#endif
 
 public struct SecretStream {
     public let xchacha20poly1305 = XChaCha20Poly1305()

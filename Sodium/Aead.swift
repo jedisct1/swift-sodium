@@ -1,5 +1,9 @@
 import Foundation
+#if SWIFT_PACKAGE
+import Clibsodium
+#else
 import Sodium.Clibsodium
+#endif
 
 public struct Aead {
     public let xchacha20poly1305ietf = XChaCha20Poly1305Ietf()

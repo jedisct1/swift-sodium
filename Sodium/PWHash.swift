@@ -1,5 +1,9 @@
 import Foundation
+#if SWIFT_PACKAGE
+import Clibsodium
+#else
 import Sodium.Clibsodium
+#endif
 
 public struct PWHash {
     public let SaltBytes = Int(crypto_pwhash_saltbytes())

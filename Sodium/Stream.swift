@@ -1,5 +1,9 @@
 import Foundation
+#if SWIFT_PACKAGE
+import Clibsodium
+#else
 import Sodium.Clibsodium
+#endif
 
 public struct Stream {
     public let Primitive = String(validatingUTF8: crypto_stream_primitive())
