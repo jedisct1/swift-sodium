@@ -89,6 +89,11 @@ class SodiumTests: XCTestCase {
         let (encryptedMessageBeforenm2, nonceBeforenm): (Bytes, Box.Nonce) = sodium.box.seal(message: message, beforenm: aliceBeforenm)!
         let decryptedBeforenm2 = sodium.box.open(authenticatedCipherText: encryptedMessageBeforenm2, beforenm: aliceBeforenm, nonce: nonceBeforenm)
         XCTAssertEqual(decryptedBeforenm2!, message)
+        
+        let nonceBeforenm2 = sodium.box.nonce()
+        let encryptedMessageBeforenm3 = sodium.box.seal(message: message, beforenm: aliceBeforenm, nonce: nonceBeforenm2)!
+        let decryptedBeforenm3 = sodium.box.open(authenticatedCipherText: encryptedMessageBeforenm3, beforenm: aliceBeforenm, nonce: nonceBeforenm2)
+        XCTAssertEqual(decryptedBeforenm3!, message)
     }
 
     func testSecretBox() {

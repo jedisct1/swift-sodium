@@ -122,13 +122,13 @@ extension Box {
 
      - Parameter message: The message to encrypt.
      - Parameter beforenm: The shared secret key.
+     - Parameter nonce: The user-specified nonce.
 
-     - Returns: The authenticated ciphertext and encryption nonce.
+     - Returns: The authenticated ciphertext.
      */
-    public func seal(message: Bytes, beforenm: Beforenm) -> (authenticatedCipherText: Bytes, nonce: Nonce)? {
+    public func seal(message: Bytes, beforenm: Beforenm, nonce: Nonce) -> Bytes? {
         guard beforenm.count == BeforenmBytes else { return nil }
         var authenticatedCipherText = Bytes(count: message.count + MacBytes)
-        let nonce = self.nonce()
 
         guard .SUCCESS == crypto_box_easy_afternm (
             &authenticatedCipherText,
@@ -136,6 +136,26 @@ extension Box {
             nonce,
             beforenm
         ).exitCode else { return nil }
+
+        return authenticatedCipherText
+    }
+    
+    /**
+     Encrypts a message with the shared secret key generated from a recipient's public key and a sender's secret key using `beforenm()`.
+
+     - Parameter message: The message to encrypt.
+     - Parameter beforenm: The shared secret key.
+
+     - Returns: The authenticated ciphertext and encryption nonce.
+     */
+    public func seal(message: Bytes, beforenm: Beforenm) -> (authenticatedCipherText: Bytes, nonce: Nonce)? {
+        let nonce = self.nonce()
+        
+        guard let authenticatedCipherText = seal(
+            message: message,
+            beforenm: beforenm,
+            nonce: nonce
+        ) else { return nil }
 
         return (authenticatedCipherText: authenticatedCipherText, nonce: nonce)
     }
