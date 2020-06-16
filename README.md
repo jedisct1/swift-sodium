@@ -34,9 +34,9 @@ Running these scripts on Xcode 11.3 (`11C29`) on the revision `b69159b5f89b95930
 
 ## Secret-key cryptography
 
-Messages are encrypted and decrypted using the same secret key.
+Messages are encrypted and decrypted using the same secret key, this is also known as symmetric cryptography.
 
-That key can be generated using the `key()` method, derived from a password using the Password Hashing API, or computed using a secret key and the peer's public key with the Key Exchange API.
+A key can be generated using the `key()` method, derived from a password using the Password Hashing API, or computed using a secret key and the peer's public key utilising the Key Exchange API.
 
 ### Authenticated encryption for a sequence of messages
 
@@ -64,9 +64,9 @@ let (message2_dec, tag2) = stream_dec.pull(cipherText: encrypted2)!
 let (message3_dec, tag3) = stream_dec.pull(cipherText: encrypted3)!
 ```
 
-A stream is a sequence of messages, that will be encrypted as they arrive, and that are expected to be received in the same order as they were received.
+A stream is a sequence of messages, that will be encrypted as they depart, and, decrypted as they arrive. The encrypted messages are expected to be received in the same order as they were sent.
 
-Streams can be arbitrary long. This API can thus be used for file encryption, by splitting files into small chunks so that the whole content doesn't need to fit in memory.
+Streams can be arbitrary long. This API can thus be used for file encryption, by splitting files into small chunks, so that the whole file doesn't need to reside in memory concurrently.
 
 It can also be used to exchange a sequence of messages between two peers.
 
