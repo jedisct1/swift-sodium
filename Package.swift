@@ -9,6 +9,9 @@ let package = Package(
             targets: ["Sodium"]),
     ],
     targets: [
+        .binaryTarget(
+            name: "Clibsodium",
+            path: "Clibsodium.xcframework"),
         .target(
             name: "Sodium",
             dependencies: [],
