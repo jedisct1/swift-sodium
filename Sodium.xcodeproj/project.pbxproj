@@ -3,13 +3,18 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 48;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		038365151A5A51D20081136D /* SecretBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038365141A5A51D20081136D /* SecretBox.swift */; };
 		091C7CDA1A507E95002E5351 /* ShortHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091C7CD91A507E95002E5351 /* ShortHash.swift */; };
 		091C7CDC1A50839D002E5351 /* Sign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091C7CDB1A50839D002E5351 /* Sign.swift */; };
+		093EFE3C24DB1D8900D7ED92 /* Sodium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90C75E941AE3571900F1E749 /* Sodium.framework */; };
+		093EFE3D24DB1D8900D7ED92 /* Sodium.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 90C75E941AE3571900F1E749 /* Sodium.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		093EFE3F24DB1E1400D7ED92 /* Clibsodium.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 093EFE3E24DB1E1400D7ED92 /* Clibsodium.xcframework */; };
+		093EFE4024DB1E1400D7ED92 /* Clibsodium.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 093EFE3E24DB1E1400D7ED92 /* Clibsodium.xcframework */; };
+		093EFE4124DB1E1400D7ED92 /* Clibsodium.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 093EFE3E24DB1E1400D7ED92 /* Clibsodium.xcframework */; };
 		094298301EDDAA3B001236B1 /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0942982F1EDDAA3B001236B1 /* Stream.swift */; };
 		094298311EDDAA3B001236B1 /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0942982F1EDDAA3B001236B1 /* Stream.swift */; };
 		094F21EA1A5017CA001C3141 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094F21E91A5017CA001C3141 /* Box.swift */; };
@@ -19,7 +24,6 @@
 		095D805D1A4F4F72000B83F9 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D805C1A4F4F72000B83F9 /* Utils.swift */; };
 		097F20DA1AF127480088C2FE /* PWHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 097F20D91AF127480088C2FE /* PWHash.swift */; };
 		098DAF041F76E35C00DFB1C3 /* SecretStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A5AC111F74466700D3200B /* SecretStream.swift */; };
-		09A030FF2201096E0028A416 /* libsodium-watchos.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 09A030FE2201096E0028A416 /* libsodium-watchos.a */; };
 		09A5AC121F74466700D3200B /* SecretStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A5AC111F74466700D3200B /* SecretStream.swift */; };
 		09A943D31A4EB5F500C8A04F /* Sodium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09A943C71A4EB5F500C8A04F /* Sodium.framework */; };
 		09A943DA1A4EB5F500C8A04F /* SodiumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A943D91A4EB5F500C8A04F /* SodiumTests.swift */; };
@@ -28,13 +32,10 @@
 		60C211E71EB73D3900882AD0 /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0918C771E92489100C1DC33 /* Auth.swift */; };
 		60CB27B81EB371480079CA46 /* Sodium.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943CC1A4EB5F500C8A04F /* Sodium.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		60CB27B91EB3714E0079CA46 /* Sodium.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943CC1A4EB5F500C8A04F /* Sodium.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		60CB27CC1EB37A520079CA46 /* libsodium-osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 90C75EAD1AE357CB00F1E749 /* libsodium-osx.a */; };
-		60CB27CD1EB37A5D0079CA46 /* libsodium-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 09A943EA1A4EB76F00C8A04F /* libsodium-ios.a */; };
 		60D50A6A1FD1778300FCE80F /* Sodium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09A943C71A4EB5F500C8A04F /* Sodium.framework */; };
 		60D50A6B1FD1778300FCE80F /* Sodium.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 09A943C71A4EB5F500C8A04F /* Sodium.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7D6373E21E7B5E0800F04E72 /* KeyExchange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6373E11E7B5E0800F04E72 /* KeyExchange.swift */; };
 		7D6373E31E7B6C6E00F04E72 /* KeyExchange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6373E11E7B5E0800F04E72 /* KeyExchange.swift */; };
-		901644FF1AE3733F00163E3E /* Sodium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90C75E941AE3571900F1E749 /* Sodium.framework */; };
 		901645031AE376C100163E3E /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901645021AE376C100163E3E /* Helpers.swift */; };
 		901645041AE376C100163E3E /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901645021AE376C100163E3E /* Helpers.swift */; };
 		9016450A1AE376E400163E3E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901645051AE376E400163E3E /* AppDelegate.swift */; };
@@ -67,7 +68,6 @@
 		D87D516B21647599006D2C03 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D87D516A21647599006D2C03 /* Assets.xcassets */; };
 		D87D516F21647599006D2C03 /* Example Watch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = D87D515521647597006D2C03 /* Example Watch.app */; };
 		D87D517A21647668006D2C03 /* Sodium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D891FE9421642CB40092AA84 /* Sodium.framework */; };
-		D87D517C21647688006D2C03 /* Sodium.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = D891FE9421642CB40092AA84 /* Sodium.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D87D517D21647698006D2C03 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901645021AE376C100163E3E /* Helpers.swift */; };
 		D891FE9E2164323A0092AA84 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094F21E91A5017CA001C3141 /* Box.swift */; };
 		D891FE9F2164323A0092AA84 /* Bytes.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD35BB6220932A83006BF351 /* Bytes.swift */; };
@@ -145,6 +145,27 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		0924EDBA24DB1CF7006A3FC4 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		093EFE3B24DB1D8500D7ED92 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				093EFE3D24DB1D8900D7ED92 /* Sodium.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		60D50A6E1FD1778300FCE80F /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -178,16 +199,6 @@
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D87D517B2164766B006D2C03 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				D87D517C21647688006D2C03 /* Sodium.framework in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -198,6 +209,7 @@
 		0917824F1CA164970022765D /* crypto_pwhash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypto_pwhash.h; sourceTree = "<group>"; };
 		091C7CD91A507E95002E5351 /* ShortHash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShortHash.swift; sourceTree = "<group>"; };
 		091C7CDB1A50839D002E5351 /* Sign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sign.swift; sourceTree = "<group>"; };
+		093EFE3E24DB1E1400D7ED92 /* Clibsodium.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = Clibsodium.xcframework; sourceTree = SOURCE_ROOT; };
 		0942982F1EDDAA3B001236B1 /* Stream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stream.swift; sourceTree = "<group>"; };
 		094E493F1BE6C7760053AC01 /* crypto_aead_aes256gcm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypto_aead_aes256gcm.h; sourceTree = "<group>"; };
 		094F21E91A5017CA001C3141 /* Box.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Box.swift; sourceTree = "<group>"; };
@@ -206,7 +218,6 @@
 		095D805A1A4F35CA000B83F9 /* RandomBytes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomBytes.swift; sourceTree = "<group>"; };
 		095D805C1A4F4F72000B83F9 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		097F20D91AF127480088C2FE /* PWHash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PWHash.swift; sourceTree = "<group>"; };
-		09A030FE2201096E0028A416 /* libsodium-watchos.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libsodium-watchos.a"; sourceTree = "<group>"; };
 		09A5AC111F74466700D3200B /* SecretStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretStream.swift; sourceTree = "<group>"; };
 		09A943C71A4EB5F500C8A04F /* Sodium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Sodium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		09A943CB1A4EB5F500C8A04F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -214,7 +225,6 @@
 		09A943D21A4EB5F500C8A04F /* SodiumTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SodiumTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		09A943D81A4EB5F500C8A04F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		09A943D91A4EB5F500C8A04F /* SodiumTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SodiumTests.swift; sourceTree = "<group>"; };
-		09A943EA1A4EB76F00C8A04F /* libsodium-ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libsodium-ios.a"; sourceTree = "<group>"; };
 		09A943F11A4EB91F00C8A04F /* core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = core.h; sourceTree = "<group>"; };
 		09A943F21A4EB91F00C8A04F /* crypto_aead_chacha20poly1305.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypto_aead_chacha20poly1305.h; sourceTree = "<group>"; };
 		09A943F31A4EB91F00C8A04F /* crypto_auth_hmacsha256.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypto_auth_hmacsha256.h; sourceTree = "<group>"; };
@@ -266,7 +276,6 @@
 		09BB142E1E75CA6F00659F17 /* crypto_kx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypto_kx.h; sourceTree = "<group>"; };
 		09BB142F1E75CA6F00659F17 /* crypto_secretbox_xchacha20poly1305.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypto_secretbox_xchacha20poly1305.h; sourceTree = "<group>"; };
 		09BB14301E75CA6F00659F17 /* crypto_stream_xchacha20.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypto_stream_xchacha20.h; sourceTree = "<group>"; };
-		60CB27B71EB370540079CA46 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		65437DA2203AF0610027D691 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		65437DA3203AF0610027D691 /* Sodium.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Sodium.podspec; sourceTree = "<group>"; };
 		7D6373E11E7B5E0800F04E72 /* KeyExchange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyExchange.swift; sourceTree = "<group>"; };
@@ -286,7 +295,6 @@
 		901645451AE37F6300163E3E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Examples/OSX/Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		901645471AE37F7200163E3E /* Base.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Base.lproj; path = Examples/OSX/Base.lproj; sourceTree = "<group>"; };
 		90C75E941AE3571900F1E749 /* Sodium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Sodium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		90C75EAD1AE357CB00F1E749 /* libsodium-osx.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libsodium-osx.a"; sourceTree = "<group>"; };
 		A0918C771E92489100C1DC33 /* Auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Auth.swift; sourceTree = "<group>"; };
 		D208E6BD1ECC7A69006D2137 /* sodium_lib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sodium_lib.h; sourceTree = "<group>"; };
 		D2A274051F13AD9300958702 /* KeyDerivation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyDerivation.swift; sourceTree = "<group>"; };
@@ -316,7 +324,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				60CB27CD1EB37A5D0079CA46 /* libsodium-ios.a in Frameworks */,
+				093EFE3F24DB1E1400D7ED92 /* Clibsodium.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -340,7 +348,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				901644FF1AE3733F00163E3E /* Sodium.framework in Frameworks */,
+				093EFE3C24DB1D8900D7ED92 /* Sodium.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -348,7 +356,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				60CB27CC1EB37A520079CA46 /* libsodium-osx.a in Frameworks */,
+				093EFE4024DB1E1400D7ED92 /* Clibsodium.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -364,7 +372,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				09A030FF2201096E0028A416 /* libsodium-watchos.a in Frameworks */,
+				093EFE4124DB1E1400D7ED92 /* Clibsodium.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -458,10 +466,7 @@
 		09A943E91A4EB70900C8A04F /* libsodium */ = {
 			isa = PBXGroup;
 			children = (
-				60CB27B71EB370540079CA46 /* module.modulemap */,
-				09A943EA1A4EB76F00C8A04F /* libsodium-ios.a */,
-				90C75EAD1AE357CB00F1E749 /* libsodium-osx.a */,
-				09A030FE2201096E0028A416 /* libsodium-watchos.a */,
+				093EFE3E24DB1E1400D7ED92 /* Clibsodium.xcframework */,
 				09BB142A1E75CA6F00659F17 /* crypto_aead_xchacha20poly1305.h */,
 				09BB142B1E75CA6F00659F17 /* crypto_box_curve25519xchacha20poly1305.h */,
 				09BB142C1E75CA6F00659F17 /* crypto_kdf_blake2b.h */,
@@ -722,6 +727,7 @@
 				901644D81AE36F2D00163E3E /* Sources */,
 				901644D91AE36F2D00163E3E /* Frameworks */,
 				901644DA1AE36F2D00163E3E /* Resources */,
+				093EFE3B24DB1D8500D7ED92 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -774,7 +780,6 @@
 				D87D515D21647598006D2C03 /* Sources */,
 				D87D515E21647598006D2C03 /* Frameworks */,
 				D87D515F21647598006D2C03 /* Resources */,
-				D87D517B2164766B006D2C03 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -794,6 +799,7 @@
 				D891FE9121642CB40092AA84 /* Frameworks */,
 				D891FE8F21642CB40092AA84 /* Headers */,
 				D891FE9221642CB40092AA84 /* Resources */,
+				0924EDBA24DB1CF7006A3FC4 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1241,7 +1247,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -1264,7 +1271,11 @@
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Sodium";
 				INFOPLIST_FILE = Sodium/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Sodium",
@@ -1295,7 +1306,11 @@
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Sodium";
 				INFOPLIST_FILE = Sodium/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Sodium",
@@ -1320,7 +1335,11 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = Tests/SodiumTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.pureftpd.swiftsodium.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = SodiumTests;
 				SUPPORTS_MACCATALYST = NO;
@@ -1333,7 +1352,11 @@
 			buildSettings = {
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Tests/SodiumTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.pureftpd.swiftsodium.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = SodiumTests;
 				SUPPORTS_MACCATALYST = NO;
@@ -1354,7 +1377,10 @@
 				);
 				INFOPLIST_FILE = Examples/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.vucontacts.swiftodium.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1371,7 +1397,10 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = Examples/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.vucontacts.swiftodium.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1392,7 +1421,10 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = Examples/OSX/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.vucontacts.swiftodium.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1413,7 +1445,10 @@
 				ENABLE_BITCODE = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = Examples/OSX/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.vucontacts.swiftodium.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1442,7 +1477,11 @@
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Sodium";
 				INFOPLIST_FILE = "$(SRCROOT)/Sodium/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Sodium",
@@ -1474,7 +1513,11 @@
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Sodium";
 				INFOPLIST_FILE = "$(SRCROOT)/Sodium/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Sodium",
@@ -1560,7 +1603,11 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "Examples/Watch Extension/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.vucontacts.swiftodium.Example-iOS.watchkitapp.watchkitextension";
@@ -1588,7 +1635,11 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "Examples/Watch Extension/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.vucontacts.swiftodium.Example-iOS.watchkitapp.watchkitextension";
 				PRODUCT_NAME = "${TARGET_NAME}";
@@ -1621,7 +1672,11 @@
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Sodium";
 				INFOPLIST_FILE = Sodium/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Sodium/libsodium",
@@ -1662,7 +1717,11 @@
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Sodium";
 				INFOPLIST_FILE = Sodium/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Sodium/libsodium",
