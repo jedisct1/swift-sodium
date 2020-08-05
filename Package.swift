@@ -14,7 +14,7 @@ let package = Package(
             path: "Clibsodium.xcframework"),
         .target(
             name: "Sodium",
-            dependencies: [],
+            dependencies: ["Clibsodium"],
             path: "Sodium",
             exclude: ["libsodium", "Info.plist"]),
         .testTarget(
