@@ -8,9 +8,6 @@ let package = Package(
             name: "Sodium",
             targets: ["Sodium"]),
     ],
-    dependencies: [
-        .package(url: "https://github.com/tiwoc/Clibsodium.git", .upToNextMajor(from: "1.0.0")),
-    ],
     targets: [
         .target(
             name: "Sodium",
