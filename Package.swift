@@ -1,4 +1,4 @@
-// swift-tools-version:4.0
+// swift-tools-version:5.3
 import PackageDescription
 
 let package = Package(
@@ -16,9 +16,10 @@ let package = Package(
             name: "Sodium",
             dependencies: [],
             path: "Sodium",
-            exclude: ["libsodium"]),
+            exclude: ["libsodium", "Info.plist"]),
         .testTarget(
             name: "SodiumTests",
-            dependencies: ["Sodium"]),
+            dependencies: ["Sodium"],
+            exclude: ["Info.plist"]),
     ]
 )
