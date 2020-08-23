@@ -5,6 +5,9 @@ let package = Package(
     name: "Sodium",
     products: [
         .library(
+            name: "Clibsodium",
+            targets: ["Clibsodium"]),
+        .library(
             name: "Sodium",
             targets: ["Sodium"]),
     ],
