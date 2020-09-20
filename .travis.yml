@@ -7,11 +7,10 @@ cache:
 
 matrix:
   include:
-    - osx_image: xcode11.3
+    - osx_image: xcode12
 
 script:
   - swift test
-  - pod lib lint
   - xcodebuild test -scheme Sodium_iOS -destination 'platform=iOS Simulator,name=iPhone 8,OS=latest' -sdk iphonesimulator | xcpretty
 
 before_install:
