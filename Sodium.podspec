@@ -20,7 +20,7 @@ s.source_files = 'Sodium/**/*.{swift,h}'
 s.private_header_files = 'Sodium/libsodium/*.h'
 
 s.pod_target_xcconfig = {
-    'SWIFT_INCLUDE_PATHS' => '$(inherited) "${PODS_XCFRAMEWORKS_BUILD_DIR}/Clibsodium"'
+      'SWIFT_INCLUDE_PATHS' => '$(inherited) "${PODS_XCFRAMEWORKS_BUILD_DIR}/Clibsodium"'
 }
 
 s.requires_arc = true
