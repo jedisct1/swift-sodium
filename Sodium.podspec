@@ -1,4 +1,4 @@
-# Broken; use Swift Packages instead
+# Requires CocoaPods 1.10.0
 
 Pod::Spec.new do |s|
 s.name = 'Sodium'
@@ -10,7 +10,7 @@ s.homepage = 'https://github.com/jedisct1/swift-sodium'
 s.social_media_url = 'https://twitter.com/jedisct1'
 s.authors = { 'Frank Denis' => '' }
 s.source = { :git => 'https://github.com/jedisct1/swift-sodium.git',
-             :tag => '0.8.0' }
+             :tag => '0.9.0' }
 
 s.ios.deployment_target = '9.0'
 s.osx.deployment_target = '10.11'
@@ -20,7 +20,14 @@ s.source_files = 'Sodium/**/*.{swift,h}'
 s.private_header_files = 'Sodium/libsodium/*.h'
 
 s.pod_target_xcconfig = {
-	'SWIFT_INCLUDE_PATHS' => '$(PODS_TARGET_SRCROOT)/Sodium/libsodium',
+    'SWIFT_INCLUDE_PATHS' => '$(inherited) "${PODS_XCFRAMEWORKS_BUILD_DIR}/Clibsodium"',
+    # Remove following once Clibsodium.xcframework also targets arm64 for iOS and watchOS simulators
+    'EXCLUDED_ARCHS[sdk=*simulator*]' => 'arm64',
+}
+
+# Remove following once Clibsodium.xcframework also targets arm64 for iOS and watchOS simulators
+s.user_target_xcconfig = {
+    'EXCLUDED_ARCHS[sdk=*simulator*]' => 'arm64',
 }
 
 s.requires_arc = true
