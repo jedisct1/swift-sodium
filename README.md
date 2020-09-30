@@ -10,7 +10,7 @@ The current Swift-Sodium documentation is not great. Your help to improve it and
 
 ## Usage
 
-To add Swift-Sodium as dependency to your Xcode project, select `File` > `Swift Packages` > `Add Package Dependency`, enter its repository URL: `https://github.com/jedisct1/swift-sodium.git` and import `Sodium` (explicitly importing `Clibsodium` in addition to it is not required).
+To add Swift-Sodium as dependency to your Xcode project, select `File` > `Swift Packages` > `Add Package Dependency`, enter its repository URL: `https://github.com/jedisct1/swift-sodium.git` and import `Sodium` as well as `Clibsodium`.
 
 Then, to use it in your source code, add:
 
