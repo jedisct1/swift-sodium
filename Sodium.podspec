@@ -5,7 +5,7 @@ s.name = 'Sodium'
 s.version = '0.9.0'
 s.swift_version = '5.0'
 s.license = { :type => "ISC", :file => 'LICENSE' }
-s.summary = 'Swift-Sodium provides a safe and easy to use interface to perform common cryptographic operations on iOS and OSX.'
+s.summary = 'Swift-Sodium provides a safe and easy to use interface to perform common cryptographic operations on Apple platforms.'
 s.homepage = 'https://github.com/jedisct1/swift-sodium'
 s.social_media_url = 'https://twitter.com/jedisct1'
 s.authors = { 'Frank Denis' => '' }
