@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1020"
+   LastUpgradeVersion = "1170"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "90C75E931AE3571900F1E749"
+               BlueprintIdentifier = "53008F9325360973006FE4EF"
                BuildableName = "Sodium.framework"
-               BlueprintName = "Sodium_OSX"
+               BlueprintName = "Sodium_tvOS"
                ReferencedContainer = "container:Sodium.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -43,9 +43,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "90C75E931AE3571900F1E749"
+            BlueprintIdentifier = "53008F9325360973006FE4EF"
             BuildableName = "Sodium.framework"
-            BlueprintName = "Sodium_OSX"
+            BlueprintName = "Sodium_tvOS"
             ReferencedContainer = "container:Sodium.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -59,9 +59,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "90C75E931AE3571900F1E749"
+            BlueprintIdentifier = "53008F9325360973006FE4EF"
             BuildableName = "Sodium.framework"
-            BlueprintName = "Sodium_OSX"
+            BlueprintName = "Sodium_tvOS"
             ReferencedContainer = "container:Sodium.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

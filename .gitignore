@@ -18,3 +18,4 @@ build/
 xcuserdata
 .build
 Package.resolved
+.DS_Store
