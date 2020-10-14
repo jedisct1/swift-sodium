@@ -28,6 +28,38 @@
 		09A943D31A4EB5F500C8A04F /* Sodium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09A943C71A4EB5F500C8A04F /* Sodium.framework */; };
 		09A943DA1A4EB5F500C8A04F /* SodiumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A943D91A4EB5F500C8A04F /* SodiumTests.swift */; };
 		28FA5A1520C9E71F00D7BE2B /* Aead.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87EEC3F2063C655006C830D /* Aead.swift */; };
+		53008F84253608B0006FE4EF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53008F7F253608B0006FE4EF /* ViewController.swift */; };
+		53008F86253608B0006FE4EF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 53008F81253608B0006FE4EF /* Assets.xcassets */; };
+		53008F87253608B0006FE4EF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53008F82253608B0006FE4EF /* AppDelegate.swift */; };
+		53008F8D253608D6006FE4EF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 53008F89253608D6006FE4EF /* LaunchScreen.storyboard */; };
+		53008F8E253608D6006FE4EF /* tvOSMain.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 53008F8B253608D6006FE4EF /* tvOSMain.storyboard */; };
+		53008F9825360973006FE4EF /* Sodium.h in Headers */ = {isa = PBXBuildFile; fileRef = 53008F9625360973006FE4EF /* Sodium.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		53008F9C2536098E006FE4EF /* Clibsodium.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 093EFE3E24DB1E1400D7ED92 /* Clibsodium.xcframework */; };
+		53008F9D2536098E006FE4EF /* Clibsodium.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 093EFE3E24DB1E1400D7ED92 /* Clibsodium.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		53008F9F253609D1006FE4EF /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094F21E91A5017CA001C3141 /* Box.swift */; };
+		53008FA0253609D1006FE4EF /* Bytes.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD35BB6220932A83006BF351 /* Bytes.swift */; };
+		53008FA1253609D1006FE4EF /* NonceGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD35BB4F20924A35006BF351 /* NonceGenerator.swift */; };
+		53008FA2253609D1006FE4EF /* KeyPairGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD35BB5220924B6F006BF351 /* KeyPairGenerator.swift */; };
+		53008FA3253609D1006FE4EF /* KeyPairProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD35BB5520924D3A006BF351 /* KeyPairProtocol.swift */; };
+		53008FA4253609D1006FE4EF /* SecretKeyGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD35BB5920925566006BF351 /* SecretKeyGenerator.swift */; };
+		53008FA5253609D1006FE4EF /* ExitCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1E4D0E20922C9E00BE7A3F /* ExitCode.swift */; };
+		53008FA6253609D1006FE4EF /* SecretBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038365141A5A51D20081136D /* SecretBox.swift */; };
+		53008FA7253609D1006FE4EF /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0942982F1EDDAA3B001236B1 /* Stream.swift */; };
+		53008FA8253609D1006FE4EF /* GenericHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D80561A4ED0B4000B83F9 /* GenericHash.swift */; };
+		53008FA9253609D1006FE4EF /* PWHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 097F20D91AF127480088C2FE /* PWHash.swift */; };
+		53008FAA253609D1006FE4EF /* RandomBytes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D805A1A4F35CA000B83F9 /* RandomBytes.swift */; };
+		53008FAB253609D1006FE4EF /* ShortHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091C7CD91A507E95002E5351 /* ShortHash.swift */; };
+		53008FAC253609D1006FE4EF /* Sign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091C7CDB1A50839D002E5351 /* Sign.swift */; };
+		53008FAD253609D1006FE4EF /* Sodium.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D80541A4ECCD7000B83F9 /* Sodium.swift */; };
+		53008FAE253609D1006FE4EF /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D805C1A4F4F72000B83F9 /* Utils.swift */; };
+		53008FAF253609D1006FE4EF /* KeyExchange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6373E11E7B5E0800F04E72 /* KeyExchange.swift */; };
+		53008FB0253609D1006FE4EF /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0918C771E92489100C1DC33 /* Auth.swift */; };
+		53008FB1253609D1006FE4EF /* KeyDerivation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A274051F13AD9300958702 /* KeyDerivation.swift */; };
+		53008FB2253609D1006FE4EF /* SecretStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A5AC111F74466700D3200B /* SecretStream.swift */; };
+		53008FB3253609D1006FE4EF /* Aead.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87EEC3F2063C655006C830D /* Aead.swift */; };
+		53008FB4253609E2006FE4EF /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901645021AE376C100163E3E /* Helpers.swift */; };
+		53008FB525360A54006FE4EF /* Sodium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53008F9425360973006FE4EF /* Sodium.framework */; };
+		53008FB625360A54006FE4EF /* Sodium.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53008F9425360973006FE4EF /* Sodium.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6096E7321F194FA800E6599F /* KeyDerivation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A274051F13AD9300958702 /* KeyDerivation.swift */; };
 		60C211E71EB73D3900882AD0 /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0918C771E92489100C1DC33 /* Auth.swift */; };
 		60CB27B81EB371480079CA46 /* Sodium.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943CC1A4EB5F500C8A04F /* Sodium.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -114,6 +146,13 @@
 			remoteGlobalIDString = 09A943C61A4EB5F500C8A04F;
 			remoteInfo = Sodium;
 		};
+		53008FB725360A54006FE4EF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 09A943BE1A4EB5F500C8A04F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 53008F9325360973006FE4EF;
+			remoteInfo = Sodium_tvOS;
+		};
 		60D50A6C1FD1778300FCE80F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 09A943BE1A4EB5F500C8A04F /* Project object */;
@@ -162,6 +201,28 @@
 			dstSubfolderSpec = 10;
 			files = (
 				093EFE3D24DB1D8900D7ED92 /* Sodium.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		53008F9E2536098E006FE4EF /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				53008F9D2536098E006FE4EF /* Clibsodium.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		53008FB925360A54006FE4EF /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				53008FB625360A54006FE4EF /* Sodium.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -276,6 +337,16 @@
 		09BB142E1E75CA6F00659F17 /* crypto_kx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypto_kx.h; sourceTree = "<group>"; };
 		09BB142F1E75CA6F00659F17 /* crypto_secretbox_xchacha20poly1305.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypto_secretbox_xchacha20poly1305.h; sourceTree = "<group>"; };
 		09BB14301E75CA6F00659F17 /* crypto_stream_xchacha20.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypto_stream_xchacha20.h; sourceTree = "<group>"; };
+		53008F6D25360875006FE4EF /* Example tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		53008F7F253608B0006FE4EF /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = Examples/tvOS/ViewController.swift; sourceTree = "<group>"; };
+		53008F81253608B0006FE4EF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Examples/tvOS/Assets.xcassets; sourceTree = "<group>"; };
+		53008F82253608B0006FE4EF /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Examples/tvOS/AppDelegate.swift; sourceTree = "<group>"; };
+		53008F83253608B0006FE4EF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Examples/tvOS/Info.plist; sourceTree = "<group>"; };
+		53008F8A253608D6006FE4EF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Examples/tvOS/Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		53008F8C253608D6006FE4EF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Examples/tvOS/Base.lproj/tvOSMain.storyboard; sourceTree = "<group>"; };
+		53008F9425360973006FE4EF /* Sodium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Sodium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		53008F9625360973006FE4EF /* Sodium.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sodium.h; sourceTree = "<group>"; };
+		53008F9725360973006FE4EF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		65437DA2203AF0610027D691 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		65437DA3203AF0610027D691 /* Sodium.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Sodium.podspec; sourceTree = "<group>"; };
 		7D6373E11E7B5E0800F04E72 /* KeyExchange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyExchange.swift; sourceTree = "<group>"; };
@@ -336,6 +407,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		53008F6A25360875006FE4EF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				53008FB525360A54006FE4EF /* Sodium.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		53008F9125360973006FE4EF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				53008F9C2536098E006FE4EF /* Clibsodium.xcframework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		901644B31AE36EA700163E3E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -388,6 +475,7 @@
 				901644AF1AE36D6000163E3E /* Examples */,
 				09A943C91A4EB5F500C8A04F /* Sodium */,
 				09A943D61A4EB5F500C8A04F /* SodiumTests */,
+				53008F9525360973006FE4EF /* Sodium */,
 				09A943C81A4EB5F500C8A04F /* Products */,
 				D891FE9C2164307B0092AA84 /* Frameworks */,
 			);
@@ -404,6 +492,8 @@
 				D891FE9421642CB40092AA84 /* Sodium.framework */,
 				D87D515521647597006D2C03 /* Example Watch.app */,
 				D87D516121647598006D2C03 /* Example Watch Extension.appex */,
+				53008F6D25360875006FE4EF /* Example tvOS.app */,
+				53008F9425360973006FE4EF /* Sodium.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -528,6 +618,28 @@
 			path = libsodium;
 			sourceTree = "<group>";
 		};
+		53008F6825360814006FE4EF /* tvOS */ = {
+			isa = PBXGroup;
+			children = (
+				53008F89253608D6006FE4EF /* LaunchScreen.storyboard */,
+				53008F8B253608D6006FE4EF /* tvOSMain.storyboard */,
+				53008F82253608B0006FE4EF /* AppDelegate.swift */,
+				53008F81253608B0006FE4EF /* Assets.xcassets */,
+				53008F83253608B0006FE4EF /* Info.plist */,
+				53008F7F253608B0006FE4EF /* ViewController.swift */,
+			);
+			name = tvOS;
+			sourceTree = "<group>";
+		};
+		53008F9525360973006FE4EF /* Sodium */ = {
+			isa = PBXGroup;
+			children = (
+				53008F9625360973006FE4EF /* Sodium.h */,
+				53008F9725360973006FE4EF /* Info.plist */,
+			);
+			path = Sodium;
+			sourceTree = "<group>";
+		};
 		901644AF1AE36D6000163E3E /* Examples */ = {
 			isa = PBXGroup;
 			children = (
@@ -536,6 +648,7 @@
 				D87D515621647597006D2C03 /* Watch */,
 				D87D516521647598006D2C03 /* Watch Extension */,
 				901644B01AE36D6D00163E3E /* iOS */,
+				53008F6825360814006FE4EF /* tvOS */,
 			);
 			name = Examples;
 			sourceTree = "<group>";
@@ -644,6 +757,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		53008F8F25360973006FE4EF /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				53008F9825360973006FE4EF /* Sodium.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		90C75E911AE3571900F1E749 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -698,6 +819,44 @@
 			productName = SodiumTests;
 			productReference = 09A943D21A4EB5F500C8A04F /* SodiumTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		53008F6C25360875006FE4EF /* Example tvOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 53008F7C25360876006FE4EF /* Build configuration list for PBXNativeTarget "Example tvOS" */;
+			buildPhases = (
+				53008F6925360875006FE4EF /* Sources */,
+				53008F6A25360875006FE4EF /* Frameworks */,
+				53008F6B25360875006FE4EF /* Resources */,
+				53008FB925360A54006FE4EF /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				53008FB825360A54006FE4EF /* PBXTargetDependency */,
+			);
+			name = "Example tvOS";
+			productName = "Example tvOS";
+			productReference = 53008F6D25360875006FE4EF /* Example tvOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+		53008F9325360973006FE4EF /* Sodium_tvOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 53008F9925360973006FE4EF /* Build configuration list for PBXNativeTarget "Sodium_tvOS" */;
+			buildPhases = (
+				53008F8F25360973006FE4EF /* Headers */,
+				53008F9025360973006FE4EF /* Sources */,
+				53008F9125360973006FE4EF /* Frameworks */,
+				53008F9225360973006FE4EF /* Resources */,
+				53008F9E2536098E006FE4EF /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Sodium_tvOS;
+			productName = Sodium;
+			productReference = 53008F9425360973006FE4EF /* Sodium.framework */;
+			productType = "com.apple.product-type.framework";
 		};
 		901644B51AE36EA700163E3E /* Example iOS */ = {
 			isa = PBXNativeTarget;
@@ -817,7 +976,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftMigration = 0700;
-				LastSwiftUpdateCheck = 1000;
+				LastSwiftUpdateCheck = 1170;
 				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = "Frank Denis";
 				TargetAttributes = {
@@ -829,6 +988,13 @@
 					09A943D11A4EB5F500C8A04F = {
 						CreatedOnToolsVersion = 6.1.1;
 						LastSwiftMigration = "";
+					};
+					53008F6C25360875006FE4EF = {
+						CreatedOnToolsVersion = 11.7;
+						LastSwiftMigration = 1170;
+					};
+					53008F9325360973006FE4EF = {
+						CreatedOnToolsVersion = 11.7;
 					};
 					901644B51AE36EA700163E3E = {
 						CreatedOnToolsVersion = 6.3;
@@ -875,10 +1041,12 @@
 				09A943D11A4EB5F500C8A04F /* SodiumTests */,
 				90C75E931AE3571900F1E749 /* Sodium_OSX */,
 				D891FE9321642CB40092AA84 /* Sodium_watchOS */,
+				53008F9325360973006FE4EF /* Sodium_tvOS */,
 				901644B51AE36EA700163E3E /* Example iOS */,
 				901644DB1AE36F2D00163E3E /* Example OSX */,
 				D87D515421647597006D2C03 /* Example Watch */,
 				D87D516021647598006D2C03 /* Example Watch Extension */,
+				53008F6C25360875006FE4EF /* Example tvOS */,
 			);
 		};
 /* End PBXProject section */
@@ -892,6 +1060,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		09A943D01A4EB5F500C8A04F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		53008F6B25360875006FE4EF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				53008F8D253608D6006FE4EF /* LaunchScreen.storyboard in Resources */,
+				53008F86253608B0006FE4EF /* Assets.xcassets in Resources */,
+				53008F8E253608D6006FE4EF /* tvOSMain.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		53008F9225360973006FE4EF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -990,6 +1175,44 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		53008F6925360875006FE4EF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				53008FB4253609E2006FE4EF /* Helpers.swift in Sources */,
+				53008F87253608B0006FE4EF /* AppDelegate.swift in Sources */,
+				53008F84253608B0006FE4EF /* ViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		53008F9025360973006FE4EF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				53008F9F253609D1006FE4EF /* Box.swift in Sources */,
+				53008FA0253609D1006FE4EF /* Bytes.swift in Sources */,
+				53008FA1253609D1006FE4EF /* NonceGenerator.swift in Sources */,
+				53008FA2253609D1006FE4EF /* KeyPairGenerator.swift in Sources */,
+				53008FA3253609D1006FE4EF /* KeyPairProtocol.swift in Sources */,
+				53008FA4253609D1006FE4EF /* SecretKeyGenerator.swift in Sources */,
+				53008FA5253609D1006FE4EF /* ExitCode.swift in Sources */,
+				53008FA6253609D1006FE4EF /* SecretBox.swift in Sources */,
+				53008FA7253609D1006FE4EF /* Stream.swift in Sources */,
+				53008FA8253609D1006FE4EF /* GenericHash.swift in Sources */,
+				53008FA9253609D1006FE4EF /* PWHash.swift in Sources */,
+				53008FAA253609D1006FE4EF /* RandomBytes.swift in Sources */,
+				53008FAB253609D1006FE4EF /* ShortHash.swift in Sources */,
+				53008FAC253609D1006FE4EF /* Sign.swift in Sources */,
+				53008FAD253609D1006FE4EF /* Sodium.swift in Sources */,
+				53008FAE253609D1006FE4EF /* Utils.swift in Sources */,
+				53008FAF253609D1006FE4EF /* KeyExchange.swift in Sources */,
+				53008FB0253609D1006FE4EF /* Auth.swift in Sources */,
+				53008FB1253609D1006FE4EF /* KeyDerivation.swift in Sources */,
+				53008FB2253609D1006FE4EF /* SecretStream.swift in Sources */,
+				53008FB3253609D1006FE4EF /* Aead.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		901644B21AE36EA700163E3E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1083,6 +1306,11 @@
 			target = 09A943C61A4EB5F500C8A04F /* Sodium_iOS */;
 			targetProxy = 09A943D41A4EB5F500C8A04F /* PBXContainerItemProxy */;
 		};
+		53008FB825360A54006FE4EF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 53008F9325360973006FE4EF /* Sodium_tvOS */;
+			targetProxy = 53008FB725360A54006FE4EF /* PBXContainerItemProxy */;
+		};
 		60D50A6D1FD1778300FCE80F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 09A943C61A4EB5F500C8A04F /* Sodium_iOS */;
@@ -1106,6 +1334,22 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		53008F89253608D6006FE4EF /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				53008F8A253608D6006FE4EF /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		53008F8B253608D6006FE4EF /* tvOSMain.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				53008F8C253608D6006FE4EF /* Base */,
+			);
+			name = tvOSMain.storyboard;
+			sourceTree = "<group>";
+		};
 		901645371AE37E5800163E3E /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1361,6 +1605,139 @@
 				PRODUCT_NAME = SodiumTests;
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		53008F7D25360876006FE4EF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = Examples/tvOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.vucontacts.swiftodium.Example-tvOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 13.4;
+			};
+			name = Debug;
+		};
+		53008F7E25360876006FE4EF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = Examples/tvOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.vucontacts.swiftodium.Example-tvOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 13.4;
+			};
+			name = Release;
+		};
+		53008F9A25360973006FE4EF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = Sodium/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.pureftpd.swiftodium.Sodium;
+				PRODUCT_NAME = Sodium;
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 13.4;
+			};
+			name = Debug;
+		};
+		53008F9B25360973006FE4EF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = Sodium/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.pureftpd.swiftodium.Sodium;
+				PRODUCT_NAME = Sodium;
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 13.4;
 			};
 			name = Release;
 		};
@@ -1764,6 +2141,24 @@
 			buildConfigurations = (
 				09A943E11A4EB5F500C8A04F /* Debug */,
 				09A943E21A4EB5F500C8A04F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		53008F7C25360876006FE4EF /* Build configuration list for PBXNativeTarget "Example tvOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				53008F7D25360876006FE4EF /* Debug */,
+				53008F7E25360876006FE4EF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		53008F9925360973006FE4EF /* Build configuration list for PBXNativeTarget "Sodium_tvOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				53008F9A25360973006FE4EF /* Debug */,
+				53008F9B25360973006FE4EF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
