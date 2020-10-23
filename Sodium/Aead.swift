@@ -115,11 +115,7 @@ extension Aead.XChaCha20Poly1305Ietf {
 
 extension Aead.XChaCha20Poly1305Ietf: NonceGenerator {
     public typealias Nonce = Bytes
-    public var NonceBytes: Int {
-        print("Aead.XChaCha20Poly1305Ietf: NonceGenerator")
-        print(Int(crypto_aead_xchacha20poly1305_ietf_npubbytes()))
-        return Int(crypto_aead_xchacha20poly1305_ietf_npubbytes())
-    }
+    public var NonceBytes: Int { Int(crypto_aead_xchacha20poly1305_ietf_npubbytes()) }
 }
 
 extension Aead.XChaCha20Poly1305Ietf: SecretKeyGenerator {
@@ -231,9 +227,5 @@ extension Aead.ChaCha20Poly1305Ietf : SecretKeyGenerator {
 
 extension Aead.ChaCha20Poly1305Ietf: NonceGenerator {
     public typealias Nonce = Bytes
-    public var NonceBytes: Int {
-        print("Aead.ChaCha20Poly1305Ietf: NonceGenerator")
-        print(Int(crypto_aead_chacha20poly1305_ietf_npubbytes()))
-        return Int(crypto_aead_chacha20poly1305_ietf_npubbytes())
-    }
+    public var NonceBytes: Int { Int(crypto_aead_chacha20poly1305_ietf_npubbytes()) }
 }
