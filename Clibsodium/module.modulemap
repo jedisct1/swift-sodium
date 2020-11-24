@@ -1,0 +1,5 @@
+module Clibsodium [system] {
+  header "shim.h"
+  link "sodium"
+  export *
+}
