@@ -2,7 +2,7 @@
 import PackageDescription
 
 let clibsodiumTarget: Target
-#if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
+#if os(OSX) || os(macOS) || os(tvOS) || os(watchOS) || os(iOS)
     clibsodiumTarget = .binaryTarget(
         name: "Clibsodium",
         path: "Clibsodium.xcframework")
@@ -13,7 +13,8 @@ let clibsodiumTarget: Target
         pkgConfig: "libsodium",
         providers: [
             .apt(["libsodium-dev"]),
-            .brew(["libsodium"])
+            .brew(["libsodium"]),
+            .yum(["libsodium-devel"])
         ])
 #endif
 
