@@ -1,6 +1,22 @@
 // swift-tools-version:5.3
 import PackageDescription
 
+let clibsodiumTarget: Target
+#if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
+    clibsodiumTarget = .binaryTarget(
+        name: "Clibsodium",
+        path: "Clibsodium.xcframework")
+#else
+    clibsodiumTarget = .systemLibrary(
+        name: "Clibsodium",
+        path: "Clibsodium",
+        pkgConfig: "libsodium",
+        providers: [
+            .apt(["libsodium-dev"]),
+            .brew(["libsodium"])
+        ])
+#endif
+
 let package = Package(
     name: "Sodium",
     products: [
@@ -12,9 +28,7 @@ let package = Package(
             targets: ["Sodium"]),
     ],
     targets: [
-        .binaryTarget(
-            name: "Clibsodium",
-            path: "Clibsodium.xcframework"),
+        clibsodiumTarget,
         .target(
             name: "Sodium",
             dependencies: ["Clibsodium"],
