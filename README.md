@@ -32,7 +32,7 @@ Messages are encrypted and decrypted using the same secret key, this is also kno
 
 A key can be generated using the `key()` method, derived from a password using the Password Hashing API, or computed using a secret key and the peer's public key utilising the Key Exchange API.
 
-Secret-key cryptogaphy uses  the symmetric primitives `XSalsa20`, `XChaCha20`, and `Poly1305` for message authentication.
+Secret-key cryptogaphy uses the symmetric primitives `XSalsa20`, `XChaCha20`, and `Poly1305` for message authentication.
 
 ### Authenticated encryption for a sequence of messages
 
