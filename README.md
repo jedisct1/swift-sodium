@@ -1,6 +1,6 @@
 # Swift-Sodium [![Build Status](https://travis-ci.com/jedisct1/swift-sodium.svg?branch=master)](https://travis-ci.com/jedisct1/swift-sodium)
 
-Swift-Sodium provides a safe and easy to use interface to perform common cryptographic operations on iOS and macOS.
+Swift-Sodium provides a safe and easy to use interface to perform common cryptographic operations on macOS, iOS, tvOS and watchOS.
 
 It leverages the [Sodium](https://download.libsodium.org/doc/) library, and although Swift is the primary target, the framework can also be used in Objective-C applications.
 
@@ -32,6 +32,8 @@ Messages are encrypted and decrypted using the same secret key, this is also kno
 
 A key can be generated using the `key()` method, derived from a password using the Password Hashing API, or computed using a secret key and the peer's public key utilising the Key Exchange API.
 
+Secret-key cryptogaphy uses the symmetric primitives `XSalsa20`, `XChaCha20`, and `Poly1305` for message authentication.
+
 ### Authenticated encryption for a sequence of messages
 
 ```swift
@@ -60,7 +62,7 @@ let (message3_dec, tag3) = stream_dec.pull(cipherText: encrypted3)!
 
 A stream is a sequence of messages, that will be encrypted as they depart, and, decrypted as they arrive. The encrypted messages are expected to be received in the same order as they were sent.
 
-Streams can be arbitrary long. This API can thus be used for file encryption, by splitting files into small chunks, so that the whole file doesn't need to reside in memory concurrently.
+Streams can be arbitrarily long. This API can thus be used for file encryption, by splitting files into small chunks, so that the whole file doesn't need to reside in memory concurrently.
 
 It can also be used to exchange a sequence of messages between two peers.
 
@@ -68,7 +70,7 @@ The decryption function automatically checks that chunks have been received with
 
 A tag is attached to each message, and can be used to signal the end of a sub-sequence (`PUSH`), or the end of the string (`FINAL`).
 
-### Authenticated encryption for independent messages
+### Authenticated encryption for single messages
 
 ```swift
 let sodium = Sodium()
@@ -80,15 +82,17 @@ if let decrypted = sodium.secretBox.open(nonceAndAuthenticatedCipherText: encryp
 }
 ```
 
-This API encrypts a message. The decryption process check that they haven't been tampered with before decrypting them.
+This API encrypts a message. The decryption process will check that the messages haven't been tampered with before decrypting them.
 
-Messages encrypted that way are independent: if multiple messages are sent that way, the recipient cannot detect if some messages have been duplicated, deleted or reordered without including additional data to each message.
+Messages encrypted this way are independent: if multiple messages are sent this way, the recipient cannot detect if some messages have been duplicated, deleted or reordered without the sender including additional data with each message.
 
 Optionally, `SecretBox` provides the ability to utilize a user-defined nonce via `seal(message: secretKey: nonce:)`.
 
 ## Public-key Cryptography
 
-With public-key cryptography, each peer has two keys: a secret key, that has to remain secret, and a public key that anyone can use to send an encrypted message to that peer. That public key can be only be used to encrypt a message. The related secret is required to decrypt it.
+With public-key cryptography, each peer has two keys: a secret (private) key, that has to remain secret, and a public key that anyone can use to send an encrypted message to that peer. That public key can be only be used to encrypt a message. The related secret is required to decrypt it. 
+
+Public-key cryptography uses the Montgomery curve, `curve25519`, or it's twisted Edwards variant `Ed25519`.
 
 ### Authenticated Encryption
 
@@ -137,7 +141,7 @@ let messageDecryptedByBob =
 
 `seal()` generates an ephemeral keypair, uses the ephemeral secret key in the encryption process, combines the ephemeral public key with the ciphertext, then destroys the keypair.
 
-The sender can not decrypt the resulting ciphertext. `open()` extracts the public key and decrypts using the recipient's secret key. Message integrity is verified, but the sender's identity cannot be correlated to the ciphertext.
+The sender cannot decrypt the resulting ciphertext. `open()` extracts the public key and decrypts using the recipient's secret key. Message integrity is verified, but the sender's identity cannot be correlated to the ciphertext.
 
 ## Key exchange
 
@@ -155,7 +159,7 @@ let aliceToBobKeyEquality = sodium.utils.equals(sessionKeyPairForAlice.tx, sessi
 let bobToAliceKeyEquality = sodium.utils.equals(sessionKeyPairForAlice.rx, sessionKeyPairForBob.tx) // true
 ```
 
-This operation computes a shared secret key using a secret key and a peer's public key.
+This operation computes a shared secret key using a secret key and a peer's public key, this process is also known as "elliptic curve Diffie-Hellman".
 
 ## Public-key signatures
 
@@ -163,7 +167,11 @@ Signatures allow multiple parties to verify the authenticity of a public message
 
 This can be especially useful to sign software updates.
 
+This signature process uses EdDSA over the twisted Edwards ellliptic curve `Ed25519`
+
 ### Detached signatures
+
+The signature is generated separately to the original message.
 
 ```swift
 let sodium = Sodium()
@@ -179,6 +187,8 @@ if sodium.sign.verify(message: message,
 
 ### Attached signatures
 
+The signature is generated and prepended to the original message.
+
 ```swift
 let sodium = Sodium()
 let message = "My Test Message".bytes
@@ -193,10 +203,17 @@ if let unsignedMessage = sodium.sign.open(signedMessage: signedMessage, publicKe
 
 ### Deterministic hashing
 
+Hashing effectively "fingerprints" input data, no matter what its size, and returns a fixed length "digest".
+
+The underlying hashing primitive is `BLAKE2b`, a secure hash function that is as strong as SHA-3 but faster than SHA-1 and MD5.
+
+The digest length can be configured as required, up to 64 bytes.
+
 ```swift
 let sodium = Sodium()
 let message = "My Test Message".bytes
-let h = sodium.genericHash.hash(message: message)
+let hash = sodium.genericHash.hash(message: message)
+let hashOfSize32Bytes = sodium.genericHash.hash(message: message, outputLength: 32)
 ```
 
 ### Keyed hashing
@@ -232,6 +249,8 @@ let h = sodium.shortHash.hash(message: message, key: key)
 
 ## Random numbers generation
 
+Random number generation produces cryptographically secure pseudorandom numbers suitable as key material. 
+
 ```swift
 let sodium = Sodium()
 let randomBytes = sodium.randomBytes.buf(length: 1000)!
@@ -240,6 +259,8 @@ let stream = sodium.randomBytes.deterministic(length: 1000, seed: seed)!
 ```
 
 ## Password hashing
+
+Password hashing provides the ability to derive key material from a user-generated password. Password hashing is designed to be "slow" to hamper brute force attacks, thus the computational and memory parameters may be user-defined.
 
 ```swift
 let sodium = Sodium()
