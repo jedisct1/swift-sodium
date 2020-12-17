@@ -32,8 +32,6 @@ Messages are encrypted and decrypted using the same secret key, this is also kno
 
 A key can be generated using the `key()` method, derived from a password using the Password Hashing API, or computed using a secret key and the peer's public key utilising the Key Exchange API.
 
-Secret-key cryptogaphy uses the symmetric primitives `XSalsa20`, `XChaCha20`, and `Poly1305` for message authentication.
-
 ### Authenticated encryption for a sequence of messages
 
 ```swift
@@ -90,9 +88,7 @@ Optionally, `SecretBox` provides the ability to utilize a user-defined nonce via
 
 ## Public-key Cryptography
 
-With public-key cryptography, each peer has two keys: a secret (private) key, that has to remain secret, and a public key that anyone can use to send an encrypted message to that peer. That public key can be only be used to encrypt a message. The related secret is required to decrypt it. 
-
-Public-key cryptography uses the Montgomery curve, `curve25519`, or it's twisted Edwards variant `Ed25519`.
+With public-key cryptography, each peer has two keys: a secret (private) key, that has to remain secret, and a public key that anyone can use to send an encrypted message to that peer. That public key can be only be used to encrypt a message. The corresponding secret is required to decrypt it.
 
 ### Authenticated Encryption
 
@@ -159,15 +155,11 @@ let aliceToBobKeyEquality = sodium.utils.equals(sessionKeyPairForAlice.tx, sessi
 let bobToAliceKeyEquality = sodium.utils.equals(sessionKeyPairForAlice.rx, sessionKeyPairForBob.tx) // true
 ```
 
-This operation computes a shared secret key using a secret key and a peer's public key, this process is also known as "elliptic curve Diffie-Hellman".
-
 ## Public-key signatures
 
 Signatures allow multiple parties to verify the authenticity of a public message, using the public key of the author's message.
 
 This can be especially useful to sign software updates.
-
-This signature process uses EdDSA over the twisted Edwards ellliptic curve `Ed25519`
 
 ### Detached signatures
 
@@ -205,9 +197,7 @@ if let unsignedMessage = sodium.sign.open(signedMessage: signedMessage, publicKe
 
 Hashing effectively "fingerprints" input data, no matter what its size, and returns a fixed length "digest".
 
-The underlying hashing primitive is `BLAKE2b`, a secure hash function that is as strong as SHA-3 but faster than SHA-1 and MD5.
-
-The digest length can be configured as required, up to 64 bytes.
+The digest length can be configured as required, from 16 to 64 bytes.
 
 ```swift
 let sodium = Sodium()
@@ -249,7 +239,7 @@ let h = sodium.shortHash.hash(message: message, key: key)
 
 ## Random numbers generation
 
-Random number generation produces cryptographically secure pseudorandom numbers suitable as key material. 
+Random number generation produces cryptographically secure pseudorandom numbers suitable as key material.
 
 ```swift
 let sodium = Sodium()
@@ -260,7 +250,7 @@ let stream = sodium.randomBytes.deterministic(length: 1000, seed: seed)!
 
 ## Password hashing
 
-Password hashing provides the ability to derive key material from a user-generated password. Password hashing is designed to be "slow" to hamper brute force attacks, thus the computational and memory parameters may be user-defined.
+Password hashing provides the ability to derive key material from a low-entropy password. Password hashing functions are designed to be expensive to hamper brute force attacks, thus the computational and memory parameters may be user-defined.
 
 ```swift
 let sodium = Sodium()
@@ -402,3 +392,11 @@ let twice = sodium.stream.xor(input: output, nonce: nonce, secretKey: key)!
 
 XCTAssertEqual(input, twice)
 ```
+
+## Algorithms
+
+* Stream ciphers: XChaCha20, XSalsa20
+* MACs: Poly1305, HMAC-SHA512/256
+* Hash function: BLAKE2B
+* Key exchange: X25519
+* Signatures: Ed25519
