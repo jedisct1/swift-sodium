@@ -14,7 +14,8 @@ let clibsodiumTarget: Target
         providers: [
             .apt(["libsodium-dev"]),
             .brew(["libsodium"]),
-            .yum(["libsodium-devel"])
+            // Waiting for bug to be fixed: https://bugs.swift.org/browse/SR-14038
+            // .yum(["libsodium-devel"])
         ])
 #endif
 
