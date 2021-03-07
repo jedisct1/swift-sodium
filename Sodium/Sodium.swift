@@ -30,7 +30,7 @@ public struct Sodium {
 }
 
 extension Sodium {
-    private static let initCode: Int32 = {
+    private static let initCode: CInt = {
         return sodium_init()
     }()
 }
