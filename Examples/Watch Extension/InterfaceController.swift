@@ -16,7 +16,7 @@ class InterfaceController: WKInterfaceController {
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
         
-        let sodium = Sodium()
+        let sodium = try! Sodium()
         let aliceKeyPair = sodium.box.keyPair()!
         let bobKeyPair = sodium.box.keyPair()!
         let message = "My Test Message".bytes

@@ -5,7 +5,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let sodium = Sodium()
+        let sodium = try! Sodium()
         let aliceKeyPair = sodium.box.keyPair()!
         let bobKeyPair = sodium.box.keyPair()!
         let message = "My Test Message".bytes
