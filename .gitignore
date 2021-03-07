@@ -14,8 +14,10 @@
 *.xcworkspace
 DerivedData
 Pods/
-build/
-xcuserdata
+/.build
+xcuserdata/
 .build
 Package.resolved
 .DS_Store
+/Packages
+/*.xcodeproj

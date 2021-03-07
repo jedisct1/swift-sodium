@@ -38,7 +38,7 @@ class SodiumTests: XCTestCase {
         ("testUtils", testUtils),
     ]
 
-    let sodium = Sodium()
+    let sodium = try! Sodium()
 
     override func setUp() {
         super.setUp()

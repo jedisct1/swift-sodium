@@ -1,7 +1,11 @@
-import Foundation
 import Clibsodium
+import Foundation
 
 public struct Sodium {
+    public enum InitError: Error {
+        case code(Int32)
+    }
+
     public let box = Box()
     public let secretBox = SecretBox()
     public let genericHash = GenericHash()
@@ -17,15 +21,16 @@ public struct Sodium {
     public let secretStream = SecretStream()
     public let aead = Aead()
 
-    public init() {
-        _ = Sodium.once
+    public init() throws {
+        let code = Sodium.initCode
+        guard code >= 0 else {
+            throw InitError.code(code)
+        }
     }
 }
 
 extension Sodium {
-    private static let once: Void = {
-        guard sodium_init() >= 0 else {
-            fatalError("Failed to initialize libsodium")
-        }
+    private static let initCode: Int32 = {
+        return sodium_init()
     }()
 }
