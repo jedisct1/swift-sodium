@@ -16,6 +16,7 @@ public struct Sodium {
     public let keyDerivation = KeyDerivation()
     public let secretStream = SecretStream()
     public let aead = Aead()
+    public let version = Version()
 
     public init() {
         _ = Sodium.once

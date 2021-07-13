@@ -24,6 +24,10 @@
 		095D805D1A4F4F72000B83F9 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095D805C1A4F4F72000B83F9 /* Utils.swift */; };
 		097F20DA1AF127480088C2FE /* PWHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 097F20D91AF127480088C2FE /* PWHash.swift */; };
 		098DAF041F76E35C00DFB1C3 /* SecretStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A5AC111F74466700D3200B /* SecretStream.swift */; };
+		09A32706269DE64E00FA3045 /* Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A32705269DE64E00FA3045 /* Version.swift */; };
+		09A32707269DE64E00FA3045 /* Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A32705269DE64E00FA3045 /* Version.swift */; };
+		09A32708269DE64E00FA3045 /* Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A32705269DE64E00FA3045 /* Version.swift */; };
+		09A32709269DE64E00FA3045 /* Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A32705269DE64E00FA3045 /* Version.swift */; };
 		09A5AC121F74466700D3200B /* SecretStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A5AC111F74466700D3200B /* SecretStream.swift */; };
 		09A943D31A4EB5F500C8A04F /* Sodium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09A943C71A4EB5F500C8A04F /* Sodium.framework */; };
 		09A943DA1A4EB5F500C8A04F /* SodiumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A943D91A4EB5F500C8A04F /* SodiumTests.swift */; };
@@ -279,6 +283,7 @@
 		095D805A1A4F35CA000B83F9 /* RandomBytes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomBytes.swift; sourceTree = "<group>"; };
 		095D805C1A4F4F72000B83F9 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		097F20D91AF127480088C2FE /* PWHash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PWHash.swift; sourceTree = "<group>"; };
+		09A32705269DE64E00FA3045 /* Version.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Version.swift; sourceTree = "<group>"; };
 		09A5AC111F74466700D3200B /* SecretStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretStream.swift; sourceTree = "<group>"; };
 		09A943C71A4EB5F500C8A04F /* Sodium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Sodium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		09A943CB1A4EB5F500C8A04F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -508,6 +513,7 @@
 				DD35BB6220932A83006BF351 /* Bytes.swift */,
 				DD35BB58209252BF006BF351 /* Generators */,
 				DD1E4D0E20922C9E00BE7A3F /* ExitCode.swift */,
+				09A32705269DE64E00FA3045 /* Version.swift */,
 				038365141A5A51D20081136D /* SecretBox.swift */,
 				0942982F1EDDAA3B001236B1 /* Stream.swift */,
 				095D80561A4ED0B4000B83F9 /* GenericHash.swift */,
@@ -1152,6 +1158,7 @@
 				091C7CDC1A50839D002E5351 /* Sign.swift in Sources */,
 				DD35BB5320924B6F006BF351 /* KeyPairGenerator.swift in Sources */,
 				A0918C781E92489100C1DC33 /* Auth.swift in Sources */,
+				09A32706269DE64E00FA3045 /* Version.swift in Sources */,
 				094298301EDDAA3B001236B1 /* Stream.swift in Sources */,
 				D2A274061F13AD9300958702 /* KeyDerivation.swift in Sources */,
 				DD35BB6320932A83006BF351 /* Bytes.swift in Sources */,
@@ -1199,6 +1206,7 @@
 				53008FA6253609D1006FE4EF /* SecretBox.swift in Sources */,
 				53008FA7253609D1006FE4EF /* Stream.swift in Sources */,
 				53008FA8253609D1006FE4EF /* GenericHash.swift in Sources */,
+				09A32709269DE64E00FA3045 /* Version.swift in Sources */,
 				53008FA9253609D1006FE4EF /* PWHash.swift in Sources */,
 				53008FAA253609D1006FE4EF /* RandomBytes.swift in Sources */,
 				53008FAB253609D1006FE4EF /* ShortHash.swift in Sources */,
@@ -1246,6 +1254,7 @@
 				90C75EE71AE3583E00F1E749 /* GenericHash.swift in Sources */,
 				90C75EE91AE3583E00F1E749 /* RandomBytes.swift in Sources */,
 				DD35BB5720924D3A006BF351 /* KeyPairProtocol.swift in Sources */,
+				09A32707269DE64E00FA3045 /* Version.swift in Sources */,
 				60C211E71EB73D3900882AD0 /* Auth.swift in Sources */,
 				094298311EDDAA3B001236B1 /* Stream.swift in Sources */,
 				DD1E4D1020922C9E00BE7A3F /* ExitCode.swift in Sources */,
@@ -1284,6 +1293,7 @@
 				D891FEA52164323A0092AA84 /* SecretBox.swift in Sources */,
 				D891FEA62164323A0092AA84 /* Stream.swift in Sources */,
 				D891FEA72164323A0092AA84 /* GenericHash.swift in Sources */,
+				09A32708269DE64E00FA3045 /* Version.swift in Sources */,
 				D891FEA82164323A0092AA84 /* PWHash.swift in Sources */,
 				D891FEA92164323A0092AA84 /* RandomBytes.swift in Sources */,
 				D891FEAA2164323A0092AA84 /* ShortHash.swift in Sources */,

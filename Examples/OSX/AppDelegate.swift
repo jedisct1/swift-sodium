@@ -7,6 +7,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         let sodium = Sodium()
+
+        let versionString = sodium.version.lib.VersionString;
+        print("Sodium library version:\(versionString)")
+
         let aliceKeyPair = sodium.box.keyPair()!
         let bobKeyPair = sodium.box.keyPair()!
         let message = "My Test Message".bytes
