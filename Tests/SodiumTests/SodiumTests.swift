@@ -184,7 +184,7 @@ class SodiumTests: XCTestCase {
         XCTAssertEqual(randomd, "444dc0602207c270b93f")
         
         var c3 = 0
-        var rng = SodiumRandomNumberGenerator()
+        var rng = RandomBytes.Generator()
         let ref3 = UInt32.random(in: 0...UInt32.max, using: &rng)
         for _ in (0..<100) {
             if UInt32.random(in: 0...UInt32.max, using: &rng) == ref3 {

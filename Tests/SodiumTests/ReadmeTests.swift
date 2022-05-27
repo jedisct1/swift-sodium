@@ -156,7 +156,7 @@ class ReadmeTests : XCTestCase {
 
         XCTAssertNotNil(randomData)
         
-        var rng = SodiumRandomNumberGenerator()
+        var rng = RandomBytes.Generator()
         let randomUInt32 = UInt32.random(in: 0...10, using: &rng)
         let randomUInt64 = UInt64.random(in: 0...10, using: &rng)
         let randomInt = Int.random(in: 0...10, using: &rng)

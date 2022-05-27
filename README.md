@@ -248,10 +248,10 @@ let seed = "0123456789abcdef0123456789abcdef".bytes
 let stream = sodium.randomBytes.deterministic(length: 1000, seed: seed)!
 ```
 
-Use `SodiumRandomNumberGenerator` as a generator to produce cryptographically secure pseudorandom numbers.
+Use `RandomBytes.Generator` as a generator to produce cryptographically secure pseudorandom numbers.
 
 ```swift
-var rng = SodiumRandomNumberGenerator()
+var rng = RandomBytes.Generator()
 let randomUInt32 = UInt32.random(in: 0...10, using: &rng)
 let randomUInt64 = UInt64.random(in: 0...10, using: &rng)
 let randomInt = Int.random(in: 0...10, using: &rng)
