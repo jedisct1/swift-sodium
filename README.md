@@ -248,6 +248,16 @@ let seed = "0123456789abcdef0123456789abcdef".bytes
 let stream = sodium.randomBytes.deterministic(length: 1000, seed: seed)!
 ```
 
+Use `SodiumRandomNumberGenerator` as a generator to produce cryptographically secure pseudorandom numbers.
+
+```swift
+var rng = SodiumRandomNumberGenerator()
+let randomUInt32 = UInt32.random(in: 0...10, using: &rng)
+let randomUInt64 = UInt64.random(in: 0...10, using: &rng)
+let randomInt = Int.random(in: 0...10, using: &rng)
+let randomDouble = Double.random(in: 0...1, using: &rng)
+```
+
 ## Password hashing
 
 Password hashing provides the ability to derive key material from a low-entropy password. Password hashing functions are designed to be expensive to hamper brute force attacks, thus the computational and memory parameters may be user-defined.

@@ -182,6 +182,16 @@ class SodiumTests: XCTestCase {
         let seed = sodium.utils.hex2bin("00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff 00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff", ignore: " ")!
         let randomd = sodium.utils.bin2hex(sodium.randomBytes.deterministic(length: 10, seed: seed)!)!
         XCTAssertEqual(randomd, "444dc0602207c270b93f")
+        
+        var c3 = 0
+        var rng = SodiumRandomNumberGenerator()
+        let ref3 = UInt32.random(in: 0...UInt32.max, using: &rng)
+        for _ in (0..<100) {
+            if sodium.randomBytes.random() == ref3 {
+                c3 += 1
+            }
+        }
+        XCTAssert(c3 < 10)
     }
 
     func testShortHash() {
