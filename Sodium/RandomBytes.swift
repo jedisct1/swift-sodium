@@ -57,3 +57,21 @@ extension RandomBytes {
         return output
     }
 }
+
+extension RandomBytes {
+    public struct Generator: RandomNumberGenerator {
+        private let sodium = Sodium()
+        
+        public init() {}
+        
+        public mutating func next() -> UInt64 {
+            guard let bytes = self.sodium.randomBytes.buf(length: MemoryLayout<UInt64>.size) else {
+                fatalError("Sodium Random Number Generator is broken")
+            }
+            
+            return bytes.withUnsafeBytes { pointer in
+                return pointer.load(as: UInt64.self)
+            }
+        }
+    }
+}

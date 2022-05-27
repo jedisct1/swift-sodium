@@ -155,6 +155,17 @@ class ReadmeTests : XCTestCase {
         let randomData = sodium.randomBytes.buf(length: 1000)
 
         XCTAssertNotNil(randomData)
+        
+        var rng = RandomBytes.Generator()
+        let randomUInt32 = UInt32.random(in: 0...10, using: &rng)
+        let randomUInt64 = UInt64.random(in: 0...10, using: &rng)
+        let randomInt = Int.random(in: 0...10, using: &rng)
+        let randomDouble = Double.random(in: 0...1, using: &rng)
+        
+        XCTAssert(randomUInt32 >= 0 && randomUInt32 <= 10)
+        XCTAssert(randomUInt64 >= 0 && randomUInt64 <= 10)
+        XCTAssert(randomInt >= 0 && randomInt <= 10)
+        XCTAssert(randomDouble >= 0 && randomDouble <= 1)
     }
 
     func testPasswordHashing() {
