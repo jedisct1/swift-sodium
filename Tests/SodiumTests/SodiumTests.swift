@@ -187,7 +187,7 @@ class SodiumTests: XCTestCase {
         var rng = SodiumRandomNumberGenerator()
         let ref3 = UInt32.random(in: 0...UInt32.max, using: &rng)
         for _ in (0..<100) {
-            if sodium.randomBytes.random() == ref3 {
+            if UInt32.random(in: 0...UInt32.max, using: &rng) == ref3 {
                 c3 += 1
             }
         }
