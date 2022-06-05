@@ -405,6 +405,10 @@ class SodiumTests: XCTestCase {
         
         XCTAssertEqual(nonce.count, 24) // check nonce is 192 bit
         
+        let authenticatedCipherTextFromNonce = sodium.aead.xchacha20poly1305ietf.encrypt(message: message, secretKey: secretKey, nonce: nonce)
+
+        XCTAssertTrue(authenticatedCipherText == authenticatedCipherTextFromNonce)
+
         let decrypted: Bytes = sodium.aead.xchacha20poly1305ietf.decrypt(authenticatedCipherText: authenticatedCipherText, secretKey: secretKey, nonce: nonce)!
         
         XCTAssertTrue(decrypted == message)
