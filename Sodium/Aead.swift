@@ -84,34 +84,34 @@ extension Aead.XChaCha20Poly1305Ietf {
 extension Aead.XChaCha20Poly1305Ietf {
     /**
      Decrypts a message with a shared secret key.
-     
+
      - Parameter nonceAndAuthenticatedCipherText: A `Bytes` object containing the nonce and authenticated ciphertext.
      - Parameter secretKey: The shared secret key.
      - Parameter additionalData: Must be used same `Bytes` that was used to encrypt, if `Bytes` deferred will return nil
-     
+
      - Returns: The decrypted message.
      */
     public func decrypt(nonceAndAuthenticatedCipherText: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> Bytes? {
         guard nonceAndAuthenticatedCipherText.count >= ABytes + NonceBytes else { return nil }
-        
+
         let nonce = nonceAndAuthenticatedCipherText[..<NonceBytes].bytes as Nonce
         let authenticatedCipherText = nonceAndAuthenticatedCipherText[NonceBytes...].bytes
 
         return decrypt(authenticatedCipherText: authenticatedCipherText, secretKey: secretKey, nonce: nonce, additionalData: additionalData)
     }
-    
+
     /**
      Decrypts a message with a shared secret key.
-     
+
      - Parameter authenticatedCipherText: A `Bytes` object containing authenticated ciphertext.
      - Parameter secretKey: The shared secret key.
      - Parameter additionalData: Must be used same `Bytes` that was used to encrypt, if `Bytes` deferred will return nil
-     
+
      - Returns: The decrypted message.
      */
     public func decrypt(authenticatedCipherText: Bytes, secretKey: Key, nonce: Nonce, additionalData: Bytes? = nil) -> Bytes? {
         guard authenticatedCipherText.count >= ABytes else { return nil }
-        
+
         var message = Bytes(count: authenticatedCipherText.count - ABytes)
         var messageLen: UInt64 = 0
 
