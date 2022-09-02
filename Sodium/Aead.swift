@@ -22,7 +22,7 @@ extension Aead.XChaCha20Poly1305Ietf {
 
      - Returns: A `Bytes` object containing the nonce and authenticated ciphertext.
      */
-    public func encrypt(message: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> Bytes? {
+    public func encryptX(message: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> Bytes? {
         guard let (authenticatedCipherText, nonce): (Bytes, Nonce) = encrypt(
             message: message,
             secretKey: secretKey,
