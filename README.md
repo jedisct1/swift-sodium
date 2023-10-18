@@ -406,6 +406,7 @@ XCTAssertEqual(input, twice)
 ## Algorithms
 
 * Stream ciphers: XChaCha20, XSalsa20
+* AEADs: XChaCha20Poly1305, AEGIS-128L, AEGIS-256, AES256-GCM
 * MACs: Poly1305, HMAC-SHA512/256
 * Hash function: BLAKE2B
 * Key exchange: X25519
