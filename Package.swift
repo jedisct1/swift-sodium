@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.9
 import PackageDescription
 
 let clibsodiumTarget: Target
@@ -6,6 +6,14 @@ let clibsodiumTarget: Target
     clibsodiumTarget = .binaryTarget(
         name: "Clibsodium",
         path: "Clibsodium.xcframework")
+#elseif os(Windows)
+    clibsodiumTarget = .target(
+        name: "Clibsodium",
+        path: "Clibsodium-win",
+        publicHeadersPath: "include",
+        linkerSettings: [
+          .linkedLibrary("libsodium"),
+        ])
 #else
     clibsodiumTarget = .systemLibrary(
         name: "Clibsodium",
@@ -35,10 +43,19 @@ let package = Package(
             name: "Sodium",
             dependencies: ["Clibsodium"],
             path: "Sodium",
-            exclude: ["libsodium", "Info.plist"]),
+            exclude: ["libsodium", "Info.plist"],
+            // Required to enable static linking on Windows
+            cxxSettings: [ .define("SODIUM_STATIC") ]
+        ),
         .testTarget(
             name: "SodiumTests",
             dependencies: ["Sodium"],
-            exclude: ["Info.plist"]),
+            exclude: ["Info.plist"],
+            linkerSettings: [
+                .unsafeFlags([
+                    "-LClibsodium-win/x64/Release/v143/static",
+                ]),
+            ]
+        ),
     ]
 )
