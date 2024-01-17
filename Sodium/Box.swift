@@ -46,7 +46,7 @@ extension Box {
 
         var authenticatedCipherText = Bytes(count: message.count + MacBytes)
 
-        guard .SUCCESS == crypto_box_easy(
+        guard .success == crypto_box_easy(
             &authenticatedCipherText,
             message,
             CUnsignedLongLong(message.count),
@@ -75,7 +75,7 @@ extension Box {
         var authenticatedCipherText = Bytes(count: message.count + MacBytes)
         let nonce = self.nonce()
 
-        guard .SUCCESS == crypto_box_easy(
+        guard .success == crypto_box_easy(
             &authenticatedCipherText,
             message,
             CUnsignedLongLong(message.count),
@@ -105,7 +105,7 @@ extension Box {
         var mac = Bytes(count: MacBytes)
         let nonce = self.nonce()
 
-        guard .SUCCESS == crypto_box_detached (
+        guard .success == crypto_box_detached (
             &authenticatedCipherText,
             &mac,
             message, CUnsignedLongLong(message.count),
@@ -130,7 +130,7 @@ extension Box {
         var authenticatedCipherText = Bytes(count: message.count + MacBytes)
         let nonce = self.nonce()
 
-        guard .SUCCESS == crypto_box_easy_afternm (
+        guard .success == crypto_box_easy_afternm (
             &authenticatedCipherText,
             message, UInt64(message.count),
             nonce,
@@ -169,7 +169,7 @@ extension Box {
         guard recipientPublicKey.count == PublicKeyBytes else { return nil }
         var anonymousCipherText = Bytes(count: SealBytes + message.count)
 
-        guard .SUCCESS == crypto_box_seal (
+        guard .success == crypto_box_seal (
             &anonymousCipherText,
             message, UInt64(message.count),
             recipientPublicKey
@@ -216,7 +216,7 @@ extension Box {
 
         var message = Bytes(count: authenticatedCipherText.count - MacBytes)
 
-        guard .SUCCESS == crypto_box_open_easy(
+        guard .success == crypto_box_open_easy(
             &message,
             authenticatedCipherText, UInt64(authenticatedCipherText.count),
             nonce,
@@ -247,7 +247,7 @@ extension Box {
 
         var message = Bytes(count: authenticatedCipherText.count)
 
-        guard .SUCCESS == crypto_box_open_detached(
+        guard .success == crypto_box_open_detached(
             &message,
             authenticatedCipherText,
             mac,
@@ -294,7 +294,7 @@ extension Box {
 
         var message = Bytes(count: authenticatedCipherText.count - MacBytes)
 
-        guard .SUCCESS == crypto_box_open_easy_afternm (
+        guard .success == crypto_box_open_easy_afternm (
             &message,
             authenticatedCipherText, UInt64(authenticatedCipherText.count),
             nonce,
@@ -321,7 +321,7 @@ extension Box {
 
         var message = Bytes(count: anonymousCipherText.count - SealBytes)
 
-        guard .SUCCESS == crypto_box_seal_open (
+        guard .success == crypto_box_seal_open (
             &message,
             anonymousCipherText, UInt64(anonymousCipherText.count),
             recipientPublicKey,
@@ -345,7 +345,7 @@ extension Box {
      */
     public func beforenm(recipientPublicKey: PublicKey, senderSecretKey: SecretKey) -> Bytes? {
         var key = Bytes(count: BeforenmBytes)
-        guard .SUCCESS == crypto_box_beforenm (
+        guard .success == crypto_box_beforenm (
             &key,
             recipientPublicKey,
             senderSecretKey
