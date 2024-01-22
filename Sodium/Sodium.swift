@@ -9,6 +9,7 @@ public struct Sodium {
     public let randomBytes = RandomBytes()
     public let shortHash = ShortHash()
     public let sign = Sign()
+    public let sha256Hash = SHA256Hash()
     public let utils = Utils()
     public let keyExchange = KeyExchange()
     public let auth = Auth()

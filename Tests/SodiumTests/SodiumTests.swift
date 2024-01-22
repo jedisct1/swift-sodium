@@ -30,6 +30,7 @@ class SodiumTests: XCTestCase {
         ("testPad", testPad),
         ("testPwHash", testPwHash),
         ("testRandomBytes", testRandomBytes),
+        ("testSHA256Hash", testSHA256Hash),
         ("testSecretBox", testSecretBox),
         ("testSecretStream", testSecretStream),
         ("testShortHash", testShortHash),
@@ -265,6 +266,13 @@ class SodiumTests: XCTestCase {
 
         XCTAssertFalse(sodium.pwHash.strNeedsRehash(hash: hash!, opsLimit: sodium.pwHash.OpsLimitInteractive, memLimit: sodium.pwHash.MemLimitInteractive))
         XCTAssertTrue(sodium.pwHash.strNeedsRehash(hash: hash!, opsLimit: sodium.pwHash.OpsLimitSensitive, memLimit: sodium.pwHash.MemLimitSensitive))
+    }
+
+    func testSHA256Hash() {
+        XCTAssertEqual(
+            sodium.utils.bin2hex(sodium.sha256Hash.hash(message: "hello there general kenobi".bytes)!)!,
+            "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4"
+        )
     }
 
     func testKeyExchange() {
