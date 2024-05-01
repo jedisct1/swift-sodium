@@ -1,7 +1,7 @@
 import Foundation
 import Clibsodium
 
-public struct SHA256Hash {
+public struct SHA256Hash: Sendable {
     public let Bytes = Int(crypto_hash_sha256_bytes())
 }
 
