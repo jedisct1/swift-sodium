@@ -19,7 +19,7 @@ extension Sign {
         guard secretKey.count == SecretKeyBytes else { return nil }
         var signedMessage = Array<UInt8>(count: message.count + Bytes)
 
-        guard .SUCCESS == crypto_sign (
+        guard .success == crypto_sign (
             &signedMessage,
             nil,
             message, UInt64(message.count),
@@ -41,7 +41,7 @@ extension Sign {
         guard secretKey.count == SecretKeyBytes else { return nil }
         var signature = Array<UInt8>(count: Bytes)
 
-        guard .SUCCESS == crypto_sign_detached (
+        guard .success == crypto_sign_detached (
             &signature,
             nil,
             message, UInt64(message.count),
@@ -82,7 +82,7 @@ extension Sign {
             return false
         }
 
-        return .SUCCESS == crypto_sign_verify_detached (
+        return .success == crypto_sign_verify_detached (
             signature,
             message, UInt64(message.count),
             publicKey
@@ -107,7 +107,7 @@ extension Sign {
         var message = Array<UInt8>(count: signedMessage.count - Bytes)
         var mlen: UInt64 = 0
 
-        guard .SUCCESS == crypto_sign_open (
+        guard .success == crypto_sign_open (
             &message, &mlen,
             signedMessage, UInt64(signedMessage.count),
             publicKey

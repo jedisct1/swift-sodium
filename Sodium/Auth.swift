@@ -19,7 +19,7 @@ extension Auth {
         guard secretKey.count == KeyBytes else { return nil }
 
         var tag = Array<UInt8>(count: Bytes)
-        guard .SUCCESS == crypto_auth (
+        guard .success == crypto_auth (
             &tag,
             message, UInt64(message.count),
             secretKey
@@ -41,7 +41,7 @@ extension Auth {
         guard secretKey.count == KeyBytes else {
             return false
         }
-        return .SUCCESS == crypto_auth_verify (
+        return .success == crypto_auth_verify (
             tag,
             message, UInt64(message.count),
             secretKey

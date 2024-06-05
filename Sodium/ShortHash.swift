@@ -18,7 +18,7 @@ extension ShortHash {
         guard key.count == KeyBytes else { return nil }
         var output = Array<UInt8>(count: Bytes)
 
-        guard .SUCCESS == crypto_shorthash (
+        guard .success == crypto_shorthash (
             &output,
             message, UInt64(message.count),
             key

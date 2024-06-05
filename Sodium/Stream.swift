@@ -23,7 +23,7 @@ extension Stream {
         guard secretKey.count == KeyBytes, nonce.count == NonceBytes else { return nil }
 
         var output = Bytes(count: input.count)
-        guard .SUCCESS == crypto_stream_xor (
+        guard .success == crypto_stream_xor (
             &output,
             input, UInt64(input.count),
             nonce,
