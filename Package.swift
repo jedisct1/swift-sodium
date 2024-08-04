@@ -47,11 +47,9 @@ let package = Package(
             ]),
         .target(
             name: "Sodium",
-            dependencies: ["_Clibsodium"],
-            exclude: ["libsodium", "Info.plist"]),
+            dependencies: ["_Clibsodium"]),
         .testTarget(
             name: "SodiumTests",
-            dependencies: ["Sodium"],
-            exclude: ["Info.plist"]),
+            dependencies: ["Sodium"]),
     ]
 )
