@@ -19,8 +19,8 @@ Pod::Spec.new do |s|
   s.osx.deployment_target = "10.11"
   s.watchos.deployment_target = "5.0"
 
-  s.source_files = "Sodium/**/*.{swift,h}"
-  s.private_header_files = "Sodium/libsodium/*.h"
+  s.source_files = "Sources/Sodium/**/*.{swift,h}"
+  s.private_header_files = "Sources/Sodium/libsodium/*.h"
 
   s.pod_target_xcconfig = {
     "SWIFT_INCLUDE_PATHS" => '$(inherited) "${PODS_XCFRAMEWORKS_BUILD_DIR}/Clibsodium"'
