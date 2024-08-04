@@ -66,8 +66,6 @@
 		53008FB625360A54006FE4EF /* Sodium.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53008F9425360973006FE4EF /* Sodium.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6096E7321F194FA800E6599F /* KeyDerivation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A274051F13AD9300958702 /* KeyDerivation.swift */; };
 		60C211E71EB73D3900882AD0 /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0918C771E92489100C1DC33 /* Auth.swift */; };
-		60CB27B81EB371480079CA46 /* Sodium.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943CC1A4EB5F500C8A04F /* Sodium.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		60CB27B91EB3714E0079CA46 /* Sodium.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943CC1A4EB5F500C8A04F /* Sodium.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		60D50A6A1FD1778300FCE80F /* Sodium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09A943C71A4EB5F500C8A04F /* Sodium.framework */; };
 		60D50A6B1FD1778300FCE80F /* Sodium.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 09A943C71A4EB5F500C8A04F /* Sodium.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7D6373E21E7B5E0800F04E72 /* KeyExchange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6373E11E7B5E0800F04E72 /* KeyExchange.swift */; };
@@ -126,7 +124,6 @@
 		D891FEB02164323A0092AA84 /* KeyDerivation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A274051F13AD9300958702 /* KeyDerivation.swift */; };
 		D891FEB12164323A0092AA84 /* SecretStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A5AC111F74466700D3200B /* SecretStream.swift */; };
 		D891FEB22164323A0092AA84 /* Aead.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87EEC3F2063C655006C830D /* Aead.swift */; };
-		D891FEB32164324A0092AA84 /* Sodium.h in Headers */ = {isa = PBXBuildFile; fileRef = 09A943CC1A4EB5F500C8A04F /* Sodium.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DD1E4D0F20922C9E00BE7A3F /* ExitCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1E4D0E20922C9E00BE7A3F /* ExitCode.swift */; };
 		DD1E4D1020922C9E00BE7A3F /* ExitCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1E4D0E20922C9E00BE7A3F /* ExitCode.swift */; };
 		DD35BB5020924A35006BF351 /* NonceGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD35BB4F20924A35006BF351 /* NonceGenerator.swift */; };
@@ -286,7 +283,6 @@
 		09A32705269DE64E00FA3045 /* Version.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Version.swift; sourceTree = "<group>"; };
 		09A5AC111F74466700D3200B /* SecretStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretStream.swift; sourceTree = "<group>"; };
 		09A943C71A4EB5F500C8A04F /* Sodium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Sodium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		09A943CC1A4EB5F500C8A04F /* Sodium.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sodium.h; sourceTree = "<group>"; };
 		09A943D21A4EB5F500C8A04F /* SodiumTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SodiumTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		09A943D91A4EB5F500C8A04F /* SodiumTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SodiumTests.swift; sourceTree = "<group>"; };
 		09A943F11A4EB91F00C8A04F /* core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = core.h; sourceTree = "<group>"; };
@@ -504,7 +500,6 @@
 			isa = PBXGroup;
 			children = (
 				09A943E91A4EB70900C8A04F /* libsodium */,
-				09A943CC1A4EB5F500C8A04F /* Sodium.h */,
 				094F21E91A5017CA001C3141 /* Box.swift */,
 				DD35BB6220932A83006BF351 /* Bytes.swift */,
 				DD35BB58209252BF006BF351 /* Generators */,
@@ -739,7 +734,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				60CB27B81EB371480079CA46 /* Sodium.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -755,7 +749,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				60CB27B91EB3714E0079CA46 /* Sodium.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -763,7 +756,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D891FEB32164324A0092AA84 /* Sodium.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
