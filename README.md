@@ -1,4 +1,4 @@
-# Swift-Sodium [![Build Status](https://travis-ci.com/jedisct1/swift-sodium.svg?branch=master)](https://travis-ci.com/jedisct1/swift-sodium)
+# Swift-Sodium
 
 Swift-Sodium provides a safe and easy to use interface to perform common cryptographic operations on macOS, iOS, tvOS and watchOS.
 
