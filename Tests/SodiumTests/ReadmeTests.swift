@@ -22,6 +22,8 @@ class ReadmeTests : XCTestCase {
         ("testSecretKeyAuthenticatedEncryption", testSecretKeyAuthenticatedEncryption),
         ("testSecretStream", testSecretStream),
         ("testShortOutputHashing", testShortOutputHashing),
+        ("testSHA256Hashing", testSHA256Hashing),
+        ("testSHA512Hashing", testSHA512Hashing),
         ("testStream", testStream),
         ("testStreaming", testStreaming),
         ("testZeroingMemory", testZeroingMemory),

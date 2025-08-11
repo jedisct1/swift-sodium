@@ -31,6 +31,7 @@ class SodiumTests: XCTestCase {
         ("testPwHash", testPwHash),
         ("testRandomBytes", testRandomBytes),
         ("testSHA256Hash", testSHA256Hash),
+        ("testSHA512Hash", testSHA512Hash),
         ("testSecretBox", testSecretBox),
         ("testSecretStream", testSecretStream),
         ("testShortHash", testShortHash),
