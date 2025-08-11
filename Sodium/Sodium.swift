@@ -10,6 +10,7 @@ public struct Sodium {
     public let shortHash = ShortHash()
     public let sign = Sign()
     public let sha256Hash = SHA256Hash()
+    public let sha512Hash = SHA512Hash()
     public let utils = Utils()
     public let keyExchange = KeyExchange()
     public let auth = Auth()

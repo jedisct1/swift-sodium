@@ -271,12 +271,17 @@ class SodiumTests: XCTestCase {
         XCTAssertFalse(sodium.pwHash.strNeedsRehash(hash: hash!, opsLimit: sodium.pwHash.OpsLimitInteractive, memLimit: sodium.pwHash.MemLimitInteractive))
         XCTAssertTrue(sodium.pwHash.strNeedsRehash(hash: hash!, opsLimit: sodium.pwHash.OpsLimitSensitive, memLimit: sodium.pwHash.MemLimitSensitive))
     }
-
+    
     func testSHA256Hash() {
-        XCTAssertEqual(
-            sodium.utils.bin2hex(sodium.sha256Hash.hash(message: "hello there general kenobi".bytes)!)!,
-            "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4"
-        )
+        let message = "My Test Message".bytes
+        let h = sodium.utils.bin2hex(sodium.sha256Hash.hash(message: message)!)!
+        XCTAssertEqual(h, "06b87ce47e9cb96156a4f55e405c2587fff2be2ed11adb9f465dc964ef70938e")
+    }
+    
+    func testSHA512Hash() {
+        let message = "My Test Message".bytes
+        let h = sodium.utils.bin2hex(sodium.sha512Hash.hash(message: message)!)!
+        XCTAssertEqual(h, "4173c1218c42b37943f39a7c5a87b782ae945b8609b8dae66a0552c56abd931ba0561a6df052008c1994a505024c31f183a5c34c0dda1e0ce82e9b9e7ea08459")
     }
 
     func testKeyExchange() {

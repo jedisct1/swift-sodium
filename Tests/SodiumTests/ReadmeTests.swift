@@ -149,6 +149,22 @@ class ReadmeTests : XCTestCase {
 
         XCTAssertNotNil(h)
     }
+    
+    func testSHA256Hashing() {
+        let sodium = Sodium()
+        let message = "My Test Message".bytes
+        let h = sodium.sha256Hash.hash(message: message)
+
+        XCTAssertNotNil(h)
+    }
+    
+    func testSHA512Hashing() {
+        let sodium = Sodium()
+        let message = "My Test Message".bytes
+        let h = sodium.sha512Hash.hash(message: message)
+
+        XCTAssertNotNil(h)
+    }
 
     func testRandomNumberGeneration() {
         let sodium = Sodium()
