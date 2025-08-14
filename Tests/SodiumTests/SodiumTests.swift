@@ -277,6 +277,11 @@ class SodiumTests: XCTestCase {
         let message = "My Test Message".bytes
         let h = sodium.utils.bin2hex(sodium.sha256Hash.hash(message: message)!)!
         XCTAssertEqual(h, "06b87ce47e9cb96156a4f55e405c2587fff2be2ed11adb9f465dc964ef70938e")
+
+        // Same test as libsodium's
+        let message2 = "testing\n".bytes
+        let h2 = sodium.utils.bin2hex(sodium.sha256Hash.hash(message: message2)!)!
+        XCTAssertEqual(h2, "12a61f4e173fb3a11c05d6471f74728f76231b4a5fcd9667cef3af87a3ae4dc2")
     }
     
     func testSHA512Hash() {
