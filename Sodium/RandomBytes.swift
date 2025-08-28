@@ -7,7 +7,7 @@ public struct RandomBytes {
 
 extension RandomBytes {
     /**
-     Returns a `Bytes object of length `length` containing an unpredictable sequence of bytes.
+     Returns a `Bytes` object of length `length` containing an unpredictable sequence of bytes.
 
      - Parameter length: The number of bytes to generate.
 
