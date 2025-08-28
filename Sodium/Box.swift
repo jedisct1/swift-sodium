@@ -12,15 +12,33 @@ public struct Box {
 }
 
 extension Box {
-    /**
-     Encrypts a message with a recipient's public key and a sender's secret key.
-
-     - Parameter message: The message to encrypt.
-     - Parameter recipientPublicKey: The recipient's public key.
-     - Parameter senderSecretKey: The sender's secret key.
-
-     - Returns: A `Bytes` object containing the nonce and authenticated ciphertext.
-     */
+    /// Encrypts a message using public-key authenticated encryption
+    ///
+    /// This method provides authenticated encryption between a sender and recipient.
+    /// Both parties can verify the message came from the expected sender.
+    ///
+    /// - Parameters:
+    ///   - message: The plaintext message to encrypt
+    ///   - recipientPublicKey: The recipient's 32-byte public key
+    ///   - senderSecretKey: The sender's 32-byte secret key
+    /// - Returns: Combined nonce (24 bytes) + authenticated ciphertext, or nil on failure
+    ///
+    /// - Example:
+    /// ```swift
+    /// let sodium = Sodium()
+    /// let alice = sodium.box.keyPair()!
+    /// let bob = sodium.box.keyPair()!
+    /// let message = "Secret message".bytes
+    ///
+    /// // Alice encrypts for Bob
+    /// if let encrypted = sodium.box.seal(
+    ///     message: message,
+    ///     recipientPublicKey: bob.publicKey,
+    ///     senderSecretKey: alice.secretKey
+    /// ) {
+    ///     print("Encrypted: \(encrypted.count) bytes")
+    /// }
+    /// ```
     public func seal(message: Bytes, recipientPublicKey: PublicKey, senderSecretKey: SecretKey) -> Bytes? {
         guard let (authenticatedCipherText, nonce): (Bytes, Nonce) = seal(message: message, recipientPublicKey: recipientPublicKey, senderSecretKey: senderSecretKey) else {
             return nil
@@ -28,16 +46,35 @@ extension Box {
         return nonce + authenticatedCipherText
     }
 
-    /**
-     Encrypts a message with a recipient's public key and a sender's secret key using a user-provided nonce.
-
-     - Parameter message: The message to encrypt.
-     - Parameter recipientPublicKey: The recipient's public key.
-     - Parameter senderSecretKey: The sender's secret key.
-     - Parameter nonce: The user-specified nonce.
-
-     - Returns: The authenticated ciphertext.
-     */
+    /// Encrypts a message using public-key authenticated encryption with specific nonce
+    ///
+    /// - Warning: Never reuse a nonce with the same key pair! Doing so compromises security.
+    /// Consider using the methods that generate random nonces automatically.
+    ///
+    /// - Parameters:
+    ///   - message: The plaintext message to encrypt
+    ///   - recipientPublicKey: The recipient's 32-byte public key
+    ///   - senderSecretKey: The sender's 32-byte secret key
+    ///   - nonce: The 24-byte nonce (must be unique for this key pair)
+    /// - Returns: Authenticated ciphertext (message.count + 16 bytes), or nil on failure
+    ///
+    /// - Example:
+    /// ```swift
+    /// let sodium = Sodium()
+    /// let alice = sodium.box.keyPair()!
+    /// let bob = sodium.box.keyPair()!
+    /// let message = "Secret message".bytes
+    /// let nonce = sodium.box.nonce() // Generate once, never reuse!
+    ///
+    /// if let encrypted = sodium.box.seal(
+    ///     message: message,
+    ///     recipientPublicKey: bob.publicKey,
+    ///     senderSecretKey: alice.secretKey,
+    ///     nonce: nonce
+    /// ) {
+    ///     print("Encrypted: \(encrypted.count) bytes")
+    /// }
+    /// ```
     public func seal(message: Bytes, recipientPublicKey: PublicKey, senderSecretKey: SecretKey, nonce: Nonce) -> Bytes? {
         guard recipientPublicKey.count == PublicKeyBytes,
             senderSecretKey.count == SecretKeyBytes,
@@ -58,15 +95,33 @@ extension Box {
         return authenticatedCipherText
     }
 
-    /**
-     Encrypts a message with a recipient's public key and a sender's secret key.
-
-     - Parameter message: The message to encrypt.
-     - Parameter recipientPublicKey: The recipient's public key.
-     - Parameter senderSecretKey: The sender's secret key.
-
-     - Returns: The authenticated ciphertext and encryption nonce.
-     */
+    /// Encrypts a message using public-key authenticated encryption (separated nonce)
+    ///
+    /// Returns the nonce separately from the ciphertext, useful when you need to
+    /// store or transmit them separately.
+    ///
+    /// - Parameters:
+    ///   - message: The plaintext message to encrypt
+    ///   - recipientPublicKey: The recipient's 32-byte public key
+    ///   - senderSecretKey: The sender's 32-byte secret key
+    /// - Returns: Tuple containing authenticated ciphertext and nonce, or nil on failure
+    ///
+    /// - Example:
+    /// ```swift
+    /// let sodium = Sodium()
+    /// let alice = sodium.box.keyPair()!
+    /// let bob = sodium.box.keyPair()!
+    /// let message = "Secret message".bytes
+    ///
+    /// if let (ciphertext, nonce) = sodium.box.seal(
+    ///     message: message,
+    ///     recipientPublicKey: bob.publicKey,
+    ///     senderSecretKey: alice.secretKey
+    /// ) {
+    ///     print("Ciphertext: \(ciphertext.count) bytes")
+    ///     print("Nonce: \(nonce.count) bytes")
+    /// }
+    /// ```
     public func seal(message: Bytes, recipientPublicKey: PublicKey, senderSecretKey: SecretKey) -> (authenticatedCipherText: Bytes, nonce: Nonce)? {
         guard recipientPublicKey.count == PublicKeyBytes,
               senderSecretKey.count == SecretKeyBytes
