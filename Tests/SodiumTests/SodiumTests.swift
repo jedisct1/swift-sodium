@@ -30,6 +30,8 @@ class SodiumTests: XCTestCase {
         ("testPad", testPad),
         ("testPwHash", testPwHash),
         ("testRandomBytes", testRandomBytes),
+        ("testSHA256Hash", testSHA256Hash),
+        ("testSHA512Hash", testSHA512Hash),
         ("testSecretBox", testSecretBox),
         ("testSecretStream", testSecretStream),
         ("testShortHash", testShortHash),
@@ -269,6 +271,28 @@ class SodiumTests: XCTestCase {
 
         XCTAssertFalse(sodium.pwHash.strNeedsRehash(hash: hash!, opsLimit: sodium.pwHash.OpsLimitInteractive, memLimit: sodium.pwHash.MemLimitInteractive))
         XCTAssertTrue(sodium.pwHash.strNeedsRehash(hash: hash!, opsLimit: sodium.pwHash.OpsLimitSensitive, memLimit: sodium.pwHash.MemLimitSensitive))
+    }
+    
+    func testSHA256Hash() {
+        let message = "My Test Message".bytes
+        let h = sodium.utils.bin2hex(sodium.sha256Hash.hash(message: message)!)!
+        XCTAssertEqual(h, "06b87ce47e9cb96156a4f55e405c2587fff2be2ed11adb9f465dc964ef70938e")
+
+        // Same test as libsodium's
+        let message2 = "testing\n".bytes
+        let h2 = sodium.utils.bin2hex(sodium.sha256Hash.hash(message: message2)!)!
+        XCTAssertEqual(h2, "12a61f4e173fb3a11c05d6471f74728f76231b4a5fcd9667cef3af87a3ae4dc2")
+    }
+    
+    func testSHA512Hash() {
+        let message = "My Test Message".bytes
+        let h = sodium.utils.bin2hex(sodium.sha512Hash.hash(message: message)!)!
+        XCTAssertEqual(h, "4173c1218c42b37943f39a7c5a87b782ae945b8609b8dae66a0552c56abd931ba0561a6df052008c1994a505024c31f183a5c34c0dda1e0ce82e9b9e7ea08459")
+        
+        // Same test as libsodium's
+        let message2 = "testing\n".bytes
+        let h2 = sodium.utils.bin2hex(sodium.sha512Hash.hash(message: message2)!)!
+        XCTAssertEqual(h2, "24f950aac7b9ea9b3cb728228a0c82b67c39e96b4b344798870d5daee93e3ae5931baae8c7cacfea4b629452c38026a81d138bc7aad1af3ef7bfd5ec646d6c28")
     }
 
     func testKeyExchange() {
