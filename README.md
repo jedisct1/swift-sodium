@@ -237,6 +237,22 @@ let key = sodium.randomBytes.buf(length: sodium.shortHash.KeyBytes)!
 let h = sodium.shortHash.hash(message: message, key: key)
 ```
 
+### SHA-256 hashing
+
+```swift
+let sodium = Sodium()
+let message = "My Test Message".bytes
+let h = sodium.sha256Hash.hash(message: message)
+```
+
+### SHA-512 hashing
+
+```swift
+let sodium = Sodium()
+let message = "My Test Message".bytes
+let h = sodium.sha512Hash.hash(message: message)
+```
+
 ## Random numbers generation
 
 Random number generation produces cryptographically secure pseudorandom numbers suitable as key material.

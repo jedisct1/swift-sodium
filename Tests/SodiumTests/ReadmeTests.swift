@@ -22,6 +22,8 @@ class ReadmeTests : XCTestCase {
         ("testSecretKeyAuthenticatedEncryption", testSecretKeyAuthenticatedEncryption),
         ("testSecretStream", testSecretStream),
         ("testShortOutputHashing", testShortOutputHashing),
+        ("testSHA256Hashing", testSHA256Hashing),
+        ("testSHA512Hashing", testSHA512Hashing),
         ("testStream", testStream),
         ("testStreaming", testStreaming),
         ("testZeroingMemory", testZeroingMemory),
@@ -146,6 +148,22 @@ class ReadmeTests : XCTestCase {
         let message = "My Test Message".bytes
         let key = sodium.randomBytes.buf(length: sodium.shortHash.KeyBytes)!
         let h = sodium.shortHash.hash(message: message, key: key)
+
+        XCTAssertNotNil(h)
+    }
+    
+    func testSHA256Hashing() {
+        let sodium = Sodium()
+        let message = "My Test Message".bytes
+        let h = sodium.sha256Hash.hash(message: message)
+
+        XCTAssertNotNil(h)
+    }
+    
+    func testSHA512Hashing() {
+        let sodium = Sodium()
+        let message = "My Test Message".bytes
+        let h = sodium.sha512Hash.hash(message: message)
 
         XCTAssertNotNil(h)
     }
