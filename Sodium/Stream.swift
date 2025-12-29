@@ -61,12 +61,12 @@ extension Stream {
 
 extension Stream: NonceGenerator {
     public typealias Nonce = Bytes
-    public var NonceBytes: Int { return Int(crypto_secretbox_noncebytes()) }
+    public var NonceBytes: Int { return Int(crypto_stream_noncebytes()) }
 }
 
 extension Stream: SecretKeyGenerator {
     public typealias Key = Bytes
-    public var KeyBytes: Int { return Int(crypto_secretbox_keybytes()) }
+    public var KeyBytes: Int { return Int(crypto_stream_keybytes()) }
 
     public static let keygen: (_ k: UnsafeMutablePointer<UInt8>) -> Void = crypto_stream_keygen
 }
