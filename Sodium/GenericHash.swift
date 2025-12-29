@@ -85,7 +85,7 @@ extension GenericHash {
 
 extension GenericHash {
     /**
-     Initializes a `Stream` object to compute a fixed-length fingerprint for an incoming stream of data.arbitrary long message. Particular data will always have the same fingerprint for a given key, but different keys used to hash the same data are very likely to produce distinct fingerprints.
+     Initializes a `Stream` object to compute a fixed-length fingerprint for an incoming stream of data. Particular data will always have the same fingerprint for a given key, but different keys used to hash the same data are very likely to produce distinct fingerprints.
 
      - Parameter key: Optional key to use while computing the fingerprint.
 
@@ -96,7 +96,7 @@ extension GenericHash {
     }
 
     /**
-     Initializes a `Stream` object to compute a fixed-length fingerprint for an incoming stream of data.arbitrary long message. Particular data will always have the same fingerprint for a given key, but different keys used to hash the same data are very likely to produce distinct fingerprints.
+     Initializes a `Stream` object to compute a fixed-length fingerprint for an incoming stream of data. Particular data will always have the same fingerprint for a given key, but different keys used to hash the same data are very likely to produce distinct fingerprints.
 
      - Parameter key: Optional key to use while computing the fingerprint.
      - Parameter outputLength: Desired length of the computed fingerprint.
@@ -108,9 +108,9 @@ extension GenericHash {
     }
 
     /**
-     Initializes a `Stream` object to compute a fixed-length fingerprint for an incoming stream of data.arbitrary long message.
+     Initializes a `Stream` object to compute a fixed-length fingerprint for an incoming stream of data.
 
-     - Parameter: outputLength: Desired length of the computed fingerprint.
+     - Parameter outputLength: Desired length of the computed fingerprint.
 
      - Returns: The initialized `Stream`.
      */
