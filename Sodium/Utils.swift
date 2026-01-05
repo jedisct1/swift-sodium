@@ -197,3 +197,46 @@ extension Utils {
         return ()
     }
 }
+
+extension Utils {
+    /**
+     Converts an IP address string (IPv4 or IPv6) into a 16-byte binary representation.
+     IPv4 addresses are stored as IPv4-mapped IPv6 addresses.
+
+     - Parameter ip: The IP address string (e.g., "192.168.1.1" or "2001:db8::1")
+
+     - Returns: A 16-byte array containing the binary representation of the IP address,
+                or `nil` if the string is not a valid IP address.
+     */
+    public func ip2bin(_ ip: String) -> Bytes? {
+        var bin = Bytes(count: 16)
+        let ipBytes = Array(ip.utf8)
+
+        guard .SUCCESS == sodium_ip2bin(&bin, ipBytes.map { Int8(bitPattern: $0) }, ipBytes.count).exitCode else {
+            return nil
+        }
+
+        return bin
+    }
+
+    /**
+     Converts a 16-byte binary IP address representation into a string.
+     IPv4-mapped IPv6 addresses are output in IPv4 dotted-decimal notation.
+
+     - Parameter bin: The 16-byte binary representation of an IP address
+
+     - Returns: The IP address string, or `nil` if the conversion failed.
+     */
+    public func bin2ip(_ bin: Bytes) -> String? {
+        guard bin.count == 16 else { return nil }
+
+        let maxLen = 46
+        var ip = [Int8](repeating: 0, count: maxLen)
+
+        guard sodium_bin2ip(&ip, maxLen, bin) != nil else {
+            return nil
+        }
+
+        return String(validatingUTF8: ip)
+    }
+}

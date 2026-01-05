@@ -19,6 +19,10 @@ class SodiumTests: XCTestCase {
         ("testBase64", testBase64),
         ("testBox", testBox),
         ("testGenericHash", testGenericHash),
+        ("testIpCrypt", testIpCrypt),
+        ("testIpCryptNd", testIpCryptNd),
+        ("testIpCryptNdx", testIpCryptNdx),
+        ("testIpCryptPfx", testIpCryptPfx),
         ("testKeyDerivation", testKeyDerivation),
         ("testKeyDerivationContextTooLong", testKeyDerivationContextTooLong),
         ("testKeyDerivationInputKeyTooLong", testKeyDerivationInputKeyTooLong),
@@ -36,6 +40,7 @@ class SodiumTests: XCTestCase {
         ("testSignature", testSignature),
         ("testStream", testStream),
         ("testUtils", testUtils),
+        ("testIpConversion", testIpConversion),
         ("testRFC8032Vector1", testRFC8032Vector1),
         ("testRFC8032Vector2", testRFC8032Vector2),
         ("testRFC8032Vector3", testRFC8032Vector3),
@@ -397,7 +402,195 @@ class SodiumTests: XCTestCase {
         sodium.utils.unpad(bytes: &data, blockSize: 16)!
         XCTAssertTrue(data.count == 4)
     }
-    
+
+    func testIpConversion() {
+        // IPv4 address conversion
+        let ipv4Bin = sodium.utils.ip2bin("192.168.1.1")!
+        XCTAssertEqual(ipv4Bin.count, 16)
+        // IPv4 is stored as IPv4-mapped IPv6: first 10 bytes are 0, next 2 bytes are 0xff
+        XCTAssertEqual(Array(ipv4Bin[0..<10]), [0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+        XCTAssertEqual(ipv4Bin[10], 0xff)
+        XCTAssertEqual(ipv4Bin[11], 0xff)
+        XCTAssertEqual(ipv4Bin[12], 192)
+        XCTAssertEqual(ipv4Bin[13], 168)
+        XCTAssertEqual(ipv4Bin[14], 1)
+        XCTAssertEqual(ipv4Bin[15], 1)
+
+        // Round-trip IPv4
+        let ipv4Str = sodium.utils.bin2ip(ipv4Bin)!
+        XCTAssertEqual(ipv4Str, "192.168.1.1")
+
+        // IPv6 address conversion
+        let ipv6Bin = sodium.utils.ip2bin("2001:db8::1")!
+        XCTAssertEqual(ipv6Bin.count, 16)
+        XCTAssertEqual(ipv6Bin[0], 0x20)
+        XCTAssertEqual(ipv6Bin[1], 0x01)
+        XCTAssertEqual(ipv6Bin[2], 0x0d)
+        XCTAssertEqual(ipv6Bin[3], 0xb8)
+        XCTAssertEqual(ipv6Bin[15], 0x01)
+
+        // Round-trip IPv6
+        let ipv6Str = sodium.utils.bin2ip(ipv6Bin)!
+        XCTAssertEqual(ipv6Str, "2001:db8::1")
+
+        // Loopback IPv6
+        let loopbackBin = sodium.utils.ip2bin("::1")!
+        let loopbackStr = sodium.utils.bin2ip(loopbackBin)!
+        XCTAssertEqual(loopbackStr, "::1")
+
+        // Invalid IP addresses
+        XCTAssertNil(sodium.utils.ip2bin(""))
+        XCTAssertNil(sodium.utils.ip2bin("256.1.1.1"))
+        XCTAssertNil(sodium.utils.ip2bin("not.an.ip"))
+        XCTAssertNil(sodium.utils.ip2bin("192.168.1"))
+
+        // Invalid bin length
+        XCTAssertNil(sodium.utils.bin2ip([1, 2, 3]))
+    }
+
+    func testIpCrypt() {
+        let key = sodium.ipCrypt.deterministic.key()
+        XCTAssertEqual(key.count, sodium.ipCrypt.deterministic.KeyBytes)
+
+        let ipv4 = "192.168.1.1"
+        let ipv6 = "2001:db8::1"
+
+        // Test string-to-string round-trip (ciphertext is also an IP address)
+        let encryptedIpv4 = sodium.ipCrypt.deterministic.encrypt(ip: ipv4, secretKey: key)!
+        XCTAssertNotNil(sodium.utils.ip2bin(encryptedIpv4)) // ciphertext is a valid IP address
+        let decryptedIpv4 = sodium.ipCrypt.deterministic.decrypt(encrypted: encryptedIpv4, secretKey: key)!
+        XCTAssertEqual(decryptedIpv4, ipv4)
+
+        // Test IPv6 round-trip
+        let encryptedIpv6 = sodium.ipCrypt.deterministic.encrypt(ip: ipv6, secretKey: key)!
+        let decryptedIpv6 = sodium.ipCrypt.deterministic.decrypt(encrypted: encryptedIpv6, secretKey: key)!
+        XCTAssertEqual(decryptedIpv6, ipv6)
+
+        // Test binary round-trip
+        let ipBin = sodium.utils.ip2bin(ipv4)!
+        let encryptedBin = sodium.ipCrypt.deterministic.encrypt(ip: ipBin, secretKey: key)!
+        let decryptedBin = sodium.ipCrypt.deterministic.decrypt(encrypted: encryptedBin, secretKey: key)!
+        XCTAssertEqual(decryptedBin, ipBin)
+
+        // Deterministic encryption: same input + key = same output
+        let encrypted1 = sodium.ipCrypt.deterministic.encrypt(ip: ipv4, secretKey: key)!
+        let encrypted2 = sodium.ipCrypt.deterministic.encrypt(ip: ipv4, secretKey: key)!
+        XCTAssertEqual(encrypted1, encrypted2)
+
+        // Different key produces different ciphertext
+        let key2 = sodium.ipCrypt.deterministic.key()
+        let encrypted3 = sodium.ipCrypt.deterministic.encrypt(ip: ipv4, secretKey: key2)!
+        XCTAssertNotEqual(encrypted1, encrypted3)
+
+        // Wrong key fails to decrypt correctly
+        let decryptedWrongKey = sodium.ipCrypt.deterministic.decrypt(encrypted: encryptedIpv4, secretKey: key2)
+        XCTAssertNotEqual(decryptedWrongKey, ipv4)
+
+        // Invalid inputs
+        XCTAssertNil(sodium.ipCrypt.deterministic.encrypt(ip: "not.an.ip", secretKey: key) as String?)
+        XCTAssertNil(sodium.ipCrypt.deterministic.encrypt(ip: [1, 2, 3], secretKey: key)) // Wrong size
+        XCTAssertNil(sodium.ipCrypt.deterministic.encrypt(ip: ipBin, secretKey: [1, 2, 3])) // Wrong key size
+    }
+
+    func testIpCryptNd() {
+        let key = sodium.ipCrypt.nd.key()
+        let tweak = sodium.randomBytes.buf(length: sodium.ipCrypt.nd.TweakBytes)!
+        let ip = "10.0.0.1"
+
+        // Test string round-trip
+        let encrypted = sodium.ipCrypt.nd.encrypt(ip: ip, tweak: tweak, secretKey: key)!
+        XCTAssertEqual(encrypted.count, sodium.ipCrypt.nd.OutputBytes * 2) // hex = 2x bytes
+        let decrypted = sodium.ipCrypt.nd.decrypt(encrypted: encrypted, secretKey: key)!
+        XCTAssertEqual(decrypted, ip)
+
+        // Different tweaks produce different ciphertexts (non-deterministic)
+        let tweak2 = sodium.randomBytes.buf(length: sodium.ipCrypt.nd.TweakBytes)!
+        let encrypted2 = sodium.ipCrypt.nd.encrypt(ip: ip, tweak: tweak2, secretKey: key)!
+        XCTAssertNotEqual(encrypted, encrypted2)
+
+        // Both decrypt to the same IP
+        let decrypted2 = sodium.ipCrypt.nd.decrypt(encrypted: encrypted2, secretKey: key)!
+        XCTAssertEqual(decrypted2, ip)
+
+        // Binary round-trip
+        let ipBin = sodium.utils.ip2bin(ip)!
+        let encryptedBin = sodium.ipCrypt.nd.encrypt(ip: ipBin, tweak: tweak, secretKey: key)!
+        let decryptedBin = sodium.ipCrypt.nd.decrypt(encrypted: encryptedBin, secretKey: key)!
+        XCTAssertEqual(decryptedBin, ipBin)
+
+        // Invalid inputs
+        XCTAssertNil(sodium.ipCrypt.nd.encrypt(ip: [1, 2, 3], tweak: tweak, secretKey: key))
+        XCTAssertNil(sodium.ipCrypt.nd.encrypt(ip: ipBin, tweak: [1], secretKey: key))
+        XCTAssertNil(sodium.ipCrypt.nd.decrypt(encrypted: [1, 2, 3], secretKey: key))
+    }
+
+    func testIpCryptNdx() {
+        let key = sodium.ipCrypt.ndx.key()
+        XCTAssertEqual(key.count, sodium.ipCrypt.ndx.KeyBytes)
+
+        let tweak = sodium.randomBytes.buf(length: sodium.ipCrypt.ndx.TweakBytes)!
+        let ip = "172.16.0.1"
+
+        // Test string round-trip
+        let encrypted = sodium.ipCrypt.ndx.encrypt(ip: ip, tweak: tweak, secretKey: key)!
+        XCTAssertEqual(encrypted.count, sodium.ipCrypt.ndx.OutputBytes * 2) // hex = 2x bytes
+        let decrypted = sodium.ipCrypt.ndx.decrypt(encrypted: encrypted, secretKey: key)!
+        XCTAssertEqual(decrypted, ip)
+
+        // Different tweaks produce different ciphertexts
+        let tweak2 = sodium.randomBytes.buf(length: sodium.ipCrypt.ndx.TweakBytes)!
+        let encrypted2 = sodium.ipCrypt.ndx.encrypt(ip: ip, tweak: tweak2, secretKey: key)!
+        XCTAssertNotEqual(encrypted, encrypted2)
+
+        // Both decrypt to the same IP
+        let decrypted2 = sodium.ipCrypt.ndx.decrypt(encrypted: encrypted2, secretKey: key)!
+        XCTAssertEqual(decrypted2, ip)
+
+        // Test IPv6
+        let ipv6 = "fe80::1"
+        let encryptedIpv6 = sodium.ipCrypt.ndx.encrypt(ip: ipv6, tweak: tweak, secretKey: key)!
+        let decryptedIpv6 = sodium.ipCrypt.ndx.decrypt(encrypted: encryptedIpv6, secretKey: key)!
+        XCTAssertEqual(decryptedIpv6, ipv6)
+
+        // Invalid inputs
+        XCTAssertNil(sodium.ipCrypt.ndx.encrypt(ip: [1, 2, 3], tweak: tweak, secretKey: key))
+        XCTAssertNil(sodium.ipCrypt.ndx.encrypt(ip: sodium.utils.ip2bin(ip)!, tweak: [1], secretKey: key))
+        XCTAssertNil(sodium.ipCrypt.ndx.decrypt(encrypted: [1, 2, 3], secretKey: key))
+    }
+
+    func testIpCryptPfx() {
+        let key = sodium.ipCrypt.pfx.key()
+        XCTAssertEqual(key.count, sodium.ipCrypt.pfx.KeyBytes)
+
+        let ip = "8.8.8.8"
+
+        // Test string round-trip (ciphertext is also an IP address)
+        let encrypted = sodium.ipCrypt.pfx.encrypt(ip: ip, secretKey: key)!
+        XCTAssertNotNil(sodium.utils.ip2bin(encrypted)) // ciphertext is a valid IP address
+        let decrypted = sodium.ipCrypt.pfx.decrypt(encrypted: encrypted, secretKey: key)!
+        XCTAssertEqual(decrypted, ip)
+
+        // Deterministic: same input = same output
+        let encrypted2 = sodium.ipCrypt.pfx.encrypt(ip: ip, secretKey: key)!
+        XCTAssertEqual(encrypted, encrypted2)
+
+        // Different key produces different ciphertext
+        let key2 = sodium.ipCrypt.pfx.key()
+        let encrypted3 = sodium.ipCrypt.pfx.encrypt(ip: ip, secretKey: key2)!
+        XCTAssertNotEqual(encrypted, encrypted3)
+
+        // Test IPv6
+        let ipv6 = "::ffff:8.8.8.8"
+        let encryptedIpv6 = sodium.ipCrypt.pfx.encrypt(ip: ipv6, secretKey: key)!
+        let decryptedIpv6 = sodium.ipCrypt.pfx.decrypt(encrypted: encryptedIpv6, secretKey: key)!
+        XCTAssertEqual(decryptedIpv6, "8.8.8.8") // IPv4-mapped form is normalized
+
+        // Invalid inputs
+        XCTAssertNil(sodium.ipCrypt.pfx.encrypt(ip: [1, 2, 3], secretKey: key))
+        XCTAssertNil(sodium.ipCrypt.pfx.encrypt(ip: sodium.utils.ip2bin(ip)!, secretKey: [1, 2, 3]))
+        XCTAssertNil(sodium.ipCrypt.pfx.decrypt(encrypted: [1, 2, 3], secretKey: key))
+    }
+
     func testAead() {
         let message = " I am message".bytes
         let additionalData = "I am additionalData".bytes

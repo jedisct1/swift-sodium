@@ -13,6 +13,7 @@ class ReadmeTests : XCTestCase {
         ("testDetachedSignatures", testDetachedSignatures),
         ("testDeterministicHashing", testDeterministicHashing),
         ("testHexDecimalDecoding", testHexDecimalDecoding),
+        ("testIpCrypt", testIpCrypt),
         ("testKeyDerivation", testKeyDerivation),
         ("testKeyedHashing", testKeyedHashing),
         ("testKeyExchange", testKeyExchange),
@@ -308,5 +309,27 @@ class ReadmeTests : XCTestCase {
 
         // restore original size
         sodium.utils.unpad(bytes: &data, blockSize: 16)!
+    }
+
+    func testIpCrypt() {
+        let sodium = Sodium()
+
+        // Deterministic encryption (same IP + key = same ciphertext)
+        let key = sodium.ipCrypt.deterministic.key()
+        let encrypted = sodium.ipCrypt.deterministic.encrypt(ip: "192.168.1.1", secretKey: key)!
+        let decrypted = sodium.ipCrypt.deterministic.decrypt(encrypted: encrypted, secretKey: key)!
+        XCTAssertEqual(decrypted, "192.168.1.1")
+
+        // Non-deterministic encryption (different ciphertext each time)
+        let ndKey = sodium.ipCrypt.nd.key()
+        let tweak = sodium.randomBytes.buf(length: sodium.ipCrypt.nd.TweakBytes)!
+        let ndEncrypted = sodium.ipCrypt.nd.encrypt(ip: "10.0.0.1", tweak: tweak, secretKey: ndKey)!
+        let ndDecrypted = sodium.ipCrypt.nd.decrypt(encrypted: ndEncrypted, secretKey: ndKey)!
+        XCTAssertEqual(ndDecrypted, "10.0.0.1")
+
+        // IPv6 is also supported
+        let ipv6Encrypted = sodium.ipCrypt.deterministic.encrypt(ip: "2001:db8::1", secretKey: key)!
+        let ipv6Decrypted = sodium.ipCrypt.deterministic.decrypt(encrypted: ipv6Encrypted, secretKey: key)!
+        XCTAssertEqual(ipv6Decrypted, "2001:db8::1")
     }
 }

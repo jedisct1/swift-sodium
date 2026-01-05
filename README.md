@@ -379,6 +379,40 @@ let data2 = sodium.utils.base642bin(b64, ignore: " \n")
 let data3 = sodium.utils.base642bin(b64_2, variant: .URLSAFE_NO_PADDING, ignore: " \n")
 ```
 
+## IP address encryption
+
+The IpCrypt API encrypts and decrypts IP addresses (both IPv4 and IPv6). This is useful for anonymizing IP addresses in logs while preserving the ability to correlate entries or restore the original addresses when needed.
+
+Four modes are available:
+
+- `deterministic`: Same IP always produces the same ciphertext (16-byte key)
+- `nd`: Non-deterministic using a tweak, different ciphertext each time (16-byte key, 8-byte tweak)
+- `ndx`: Extended non-deterministic with larger key and tweak (32-byte key, 16-byte tweak)
+- `pfx`: Deterministic with a larger key (32-byte key)
+
+```swift
+let sodium = Sodium()
+
+// Deterministic encryption (same IP + key = same ciphertext)
+let key = sodium.ipCrypt.deterministic.key()
+let encrypted = sodium.ipCrypt.deterministic.encrypt(ip: "192.168.1.1", secretKey: key)!
+// encrypted is a valid IP address (format-preserving encryption)
+let decrypted = sodium.ipCrypt.deterministic.decrypt(encrypted: encrypted, secretKey: key)!
+// decrypted = "192.168.1.1"
+
+// Non-deterministic encryption (ciphertext is hex-encoded, larger than input)
+let ndKey = sodium.ipCrypt.nd.key()
+let tweak = sodium.randomBytes.buf(length: sodium.ipCrypt.nd.TweakBytes)!
+let ndEncrypted = sodium.ipCrypt.nd.encrypt(ip: "10.0.0.1", tweak: tweak, secretKey: ndKey)!
+// ndEncrypted = "a1b2c3d4..." (hex string, different each time due to tweak)
+let ndDecrypted = sodium.ipCrypt.nd.decrypt(encrypted: ndEncrypted, secretKey: ndKey)!
+
+// IPv6 is also supported
+let ipv6Encrypted = sodium.ipCrypt.deterministic.encrypt(ip: "2001:db8::1", secretKey: key)!
+```
+
+Binary APIs are also available for working with raw bytes instead of strings.
+
 ## Helpers to build custom constructions
 
 Only use the functions below if you know that you absolutely need them, and know how to use them correctly.
@@ -411,3 +445,4 @@ XCTAssertEqual(input, twice)
 * Hash function: BLAKE2B
 * Key exchange: X25519
 * Signatures: Ed25519
+* IP encryption: IPCrypt (AES-based, KIASU-BC)
