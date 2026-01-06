@@ -1,44 +1,51 @@
-// swift-tools-version:5.3
+// swift-tools-version: 5.8
 import PackageDescription
-
-let clibsodiumTarget: Target
-#if os(OSX) || os(macOS) || os(tvOS) || os(watchOS) || os(iOS)
-    clibsodiumTarget = .binaryTarget(
-        name: "Clibsodium",
-        path: "Clibsodium.xcframework")
-#else
-    clibsodiumTarget = .systemLibrary(
-        name: "Clibsodium",
-        path: "Clibsodium",
-        pkgConfig: "libsodium",
-        providers: [
-            .apt(["libsodium-dev"]),
-            .brew(["libsodium"]),
-            // Waiting for bug to be fixed: https://bugs.swift.org/browse/SR-14038
-            // .yum(["libsodium-devel"])
-        ])
-#endif
 
 let package = Package(
     name: "Sodium",
     products: [
         .library(
             name: "Clibsodium",
-            targets: ["Clibsodium"]),
+            targets: ["_Clibsodium"]),
         .library(
             name: "Sodium",
             targets: ["Sodium"]),
     ],
     targets: [
-        clibsodiumTarget,
+        .target(
+            name: "_Clibsodium",
+            dependencies: [
+                .target(name: "ClibsodiumBinary", condition: .when(platforms: [
+                    .macOS,
+                    .macCatalyst,
+                    .iOS,
+                    .watchOS,
+                    .tvOS,
+                    .visionOS,
+                ])),
+                .target(name: "ClibsodiumSystem", condition: .when(platforms: [
+                    .linux,
+                    .android,
+                    .windows,
+                    .openbsd,
+                ])),
+            ]),
+        .binaryTarget(
+            name: "ClibsodiumBinary",
+            path: "Clibsodium.xcframework"),
+        .systemLibrary(
+            name: "ClibsodiumSystem",
+            pkgConfig: "libsodium",
+            providers: [
+                .apt(["libsodium-dev"]),
+                .brew(["libsodium"]),
+                .yum(["libsodium-devel"]),
+            ]),
         .target(
             name: "Sodium",
-            dependencies: ["Clibsodium"],
-            path: "Sodium",
-            exclude: ["libsodium", "Info.plist"]),
+            dependencies: ["_Clibsodium"]),
         .testTarget(
             name: "SodiumTests",
-            dependencies: ["Sodium"],
-            exclude: ["Info.plist"]),
+            dependencies: ["Sodium"]),
     ]
 )
