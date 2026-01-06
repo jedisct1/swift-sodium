@@ -140,6 +140,10 @@
 		DD35BB6320932A83006BF351 /* Bytes.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD35BB6220932A83006BF351 /* Bytes.swift */; };
 		DD35BB6420932A83006BF351 /* Bytes.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD35BB6220932A83006BF351 /* Bytes.swift */; };
 		F87EEC402063C655006C830D /* Aead.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87EEC3F2063C655006C830D /* Aead.swift */; };
+		CCCCCC0226010600001PCRY1 /* IpCrypt.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCCCCC0126010600001PCRYP /* IpCrypt.swift */; };
+		CCCCCC0326010600001PCRY2 /* IpCrypt.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCCCCC0126010600001PCRYP /* IpCrypt.swift */; };
+		CCCCCC0426010600001PCRY3 /* IpCrypt.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCCCCC0126010600001PCRYP /* IpCrypt.swift */; };
+		CCCCCC0526010600001PCRY4 /* IpCrypt.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCCCCC0126010600001PCRYP /* IpCrypt.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -393,6 +397,7 @@
 		DD35BB5920925566006BF351 /* SecretKeyGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretKeyGenerator.swift; sourceTree = "<group>"; };
 		DD35BB6220932A83006BF351 /* Bytes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bytes.swift; sourceTree = "<group>"; };
 		F87EEC3F2063C655006C830D /* Aead.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Aead.swift; sourceTree = "<group>"; };
+		CCCCCC0126010600001PCRYP /* IpCrypt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IpCrypt.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -528,6 +533,7 @@
 				D2A274051F13AD9300958702 /* KeyDerivation.swift */,
 				09A5AC111F74466700D3200B /* SecretStream.swift */,
 				F87EEC3F2063C655006C830D /* Aead.swift */,
+				CCCCCC0126010600001PCRYP /* IpCrypt.swift */,
 			);
 			path = Sodium;
 			sourceTree = "<group>";
@@ -1171,6 +1177,7 @@
 				DD35BB5620924D3A006BF351 /* KeyPairProtocol.swift in Sources */,
 				F87EEC402063C655006C830D /* Aead.swift in Sources */,
 				094F21EA1A5017CA001C3141 /* Box.swift in Sources */,
+				CCCCCC0226010600001PCRY1 /* IpCrypt.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1219,6 +1226,7 @@
 				53008FB1253609D1006FE4EF /* KeyDerivation.swift in Sources */,
 				53008FB2253609D1006FE4EF /* SecretStream.swift in Sources */,
 				53008FB3253609D1006FE4EF /* Aead.swift in Sources */,
+				CCCCCC0326010600001PCRY2 /* IpCrypt.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1267,6 +1275,7 @@
 				DD35BB5B20925566006BF351 /* SecretKeyGenerator.swift in Sources */,
 				90C75EEC1AE3583E00F1E749 /* Sodium.swift in Sources */,
 				90C75EED1AE3583E00F1E749 /* Utils.swift in Sources */,
+				CCCCCC0426010600001PCRY3 /* IpCrypt.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1306,6 +1315,7 @@
 				D891FEB02164323A0092AA84 /* KeyDerivation.swift in Sources */,
 				D891FEB12164323A0092AA84 /* SecretStream.swift in Sources */,
 				D891FEB22164323A0092AA84 /* Aead.swift in Sources */,
+				CCCCCC0526010600001PCRY4 /* IpCrypt.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
