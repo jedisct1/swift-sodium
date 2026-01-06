@@ -3,6 +3,7 @@ import Sodium
 
 class ReadmeTests : XCTestCase {
     static let allTests = [
+        ("testAead", testAead),
         ("testAnonymousEncryptionSealedBoxes", testAnonymousEncryptionSealedBoxes),
         ("testAttachedSignatures", testAttachedSignatures),
         ("testAuth", testAuth),
@@ -27,6 +28,25 @@ class ReadmeTests : XCTestCase {
         ("testStreaming", testStreaming),
         ("testZeroingMemory", testZeroingMemory),
     ]
+
+    func testAead() {
+        let sodium = Sodium()
+        let message = "My secret message".bytes
+        let additionalData = "v1".bytes
+
+        let key = sodium.aead.xchacha20poly1305ietf.key()
+        let encrypted: Bytes = sodium.aead.xchacha20poly1305ietf.encrypt(
+            message: message,
+            secretKey: key,
+            additionalData: additionalData)!
+
+        let decrypted = sodium.aead.xchacha20poly1305ietf.decrypt(
+            nonceAndAuthenticatedCipherText: encrypted,
+            secretKey: key,
+            additionalData: additionalData)
+
+        XCTAssertEqual(decrypted, message)
+    }
 
     func testAuthenticatedEncryption() {
         let sodium = Sodium()

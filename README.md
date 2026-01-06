@@ -1,12 +1,8 @@
 # Swift-Sodium
 
-Swift-Sodium provides a safe and easy to use interface to perform common cryptographic operations on macOS, iOS, tvOS and watchOS.
+Swift-Sodium provides a safe and easy to use interface to perform common cryptographic operations on Apple platforms (macOS, iOS, tvOS, watchOS) and Linux.
 
 It leverages the [Sodium](https://download.libsodium.org/doc/) library, and although Swift is the primary target, the framework can also be used in Objective-C applications.
-
-## Please help!
-
-The current Swift-Sodium documentation is not great. Your help to improve it and make it awesome would be very appreciated!
 
 ## Usage
 
@@ -85,6 +81,33 @@ This API encrypts a message. The decryption process will check that the messages
 Messages encrypted this way are independent: if multiple messages are sent this way, the recipient cannot detect if some messages have been duplicated, deleted or reordered without the sender including additional data with each message.
 
 Optionally, `SecretBox` provides the ability to utilize a user-defined nonce via `seal(message: secretKey: nonce:)`.
+
+### AEAD (Authenticated Encryption with Additional Data)
+
+AEAD ciphers encrypt and authenticate a message, and also authenticate optional non-confidential data. The ciphertext cannot be decrypted without knowing the key, and tampering with either the ciphertext or the additional data will be detected.
+
+Four AEAD constructions are available:
+- `xchacha20poly1305ietf`: XChaCha20-Poly1305, recommended for most applications
+- `aegis128l`: AEGIS-128L, very fast on modern CPUs with AES acceleration
+- `aegis256`: AEGIS-256, similar to AEGIS-128L with a 256-bit key
+- `aes256gcm`: AES256-GCM, for hardware-accelerated AES on Intel/ARM
+
+```swift
+let sodium = Sodium()
+let message = "My secret message".bytes
+let additionalData = "v1".bytes
+
+let key = sodium.aead.xchacha20poly1305ietf.key()
+let encrypted: Bytes = sodium.aead.xchacha20poly1305ietf.encrypt(
+    message: message,
+    secretKey: key,
+    additionalData: additionalData)!
+
+let decrypted = sodium.aead.xchacha20poly1305ietf.decrypt(
+    nonceAndAuthenticatedCipherText: encrypted,
+    secretKey: key,
+    additionalData: additionalData)
+```
 
 ## Public-key Cryptography
 
@@ -303,7 +326,7 @@ The `sodium.keyDerivation.derive()` function generates a subkey using an input (
 
 ```swift
 let sodium = Sodium()
-let secretKey = sodium.keyDerivation.keygen()!
+let secretKey = sodium.keyDerivation.key()
 
 let subKey1 = sodium.keyDerivation.derive(secretKey: secretKey,
                                           index: 0, length: 32,
