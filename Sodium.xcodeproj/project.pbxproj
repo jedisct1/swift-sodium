@@ -535,7 +535,7 @@
 				F87EEC3F2063C655006C830D /* Aead.swift */,
 				CCCCCC0126010600001PCRYP /* IpCrypt.swift */,
 			);
-			path = Sodium;
+			path = Sources/Sodium;
 			sourceTree = "<group>";
 		};
 		09A943CA1A4EB5F500C8A04F /* Supporting Files */ = {
@@ -649,7 +649,7 @@
 				53008F9625360973006FE4EF /* Sodium.h */,
 				53008F9725360973006FE4EF /* Info.plist */,
 			);
-			path = Sodium;
+			path = Sources/Sodium;
 			sourceTree = "<group>";
 		};
 		901644AF1AE36D6000163E3E /* Examples */ = {
@@ -1542,7 +1542,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = YES;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Sodium";
-				INFOPLIST_FILE = Sodium/Info.plist;
+				INFOPLIST_FILE = Sources/Sodium/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1580,7 +1580,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = YES;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Sodium";
-				INFOPLIST_FILE = Sodium/Info.plist;
+				INFOPLIST_FILE = Sources/Sodium/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1722,7 +1722,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = Sodium/Info.plist;
+				INFOPLIST_FILE = Sources/Sodium/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1763,7 +1763,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = Sodium/Info.plist;
+				INFOPLIST_FILE = Sources/Sodium/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1896,7 +1896,7 @@
 					"$(inherited)",
 				);
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Sodium";
-				INFOPLIST_FILE = "$(SRCROOT)/Sodium/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Sources/Sodium/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1936,7 +1936,7 @@
 				FRAMEWORK_VERSION = A;
 				GCC_NO_COMMON_BLOCKS = YES;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Sodium";
-				INFOPLIST_FILE = "$(SRCROOT)/Sodium/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Sources/Sodium/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2096,7 +2096,7 @@
 				ENABLE_MODULE_VERIFIER = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Sodium";
-				INFOPLIST_FILE = Sodium/Info.plist;
+				INFOPLIST_FILE = Sources/Sodium/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2144,7 +2144,7 @@
 				ENABLE_MODULE_VERIFIER = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Sodium";
-				INFOPLIST_FILE = Sodium/Info.plist;
+				INFOPLIST_FILE = Sources/Sodium/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
