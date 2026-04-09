@@ -391,7 +391,8 @@ public extension Box {
     /**
      Computes a shared secret key given a public key and a secret key.
 
-     Applications that send several messages to the same receiver or receive several messages from the same sender can gain speed by calculating the shared key only once, and reusing it in subsequent operations.
+     Applications that send several messages to the same receiver or receive several messages from the same
+     sender can gain speed by calculating the shared key only once, and reusing it in subsequent operations.
 
      - Parameter recipientPublicKey: The recipient's public key.
      - Parameter senderSecretKey: The sender's secret key.

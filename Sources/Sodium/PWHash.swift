@@ -102,7 +102,8 @@ public extension PWHash {
     /**
      Derives a key from a password and a salt using the Argon2 password hashing function.
 
-     Keep in mind that in order to produce the same key from the same password, the same salt, and the same values for opslimit and memlimit have to be used. Therefore, these parameters have to be stored for each user.
+     Keep in mind that in order to produce the same key from the same password, the same salt, and the same
+     values for opslimit and memlimit have to be used. Therefore, these parameters have to be stored for each user.
 
      - Parameter outputLength: Desired length of the derived key.  Should be at least 16 (128 bits)
      - Parameter passwd: The password data to hash.

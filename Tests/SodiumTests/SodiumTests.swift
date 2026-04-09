@@ -49,14 +49,6 @@ class SodiumTests: XCTestCase {
 
     let sodium = Sodium()
 
-    override func setUp() {
-        super.setUp()
-    }
-
-    override func tearDown() {
-        super.tearDown()
-    }
-
     func testBox() throws {
         let message = "My Test Message".bytes
         let aliceKeyPair = try XCTUnwrap(sodium.box.keyPair())
@@ -172,19 +164,15 @@ class SodiumTests: XCTestCase {
 
         var c1 = 0
         let ref1 = sodium.randomBytes.random()
-        for _ in 0 ..< 100 {
-            if sodium.randomBytes.random() == ref1 {
-                c1 += 1
-            }
+        for _ in 0 ..< 100 where sodium.randomBytes.random() == ref1 {
+            c1 += 1
         }
         XCTAssert(c1 < 10)
 
         var c2 = 0
         let ref2 = sodium.randomBytes.uniform(upperBound: 100_000)
-        for _ in 0 ..< 100 {
-            if sodium.randomBytes.uniform(upperBound: 100_000) == ref2 {
-                c2 += 1
-            }
+        for _ in 0 ..< 100 where sodium.randomBytes.uniform(upperBound: 100_000) == ref2 {
+            c2 += 1
         }
         XCTAssert(c2 < 10)
 
@@ -195,10 +183,8 @@ class SodiumTests: XCTestCase {
         var c3 = 0
         var rng = RandomBytes.Generator()
         let ref3 = UInt32.random(in: 0 ... UInt32.max, using: &rng)
-        for _ in 0 ..< 100 {
-            if UInt32.random(in: 0 ... UInt32.max, using: &rng) == ref3 {
-                c3 += 1
-            }
+        for _ in 0 ..< 100 where UInt32.random(in: 0 ... UInt32.max, using: &rng) == ref3 {
+            c3 += 1
         }
         XCTAssert(c3 < 10)
     }
@@ -299,6 +285,7 @@ class SodiumTests: XCTestCase {
 
     func testAuth() throws {
         let key = try XCTUnwrap(sodium.utils.hex2bin("eea6a7251c1e72916d11c2cb214d3c252539121d8e234e652d651fa4c8cff880"))
+        // swiftlint:disable:next line_length
         let message = try XCTUnwrap(sodium.utils.hex2bin("8e993b9f48681273c29650ba32fc76ce48332ea7164d96a4476fb8c531a1186ac0dfc17c98dce87b4da7f011ec48c97271d2c20f9b928fe2270d6fb863d51738b48eeee314a7cc8ab932164548e526ae90224368517acfeabd6bb3732bc0e9da99832b61ca01b6de56244a9e88d5f9b37973f622a43d14a6599b1f654cb45a74e355a5"))
         let tag = try XCTUnwrap(sodium.auth.tag(message: message, secretKey: key))
         XCTAssertEqual(sodium.utils.bin2hex(tag), "b2a31b8d4e01afcab2ee545b5caf4e3d212a99d7b3a116a97cec8e83c32e107d")
@@ -690,6 +677,7 @@ class SodiumTests: XCTestCase {
 
     func testRFC8032Vector1024() throws {
         // test vectors from https://datatracker.ietf.org/doc/html/rfc8032#section-7.1
+        // swiftlint:disable:next line_length
         let message = try XCTUnwrap(sodium.utils.hex2bin("08b8b2b733424243760fe426a4b54908632110a66c2f6591eabd3345e3e4eb98fa6e264bf09efe12ee50f8f54e9f77b1e355f6c50544e23fb1433ddf73be84d879de7c0046dc4996d9e773f4bc9efe5738829adb26c81b37c93a1b270b20329d658675fc6ea534e0810a4432826bf58c941efb65d57a338bbd2e26640f89ffbc1a858efcb8550ee3a5e1998bd177e93a7363c344fe6b199ee5d02e82d522c4feba15452f80288a821a579116ec6dad2b3b310da903401aa62100ab5d1a36553e06203b33890cc9b832f79ef80560ccb9a39ce767967ed628c6ad573cb116dbefefd75499da96bd68a8a97b928a8bbc103b6621fcde2beca1231d206be6cd9ec7aff6f6c94fcd7204ed3455c68c83f4a41da4af2b74ef5c53f1d8ac70bdcb7ed185ce81bd84359d44254d95629e9855a94a7c1958d1f8ada5d0532ed8a5aa3fb2d17ba70eb6248e594e1a2297acbbb39d502f1a8c6eb6f1ce22b3de1a1f40cc24554119a831a9aad6079cad88425de6bde1a9187ebb6092cf67bf2b13fd65f27088d78b7e883c8759d2c4f5c65adb7553878ad575f9fad878e80a0c9ba63bcbcc2732e69485bbc9c90bfbd62481d9089beccf80cfe2df16a2cf65bd92dd597b0707e0917af48bbb75fed413d238f5555a7a569d80c3414a8d0859dc65a46128bab27af87a71314f318c782b23ebfe808b82b0ce26401d2e22f04d83d1255dc51addd3b75a2b1ae0784504df543af8969be3ea7082ff7fc9888c144da2af58429ec96031dbcad3dad9af0dcbaaaf268cb8fcffead94f3c7ca495e056a9b47acdb751fb73e666c6c655ade8297297d07ad1ba5e43f1bca32301651339e22904cc8c42f58c30c04aafdb038dda0847dd988dcda6f3bfd15c4b4c4525004aa06eeff8ca61783aacec57fb3d1f92b0fe2fd1a85f6724517b65e614ad6808d6f6ee34dff7310fdc82aebfd904b01e1dc54b2927094b2db68d6f903b68401adebf5a7e08d78ff4ef5d63653a65040cf9bfd4aca7984a74d37145986780fc0b16ac451649de6188a7dbdf191f64b5fc5e2ab47b57f7f7276cd419c17a3ca8e1b939ae49e488acba6b965610b5480109c8b17b80e1b7b750dfc7598d5d5011fd2dcc5600a32ef5b52a1ecc820e308aa342721aac0943bf6686b64b2579376504ccc493d97e6aed3fb0f9cd71a43dd497f01f17c0e2cb3797aa2a2f256656168e6c496afc5fb93246f6b1116398a346f1a641f3b041e989f7914f90cc2c7fff357876e506b50d334ba77c225bc307ba537152f3f1610e4eafe595f6d9d90d11faa933a15ef1369546868a7f3a45a96768d40fd9d03412c091c6315cf4fde7cb68606937380db2eaaa707b4c4185c32eddcdd306705e4dc1ffc872eeee475a64dfac86aba41c0618983f8741c5ef68d3a101e8a3b8cac60c905c15fc910840b94c00a0b9d0"))
         let seed = "f5e5767cf153319517630f226876b86c8160cc583bc013744c6bf255f5cc0ee5"
         let expectedPublicKey = "278117fc144c72340f67d0f2316e8386ceffbf2b2428c9c51fef7c597f1d426e"

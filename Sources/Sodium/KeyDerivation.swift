@@ -21,7 +21,9 @@ public extension KeyDerivation {
 
      - Returns: the derived key or nil on error.
 
-     - Note: Output keys must have a length between BytesMin and BytesMax bytes (inclusive), otherwise an error is returned. Context must be at most 8 characters long. If the specified context is shorter than 8 characters, it will be padded to 8 characters. The master key is KeyBytes long.
+     - Note: Output keys must have a length between BytesMin and BytesMax bytes (inclusive), otherwise
+       an error is returned. Context must be at most 8 characters long. If the specified context is
+       shorter than 8 characters, it will be padded to 8 characters. The master key is KeyBytes long.
      */
     func derive(secretKey: Bytes, index: UInt64, length: Int, context: String) -> Bytes? {
         var contextBin = Bytes(context.utf8).map(Int8.init)

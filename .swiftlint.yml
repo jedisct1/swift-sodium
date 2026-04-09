@@ -1,0 +1,21 @@
+excluded:
+  - Examples
+  - Clibsodium.xcframework
+  - .build
+
+disabled_rules:
+  - identifier_name
+  - large_tuple
+  - nesting
+  - type_body_length
+
+file_length:
+  warning: 800
+  error: 1200
+
+line_length:
+  warning: 300
+  error: 3000
+
+type_name:
+  min_length: 1

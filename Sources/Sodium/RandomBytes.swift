@@ -28,7 +28,9 @@ public extension RandomBytes {
     }
 
     /**
-     Returns an unpredictable value between 0 and `upper_bound` (excluded). Unlike randombytes_random() % upper_bound, it does its best to guarantee a uniform distribution of the possible output values even when upper_bound is not a power of 2.
+     Returns an unpredictable value between 0 and `upper_bound` (excluded). Unlike
+     `randombytes_random() % upper_bound`, it does its best to guarantee a uniform distribution of
+     the possible output values even when upper_bound is not a power of 2.
 
      - Parameter upperBound: The upper bound (excluded) of the returned value.
 

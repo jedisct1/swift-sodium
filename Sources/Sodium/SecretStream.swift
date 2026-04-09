@@ -6,7 +6,7 @@ public struct SecretStream {
 }
 
 public extension SecretStream {
-    enum XChaCha20Poly1305 {
+    struct XChaCha20Poly1305 {
         public static let ABytes = Int(crypto_secretstream_xchacha20poly1305_abytes())
         public static let HeaderBytes = Int(crypto_secretstream_xchacha20poly1305_headerbytes())
         public static let KeyBytes = Int(crypto_secretstream_xchacha20poly1305_keybytes())
