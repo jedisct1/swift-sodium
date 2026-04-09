@@ -18,4 +18,5 @@ build/
 xcuserdata
 .build
 Package.resolved
+.swival
 .DS_Store
