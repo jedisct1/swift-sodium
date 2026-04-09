@@ -23,6 +23,7 @@ class SodiumTests: XCTestCase {
         ("testIpCryptNd", testIpCryptNd),
         ("testIpCryptNdx", testIpCryptNdx),
         ("testIpCryptPfx", testIpCryptPfx),
+        ("testKEM", testKEM),
         ("testKeyDerivation", testKeyDerivation),
         ("testKeyDerivationContextTooLong", testKeyDerivationContextTooLong),
         ("testKeyDerivationInputKeyTooLong", testKeyDerivationInputKeyTooLong),
@@ -271,6 +272,29 @@ class SodiumTests: XCTestCase {
 
         XCTAssertEqual(sessionKeyPairForAlice.rx, sessionKeyPairForBob.tx)
         XCTAssertEqual(sessionKeyPairForAlice.tx, sessionKeyPairForBob.rx)
+    }
+
+    func testKEM() throws {
+        let keyPair = try XCTUnwrap(sodium.kem.keyPair())
+        let (ct, ss1) = try XCTUnwrap(sodium.kem.encapsulate(recipientPublicKey: keyPair.publicKey))
+        let ss2 = try XCTUnwrap(sodium.kem.decapsulate(cipherText: ct, secretKey: keyPair.secretKey))
+        XCTAssertEqual(ss1, ss2)
+
+        var badCt = ct
+        badCt[0] ^= 0xFF
+        let badSs = sodium.kem.decapsulate(cipherText: badCt, secretKey: keyPair.secretKey)
+        XCTAssertNotNil(badSs)
+        XCTAssertNotEqual(badSs, ss2)
+
+        XCTAssertNil(sodium.kem.encapsulate(recipientPublicKey: Bytes(repeating: 0, count: sodium.kem.PublicKeyBytes - 1)))
+        XCTAssertNil(sodium.kem.decapsulate(cipherText: Bytes(repeating: 0, count: sodium.kem.CipherTextBytes - 1), secretKey: keyPair.secretKey))
+        XCTAssertNil(sodium.kem.decapsulate(cipherText: ct, secretKey: Bytes(repeating: 0, count: sodium.kem.SecretKeyBytes - 1)))
+
+        let seed = try XCTUnwrap(sodium.randomBytes.buf(length: sodium.kem.SeedBytes))
+        let kp1 = try XCTUnwrap(sodium.kem.keyPair(seed: seed))
+        let kp2 = try XCTUnwrap(sodium.kem.keyPair(seed: seed))
+        XCTAssertEqual(kp1.publicKey, kp2.publicKey)
+        XCTAssertEqual(kp1.secretKey, kp2.secretKey)
     }
 
     func testStream() throws {

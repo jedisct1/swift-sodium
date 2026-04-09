@@ -15,6 +15,7 @@ class ReadmeTests: XCTestCase {
         ("testDeterministicHashing", testDeterministicHashing),
         ("testHexDecimalDecoding", testHexDecimalDecoding),
         ("testIpCrypt", testIpCrypt),
+        ("testKEM", testKEM),
         ("testKeyDerivation", testKeyDerivation),
         ("testKeyedHashing", testKeyedHashing),
         ("testKeyExchange", testKeyExchange),
@@ -355,5 +356,21 @@ class ReadmeTests: XCTestCase {
         let ipv6Encrypted = try XCTUnwrap(sodium.ipCrypt.deterministic.encrypt(ip: "2001:db8::1", secretKey: key))
         let ipv6Decrypted = try XCTUnwrap(sodium.ipCrypt.deterministic.decrypt(encrypted: ipv6Encrypted, secretKey: key))
         XCTAssertEqual(ipv6Decrypted, "2001:db8::1")
+    }
+
+    func testKEM() throws {
+        let sodium = Sodium()
+
+        let recipientKP = try XCTUnwrap(sodium.kem.keyPair())
+
+        let (cipherText, sharedSecretSender) = try XCTUnwrap(
+            sodium.kem.encapsulate(recipientPublicKey: recipientKP.publicKey)
+        )
+
+        let sharedSecretRecipient = try XCTUnwrap(
+            sodium.kem.decapsulate(cipherText: cipherText, secretKey: recipientKP.secretKey)
+        )
+
+        XCTAssertEqual(sharedSecretSender, sharedSecretRecipient)
     }
 }

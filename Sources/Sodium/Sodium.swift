@@ -18,6 +18,7 @@ public struct Sodium {
     public let aead = Aead()
     public let version = Version()
     public let ipCrypt = IpCrypt()
+    public let kem = KEM()
 
     public init() {
         _ = Sodium.once

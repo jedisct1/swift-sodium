@@ -178,6 +178,36 @@ let aliceToBobKeyEquality = sodium.utils.equals(sessionKeyPairForAlice.tx, sessi
 let bobToAliceKeyEquality = sodium.utils.equals(sessionKeyPairForAlice.rx, sessionKeyPairForBob.tx) // true
 ```
 
+## Key encapsulation (KEM)
+
+A KEM lets a sender establish a shared secret with a recipient using only the
+recipient's public key. The sender calls `encapsulate` to get a ciphertext and
+a shared secret; the recipient calls `decapsulate` with the ciphertext and their
+secret key to recover the same shared secret. The current primitive is X-Wing,
+a hybrid of ML-KEM-768 and X25519.
+
+```swift
+let sodium = Sodium()
+let recipientKP = sodium.kem.keyPair()!
+
+// Sender side
+let (cipherText, sharedSecretSender) = sodium.kem.encapsulate(
+    recipientPublicKey: recipientKP.publicKey
+)!
+
+// Recipient side
+let sharedSecretRecipient = sodium.kem.decapsulate(
+    cipherText: cipherText,
+    secretKey: recipientKP.secretKey
+)!
+// sharedSecretSender == sharedSecretRecipient
+```
+
+Both methods return `nil` only for wrong-length inputs. X-Wing uses implicit
+rejection: a ciphertext that has been tampered with decapsulates to a
+pseudo-random key rather than signaling failure, so comparing the shared secret
+against an expected value or a MAC is the correct way to detect corruption.
+
 ## Public-key signatures
 
 Signatures allow multiple parties to verify the authenticity of a public message, using the public key of the author's message.
