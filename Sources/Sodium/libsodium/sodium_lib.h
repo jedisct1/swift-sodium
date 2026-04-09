@@ -1,6 +1,6 @@
 
-#ifndef sodium_lib_H
-#define sodium_lib_H
+#ifndef sodium_H
+#define sodium_H
 
 #include "version.h"
 
@@ -26,14 +26,16 @@
 #include "crypto_generichash_blake2b.h"
 #include "crypto_hash.h"
 #include "crypto_hash_sha256.h"
+#include "crypto_hash_sha3.h"
 #include "crypto_hash_sha512.h"
 #include "crypto_ipcrypt.h"
 #include "crypto_kdf.h"
-#include "crypto_kdf_hkdf_sha256.h"
-#include "crypto_kdf_hkdf_sha512.h"
 #include "crypto_kdf_blake2b.h"
 #include "crypto_kdf_hkdf_sha256.h"
 #include "crypto_kdf_hkdf_sha512.h"
+#include "crypto_kem.h"
+#include "crypto_kem_mlkem768.h"
+#include "crypto_kem_xwing.h"
 #include "crypto_kx.h"
 #include "crypto_onetimeauth.h"
 #include "crypto_onetimeauth_poly1305.h"
