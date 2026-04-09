@@ -1,5 +1,5 @@
-import Foundation
 import Clibsodium
+import Foundation
 
 public struct Aead {
     public let aegis128l = Aegis128L()
@@ -10,14 +10,14 @@ public struct Aead {
 
 // Aegis128L
 
-extension Aead {
-    public struct Aegis128L {
+public extension Aead {
+    struct Aegis128L {
         public let ABytes = Int(crypto_aead_aegis128l_abytes())
         public typealias MAC = Bytes
     }
 }
 
-extension Aead.Aegis128L {
+public extension Aead.Aegis128L {
     /**
      Encrypts a message with a shared secret key.
 
@@ -27,7 +27,7 @@ extension Aead.Aegis128L {
 
      - Returns: A `Bytes` object containing the nonce and authenticated ciphertext.
      */
-    public func encrypt(message: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> Bytes? {
+    func encrypt(message: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> Bytes? {
         guard let (authenticatedCipherText, nonce): (Bytes, Nonce) = encrypt(
             message: message,
             secretKey: secretKey,
@@ -46,25 +46,25 @@ extension Aead.Aegis128L {
 
      - Returns: The authenticated ciphertext and encryption nonce.
      */
-    public func encrypt(message: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> (authenticatedCipherText: Bytes, nonce: Nonce)? {
+    func encrypt(message: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> (authenticatedCipherText: Bytes, nonce: Nonce)? {
         guard secretKey.count == KeyBytes else { return nil }
 
         var authenticatedCipherText = Bytes(count: message.count + ABytes)
         var authenticatedCipherTextLen: UInt64 = 0
-        let nonce = self.nonce()
+        let nonce = nonce()
 
-        guard .SUCCESS == crypto_aead_aegis128l_encrypt (
+        guard crypto_aead_aegis128l_encrypt(
             &authenticatedCipherText, &authenticatedCipherTextLen,
             message, UInt64(message.count),
             additionalData, UInt64(additionalData?.count ?? 0),
             nil, nonce, secretKey
-        ).exitCode else { return nil }
+        ).exitCode == .SUCCESS else { return nil }
 
         return (authenticatedCipherText: authenticatedCipherText, nonce: nonce)
     }
 }
 
-extension Aead.Aegis128L {
+public extension Aead.Aegis128L {
     /**
      Decrypts a message with a shared secret key.
 
@@ -74,7 +74,7 @@ extension Aead.Aegis128L {
 
      - Returns: The decrypted message.
      */
-    public func decrypt(nonceAndAuthenticatedCipherText: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> Bytes? {
+    func decrypt(nonceAndAuthenticatedCipherText: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> Bytes? {
         guard nonceAndAuthenticatedCipherText.count >= ABytes + NonceBytes else { return nil }
 
         let nonce = nonceAndAuthenticatedCipherText[..<NonceBytes].bytes as Nonce
@@ -92,19 +92,19 @@ extension Aead.Aegis128L {
 
      - Returns: The decrypted message.
      */
-    public func decrypt(authenticatedCipherText: Bytes, secretKey: Key, nonce: Nonce, additionalData: Bytes? = nil) -> Bytes? {
+    func decrypt(authenticatedCipherText: Bytes, secretKey: Key, nonce: Nonce, additionalData: Bytes? = nil) -> Bytes? {
         guard authenticatedCipherText.count >= ABytes else { return nil }
 
         var message = Bytes(count: authenticatedCipherText.count - ABytes)
         var messageLen: UInt64 = 0
 
-        guard .SUCCESS == crypto_aead_aegis128l_decrypt (
+        guard crypto_aead_aegis128l_decrypt(
             &message, &messageLen,
             nil,
             authenticatedCipherText, UInt64(authenticatedCipherText.count),
             additionalData, UInt64(additionalData?.count ?? 0),
             nonce, secretKey
-        ).exitCode else { return nil }
+        ).exitCode == .SUCCESS else { return nil }
 
         return message
     }
@@ -112,11 +112,16 @@ extension Aead.Aegis128L {
 
 extension Aead.Aegis128L: NonceGenerator {
     public typealias Nonce = Bytes
-    public var NonceBytes: Int { return Int(crypto_aead_aegis128l_npubbytes()) }
+    public var NonceBytes: Int {
+        Int(crypto_aead_aegis128l_npubbytes())
+    }
 }
 
 extension Aead.Aegis128L: SecretKeyGenerator {
-    public var KeyBytes: Int { return Int(crypto_aead_aegis128l_keybytes()) }
+    public var KeyBytes: Int {
+        Int(crypto_aead_aegis128l_keybytes())
+    }
+
     public typealias Key = Bytes
 
     public static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_aead_aegis128l_keygen
@@ -124,14 +129,14 @@ extension Aead.Aegis128L: SecretKeyGenerator {
 
 // Aegis256
 
-extension Aead {
-    public struct Aegis256 {
+public extension Aead {
+    struct Aegis256 {
         public let ABytes = Int(crypto_aead_aegis256_abytes())
         public typealias MAC = Bytes
     }
 }
 
-extension Aead.Aegis256 {
+public extension Aead.Aegis256 {
     /**
      Encrypts a message with a shared secret key.
 
@@ -141,7 +146,7 @@ extension Aead.Aegis256 {
 
      - Returns: A `Bytes` object containing the nonce and authenticated ciphertext.
      */
-    public func encrypt(message: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> Bytes? {
+    func encrypt(message: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> Bytes? {
         guard let (authenticatedCipherText, nonce): (Bytes, Nonce) = encrypt(
             message: message,
             secretKey: secretKey,
@@ -160,25 +165,25 @@ extension Aead.Aegis256 {
 
      - Returns: The authenticated ciphertext and encryption nonce.
      */
-    public func encrypt(message: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> (authenticatedCipherText: Bytes, nonce: Nonce)? {
+    func encrypt(message: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> (authenticatedCipherText: Bytes, nonce: Nonce)? {
         guard secretKey.count == KeyBytes else { return nil }
 
         var authenticatedCipherText = Bytes(count: message.count + ABytes)
         var authenticatedCipherTextLen: UInt64 = 0
-        let nonce = self.nonce()
+        let nonce = nonce()
 
-        guard .SUCCESS == crypto_aead_aegis256_encrypt (
+        guard crypto_aead_aegis256_encrypt(
             &authenticatedCipherText, &authenticatedCipherTextLen,
             message, UInt64(message.count),
             additionalData, UInt64(additionalData?.count ?? 0),
             nil, nonce, secretKey
-        ).exitCode else { return nil }
+        ).exitCode == .SUCCESS else { return nil }
 
         return (authenticatedCipherText: authenticatedCipherText, nonce: nonce)
     }
 }
 
-extension Aead.Aegis256 {
+public extension Aead.Aegis256 {
     /**
      Decrypts a message with a shared secret key.
 
@@ -188,7 +193,7 @@ extension Aead.Aegis256 {
 
      - Returns: The decrypted message.
      */
-    public func decrypt(nonceAndAuthenticatedCipherText: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> Bytes? {
+    func decrypt(nonceAndAuthenticatedCipherText: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> Bytes? {
         guard nonceAndAuthenticatedCipherText.count >= ABytes + NonceBytes else { return nil }
 
         let nonce = nonceAndAuthenticatedCipherText[..<NonceBytes].bytes as Nonce
@@ -206,19 +211,19 @@ extension Aead.Aegis256 {
 
      - Returns: The decrypted message.
      */
-    public func decrypt(authenticatedCipherText: Bytes, secretKey: Key, nonce: Nonce, additionalData: Bytes? = nil) -> Bytes? {
+    func decrypt(authenticatedCipherText: Bytes, secretKey: Key, nonce: Nonce, additionalData: Bytes? = nil) -> Bytes? {
         guard authenticatedCipherText.count >= ABytes else { return nil }
 
         var message = Bytes(count: authenticatedCipherText.count - ABytes)
         var messageLen: UInt64 = 0
 
-        guard .SUCCESS == crypto_aead_aegis256_decrypt (
+        guard crypto_aead_aegis256_decrypt(
             &message, &messageLen,
             nil,
             authenticatedCipherText, UInt64(authenticatedCipherText.count),
             additionalData, UInt64(additionalData?.count ?? 0),
             nonce, secretKey
-        ).exitCode else { return nil }
+        ).exitCode == .SUCCESS else { return nil }
 
         return message
     }
@@ -226,11 +231,16 @@ extension Aead.Aegis256 {
 
 extension Aead.Aegis256: NonceGenerator {
     public typealias Nonce = Bytes
-    public var NonceBytes: Int { return Int(crypto_aead_aegis256_npubbytes()) }
+    public var NonceBytes: Int {
+        Int(crypto_aead_aegis256_npubbytes())
+    }
 }
 
 extension Aead.Aegis256: SecretKeyGenerator {
-    public var KeyBytes: Int { return Int(crypto_aead_aegis256_keybytes()) }
+    public var KeyBytes: Int {
+        Int(crypto_aead_aegis256_keybytes())
+    }
+
     public typealias Key = Bytes
 
     public static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_aead_aegis256_keygen
@@ -238,14 +248,14 @@ extension Aead.Aegis256: SecretKeyGenerator {
 
 // XChaCha20Poly1305
 
-extension Aead {
-    public struct XChaCha20Poly1305Ietf {
+public extension Aead {
+    struct XChaCha20Poly1305Ietf {
         public let ABytes = Int(crypto_aead_xchacha20poly1305_ietf_abytes())
         public typealias MAC = Bytes
     }
 }
 
-extension Aead.XChaCha20Poly1305Ietf {
+public extension Aead.XChaCha20Poly1305Ietf {
     /**
      Encrypts a message with a shared secret key.
 
@@ -255,7 +265,7 @@ extension Aead.XChaCha20Poly1305Ietf {
 
      - Returns: A `Bytes` object containing the nonce and authenticated ciphertext.
      */
-    public func encrypt(message: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> Bytes? {
+    func encrypt(message: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> Bytes? {
         guard let (authenticatedCipherText, nonce): (Bytes, Nonce) = encrypt(
             message: message,
             secretKey: secretKey,
@@ -274,25 +284,25 @@ extension Aead.XChaCha20Poly1305Ietf {
 
      - Returns: The authenticated ciphertext and encryption nonce.
      */
-    public func encrypt(message: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> (authenticatedCipherText: Bytes, nonce: Nonce)? {
+    func encrypt(message: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> (authenticatedCipherText: Bytes, nonce: Nonce)? {
         guard secretKey.count == KeyBytes else { return nil }
 
         var authenticatedCipherText = Bytes(count: message.count + ABytes)
         var authenticatedCipherTextLen: UInt64 = 0
-        let nonce = self.nonce()
+        let nonce = nonce()
 
-        guard .SUCCESS == crypto_aead_xchacha20poly1305_ietf_encrypt (
+        guard crypto_aead_xchacha20poly1305_ietf_encrypt(
             &authenticatedCipherText, &authenticatedCipherTextLen,
             message, UInt64(message.count),
             additionalData, UInt64(additionalData?.count ?? 0),
             nil, nonce, secretKey
-        ).exitCode else { return nil }
+        ).exitCode == .SUCCESS else { return nil }
 
         return (authenticatedCipherText: authenticatedCipherText, nonce: nonce)
     }
 }
 
-extension Aead.XChaCha20Poly1305Ietf {
+public extension Aead.XChaCha20Poly1305Ietf {
     /**
      Decrypts a message with a shared secret key.
 
@@ -302,7 +312,7 @@ extension Aead.XChaCha20Poly1305Ietf {
 
      - Returns: The decrypted message.
      */
-    public func decrypt(nonceAndAuthenticatedCipherText: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> Bytes? {
+    func decrypt(nonceAndAuthenticatedCipherText: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> Bytes? {
         guard nonceAndAuthenticatedCipherText.count >= ABytes + NonceBytes else { return nil }
 
         let nonce = nonceAndAuthenticatedCipherText[..<NonceBytes].bytes as Nonce
@@ -320,19 +330,19 @@ extension Aead.XChaCha20Poly1305Ietf {
 
      - Returns: The decrypted message.
      */
-    public func decrypt(authenticatedCipherText: Bytes, secretKey: Key, nonce: Nonce, additionalData: Bytes? = nil) -> Bytes? {
+    func decrypt(authenticatedCipherText: Bytes, secretKey: Key, nonce: Nonce, additionalData: Bytes? = nil) -> Bytes? {
         guard authenticatedCipherText.count >= ABytes else { return nil }
 
         var message = Bytes(count: authenticatedCipherText.count - ABytes)
         var messageLen: UInt64 = 0
 
-        guard .SUCCESS == crypto_aead_xchacha20poly1305_ietf_decrypt (
+        guard crypto_aead_xchacha20poly1305_ietf_decrypt(
             &message, &messageLen,
             nil,
             authenticatedCipherText, UInt64(authenticatedCipherText.count),
             additionalData, UInt64(additionalData?.count ?? 0),
             nonce, secretKey
-        ).exitCode else { return nil }
+        ).exitCode == .SUCCESS else { return nil }
 
         return message
     }
@@ -340,27 +350,31 @@ extension Aead.XChaCha20Poly1305Ietf {
 
 extension Aead.XChaCha20Poly1305Ietf: NonceGenerator {
     public typealias Nonce = Bytes
-    public var NonceBytes: Int { return Int(crypto_aead_xchacha20poly1305_ietf_npubbytes()) }
+    public var NonceBytes: Int {
+        Int(crypto_aead_xchacha20poly1305_ietf_npubbytes())
+    }
 }
 
 extension Aead.XChaCha20Poly1305Ietf: SecretKeyGenerator {
-    public var KeyBytes: Int { return Int(crypto_aead_xchacha20poly1305_ietf_keybytes()) }
+    public var KeyBytes: Int {
+        Int(crypto_aead_xchacha20poly1305_ietf_keybytes())
+    }
+
     public typealias Key = Bytes
 
     public static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_aead_xchacha20poly1305_ietf_keygen
 }
 
-
 // AES256-GCM
 
-extension Aead {
-    public struct Aes256Gcm {
+public extension Aead {
+    struct Aes256Gcm {
         public let ABytes = Int(crypto_aead_aes256gcm_abytes())
         public typealias MAC = Bytes
     }
 }
 
-extension Aead.Aes256Gcm {
+public extension Aead.Aes256Gcm {
     /**
      Encrypts a message with a shared secret key.
 
@@ -370,7 +384,7 @@ extension Aead.Aes256Gcm {
 
      - Returns: A `Bytes` object containing the nonce and authenticated ciphertext.
      */
-    public func encrypt(message: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> Bytes? {
+    func encrypt(message: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> Bytes? {
         guard let (authenticatedCipherText, nonce): (Bytes, Nonce) = encrypt(
             message: message,
             secretKey: secretKey,
@@ -389,25 +403,25 @@ extension Aead.Aes256Gcm {
 
      - Returns: The authenticated ciphertext and encryption nonce.
      */
-    public func encrypt(message: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> (authenticatedCipherText: Bytes, nonce: Nonce)? {
+    func encrypt(message: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> (authenticatedCipherText: Bytes, nonce: Nonce)? {
         guard secretKey.count == KeyBytes else { return nil }
 
         var authenticatedCipherText = Bytes(count: message.count + ABytes)
         var authenticatedCipherTextLen: UInt64 = 0
-        let nonce = self.nonce()
+        let nonce = nonce()
 
-        guard .SUCCESS == crypto_aead_aes256gcm_encrypt (
+        guard crypto_aead_aes256gcm_encrypt(
             &authenticatedCipherText, &authenticatedCipherTextLen,
             message, UInt64(message.count),
             additionalData, UInt64(additionalData?.count ?? 0),
             nil, nonce, secretKey
-        ).exitCode else { return nil }
+        ).exitCode == .SUCCESS else { return nil }
 
         return (authenticatedCipherText: authenticatedCipherText, nonce: nonce)
     }
 }
 
-extension Aead.Aes256Gcm {
+public extension Aead.Aes256Gcm {
     /**
      Decrypts a message with a shared secret key.
 
@@ -417,7 +431,7 @@ extension Aead.Aes256Gcm {
 
      - Returns: The decrypted message.
      */
-    public func decrypt(nonceAndAuthenticatedCipherText: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> Bytes? {
+    func decrypt(nonceAndAuthenticatedCipherText: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> Bytes? {
         guard nonceAndAuthenticatedCipherText.count >= ABytes + NonceBytes else { return nil }
 
         let nonce = nonceAndAuthenticatedCipherText[..<NonceBytes].bytes as Nonce
@@ -435,19 +449,19 @@ extension Aead.Aes256Gcm {
 
      - Returns: The decrypted message.
      */
-    public func decrypt(authenticatedCipherText: Bytes, secretKey: Key, nonce: Nonce, additionalData: Bytes? = nil) -> Bytes? {
+    func decrypt(authenticatedCipherText: Bytes, secretKey: Key, nonce: Nonce, additionalData: Bytes? = nil) -> Bytes? {
         guard authenticatedCipherText.count >= ABytes else { return nil }
 
         var message = Bytes(count: authenticatedCipherText.count - ABytes)
         var messageLen: UInt64 = 0
 
-        guard .SUCCESS == crypto_aead_aes256gcm_decrypt (
+        guard crypto_aead_aes256gcm_decrypt(
             &message, &messageLen,
             nil,
             authenticatedCipherText, UInt64(authenticatedCipherText.count),
             additionalData, UInt64(additionalData?.count ?? 0),
             nonce, secretKey
-        ).exitCode else { return nil }
+        ).exitCode == .SUCCESS else { return nil }
 
         return message
     }
@@ -455,11 +469,16 @@ extension Aead.Aes256Gcm {
 
 extension Aead.Aes256Gcm: NonceGenerator {
     public typealias Nonce = Bytes
-    public var NonceBytes: Int { return Int(crypto_aead_aes256gcm_npubbytes()) }
+    public var NonceBytes: Int {
+        Int(crypto_aead_aes256gcm_npubbytes())
+    }
 }
 
 extension Aead.Aes256Gcm: SecretKeyGenerator {
-    public var KeyBytes: Int { return Int(crypto_aead_aes256gcm_keybytes()) }
+    public var KeyBytes: Int {
+        Int(crypto_aead_aes256gcm_keybytes())
+    }
+
     public typealias Key = Bytes
 
     public static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_aead_aes256gcm_keygen

@@ -1,5 +1,5 @@
-import Foundation
 import Clibsodium
+import Foundation
 
 public struct PWHash {
     public let SaltBytes = Int(crypto_pwhash_saltbytes())
@@ -13,8 +13,8 @@ public struct PWHash {
     public let MemLimitSensitive = Int(crypto_pwhash_memlimit_sensitive())
 }
 
-extension PWHash {
-    public enum Alg {
+public extension PWHash {
+    enum Alg {
         case Default
         case Argon2I13
         case Argon2ID13
@@ -24,14 +24,14 @@ extension PWHash {
 extension PWHash.Alg {
     var id: Int32 {
         switch self {
-        case .Default:    return crypto_pwhash_alg_default()
-        case .Argon2I13:  return crypto_pwhash_alg_argon2i13()
+        case .Default: return crypto_pwhash_alg_default()
+        case .Argon2I13: return crypto_pwhash_alg_argon2i13()
         case .Argon2ID13: return crypto_pwhash_alg_argon2id13()
         }
     }
 }
 
-extension PWHash {
+public extension PWHash {
     /**
      Generates an ASCII encoded string, which includes:
 
@@ -47,16 +47,16 @@ extension PWHash {
 
      - Returns: The generated string.
      */
-    public func str(passwd: Bytes, opsLimit: Int, memLimit: Int) -> String? {
+    func str(passwd: Bytes, opsLimit: Int, memLimit: Int) -> String? {
         var output = Bytes(count: StrBytes).map(Int8.init)
         let passwd = passwd.map(Int8.init)
 
-        guard .SUCCESS == crypto_pwhash_str(
+        guard crypto_pwhash_str(
             &output,
             passwd, UInt64(passwd.count),
             UInt64(opsLimit),
             size_t(memLimit)
-        ).exitCode else { return nil }
+        ).exitCode == .SUCCESS else { return nil }
 
         return String(cString: output)
     }
@@ -69,14 +69,14 @@ extension PWHash {
 
      - Returns: `true` if the verification succeeds.
      */
-    public func strVerify(hash: String, passwd: Bytes) -> Bool {
+    func strVerify(hash: String, passwd: Bytes) -> Bool {
         let hashBytes = Bytes((hash + "\0").utf8).map(Int8.init)
         let passwd = passwd.map(Int8.init)
 
-        return .SUCCESS == crypto_pwhash_str_verify(
+        return crypto_pwhash_str_verify(
             hashBytes,
             passwd, UInt64(passwd.count)
-        ).exitCode
+        ).exitCode == .SUCCESS
     }
 
     /**
@@ -88,17 +88,17 @@ extension PWHash {
 
      - Returns: `true` if the password hash should be updated.
      */
-    public func strNeedsRehash(hash: String, opsLimit: Int, memLimit: Int) -> Bool {
+    func strNeedsRehash(hash: String, opsLimit: Int, memLimit: Int) -> Bool {
         let hashBytes = Bytes((hash + "\0").utf8).map(Int8.init)
-        return .SUCCESS != crypto_pwhash_str_needs_rehash(
+        return crypto_pwhash_str_needs_rehash(
             hashBytes,
             UInt64(opsLimit),
             size_t(memLimit)
-        ).exitCode
+        ).exitCode != .SUCCESS
     }
 }
 
-extension PWHash {
+public extension PWHash {
     /**
      Derives a key from a password and a salt using the Argon2 password hashing function.
 
@@ -113,19 +113,19 @@ extension PWHash {
 
      - Returns: The derived key data.
      */
-    public func hash(outputLength: Int, passwd: Bytes, salt: Bytes, opsLimit: Int, memLimit: Int, alg: Alg = .Default) -> Bytes? {
+    func hash(outputLength: Int, passwd: Bytes, salt: Bytes, opsLimit: Int, memLimit: Int, alg: Alg = .Default) -> Bytes? {
         guard salt.count == SaltBytes else { return nil }
         var output = Bytes(count: outputLength)
         let passwd = passwd.map(Int8.init)
 
-        guard .SUCCESS == crypto_pwhash(
+        guard crypto_pwhash(
             &output, UInt64(outputLength),
             passwd, UInt64(passwd.count),
             salt,
             UInt64(opsLimit),
             size_t(memLimit),
             alg.id
-        ).exitCode else { return nil }
+        ).exitCode == .SUCCESS else { return nil }
 
         return output
     }

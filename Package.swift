@@ -6,10 +6,12 @@ let package = Package(
     products: [
         .library(
             name: "Clibsodium",
-            targets: ["_Clibsodium"]),
+            targets: ["_Clibsodium"]
+        ),
         .library(
             name: "Sodium",
-            targets: ["Sodium"]),
+            targets: ["Sodium"]
+        ),
     ],
     targets: [
         .target(
@@ -29,10 +31,12 @@ let package = Package(
                     .windows,
                     .openbsd,
                 ])),
-            ]),
+            ]
+        ),
         .binaryTarget(
             name: "ClibsodiumBinary",
-            path: "Clibsodium.xcframework"),
+            path: "Clibsodium.xcframework"
+        ),
         .systemLibrary(
             name: "ClibsodiumSystem",
             pkgConfig: "libsodium",
@@ -40,12 +44,15 @@ let package = Package(
                 .apt(["libsodium-dev"]),
                 .brew(["libsodium"]),
                 .yum(["libsodium-devel"]),
-            ]),
+            ]
+        ),
         .target(
             name: "Sodium",
-            dependencies: ["_Clibsodium"]),
+            dependencies: ["_Clibsodium"]
+        ),
         .testTarget(
             name: "SodiumTests",
-            dependencies: ["Sodium"]),
+            dependencies: ["Sodium"]
+        ),
     ]
 )

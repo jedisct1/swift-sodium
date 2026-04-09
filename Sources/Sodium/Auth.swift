@@ -1,12 +1,12 @@
-import Foundation
 import Clibsodium
+import Foundation
 
 public struct Auth {
     public let Bytes = Int(crypto_auth_bytes())
     public typealias SecretKey = Key
 }
 
-extension Auth {
+public extension Auth {
     /**
      Computes an authentication tag for a message using a key
 
@@ -15,15 +15,15 @@ extension Auth {
 
      - Returns: The computed authentication tag.
      */
-    public func tag(message: Bytes, secretKey: SecretKey) -> Bytes? {
+    func tag(message: Bytes, secretKey: SecretKey) -> Bytes? {
         guard secretKey.count == KeyBytes else { return nil }
 
-        var tag = Array<UInt8>(count: Bytes)
-        guard .SUCCESS == crypto_auth (
+        var tag = [UInt8](count: Bytes)
+        guard crypto_auth(
             &tag,
             message, UInt64(message.count),
             secretKey
-        ).exitCode else { return nil }
+        ).exitCode == .SUCCESS else { return nil }
 
         return tag
     }
@@ -37,20 +37,23 @@ extension Auth {
 
      - Returns: `true` if the verification is successful.
      */
-    public func verify(message: Bytes, secretKey: SecretKey, tag: Bytes) -> Bool {
+    func verify(message: Bytes, secretKey: SecretKey, tag: Bytes) -> Bool {
         guard secretKey.count == KeyBytes else {
             return false
         }
-        return .SUCCESS == crypto_auth_verify (
+        return crypto_auth_verify(
             tag,
             message, UInt64(message.count),
             secretKey
-        ).exitCode
+        ).exitCode == .SUCCESS
     }
 }
 
 extension Auth: SecretKeyGenerator {
-    public var KeyBytes: Int { return Int(crypto_auth_keybytes()) }
+    public var KeyBytes: Int {
+        Int(crypto_auth_keybytes())
+    }
+
     public typealias Key = Bytes
 
     public static let keygen: (_ k: UnsafeMutablePointer<UInt8>) -> Void = crypto_auth_keygen

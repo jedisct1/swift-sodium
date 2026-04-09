@@ -1,11 +1,11 @@
-import Foundation
 import Clibsodium
+import Foundation
 
 public struct Stream {
     public let Primitive = String(validatingUTF8: crypto_stream_primitive())
 }
 
-extension Stream {
+public extension Stream {
     /**
      XOR the input with a key stream derived from a secret key and a nonce.
      Applying the same operation twice outputs the original input.
@@ -19,16 +19,16 @@ extension Stream {
 
      -  Returns: input XOR keystream(secretKey, nonce)
      */
-    public func xor(input: Bytes, nonce: Nonce, secretKey: Key) -> Bytes? {
+    func xor(input: Bytes, nonce: Nonce, secretKey: Key) -> Bytes? {
         guard secretKey.count == KeyBytes, nonce.count == NonceBytes else { return nil }
 
         var output = Bytes(count: input.count)
-        guard .SUCCESS == crypto_stream_xor (
+        guard crypto_stream_xor(
             &output,
             input, UInt64(input.count),
             nonce,
             secretKey
-        ).exitCode else { return nil }
+        ).exitCode == .SUCCESS else { return nil }
 
         return output
     }
@@ -46,8 +46,8 @@ extension Stream {
 
      -  Returns: (input XOR keystream(secretKey, nonce), nonce)
      */
-    public func xor(input: Bytes, secretKey: Key) -> (output:Bytes, nonce: Nonce)? {
-        let nonce = self.nonce()
+    func xor(input: Bytes, secretKey: Key) -> (output: Bytes, nonce: Nonce)? {
+        let nonce = nonce()
 
         guard let output: Bytes = xor(
             input: input,
@@ -61,12 +61,16 @@ extension Stream {
 
 extension Stream: NonceGenerator {
     public typealias Nonce = Bytes
-    public var NonceBytes: Int { return Int(crypto_stream_noncebytes()) }
+    public var NonceBytes: Int {
+        Int(crypto_stream_noncebytes())
+    }
 }
 
 extension Stream: SecretKeyGenerator {
     public typealias Key = Bytes
-    public var KeyBytes: Int { return Int(crypto_stream_keybytes()) }
+    public var KeyBytes: Int {
+        Int(crypto_stream_keybytes())
+    }
 
     public static let keygen: (_ k: UnsafeMutablePointer<UInt8>) -> Void = crypto_stream_keygen
 }

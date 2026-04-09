@@ -1,12 +1,12 @@
-import Foundation
 import Clibsodium
+import Foundation
 
 public struct KeyExchange {
     public let SessionKeyBytes = Int(crypto_kx_sessionkeybytes())
 }
 
-extension KeyExchange {
-    public struct SessionKeyPair {
+public extension KeyExchange {
+    struct SessionKeyPair {
         public let rx: Bytes
         public let tx: Bytes
 
@@ -17,8 +17,8 @@ extension KeyExchange {
     }
 }
 
-extension KeyExchange {
-    public enum Side {
+public extension KeyExchange {
+    enum Side {
         case CLIENT
         case SERVER
 
@@ -37,7 +37,7 @@ extension KeyExchange {
     }
 }
 
-extension KeyExchange {
+public extension KeyExchange {
     /**
      Using this function, two parties can securely compute a set of shared keys using their peer's public key and their own secret key.
      See [libsodium.org/doc/key_exchange](https://download.libsodium.org/doc/key_exchange) for more details.
@@ -51,7 +51,7 @@ extension KeyExchange {
 
      - Note: `rx` on client side equals `tx` on server side and vice versa.
      */
-    public func sessionKeyPair(publicKey: PublicKey, secretKey: SecretKey, otherPublicKey: PublicKey, side: Side) -> SessionKeyPair? {
+    func sessionKeyPair(publicKey: PublicKey, secretKey: SecretKey, otherPublicKey: PublicKey, side: Side) -> SessionKeyPair? {
         guard publicKey.count == PublicKeyBytes,
               secretKey.count == SecretKeyBytes,
               otherPublicKey.count == PublicKeyBytes
@@ -60,13 +60,13 @@ extension KeyExchange {
         var rx = Bytes(count: SessionKeyBytes)
         var tx = Bytes(count: SessionKeyBytes)
 
-        guard .SUCCESS == side.sessionKeys (
+        guard side.sessionKeys(
             &rx,
             &tx,
             publicKey,
             secretKey,
             otherPublicKey
-        ).exitCode else { return nil }
+        ).exitCode == .SUCCESS else { return nil }
 
         return SessionKeyPair(rx: rx, tx: tx)
     }
@@ -76,9 +76,17 @@ extension KeyExchange: KeyPairGenerator {
     public typealias PublicKey = Bytes
     public typealias SecretKey = Bytes
 
-    public var SeedBytes: Int { return Int(crypto_kx_seedbytes()) }
-    public var PublicKeyBytes: Int { return Int(crypto_kx_publickeybytes()) }
-    public var SecretKeyBytes: Int { return Int(crypto_kx_secretkeybytes()) }
+    public var SeedBytes: Int {
+        Int(crypto_kx_seedbytes())
+    }
+
+    public var PublicKeyBytes: Int {
+        Int(crypto_kx_publickeybytes())
+    }
+
+    public var SecretKeyBytes: Int {
+        Int(crypto_kx_secretkeybytes())
+    }
 
     public static let newKeypair: (
         _ pk: UnsafeMutablePointer<UInt8>,

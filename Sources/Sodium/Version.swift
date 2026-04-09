@@ -9,7 +9,7 @@
 import Clibsodium
 
 public struct Lib {
-    public let VersionString = String(validatingUTF8:sodium_version_string())!
+    public let VersionString = String(validatingUTF8: sodium_version_string())!
     public let Major = Int(sodium_library_version_major())
     public let Minor = Int(sodium_library_version_minor())
 }

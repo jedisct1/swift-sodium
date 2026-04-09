@@ -1,14 +1,14 @@
 import Cocoa
 import Sodium
 
-@NSApplicationMain
+@main
 class AppDelegate: NSObject, NSApplicationDelegate {
-    @IBOutlet weak var window: NSWindow!
+    @IBOutlet var window: NSWindow!
 
-    func applicationDidFinishLaunching(_ notification: Notification) {
+    func applicationDidFinishLaunching(_: Notification) {
         let sodium = Sodium()
 
-        let versionString = sodium.version.lib.VersionString;
+        let versionString = sodium.version.lib.VersionString
         print("Sodium library version:\(versionString)")
 
         let aliceKeyPair = sodium.box.keyPair()!
@@ -21,7 +21,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             sodium.box.seal(
                 message: message,
                 recipientPublicKey: bobKeyPair.publicKey,
-                senderSecretKey: aliceKeyPair.secretKey)!
+                senderSecretKey: aliceKeyPair.secretKey
+            )!
 
         print("Encrypted Message:\(encryptedMessageFromAliceToBob)")
 
@@ -29,9 +30,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             sodium.box.open(
                 nonceAndAuthenticatedCipherText: encryptedMessageFromAliceToBob,
                 senderPublicKey: bobKeyPair.publicKey,
-                recipientSecretKey: aliceKeyPair.secretKey)
+                recipientSecretKey: aliceKeyPair.secretKey
+            )
 
         print("Decrypted Message:\(messageVerifiedAndDecryptedByBob!.utf8String!)")
-
     }
 }

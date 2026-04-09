@@ -1,5 +1,5 @@
-import Foundation
 import Clibsodium
+import Foundation
 
 public struct GenericHash {
     public let BytesMin = Int(crypto_generichash_bytes_min())
@@ -11,8 +11,8 @@ public struct GenericHash {
     public let Primitive = String(validatingUTF8: crypto_generichash_primitive())
 }
 
-extension GenericHash {
-    public class Stream {
+public extension GenericHash {
+    class Stream {
         private var state: UnsafeMutableRawBufferPointer
         private var opaqueState: OpaquePointer
         public var outputLength: Int = 0
@@ -21,11 +21,11 @@ extension GenericHash {
             state = UnsafeMutableRawBufferPointer.allocate(byteCount: crypto_generichash_statebytes(), alignment: 64)
             guard state.baseAddress != nil else { return nil }
             opaqueState = OpaquePointer(state.baseAddress!)
-            guard .SUCCESS == crypto_generichash_init(
+            guard crypto_generichash_init(
                 opaqueState,
                 key, key?.count ?? 0,
                 outputLength
-            ).exitCode else { return nil }
+            ).exitCode == .SUCCESS else { return nil }
 
             self.outputLength = outputLength
         }
@@ -36,7 +36,7 @@ extension GenericHash {
     }
 }
 
-extension GenericHash {
+public extension GenericHash {
     /**
      Computes a fixed-length fingerprint for an arbitrary long message. A key can also be specified. A message will always have the same fingerprint for a given key, but different keys used to hash the same message are very likely to produce distinct fingerprints.
 
@@ -45,8 +45,8 @@ extension GenericHash {
 
      - Returns: The computed fingerprint.
      */
-    public func hash(message: Bytes, key: Bytes? = nil) -> Bytes? {
-        return hash(message: message, key: key, outputLength: Bytes)
+    func hash(message: Bytes, key: Bytes? = nil) -> Bytes? {
+        hash(message: message, key: key, outputLength: Bytes)
     }
 
     /**
@@ -58,14 +58,14 @@ extension GenericHash {
 
      - Returns: The computed fingerprint.
      */
-    public func hash(message: Bytes, key: Bytes?, outputLength: Int) -> Bytes? {
-        var output = Array<UInt8>(count: outputLength)
+    func hash(message: Bytes, key: Bytes?, outputLength: Int) -> Bytes? {
+        var output = [UInt8](count: outputLength)
 
-        guard .SUCCESS == crypto_generichash(
+        guard crypto_generichash(
             &output, outputLength,
             message, UInt64(message.count),
             key, key?.count ?? 0
-        ).exitCode else { return nil }
+        ).exitCode == .SUCCESS else { return nil }
 
         return output
     }
@@ -78,12 +78,12 @@ extension GenericHash {
 
      - Returns: The computed fingerprint.
      */
-    public func hash(message: Bytes, outputLength: Int) -> Bytes? {
-        return hash(message: message, key: nil, outputLength: outputLength)
+    func hash(message: Bytes, outputLength: Int) -> Bytes? {
+        hash(message: message, key: nil, outputLength: outputLength)
     }
 }
 
-extension GenericHash {
+public extension GenericHash {
     /**
      Initializes a `Stream` object to compute a fixed-length fingerprint for an incoming stream of data. Particular data will always have the same fingerprint for a given key, but different keys used to hash the same data are very likely to produce distinct fingerprints.
 
@@ -91,8 +91,8 @@ extension GenericHash {
 
      - Returns: The initialized `Stream`.
      */
-    public func initStream(key: Bytes? = nil) -> Stream? {
-        return Stream(key: key, outputLength: Bytes)
+    func initStream(key: Bytes? = nil) -> Stream? {
+        Stream(key: key, outputLength: Bytes)
     }
 
     /**
@@ -103,8 +103,8 @@ extension GenericHash {
 
      - Returns: The initialized `Stream`.
      */
-    public func initStream(key: Bytes?, outputLength: Int) -> Stream? {
-        return Stream(key: key, outputLength: outputLength)
+    func initStream(key: Bytes?, outputLength: Int) -> Stream? {
+        Stream(key: key, outputLength: outputLength)
     }
 
     /**
@@ -114,12 +114,12 @@ extension GenericHash {
 
      - Returns: The initialized `Stream`.
      */
-    public func initStream(outputLength: Int) -> Stream? {
-        return Stream(key: nil, outputLength: outputLength)
+    func initStream(outputLength: Int) -> Stream? {
+        Stream(key: nil, outputLength: outputLength)
     }
 }
 
-extension GenericHash.Stream {
+public extension GenericHash.Stream {
     /**
      Updates the hash stream with incoming data to contribute to the computed fingerprint.
 
@@ -128,11 +128,11 @@ extension GenericHash.Stream {
      - Returns: `true` if the data was consumed successfully.
      */
     @discardableResult
-    public func update(input: Bytes) -> Bool {
-        return .SUCCESS == crypto_generichash_update(
+    func update(input: Bytes) -> Bool {
+        crypto_generichash_update(
             opaqueState,
             input, UInt64(input.count)
-        ).exitCode
+        ).exitCode == .SUCCESS
     }
 
     /**
@@ -140,22 +140,24 @@ extension GenericHash.Stream {
 
      - Returns: The computed fingerprint.
      */
-    public func final() -> Bytes? {
+    func final() -> Bytes? {
         let outputLen = outputLength
-        var output = Array<UInt8>(count: outputLen)
-        guard .SUCCESS == crypto_generichash_final(
+        var output = [UInt8](count: outputLen)
+        guard crypto_generichash_final(
             opaqueState,
             &output, outputLen
-        ).exitCode else { return nil }
+        ).exitCode == .SUCCESS else { return nil }
 
         return output
     }
 }
 
 extension GenericHash: SecretKeyGenerator {
-    public var KeyBytes: Int { return Int(crypto_generichash_keybytes()) }
+    public var KeyBytes: Int {
+        Int(crypto_generichash_keybytes())
+    }
+
     public typealias Key = Bytes
 
     public static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_generichash_keygen
-
 }

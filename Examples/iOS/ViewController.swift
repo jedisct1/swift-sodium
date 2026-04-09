@@ -1,5 +1,5 @@
-import UIKit
 import Sodium
+import UIKit
 
 class ViewController: UIViewController {
     override func viewDidLoad() {
@@ -16,7 +16,8 @@ class ViewController: UIViewController {
             sodium.box.seal(
                 message: message,
                 recipientPublicKey: bobKeyPair.publicKey,
-                senderSecretKey: aliceKeyPair.secretKey)!
+                senderSecretKey: aliceKeyPair.secretKey
+            )!
 
         print("Encrypted Message:\(encryptedMessageFromAliceToBob)")
 
@@ -24,14 +25,13 @@ class ViewController: UIViewController {
             sodium.box.open(
                 nonceAndAuthenticatedCipherText: encryptedMessageFromAliceToBob,
                 senderPublicKey: bobKeyPair.publicKey,
-                recipientSecretKey: aliceKeyPair.secretKey)
+                recipientSecretKey: aliceKeyPair.secretKey
+            )
 
         print("Decrypted Message:\(messageVerifiedAndDecryptedByBob!.utf8String!)")
-
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
 }
-

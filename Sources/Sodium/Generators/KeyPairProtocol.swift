@@ -6,5 +6,5 @@ public protocol KeyPairProtocol {
     var publicKey: PublicKey { get }
     var secretKey: SecretKey { get }
 
-    init (publicKey: PublicKey, secretKey: SecretKey)
+    init(publicKey: PublicKey, secretKey: SecretKey)
 }

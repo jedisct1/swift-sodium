@@ -1,11 +1,11 @@
-import Foundation
 import Clibsodium
+import Foundation
 
 public struct RandomBytes {
     public let SeedBytes = Int(randombytes_seedbytes())
 }
 
-extension RandomBytes {
+public extension RandomBytes {
     /**
      Returns a `Bytes` object of length `length` containing an unpredictable sequence of bytes.
 
@@ -13,7 +13,7 @@ extension RandomBytes {
 
      - Returns: The generated data.
      */
-    public func buf(length: Int) -> Bytes? {
+    func buf(length: Int) -> Bytes? {
         guard length >= 0 else { return nil }
         var output = Bytes(count: length)
         randombytes_buf(&output, length)
@@ -23,8 +23,8 @@ extension RandomBytes {
     /**
      - Returns: An unpredictable value between 0 and 0xffffffff (included).
      */
-    public func random() -> UInt32 {
-        return randombytes_random()
+    func random() -> UInt32 {
+        randombytes_random()
     }
 
     /**
@@ -34,8 +34,8 @@ extension RandomBytes {
 
      - Returns: The unpredictable value.
      */
-    public func uniform(upperBound: UInt32) -> UInt32 {
-        return randombytes_uniform(upperBound)
+    func uniform(upperBound: UInt32) -> UInt32 {
+        randombytes_uniform(upperBound)
     }
 
     /**
@@ -46,10 +46,10 @@ extension RandomBytes {
 
      - Returns: The generated data.
      */
-    public func deterministic(length: Int, seed: Bytes) -> Bytes? {
+    func deterministic(length: Int, seed: Bytes) -> Bytes? {
         guard length >= 0,
               seed.count == SeedBytes,
-              Int64(length) <= 0x4000000000 as Int64
+              Int64(length) <= 0x40_0000_0000 as Int64
         else { return nil }
 
         var output = Bytes(count: length)
@@ -58,19 +58,19 @@ extension RandomBytes {
     }
 }
 
-extension RandomBytes {
-    public struct Generator: RandomNumberGenerator {
+public extension RandomBytes {
+    struct Generator: RandomNumberGenerator {
         private let sodium = Sodium()
-        
+
         public init() {}
-        
+
         public mutating func next() -> UInt64 {
-            guard let bytes = self.sodium.randomBytes.buf(length: MemoryLayout<UInt64>.size) else {
+            guard let bytes = sodium.randomBytes.buf(length: MemoryLayout<UInt64>.size) else {
                 fatalError("Sodium Random Number Generator is broken")
             }
-            
+
             return bytes.withUnsafeBytes { pointer in
-                return pointer.load(as: UInt64.self)
+                pointer.load(as: UInt64.self)
             }
         }
     }

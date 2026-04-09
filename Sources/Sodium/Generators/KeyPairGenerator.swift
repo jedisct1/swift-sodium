@@ -23,17 +23,17 @@ public protocol KeyPairGenerator {
     ) -> Int32 { get }
 }
 
-extension KeyPairGenerator {
+public extension KeyPairGenerator {
     /**
      Generates a signing secret key and a corresponding public key.
 
      - Returns: A key pair containing the secret key and public key.
      */
-    public func keyPair() -> KeyPair? {
+    func keyPair() -> KeyPair? {
         var pk = Bytes(count: PublicKeyBytes)
         var sk = Bytes(count: SecretKeyBytes)
 
-        guard .SUCCESS == Self.newKeypair(&pk, &sk).exitCode else { return nil }
+        guard Self.newKeypair(&pk, &sk).exitCode == .SUCCESS else { return nil }
 
         return KeyPair(publicKey: pk, secretKey: sk)
     }
@@ -45,12 +45,12 @@ extension KeyPairGenerator {
 
      - Returns: A key pair containing the secret key and public key.
      */
-    public func keyPair(seed: Bytes) -> KeyPair? {
+    func keyPair(seed: Bytes) -> KeyPair? {
         guard seed.count == SeedBytes else { return nil }
         var pk = Bytes(count: PublicKeyBytes)
         var sk = Bytes(count: SecretKeyBytes)
 
-        guard .SUCCESS == Self.keypairFromSeed(&pk, &sk, seed).exitCode else {
+        guard Self.keypairFromSeed(&pk, &sk, seed).exitCode == .SUCCESS else {
             return nil
         }
 

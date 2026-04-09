@@ -7,13 +7,13 @@ public protocol SecretKeyGenerator {
     static var keygen: (_ k: UnsafeMutablePointer<UInt8>) -> Void { get }
 }
 
-extension SecretKeyGenerator {
+public extension SecretKeyGenerator {
     /**
      Generates a secret key.
 
      - Returns: The generated key.
      */
-    public func key() -> Key {
+    func key() -> Key {
         var k = Bytes(count: KeyBytes)
         Self.keygen(&k)
         return k
