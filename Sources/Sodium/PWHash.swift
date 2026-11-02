@@ -48,7 +48,7 @@ public extension PWHash {
      - Returns: The generated string.
      */
     func str(passwd: Bytes, opsLimit: Int, memLimit: Int) -> String? {
-        var output = Bytes(count: StrBytes).map(Int8.init)
+        var output = Bytes(count: StrBytes + 1).map(Int8.init)
         let passwd = passwd.map(Int8.init)
 
         guard crypto_pwhash_str(
@@ -115,7 +115,9 @@ public extension PWHash {
      - Returns: The derived key data.
      */
     func hash(outputLength: Int, passwd: Bytes, salt: Bytes, opsLimit: Int, memLimit: Int, alg: Alg = .Default) -> Bytes? {
-        guard salt.count == SaltBytes else { return nil }
+        guard (Int(crypto_pwhash_bytes_min()) ... Int(crypto_pwhash_bytes_max())).contains(outputLength),
+              salt.count == SaltBytes
+        else { return nil }
         var output = Bytes(count: outputLength)
         let passwd = passwd.map(Int8.init)
 
