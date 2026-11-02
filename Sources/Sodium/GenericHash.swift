@@ -19,7 +19,7 @@ public extension GenericHash {
 
         init?(key: Bytes?, outputLength: Int) {
             guard (Int(crypto_generichash_bytes_min()) ... Int(crypto_generichash_bytes_max())).contains(outputLength),
-                  key.map({ (Int(crypto_generichash_keybytes_min()) ... Int(crypto_generichash_keybytes_max())).contains($0.count) }) ?? true
+                  key.map({ $0.count <= Int(crypto_generichash_keybytes_max()) }) ?? true
             else { return nil }
 
             state = UnsafeMutableRawBufferPointer.allocate(byteCount: crypto_generichash_statebytes(), alignment: 64)
@@ -68,7 +68,7 @@ public extension GenericHash {
      */
     func hash(message: Bytes, key: Bytes?, outputLength: Int) -> Bytes? {
         guard (BytesMin ... BytesMax).contains(outputLength),
-              key.map({ (KeyBytesMin ... KeyBytesMax).contains($0.count) }) ?? true
+              key.map({ $0.count <= KeyBytesMax }) ?? true
         else { return nil }
 
         var output = [UInt8](count: outputLength)
@@ -106,7 +106,7 @@ public extension GenericHash {
      - Returns: The initialized `Stream`.
      */
     func initStream(key: Bytes? = nil) -> Stream? {
-        guard key.map({ (KeyBytesMin ... KeyBytesMax).contains($0.count) }) ?? true else {
+        guard key.map({ $0.count <= KeyBytesMax }) ?? true else {
             return nil
         }
         return Stream(key: key, outputLength: Bytes)
@@ -124,7 +124,7 @@ public extension GenericHash {
      */
     func initStream(key: Bytes?, outputLength: Int) -> Stream? {
         guard (BytesMin ... BytesMax).contains(outputLength),
-              key.map({ (KeyBytesMin ... KeyBytesMax).contains($0.count) }) ?? true
+              key.map({ $0.count <= KeyBytesMax }) ?? true
         else { return nil }
 
         return Stream(key: key, outputLength: outputLength)

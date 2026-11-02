@@ -1,4 +1,5 @@
 import Sodium
+import Clibsodium
 import XCTest
 
 extension String {
@@ -163,12 +164,12 @@ class SodiumTests: XCTestCase {
         let h1 = try XCTUnwrap(try sodium.utils.bin2hex(XCTUnwrap(sodium.genericHash.hash(message: message))))
         XCTAssertEqual(h1, "64a9026fca646c31df54426ad15a341e2444d8a1863d57eb27abecf239609f75")
 
-        let key = sodium.utils.hex2bin("64 a9 02 6f ca 64 6c 31 df 54 00 11 22 33 44 55", ignore: " ")
+        let key = sodium.utils.hex2bin("64 a9 02 6f ca 64 6c 31 df 54", ignore: " ")
         let h2 = try XCTUnwrap(try sodium.utils.bin2hex(XCTUnwrap(sodium.genericHash.hash(message: message, key: key))))
-        XCTAssertEqual(h2, "e960e55fcbf4297be0e51808720c8b019ee1cf113e6967041b49bc9a5bbb2a1b")
+        XCTAssertEqual(h2, "1773f324cba2e7b0017e32d7e44f7afd1036c5d4ef9a80ae0e52e95a629844cd")
 
         let h3 = try XCTUnwrap(try sodium.utils.bin2hex(XCTUnwrap(sodium.genericHash.hash(message: message, key: key, outputLength: sodium.genericHash.BytesMax))))
-        XCTAssertEqual(h3, "b10ed3be96de90e156e04f95b11f0175c9035fec1bd24c6c667fcbd0789e934ccc21d6b2ebc4c4885def23a1855e6a42a1015ffa1c473fd144faa45241873185")
+        XCTAssertEqual(h3, "cba85e39f2d03923b2f66aba99b204333edc34a8443ab1700f7920c7abcc6639963a953f35162a520b21072ab906457d21f1645e6e3985858ee95a84d0771f07")
 
         let s1 = try XCTUnwrap(sodium.genericHash.initStream())
         XCTAssertTrue(s1.update(input: message))
@@ -185,15 +186,12 @@ class SodiumTests: XCTestCase {
         let h6 = try XCTUnwrap(try sodium.utils.bin2hex(XCTUnwrap(s3.final())))
         XCTAssertEqual(h6, h3)
 
-        let shortKey = Bytes(repeating: 0, count: sodium.genericHash.KeyBytesMin - 1)
         let longKey = Bytes(repeating: 0, count: sodium.genericHash.KeyBytesMax + 1)
         XCTAssertNil(sodium.genericHash.hash(message: message, key: key, outputLength: sodium.genericHash.BytesMin - 1))
         XCTAssertNil(sodium.genericHash.hash(message: message, key: key, outputLength: sodium.genericHash.BytesMax + 1))
-        XCTAssertNil(sodium.genericHash.hash(message: message, key: shortKey))
         XCTAssertNil(sodium.genericHash.hash(message: message, key: longKey))
         XCTAssertNil(sodium.genericHash.initStream(key: key, outputLength: sodium.genericHash.BytesMin - 1))
         XCTAssertNil(sodium.genericHash.initStream(key: key, outputLength: sodium.genericHash.BytesMax + 1))
-        XCTAssertNil(sodium.genericHash.initStream(key: shortKey))
         XCTAssertNil(sodium.genericHash.initStream(key: longKey))
 
         let invalidFinal = try XCTUnwrap(sodium.genericHash.initStream())
@@ -203,6 +201,20 @@ class SodiumTests: XCTestCase {
         let oversizedFinal = try XCTUnwrap(sodium.genericHash.initStream())
         oversizedFinal.outputLength = sodium.genericHash.BytesMax + 1
         XCTAssertNil(oversizedFinal.final())
+
+        for keyLength in 0 ... sodium.genericHash.KeyBytesMax {
+            let key = Bytes(repeating: 0x80, count: keyLength)
+            var expected = Bytes(repeating: 0, count: sodium.genericHash.Bytes)
+            XCTAssertEqual(crypto_generichash(&expected, expected.count, message, UInt64(message.count), key, key.count), 0)
+            XCTAssertEqual(sodium.genericHash.hash(message: message, key: key), expected)
+            let stream = try XCTUnwrap(sodium.genericHash.initStream(key: key))
+            XCTAssertTrue(stream.update(input: message))
+            XCTAssertEqual(stream.final(), expected)
+            let explicitStream = try XCTUnwrap(sodium.genericHash.initStream(key: key, outputLength: sodium.genericHash.Bytes))
+            XCTAssertTrue(explicitStream.update(input: message))
+            XCTAssertEqual(explicitStream.final(), expected)
+        }
+        XCTAssertEqual(sodium.genericHash.hash(message: message, key: []), sodium.genericHash.hash(message: message))
     }
 
     func testRandomBytes() throws {
