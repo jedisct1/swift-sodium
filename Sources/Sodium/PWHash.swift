@@ -115,7 +115,9 @@ public extension PWHash {
      - Returns: The derived key data.
      */
     func hash(outputLength: Int, passwd: Bytes, salt: Bytes, opsLimit: Int, memLimit: Int, alg: Alg = .Default) -> Bytes? {
-        guard (Int(crypto_pwhash_bytes_min()) ... Int(crypto_pwhash_bytes_max())).contains(outputLength),
+        guard outputLength >= 0,
+              UInt64(outputLength) >= UInt64(crypto_pwhash_bytes_min()),
+              UInt64(outputLength) <= UInt64(crypto_pwhash_bytes_max()),
               salt.count == SaltBytes
         else { return nil }
         var output = Bytes(count: outputLength)

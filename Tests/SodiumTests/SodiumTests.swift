@@ -16,6 +16,7 @@ extension Data {
 class SodiumTests: XCTestCase {
     static let allTests = [
         ("testAuth", testAuth),
+        ("testAeadInputLengths", testAeadInputLengths),
         ("testBase64", testBase64),
         ("testBox", testBox),
         ("testGenericHash", testGenericHash),
@@ -83,6 +84,23 @@ class SodiumTests: XCTestCase {
         let bobBeforenm = try XCTUnwrap(sodium.box.beforenm(recipientPublicKey: aliceKeyPair.publicKey, senderSecretKey: bobKeyPair.secretKey))
         XCTAssertEqual(aliceBeforenm, bobBeforenm)
 
+        XCTAssertNil(sodium.box.beforenm(
+            recipientPublicKey: Bytes(repeating: 0, count: sodium.box.PublicKeyBytes - 1),
+            senderSecretKey: aliceKeyPair.secretKey
+        ))
+        XCTAssertNil(sodium.box.beforenm(
+            recipientPublicKey: Bytes(repeating: 0, count: sodium.box.PublicKeyBytes + 1),
+            senderSecretKey: aliceKeyPair.secretKey
+        ))
+        XCTAssertNil(sodium.box.beforenm(
+            recipientPublicKey: bobKeyPair.publicKey,
+            senderSecretKey: Bytes(repeating: 0, count: sodium.box.SecretKeyBytes - 1)
+        ))
+        XCTAssertNil(sodium.box.beforenm(
+            recipientPublicKey: bobKeyPair.publicKey,
+            senderSecretKey: Bytes(repeating: 0, count: sodium.box.SecretKeyBytes + 1)
+        ))
+
         // Make sure the encryption using beforenm works
         let encryptedMessageBeforenm: Bytes = try XCTUnwrap(sodium.box.seal(message: message, beforenm: aliceBeforenm))
         let decryptedBeforenm = sodium.box.open(nonceAndAuthenticatedCipherText: encryptedMessageBeforenm, beforenm: aliceBeforenm)
@@ -125,6 +143,19 @@ class SodiumTests: XCTestCase {
         // reproduce encryption result with user-provided nonce
         let encrypted5 = try XCTUnwrap(sodium.secretBox.seal(message: message, secretKey: secretKey, nonce: nonce2))
         XCTAssertEqual(encrypted5, encrypted2)
+
+        let shortNonce = Bytes(repeating: 0, count: sodium.secretBox.NonceBytes - 1)
+        let longNonce = Bytes(repeating: 0, count: sodium.secretBox.NonceBytes + 1)
+        let shortKey = Bytes(repeating: 0, count: sodium.secretBox.KeyBytes - 1)
+        let longKey = Bytes(repeating: 0, count: sodium.secretBox.KeyBytes + 1)
+        XCTAssertNil(sodium.secretBox.seal(message: message, secretKey: secretKey, nonce: shortNonce))
+        XCTAssertNil(sodium.secretBox.seal(message: message, secretKey: secretKey, nonce: longNonce))
+        XCTAssertNil(sodium.secretBox.open(authenticatedCipherText: encrypted2, secretKey: secretKey, nonce: shortNonce))
+        XCTAssertNil(sodium.secretBox.open(authenticatedCipherText: encrypted2, secretKey: secretKey, nonce: longNonce))
+        XCTAssertNil(sodium.secretBox.open(authenticatedCipherText: encrypted2, secretKey: shortKey, nonce: nonce2))
+        XCTAssertNil(sodium.secretBox.open(authenticatedCipherText: encrypted2, secretKey: longKey, nonce: nonce2))
+        XCTAssertNil(sodium.secretBox.open(nonceAndAuthenticatedCipherText: encrypted, secretKey: shortKey))
+        XCTAssertNil(sodium.secretBox.open(nonceAndAuthenticatedCipherText: encrypted, secretKey: longKey))
     }
 
     func testGenericHash() throws {
@@ -132,12 +163,12 @@ class SodiumTests: XCTestCase {
         let h1 = try XCTUnwrap(try sodium.utils.bin2hex(XCTUnwrap(sodium.genericHash.hash(message: message))))
         XCTAssertEqual(h1, "64a9026fca646c31df54426ad15a341e2444d8a1863d57eb27abecf239609f75")
 
-        let key = sodium.utils.hex2bin("64 a9 02 6f ca 64 6c 31 df 54", ignore: " ")
+        let key = sodium.utils.hex2bin("64 a9 02 6f ca 64 6c 31 df 54 00 11 22 33 44 55", ignore: " ")
         let h2 = try XCTUnwrap(try sodium.utils.bin2hex(XCTUnwrap(sodium.genericHash.hash(message: message, key: key))))
-        XCTAssertEqual(h2, "1773f324cba2e7b0017e32d7e44f7afd1036c5d4ef9a80ae0e52e95a629844cd")
+        XCTAssertEqual(h2, "e960e55fcbf4297be0e51808720c8b019ee1cf113e6967041b49bc9a5bbb2a1b")
 
         let h3 = try XCTUnwrap(try sodium.utils.bin2hex(XCTUnwrap(sodium.genericHash.hash(message: message, key: key, outputLength: sodium.genericHash.BytesMax))))
-        XCTAssertEqual(h3, "cba85e39f2d03923b2f66aba99b204333edc34a8443ab1700f7920c7abcc6639963a953f35162a520b21072ab906457d21f1645e6e3985858ee95a84d0771f07")
+        XCTAssertEqual(h3, "b10ed3be96de90e156e04f95b11f0175c9035fec1bd24c6c667fcbd0789e934ccc21d6b2ebc4c4885def23a1855e6a42a1015ffa1c473fd144faa45241873185")
 
         let s1 = try XCTUnwrap(sodium.genericHash.initStream())
         XCTAssertTrue(s1.update(input: message))
@@ -153,6 +184,25 @@ class SodiumTests: XCTestCase {
         XCTAssertTrue(s3.update(input: message))
         let h6 = try XCTUnwrap(try sodium.utils.bin2hex(XCTUnwrap(s3.final())))
         XCTAssertEqual(h6, h3)
+
+        let shortKey = Bytes(repeating: 0, count: sodium.genericHash.KeyBytesMin - 1)
+        let longKey = Bytes(repeating: 0, count: sodium.genericHash.KeyBytesMax + 1)
+        XCTAssertNil(sodium.genericHash.hash(message: message, key: key, outputLength: sodium.genericHash.BytesMin - 1))
+        XCTAssertNil(sodium.genericHash.hash(message: message, key: key, outputLength: sodium.genericHash.BytesMax + 1))
+        XCTAssertNil(sodium.genericHash.hash(message: message, key: shortKey))
+        XCTAssertNil(sodium.genericHash.hash(message: message, key: longKey))
+        XCTAssertNil(sodium.genericHash.initStream(key: key, outputLength: sodium.genericHash.BytesMin - 1))
+        XCTAssertNil(sodium.genericHash.initStream(key: key, outputLength: sodium.genericHash.BytesMax + 1))
+        XCTAssertNil(sodium.genericHash.initStream(key: shortKey))
+        XCTAssertNil(sodium.genericHash.initStream(key: longKey))
+
+        let invalidFinal = try XCTUnwrap(sodium.genericHash.initStream())
+        invalidFinal.outputLength = sodium.genericHash.BytesMin - 1
+        XCTAssertNil(invalidFinal.final())
+
+        let oversizedFinal = try XCTUnwrap(sodium.genericHash.initStream())
+        oversizedFinal.outputLength = sodium.genericHash.BytesMax + 1
+        XCTAssertNil(oversizedFinal.final())
     }
 
     func testRandomBytes() throws {
@@ -208,6 +258,9 @@ class SodiumTests: XCTestCase {
 
         XCTAssertTrue(sodium.sign.verify(signedMessage: signedMessage, publicKey: keyPair.publicKey))
         XCTAssertTrue(sodium.sign.verify(message: message, publicKey: keyPair.publicKey, signature: signature))
+        XCTAssertFalse(sodium.sign.verify(signedMessage: Bytes(repeating: 0, count: sodium.sign.Bytes - 1), publicKey: keyPair.publicKey))
+        XCTAssertFalse(sodium.sign.verify(message: message, publicKey: keyPair.publicKey, signature: Bytes(repeating: 0, count: sodium.sign.Bytes - 1)))
+        XCTAssertFalse(sodium.sign.verify(message: message, publicKey: keyPair.publicKey, signature: Bytes(repeating: 0, count: sodium.sign.Bytes + 1)))
 
         let unsignedMessage = try XCTUnwrap(sodium.sign.open(signedMessage: signedMessage, publicKey: keyPair.publicKey))
         XCTAssertEqual(unsignedMessage, message)
@@ -258,6 +311,10 @@ class SodiumTests: XCTestCase {
         let salt = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16] as [UInt8]
         let hash2 = sodium.pwHash.hash(outputLength: 64, passwd: password3, salt: salt, opsLimit: sodium.pwHash.OpsLimitInteractive, memLimit: sodium.pwHash.MemLimitInteractive)
         XCTAssertEqual(try sodium.utils.bin2hex(XCTUnwrap(hash2)), "cc80dee6a19da46ed6ea11507dd709ce52519ddd1fd2d823ce85b9e9b4fd96d06583de2ca8bcc5998f3483a8a424c4e93ddb500968b0dbefb667d56d421d5a6c")
+        XCTAssertNil(sodium.pwHash.hash(outputLength: 0, passwd: password3, salt: salt, opsLimit: sodium.pwHash.OpsLimitInteractive, memLimit: sodium.pwHash.MemLimitInteractive))
+        if MemoryLayout<Int>.size > MemoryLayout<UInt32>.size {
+            XCTAssertNil(sodium.pwHash.hash(outputLength: Int(UInt32.max) + 1, passwd: password3, salt: salt, opsLimit: sodium.pwHash.OpsLimitInteractive, memLimit: sodium.pwHash.MemLimitInteractive))
+        }
 
         XCTAssertFalse(try sodium.pwHash.strNeedsRehash(hash: XCTUnwrap(hash), opsLimit: sodium.pwHash.OpsLimitInteractive, memLimit: sodium.pwHash.MemLimitInteractive))
         XCTAssertTrue(try sodium.pwHash.strNeedsRehash(hash: XCTUnwrap(hash), opsLimit: sodium.pwHash.OpsLimitSensitive, memLimit: sodium.pwHash.MemLimitSensitive))
@@ -318,6 +375,8 @@ class SodiumTests: XCTestCase {
         let key2 = sodium.auth.key()
         let verify2 = sodium.auth.verify(message: message, secretKey: key2, tag: tag)
         XCTAssertFalse(verify2)
+        XCTAssertFalse(sodium.auth.verify(message: message, secretKey: key, tag: Bytes(repeating: 0, count: sodium.auth.Bytes - 1)))
+        XCTAssertFalse(sodium.auth.verify(message: message, secretKey: key, tag: Bytes(repeating: 0, count: sodium.auth.Bytes + 1)))
     }
 
     func testKeyDerivationInputKeyTooShort() {
@@ -649,6 +708,45 @@ class SodiumTests: XCTestCase {
         let decryptedEmpty: Bytes = try XCTUnwrap(sodium.aead.xchacha20poly1305ietf.decrypt(nonceAndAuthenticatedCipherText: encryptedEmpty, secretKey: secretKey, additionalData: additionalData))
 
         XCTAssertTrue(decryptedEmpty == emptyMessage)
+    }
+
+    func testAeadInputLengths() {
+        func assertInvalidLengths(
+            aBytes: Int,
+            keyBytes: Int,
+            nonceBytes: Int,
+            decrypt: (Bytes, Bytes, Bytes) -> Bytes?,
+            file: StaticString = #filePath,
+            line: UInt = #line
+        ) {
+            let cipherText = Bytes(repeating: 0, count: aBytes)
+            let key = Bytes(repeating: 0, count: keyBytes)
+            let nonce = Bytes(repeating: 0, count: nonceBytes)
+            XCTAssertNil(decrypt(cipherText, Bytes(repeating: 0, count: keyBytes - 1), nonce), file: file, line: line)
+            XCTAssertNil(decrypt(cipherText, Bytes(repeating: 0, count: keyBytes + 1), nonce), file: file, line: line)
+            XCTAssertNil(decrypt(cipherText, key, Bytes(repeating: 0, count: nonceBytes - 1)), file: file, line: line)
+            XCTAssertNil(decrypt(cipherText, key, Bytes(repeating: 0, count: nonceBytes + 1)), file: file, line: line)
+        }
+
+        let aegis128l = sodium.aead.aegis128l
+        assertInvalidLengths(aBytes: aegis128l.ABytes, keyBytes: aegis128l.KeyBytes, nonceBytes: aegis128l.NonceBytes) {
+            aegis128l.decrypt(authenticatedCipherText: $0, secretKey: $1, nonce: $2)
+        }
+
+        let aegis256 = sodium.aead.aegis256
+        assertInvalidLengths(aBytes: aegis256.ABytes, keyBytes: aegis256.KeyBytes, nonceBytes: aegis256.NonceBytes) {
+            aegis256.decrypt(authenticatedCipherText: $0, secretKey: $1, nonce: $2)
+        }
+
+        let xchacha20 = sodium.aead.xchacha20poly1305ietf
+        assertInvalidLengths(aBytes: xchacha20.ABytes, keyBytes: xchacha20.KeyBytes, nonceBytes: xchacha20.NonceBytes) {
+            xchacha20.decrypt(authenticatedCipherText: $0, secretKey: $1, nonce: $2)
+        }
+
+        let aes256gcm = sodium.aead.aes256gcm
+        assertInvalidLengths(aBytes: aes256gcm.ABytes, keyBytes: aes256gcm.KeyBytes, nonceBytes: aes256gcm.NonceBytes) {
+            aes256gcm.decrypt(authenticatedCipherText: $0, secretKey: $1, nonce: $2)
+        }
     }
 
     func testRFC8032Vector1() throws {

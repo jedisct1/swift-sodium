@@ -62,6 +62,8 @@ public extension Sign {
      - Returns: `true` if verification is successful.
      */
     func verify(signedMessage: Bytes, publicKey: PublicKey) -> Bool {
+        guard signedMessage.count >= Bytes else { return false }
+
         let signature = signedMessage[..<Bytes].bytes
         let message = signedMessage[Bytes...].bytes
 
@@ -78,7 +80,7 @@ public extension Sign {
      - Returns: `true` if verification is successful.
      */
     func verify(message: Bytes, publicKey: PublicKey, signature: Bytes) -> Bool {
-        guard publicKey.count == PublicKeyBytes else {
+        guard publicKey.count == PublicKeyBytes, signature.count == Bytes else {
             return false
         }
 

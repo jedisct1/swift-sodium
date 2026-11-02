@@ -18,6 +18,10 @@ public extension GenericHash {
         public var outputLength: Int = 0
 
         init?(key: Bytes?, outputLength: Int) {
+            guard (Int(crypto_generichash_bytes_min()) ... Int(crypto_generichash_bytes_max())).contains(outputLength),
+                  key.map({ (Int(crypto_generichash_keybytes_min()) ... Int(crypto_generichash_keybytes_max())).contains($0.count) }) ?? true
+            else { return nil }
+
             state = UnsafeMutableRawBufferPointer.allocate(byteCount: crypto_generichash_statebytes(), alignment: 64)
             guard state.baseAddress != nil else { return nil }
             opaqueState = OpaquePointer(state.baseAddress!)
@@ -63,6 +67,10 @@ public extension GenericHash {
      - Returns: The computed fingerprint.
      */
     func hash(message: Bytes, key: Bytes?, outputLength: Int) -> Bytes? {
+        guard (BytesMin ... BytesMax).contains(outputLength),
+              key.map({ (KeyBytesMin ... KeyBytesMax).contains($0.count) }) ?? true
+        else { return nil }
+
         var output = [UInt8](count: outputLength)
 
         guard crypto_generichash(
@@ -98,7 +106,10 @@ public extension GenericHash {
      - Returns: The initialized `Stream`.
      */
     func initStream(key: Bytes? = nil) -> Stream? {
-        Stream(key: key, outputLength: Bytes)
+        guard key.map({ (KeyBytesMin ... KeyBytesMax).contains($0.count) }) ?? true else {
+            return nil
+        }
+        return Stream(key: key, outputLength: Bytes)
     }
 
     /**
@@ -112,7 +123,11 @@ public extension GenericHash {
      - Returns: The initialized `Stream`.
      */
     func initStream(key: Bytes?, outputLength: Int) -> Stream? {
-        Stream(key: key, outputLength: outputLength)
+        guard (BytesMin ... BytesMax).contains(outputLength),
+              key.map({ (KeyBytesMin ... KeyBytesMax).contains($0.count) }) ?? true
+        else { return nil }
+
+        return Stream(key: key, outputLength: outputLength)
     }
 
     /**
@@ -123,7 +138,8 @@ public extension GenericHash {
      - Returns: The initialized `Stream`.
      */
     func initStream(outputLength: Int) -> Stream? {
-        Stream(key: nil, outputLength: outputLength)
+        guard (BytesMin ... BytesMax).contains(outputLength) else { return nil }
+        return Stream(key: nil, outputLength: outputLength)
     }
 }
 
@@ -150,6 +166,10 @@ public extension GenericHash.Stream {
      */
     func final() -> Bytes? {
         let outputLen = outputLength
+        guard (Int(crypto_generichash_bytes_min()) ... Int(crypto_generichash_bytes_max())).contains(outputLen) else {
+            return nil
+        }
+
         var output = [UInt8](count: outputLen)
         guard crypto_generichash_final(
             opaqueState,

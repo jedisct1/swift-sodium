@@ -38,7 +38,7 @@ public extension Auth {
      - Returns: `true` if the verification is successful.
      */
     func verify(message: Bytes, secretKey: SecretKey, tag: Bytes) -> Bool {
-        guard secretKey.count == KeyBytes else {
+        guard secretKey.count == KeyBytes, tag.count == Bytes else {
             return false
         }
         return crypto_auth_verify(

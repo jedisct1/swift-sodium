@@ -95,7 +95,9 @@ public extension SecretBox {
     /// }
     /// ```
     func seal(message: Bytes, secretKey: Key, nonce: Nonce) -> Bytes? {
-        guard secretKey.count == KeyBytes else { return nil }
+        guard secretKey.count == KeyBytes,
+              nonce.count == NonceBytes
+        else { return nil }
         var authenticatedCipherText = Bytes(count: message.count + MacBytes)
 
         guard crypto_secretbox_easy(
@@ -179,7 +181,10 @@ public extension SecretBox {
      - Returns: The decrypted message.
      */
     func open(authenticatedCipherText: Bytes, secretKey: Key, nonce: Nonce) -> Bytes? {
-        guard authenticatedCipherText.count >= MacBytes else { return nil }
+        guard authenticatedCipherText.count >= MacBytes,
+              secretKey.count == KeyBytes,
+              nonce.count == NonceBytes
+        else { return nil }
         var message = Bytes(count: authenticatedCipherText.count - MacBytes)
 
         guard crypto_secretbox_open_easy(

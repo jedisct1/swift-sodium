@@ -93,7 +93,10 @@ public extension Aead.Aegis128L {
      - Returns: The decrypted message.
      */
     func decrypt(authenticatedCipherText: Bytes, secretKey: Key, nonce: Nonce, additionalData: Bytes? = nil) -> Bytes? {
-        guard authenticatedCipherText.count >= ABytes else { return nil }
+        guard authenticatedCipherText.count >= ABytes,
+              secretKey.count == KeyBytes,
+              nonce.count == NonceBytes
+        else { return nil }
 
         var message = Bytes(count: authenticatedCipherText.count - ABytes)
         var messageLen: UInt64 = 0
@@ -212,7 +215,10 @@ public extension Aead.Aegis256 {
      - Returns: The decrypted message.
      */
     func decrypt(authenticatedCipherText: Bytes, secretKey: Key, nonce: Nonce, additionalData: Bytes? = nil) -> Bytes? {
-        guard authenticatedCipherText.count >= ABytes else { return nil }
+        guard authenticatedCipherText.count >= ABytes,
+              secretKey.count == KeyBytes,
+              nonce.count == NonceBytes
+        else { return nil }
 
         var message = Bytes(count: authenticatedCipherText.count - ABytes)
         var messageLen: UInt64 = 0
@@ -331,7 +337,10 @@ public extension Aead.XChaCha20Poly1305Ietf {
      - Returns: The decrypted message.
      */
     func decrypt(authenticatedCipherText: Bytes, secretKey: Key, nonce: Nonce, additionalData: Bytes? = nil) -> Bytes? {
-        guard authenticatedCipherText.count >= ABytes else { return nil }
+        guard authenticatedCipherText.count >= ABytes,
+              secretKey.count == KeyBytes,
+              nonce.count == NonceBytes
+        else { return nil }
 
         var message = Bytes(count: authenticatedCipherText.count - ABytes)
         var messageLen: UInt64 = 0
@@ -450,7 +459,10 @@ public extension Aead.Aes256Gcm {
      - Returns: The decrypted message.
      */
     func decrypt(authenticatedCipherText: Bytes, secretKey: Key, nonce: Nonce, additionalData: Bytes? = nil) -> Bytes? {
-        guard authenticatedCipherText.count >= ABytes else { return nil }
+        guard authenticatedCipherText.count >= ABytes,
+              secretKey.count == KeyBytes,
+              nonce.count == NonceBytes
+        else { return nil }
 
         var message = Bytes(count: authenticatedCipherText.count - ABytes)
         var messageLen: UInt64 = 0

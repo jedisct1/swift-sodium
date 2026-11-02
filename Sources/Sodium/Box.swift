@@ -400,6 +400,10 @@ public extension Box {
      - Returns: The computed shared secret key.
      */
     func beforenm(recipientPublicKey: PublicKey, senderSecretKey: SecretKey) -> Bytes? {
+        guard recipientPublicKey.count == PublicKeyBytes,
+              senderSecretKey.count == SecretKeyBytes
+        else { return nil }
+
         var key = Bytes(count: BeforenmBytes)
         guard crypto_box_beforenm(
             &key,
