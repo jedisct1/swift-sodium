@@ -56,6 +56,29 @@ public extension Utils {
 
 public extension Utils {
     /**
+     Increments a nonce, treated as a little-endian number.
+
+     - Parameter bytes: The nonce to increment in place.
+
+     - Returns: `true` on success, or `false` if the nonce is empty or already at its maximum value.
+     In that case, it is left unchanged instead of wrapping around to zero.
+     */
+    func increment(_ bytes: inout Bytes) -> Bool {
+        let count = bytes.count
+        sodium_increment(&bytes, count)
+
+        guard sodium_is_zero(bytes, count) == 0 else {
+            // Only all 0xFF wraps around to zero, so put that back.
+            bytes = Bytes(repeating: 0xFF, count: count)
+            return false
+        }
+
+        return true
+    }
+}
+
+public extension Utils {
+    /**
      Converts bytes stored in `bin` into a hexadecimal string.
 
      - Parameter bin: The data to encode as hexdecimal.

@@ -41,6 +41,7 @@ class SodiumTests: XCTestCase {
         ("testSecretStream", testSecretStream),
         ("testShortHash", testShortHash),
         ("testSignature", testSignature),
+        ("testSignatureStream", testSignatureStream),
         ("testStream", testStream),
         ("testUtils", testUtils),
         ("testIpConversion", testIpConversion),
@@ -276,6 +277,52 @@ class SodiumTests: XCTestCase {
 
         let unsignedMessage = try XCTUnwrap(sodium.sign.open(signedMessage: signedMessage, publicKey: keyPair.publicKey))
         XCTAssertEqual(unsignedMessage, message)
+
+        XCTAssertEqual(sodium.sign.publicKey(secretKey: keyPair.secretKey), keyPair.publicKey)
+        XCTAssertEqual(try sodium.utils.bin2hex(XCTUnwrap(sodium.sign.seed(secretKey: keyPair.secretKey))), "00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff")
+        XCTAssertNil(sodium.sign.publicKey(secretKey: Bytes(repeating: 0, count: sodium.sign.SecretKeyBytes - 1)))
+        XCTAssertNil(sodium.sign.seed(secretKey: Bytes(repeating: 0, count: sodium.sign.SecretKeyBytes - 1)))
+    }
+
+    func testSignatureStream() throws {
+        // test vector from https://datatracker.ietf.org/doc/html/rfc8032#section-7.3
+        let message = "abc".bytes
+        let keyPair = try XCTUnwrap(try sodium.sign.keyPair(seed: XCTUnwrap(sodium.utils.hex2bin("833fe62409237b9d62ec77587520911e9a759cec1d19755b7da901b96dca3d42"))))
+
+        let signer = try XCTUnwrap(sodium.sign.initStream())
+        XCTAssertTrue(signer.update(input: message))
+        let signature = try XCTUnwrap(signer.final(secretKey: keyPair.secretKey))
+        XCTAssertEqual(sodium.utils.bin2hex(signature), "98a70222f0b8121aa9d30f813d683f809e462b469c7ff87639499bb94e6dae4131f85042463c2a355a2003d062adf5aaa10b8c61e636062aaad11c2a26083406")
+
+        let verifier = try XCTUnwrap(sodium.sign.initStream())
+        verifier.update(input: "a".bytes)
+        verifier.update(input: "bc".bytes)
+        XCTAssertTrue(verifier.verify(publicKey: keyPair.publicKey, signature: signature))
+
+        let tamperedVerifier = try XCTUnwrap(sodium.sign.initStream())
+        tamperedVerifier.update(input: "abd".bytes)
+        XCTAssertFalse(tamperedVerifier.verify(publicKey: keyPair.publicKey, signature: signature))
+
+        // Stream signatures and regular signatures can't be mixed.
+        XCTAssertFalse(sodium.sign.verify(message: message, publicKey: keyPair.publicKey, signature: signature))
+        let regularSignature = try XCTUnwrap(sodium.sign.signature(message: message, secretKey: keyPair.secretKey))
+        let regularVerifier = try XCTUnwrap(sodium.sign.initStream())
+        regularVerifier.update(input: message)
+        XCTAssertFalse(regularVerifier.verify(publicKey: keyPair.publicKey, signature: regularSignature))
+
+        // Finalized streams can't be reused.
+        XCTAssertFalse(signer.update(input: message))
+        XCTAssertNil(signer.final(secretKey: keyPair.secretKey))
+        XCTAssertFalse(signer.verify(publicKey: keyPair.publicKey, signature: signature))
+        XCTAssertFalse(verifier.update(input: message))
+
+        // Wrong sizes don't use up the stream.
+        let stream = try XCTUnwrap(sodium.sign.initStream())
+        stream.update(input: message)
+        XCTAssertNil(stream.final(secretKey: Bytes(repeating: 0, count: sodium.sign.SecretKeyBytes - 1)))
+        XCTAssertFalse(stream.verify(publicKey: Bytes(repeating: 0, count: sodium.sign.PublicKeyBytes - 1), signature: signature))
+        XCTAssertFalse(stream.verify(publicKey: keyPair.publicKey, signature: Bytes(repeating: 0, count: sodium.sign.Bytes + 1)))
+        XCTAssertTrue(stream.verify(publicKey: keyPair.publicKey, signature: signature))
     }
 
     func testUtils() throws {
@@ -306,6 +353,15 @@ class SodiumTests: XCTestCase {
         XCTAssertEqual(hex, "deadbeef")
         let bin2 = try XCTUnwrap(sodium.utils.hex2bin("de-ad be:ef", ignore: ":- "))
         XCTAssertEqual(bin2, bin)
+
+        var nonce: Bytes = [0xFF, 0xFF, 0x00, 0x01]
+        XCTAssertTrue(sodium.utils.increment(&nonce))
+        XCTAssertEqual(nonce, [0x00, 0x00, 0x01, 0x01])
+        for length in [0, 1, 8, 12, 24] {
+            var max = Bytes(repeating: 0xFF, count: length)
+            XCTAssertFalse(sodium.utils.increment(&max))
+            XCTAssertEqual(max, Bytes(repeating: 0xFF, count: length))
+        }
     }
 
     func testPwHash() throws {

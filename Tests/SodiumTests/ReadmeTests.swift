@@ -14,6 +14,7 @@ class ReadmeTests: XCTestCase {
         ("testDetachedSignatures", testDetachedSignatures),
         ("testDeterministicHashing", testDeterministicHashing),
         ("testHexDecimalDecoding", testHexDecimalDecoding),
+        ("testIncrementingNonce", testIncrementingNonce),
         ("testIpCrypt", testIpCrypt),
         ("testKEM", testKEM),
         ("testKeyDerivation", testKeyDerivation),
@@ -25,8 +26,10 @@ class ReadmeTests: XCTestCase {
         ("testSecretKeyAuthenticatedEncryption", testSecretKeyAuthenticatedEncryption),
         ("testSecretStream", testSecretStream),
         ("testShortOutputHashing", testShortOutputHashing),
+        ("testSigningKeyExtraction", testSigningKeyExtraction),
         ("testStream", testStream),
         ("testStreaming", testStreaming),
+        ("testStreamingSignatures", testStreamingSignatures),
         ("testZeroingMemory", testZeroingMemory),
     ]
 
@@ -124,6 +127,31 @@ class ReadmeTests: XCTestCase {
         if sodium.sign.open(signedMessage: signedMessage, publicKey: keyPair.publicKey) != nil {
             // signature is valid
         }
+    }
+
+    func testStreamingSignatures() throws {
+        let sodium = Sodium()
+        let keyPair = try XCTUnwrap(sodium.sign.keyPair())
+
+        let signer = try XCTUnwrap(sodium.sign.initStream())
+        signer.update(input: "My Test ".bytes)
+        signer.update(input: "Message".bytes)
+        let signature = try XCTUnwrap(signer.final(secretKey: keyPair.secretKey))
+
+        let verifier = try XCTUnwrap(sodium.sign.initStream())
+        verifier.update(input: "My Test ".bytes)
+        verifier.update(input: "Message".bytes)
+        XCTAssertTrue(verifier.verify(publicKey: keyPair.publicKey, signature: signature))
+    }
+
+    func testSigningKeyExtraction() throws {
+        let sodium = Sodium()
+        let keyPair = try XCTUnwrap(sodium.sign.keyPair())
+        let publicKey = try XCTUnwrap(sodium.sign.publicKey(secretKey: keyPair.secretKey))
+        let seed = try XCTUnwrap(sodium.sign.seed(secretKey: keyPair.secretKey))
+
+        XCTAssertEqual(publicKey, keyPair.publicKey)
+        XCTAssertEqual(sodium.sign.keyPair(seed: seed)?.secretKey, keyPair.secretKey)
     }
 
     func testSecretKeyAuthenticatedEncryption() throws {
@@ -228,6 +256,12 @@ class ReadmeTests: XCTestCase {
         let equality = sodium.utils.equals(secret1, secret2)
 
         XCTAssertTrue(equality)
+    }
+
+    func testIncrementingNonce() {
+        let sodium = Sodium()
+        var nonce = sodium.secretBox.nonce()
+        XCTAssertTrue(sodium.utils.increment(&nonce))
     }
 
     func testConstantTimeHexdecimalEncoding() {

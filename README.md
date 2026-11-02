@@ -244,6 +244,43 @@ if let unsignedMessage = sodium.sign.open(signedMessage: signedMessage, publicKe
 }
 ```
 
+### Streaming signatures
+
+Messages that are too big to keep in memory, or that arrive in pieces, can be signed and verified piece by piece.
+
+```swift
+let sodium = Sodium()
+let keyPair = sodium.sign.keyPair()!
+
+let signer = sodium.sign.initStream()!
+signer.update(input: "My Test ".bytes)
+signer.update(input: "Message".bytes)
+let signature = signer.final(secretKey: keyPair.secretKey)!
+
+let verifier = sodium.sign.initStream()!
+verifier.update(input: "My Test ".bytes)
+verifier.update(input: "Message".bytes)
+if verifier.verify(publicKey: keyPair.publicKey, signature: signature) {
+    // signature is valid
+}
+```
+
+Streams use a different algorithm (Ed25519ph), so their signatures can only be verified by a stream.
+For the same reason, a stream can't verify a signature made with `sodium.sign.signature()`.
+
+A stream can't be used again after `final()` or `verify()`.
+The only exception is a call that was rejected because a key or signature had the wrong size.
+
+### Extracting the public key and seed from a secret key
+
+```swift
+let sodium = Sodium()
+let keyPair = sodium.sign.keyPair()!
+let publicKey = sodium.sign.publicKey(secretKey: keyPair.secretKey)!
+let seed = sodium.sign.seed(secretKey: keyPair.secretKey)!
+// sodium.sign.keyPair(seed: seed) returns the same key pair
+```
+
 ## Hashing
 
 ### Deterministic hashing
@@ -384,6 +421,21 @@ let secret1 = "Secret key".bytes
 let secret2 = "Secret key".bytes
 let equality = sodium.utils.equals(secret1, secret2)
 ```
+
+### Incrementing a nonce
+
+```swift
+let sodium = Sodium()
+var nonce = sodium.secretBox.nonce()
+if sodium.utils.increment(&nonce) {
+    // nonce can be used for the next message
+}
+```
+
+The nonce is treated as a little-endian number.
+
+If it is already at its maximum value, `increment()` returns `false` and leaves it unchanged.
+Wrapping around to zero would reuse an old nonce.
 
 ### Padding
 

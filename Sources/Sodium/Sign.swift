@@ -7,6 +7,17 @@ public struct Sign {
 }
 
 public extension Sign {
+    class Stream {
+        private var state = crypto_sign_state()
+        private var finalized = false
+
+        init?() {
+            guard crypto_sign_init(&state).exitCode == .SUCCESS else { return nil }
+        }
+    }
+}
+
+public extension Sign {
     /**
      Signs a message with the sender's secret key
 
@@ -116,6 +127,128 @@ public extension Sign {
         ).exitCode == .SUCCESS else { return nil }
 
         return message
+    }
+}
+
+public extension Sign {
+    /**
+     Extracts the public key from a secret key.
+
+     - Parameter secretKey: The secret key.
+
+     - Returns: The public key.
+     */
+    func publicKey(secretKey: SecretKey) -> PublicKey? {
+        guard secretKey.count == SecretKeyBytes else { return nil }
+        var publicKey = [UInt8](count: PublicKeyBytes)
+
+        guard crypto_sign_ed25519_sk_to_pk(
+            &publicKey,
+            secretKey
+        ).exitCode == .SUCCESS else { return nil }
+
+        return publicKey
+    }
+
+    /**
+     Extracts the seed of a secret key.
+
+     The seed is enough to recreate the key pair with `keyPair(seed:)`.
+
+     - Parameter secretKey: The secret key.
+
+     - Returns: The seed.
+     */
+    func seed(secretKey: SecretKey) -> Bytes? {
+        guard secretKey.count == SecretKeyBytes else { return nil }
+        var seed = [UInt8](count: SeedBytes)
+
+        guard crypto_sign_ed25519_sk_to_seed(
+            &seed,
+            secretKey
+        ).exitCode == .SUCCESS else { return nil }
+
+        return seed
+    }
+}
+
+public extension Sign {
+    /**
+     Initializes a `Stream` object to sign or verify a message piece by piece, such as a large file.
+
+     Streams use a different algorithm (Ed25519ph) than `signature(message:secretKey:)`.
+     A signature created by a stream can only be verified by a stream.
+
+     - Returns: The initialized `Stream`.
+     */
+    func initStream() -> Stream? {
+        Stream()
+    }
+}
+
+public extension Sign.Stream {
+    /**
+     Adds the next part of the message to the stream.
+
+     - Parameter input: The next part of the message.
+
+     - Returns: `true` on success, or `false` if the stream was already finalized.
+     */
+    @discardableResult
+    func update(input: Bytes) -> Bool {
+        guard !finalized else { return false }
+
+        return crypto_sign_update(
+            &state,
+            input, UInt64(input.count)
+        ).exitCode == .SUCCESS
+    }
+
+    /**
+     Signs the whole message, and finalizes the stream.
+
+     - Parameter secretKey: The sender's secret key.
+
+     - Returns: The signature, or `nil` if the stream was already finalized.
+     A key with the wrong size also returns `nil`, but leaves the stream usable.
+     */
+    func final(secretKey: Sign.SecretKey) -> Bytes? {
+        guard !finalized, secretKey.count == Int(crypto_sign_secretkeybytes()) else { return nil }
+        finalized = true
+
+        var signature = [UInt8](count: Int(crypto_sign_bytes()))
+
+        guard crypto_sign_final_create(
+            &state,
+            &signature,
+            nil,
+            secretKey
+        ).exitCode == .SUCCESS else { return nil }
+
+        return signature
+    }
+
+    /**
+     Verifies the signature of the whole message, and finalizes the stream.
+
+     - Parameter publicKey: The sender's public key.
+     - Parameter signature: A signature created by a stream.
+
+     - Returns: `true` if the signature is valid.
+     A key or signature with the wrong size returns `false`, but leaves the stream usable.
+     */
+    func verify(publicKey: Sign.PublicKey, signature: Bytes) -> Bool {
+        guard !finalized,
+              publicKey.count == Int(crypto_sign_publickeybytes()),
+              signature.count == Int(crypto_sign_bytes())
+        else { return false }
+        finalized = true
+
+        return crypto_sign_final_verify(
+            &state,
+            signature,
+            publicKey
+        ).exitCode == .SUCCESS
     }
 }
 
