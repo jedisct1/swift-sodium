@@ -127,7 +127,7 @@ extension Aead.Aegis128L: SecretKeyGenerator {
 
     public typealias Key = Bytes
 
-    public static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_aead_aegis128l_keygen
+    public static let keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_aead_aegis128l_keygen
 }
 
 // Aegis256
@@ -249,7 +249,7 @@ extension Aead.Aegis256: SecretKeyGenerator {
 
     public typealias Key = Bytes
 
-    public static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_aead_aegis256_keygen
+    public static let keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_aead_aegis256_keygen
 }
 
 // XChaCha20Poly1305
@@ -371,7 +371,7 @@ extension Aead.XChaCha20Poly1305Ietf: SecretKeyGenerator {
 
     public typealias Key = Bytes
 
-    public static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_aead_xchacha20poly1305_ietf_keygen
+    public static let keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_aead_xchacha20poly1305_ietf_keygen
 }
 
 // AES256-GCM
@@ -500,5 +500,5 @@ extension Aead.Aes256Gcm: SecretKeyGenerator {
 
     public typealias Key = Bytes
 
-    public static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_aead_aes256gcm_keygen
+    public static let keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_aead_aes256gcm_keygen
 }

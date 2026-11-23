@@ -48,6 +48,7 @@ public extension PWHash {
      - Returns: The generated string.
      */
     func str(passwd: Bytes, opsLimit: Int, memLimit: Int) -> String? {
+        guard opsLimit >= 0, memLimit >= 0 else { return nil }
         var output = Bytes(count: StrBytes + 1).map(Int8.init)
         let passwd = passwd.map(Int8.init)
 
@@ -89,6 +90,7 @@ public extension PWHash {
      - Returns: `true` if the password hash should be updated.
      */
     func strNeedsRehash(hash: String, opsLimit: Int, memLimit: Int) -> Bool {
+        guard opsLimit >= 0, memLimit >= 0 else { return true }
         let hashBytes = Bytes((hash + "\0").utf8).map(Int8.init)
         return crypto_pwhash_str_needs_rehash(
             hashBytes,
@@ -118,6 +120,7 @@ public extension PWHash {
         guard outputLength >= 0,
               UInt64(outputLength) >= UInt64(crypto_pwhash_bytes_min()),
               UInt64(outputLength) <= UInt64(crypto_pwhash_bytes_max()),
+              opsLimit >= 0, memLimit >= 0,
               salt.count == SaltBytes
         else { return nil }
         var output = Bytes(count: outputLength)

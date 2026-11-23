@@ -56,5 +56,5 @@ extension KeyDerivation: SecretKeyGenerator {
 
     public typealias Key = Bytes
 
-    public static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_kdf_keygen
+    public static let keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_kdf_keygen
 }

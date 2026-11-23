@@ -15,13 +15,15 @@ public extension GenericHash {
     class Stream {
         private var state: UnsafeMutableRawBufferPointer
         private var opaqueState: OpaquePointer
-        public var outputLength: Int = 0
+        public let outputLength: Int
 
         init?(key: Bytes?, outputLength: Int) {
             guard (Int(crypto_generichash_bytes_min()) ... Int(crypto_generichash_bytes_max())).contains(outputLength),
                   key.map({ $0.count <= Int(crypto_generichash_keybytes_max()) }) ?? true
             else { return nil }
 
+            // Set before allocating, so that deinit frees the state if init fails.
+            self.outputLength = outputLength
             state = UnsafeMutableRawBufferPointer.allocate(byteCount: crypto_generichash_statebytes(), alignment: 64)
             guard state.baseAddress != nil else { return nil }
             opaqueState = OpaquePointer(state.baseAddress!)
@@ -30,11 +32,10 @@ public extension GenericHash {
                 key, key?.count ?? 0,
                 outputLength
             ).exitCode == .SUCCESS else { return nil }
-
-            self.outputLength = outputLength
         }
 
         deinit {
+            sodium_memzero(state.baseAddress, state.count)
             state.deallocate()
         }
     }
@@ -165,15 +166,10 @@ public extension GenericHash.Stream {
      - Returns: The computed fingerprint.
      */
     func final() -> Bytes? {
-        let outputLen = outputLength
-        guard (Int(crypto_generichash_bytes_min()) ... Int(crypto_generichash_bytes_max())).contains(outputLen) else {
-            return nil
-        }
-
-        var output = [UInt8](count: outputLen)
+        var output = [UInt8](count: outputLength)
         guard crypto_generichash_final(
             opaqueState,
-            &output, outputLen
+            &output, outputLength
         ).exitCode == .SUCCESS else { return nil }
 
         return output
@@ -187,5 +183,5 @@ extension GenericHash: SecretKeyGenerator {
 
     public typealias Key = Bytes
 
-    public static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_generichash_keygen
+    public static let keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_generichash_keygen
 }

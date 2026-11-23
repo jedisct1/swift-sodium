@@ -40,6 +40,10 @@ public extension SecretStream.XChaCha20Poly1305 {
                 secretKey
             ).exitCode == .SUCCESS else { return nil }
         }
+
+        deinit {
+            sodium_memzero(&state, MemoryLayout<crypto_secretstream_xchacha20poly1305_state>.size)
+        }
     }
 }
 
@@ -59,6 +63,10 @@ public extension SecretStream.XChaCha20Poly1305 {
                 header,
                 secretKey
             ).exitCode == .SUCCESS else { return nil }
+        }
+
+        deinit {
+            sodium_memzero(&state, MemoryLayout<crypto_secretstream_xchacha20poly1305_state>.size)
         }
     }
 }
@@ -186,5 +194,5 @@ extension SecretStream.XChaCha20Poly1305: SecretKeyGenerator {
 
     public typealias Key = Bytes
 
-    public static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_secretstream_xchacha20poly1305_keygen
+    public static let keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_secretstream_xchacha20poly1305_keygen
 }

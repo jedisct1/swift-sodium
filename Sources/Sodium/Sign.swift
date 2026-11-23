@@ -14,6 +14,10 @@ public extension Sign {
         init?() {
             guard crypto_sign_init(&state).exitCode == .SUCCESS else { return nil }
         }
+
+        deinit {
+            sodium_memzero(&state, MemoryLayout<crypto_sign_state>.size)
+        }
     }
 }
 

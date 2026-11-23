@@ -159,13 +159,9 @@ class SodiumTests: XCTestCase {
         XCTAssertNil(sodium.genericHash.initStream(key: key, outputLength: sodium.genericHash.BytesMax + 1))
         XCTAssertNil(sodium.genericHash.initStream(key: longKey))
 
-        let invalidFinal = try XCTUnwrap(sodium.genericHash.initStream())
-        invalidFinal.outputLength = sodium.genericHash.BytesMin - 1
-        XCTAssertNil(invalidFinal.final())
-
-        let oversizedFinal = try XCTUnwrap(sodium.genericHash.initStream())
-        oversizedFinal.outputLength = sodium.genericHash.BytesMax + 1
-        XCTAssertNil(oversizedFinal.final())
+        let minStream = try XCTUnwrap(sodium.genericHash.initStream(outputLength: sodium.genericHash.BytesMin))
+        XCTAssertEqual(minStream.outputLength, sodium.genericHash.BytesMin)
+        XCTAssertEqual(minStream.final()?.count, sodium.genericHash.BytesMin)
 
         for keyLength in 0 ... sodium.genericHash.KeyBytesMax {
             let key = Bytes(repeating: 0x80, count: keyLength)
@@ -350,6 +346,13 @@ class SodiumTests: XCTestCase {
 
         XCTAssertFalse(try sodium.pwHash.strNeedsRehash(hash: XCTUnwrap(hash), opsLimit: sodium.pwHash.OpsLimitInteractive, memLimit: sodium.pwHash.MemLimitInteractive))
         XCTAssertTrue(try sodium.pwHash.strNeedsRehash(hash: XCTUnwrap(hash), opsLimit: sodium.pwHash.OpsLimitSensitive, memLimit: sodium.pwHash.MemLimitSensitive))
+
+        XCTAssertNil(sodium.pwHash.str(passwd: password, opsLimit: -1, memLimit: sodium.pwHash.MemLimitInteractive))
+        XCTAssertNil(sodium.pwHash.str(passwd: password, opsLimit: sodium.pwHash.OpsLimitInteractive, memLimit: -1))
+        XCTAssertNil(sodium.pwHash.hash(outputLength: 64, passwd: password3, salt: salt, opsLimit: -1, memLimit: sodium.pwHash.MemLimitInteractive))
+        XCTAssertNil(sodium.pwHash.hash(outputLength: 64, passwd: password3, salt: salt, opsLimit: sodium.pwHash.OpsLimitInteractive, memLimit: -1))
+        XCTAssertTrue(try sodium.pwHash.strNeedsRehash(hash: XCTUnwrap(hash), opsLimit: -1, memLimit: sodium.pwHash.MemLimitInteractive))
+        XCTAssertTrue(try sodium.pwHash.strNeedsRehash(hash: XCTUnwrap(hash), opsLimit: sodium.pwHash.OpsLimitInteractive, memLimit: -1))
     }
 
     func testKeyExchange() throws {
@@ -503,6 +506,10 @@ class SodiumTests: XCTestCase {
         XCTAssertTrue(data.count % 16 == 0)
         sodium.utils.unpad(bytes: &data, blockSize: 16)
         XCTAssertTrue(data.count == 4)
+
+        XCTAssertNil(sodium.utils.pad(bytes: &data, blockSize: 0))
+        XCTAssertNil(sodium.utils.pad(bytes: &data, blockSize: -1))
+        XCTAssertEqual(data, "test".bytes)
     }
 
     func testIpConversion() throws {

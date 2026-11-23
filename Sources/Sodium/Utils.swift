@@ -182,6 +182,7 @@ public extension Utils {
      - Parameter blocksize: the block size
      */
     func pad(bytes: inout Bytes, blockSize: Int) -> Void? {
+        guard blockSize > 0 else { return nil }
         let bytesCount = bytes.count
         bytes += Bytes(count: blockSize)
 

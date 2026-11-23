@@ -20,7 +20,7 @@ extension IpCrypt.Deterministic: SecretKeyGenerator {
         Int(crypto_ipcrypt_keybytes())
     }
 
-    public static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_ipcrypt_keygen
+    public static let keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_ipcrypt_keygen
 }
 
 public extension IpCrypt.Deterministic {
@@ -68,7 +68,7 @@ extension IpCrypt.Nd: SecretKeyGenerator {
         Int(crypto_ipcrypt_nd_keybytes())
     }
 
-    public static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_ipcrypt_nd_keygen
+    public static let keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_ipcrypt_nd_keygen
 }
 
 public extension IpCrypt.Nd {
@@ -116,7 +116,7 @@ extension IpCrypt.Ndx: SecretKeyGenerator {
         Int(crypto_ipcrypt_ndx_keybytes())
     }
 
-    public static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_ipcrypt_ndx_keygen
+    public static let keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_ipcrypt_ndx_keygen
 }
 
 public extension IpCrypt.Ndx {
@@ -161,7 +161,7 @@ extension IpCrypt.Pfx: SecretKeyGenerator {
         Int(crypto_ipcrypt_pfx_keybytes())
     }
 
-    public static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_ipcrypt_pfx_keygen
+    public static let keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_ipcrypt_pfx_keygen
 }
 
 public extension IpCrypt.Pfx {
