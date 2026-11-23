@@ -48,11 +48,13 @@ let package = Package(
         ),
         .target(
             name: "Sodium",
-            dependencies: ["_Clibsodium"]
+            dependencies: ["_Clibsodium"],
+            exclude: ["Info.plist"]
         ),
         .testTarget(
             name: "SodiumTests",
-            dependencies: ["Sodium"]
+            dependencies: ["Sodium"],
+            exclude: ["Info.plist"]
         ),
     ]
 )

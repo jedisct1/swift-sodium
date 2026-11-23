@@ -45,8 +45,8 @@ public extension Utils {
      Compares two `Bytes` objects without leaking information about the content of these objects.
 
      - Returns: `0` if the bytes in `b1` match the bytes in `b2`.
-     `-1` if `b2` is less than `b1` (considered as little-endian values) and
-     `1`  if `b1` is less than `b2` (considered as little-endian values)
+     `-1` if `b1` is less than `b2` (considered as little-endian values) and
+     `1`  if `b2` is less than `b1` (considered as little-endian values)
      */
     func compare(_ b1: Bytes, _ b2: Bytes) -> Int? {
         guard b1.count == b2.count else { return nil }

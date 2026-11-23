@@ -15,42 +15,6 @@ extension Data {
 }
 
 class SodiumTests: XCTestCase {
-    static let allTests = [
-        ("testAuth", testAuth),
-        ("testAeadInputLengths", testAeadInputLengths),
-        ("testBase64", testBase64),
-        ("testBox", testBox),
-        ("testGenericHash", testGenericHash),
-        ("testIpCrypt", testIpCrypt),
-        ("testIpCryptNd", testIpCryptNd),
-        ("testIpCryptNdx", testIpCryptNdx),
-        ("testIpCryptPfx", testIpCryptPfx),
-        ("testKEM", testKEM),
-        ("testKeyDerivation", testKeyDerivation),
-        ("testKeyDerivationContextTooLong", testKeyDerivationContextTooLong),
-        ("testKeyDerivationInputKeyTooLong", testKeyDerivationInputKeyTooLong),
-        ("testKeyDerivationInputKeyTooShort", testKeyDerivationInputKeyTooShort),
-        ("testKeyDerivationRegression", testKeyDerivationRegression),
-        ("testKeyDerivationSubKeyTooLong", testKeyDerivationSubKeyTooLong),
-        ("testKeyDerivationSubKeyTooShort", testKeyDerivationSubKeyTooShort),
-        ("testKeyExchange", testKeyExchange),
-        ("testPad", testPad),
-        ("testPwHash", testPwHash),
-        ("testRandomBytes", testRandomBytes),
-        ("testSecretBox", testSecretBox),
-        ("testSecretStream", testSecretStream),
-        ("testShortHash", testShortHash),
-        ("testSignature", testSignature),
-        ("testSignatureStream", testSignatureStream),
-        ("testStream", testStream),
-        ("testUtils", testUtils),
-        ("testIpConversion", testIpConversion),
-        ("testRFC8032Vector1", testRFC8032Vector1),
-        ("testRFC8032Vector2", testRFC8032Vector2),
-        ("testRFC8032Vector3", testRFC8032Vector3),
-        ("testRFC8032VectorSHAABC", testRFC8032VectorSHAABC),
-    ]
-
     let sodium = Sodium()
 
     func testBox() throws {
@@ -776,6 +740,22 @@ class SodiumTests: XCTestCase {
         let decryptedEmpty: Bytes = try XCTUnwrap(sodium.aead.xchacha20poly1305ietf.decrypt(nonceAndAuthenticatedCipherText: encryptedEmpty, secretKey: secretKey, additionalData: additionalData))
 
         XCTAssertTrue(decryptedEmpty == emptyMessage)
+    }
+
+    func testAeadAes256Gcm() throws {
+        let aes256gcm = sodium.aead.aes256gcm
+        let message = "message".bytes
+        let secretKey = aes256gcm.key()
+
+        guard aes256gcm.isAvailable else {
+            XCTAssertNil(aes256gcm.encrypt(message: message, secretKey: secretKey) as Bytes?)
+            XCTAssertNil(aes256gcm.decrypt(authenticatedCipherText: Bytes(repeating: 0, count: aes256gcm.ABytes), secretKey: secretKey, nonce: aes256gcm.nonce()))
+            return
+        }
+        let sealed: Bytes = try XCTUnwrap(aes256gcm.encrypt(message: message, secretKey: secretKey, additionalData: "ad".bytes))
+        XCTAssertEqual(sealed.count, aes256gcm.NonceBytes + message.count + aes256gcm.ABytes)
+        XCTAssertEqual(aes256gcm.decrypt(nonceAndAuthenticatedCipherText: sealed, secretKey: secretKey, additionalData: "ad".bytes), message)
+        XCTAssertNil(aes256gcm.decrypt(nonceAndAuthenticatedCipherText: sealed, secretKey: secretKey))
     }
 
     func testAeadInputLengths() {

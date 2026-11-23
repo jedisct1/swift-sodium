@@ -2,37 +2,6 @@ import Sodium
 import XCTest
 
 class ReadmeTests: XCTestCase {
-    static let allTests = [
-        ("testAead", testAead),
-        ("testAnonymousEncryptionSealedBoxes", testAnonymousEncryptionSealedBoxes),
-        ("testAttachedSignatures", testAttachedSignatures),
-        ("testAuth", testAuth),
-        ("testAuthenticatedEncryption", testAuthenticatedEncryption),
-        ("testBase64", testBase64),
-        ("testConstantTimeComparison", testConstantTimeComparison),
-        ("testConstantTimeHexdecimalEncoding", testConstantTimeHexdecimalEncoding),
-        ("testDetachedSignatures", testDetachedSignatures),
-        ("testDeterministicHashing", testDeterministicHashing),
-        ("testHexDecimalDecoding", testHexDecimalDecoding),
-        ("testIncrementingNonce", testIncrementingNonce),
-        ("testIpCrypt", testIpCrypt),
-        ("testKEM", testKEM),
-        ("testKeyDerivation", testKeyDerivation),
-        ("testKeyedHashing", testKeyedHashing),
-        ("testKeyExchange", testKeyExchange),
-        ("testPadding", testPadding),
-        ("testPasswordHashing", testPasswordHashing),
-        ("testRandomNumberGeneration", testRandomNumberGeneration),
-        ("testSecretKeyAuthenticatedEncryption", testSecretKeyAuthenticatedEncryption),
-        ("testSecretStream", testSecretStream),
-        ("testShortOutputHashing", testShortOutputHashing),
-        ("testSigningKeyExtraction", testSigningKeyExtraction),
-        ("testStream", testStream),
-        ("testStreaming", testStreaming),
-        ("testStreamingSignatures", testStreamingSignatures),
-        ("testZeroingMemory", testZeroingMemory),
-    ]
-
     func testAead() throws {
         let sodium = Sodium()
         let message = "My secret message".bytes

@@ -68,7 +68,7 @@ extension IpCrypt.Nd: SecretKeyGenerator {
         Int(crypto_ipcrypt_nd_keybytes())
     }
 
-    public static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_ipcrypt_keygen
+    public static var keygen: (UnsafeMutablePointer<UInt8>) -> Void = crypto_ipcrypt_nd_keygen
 }
 
 public extension IpCrypt.Nd {

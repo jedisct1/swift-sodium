@@ -380,6 +380,12 @@ public extension Aead {
     struct Aes256Gcm {
         public let ABytes = Int(crypto_aead_aes256gcm_abytes())
         public typealias MAC = Bytes
+
+        /// Whether the CPU has the hardware AES support this cipher needs.
+        /// When it doesn't, `encrypt` and `decrypt` return `nil`.
+        public var isAvailable: Bool {
+            crypto_aead_aes256gcm_is_available() == 1
+        }
     }
 }
 
@@ -413,7 +419,7 @@ public extension Aead.Aes256Gcm {
      - Returns: The authenticated ciphertext and encryption nonce.
      */
     func encrypt(message: Bytes, secretKey: Key, additionalData: Bytes? = nil) -> (authenticatedCipherText: Bytes, nonce: Nonce)? {
-        guard secretKey.count == KeyBytes else { return nil }
+        guard isAvailable, secretKey.count == KeyBytes else { return nil }
 
         var authenticatedCipherText = Bytes(count: message.count + ABytes)
         var authenticatedCipherTextLen: UInt64 = 0
@@ -459,7 +465,8 @@ public extension Aead.Aes256Gcm {
      - Returns: The decrypted message.
      */
     func decrypt(authenticatedCipherText: Bytes, secretKey: Key, nonce: Nonce, additionalData: Bytes? = nil) -> Bytes? {
-        guard authenticatedCipherText.count >= ABytes,
+        guard isAvailable,
+              authenticatedCipherText.count >= ABytes,
               secretKey.count == KeyBytes,
               nonce.count == NonceBytes
         else { return nil }
