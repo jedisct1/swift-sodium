@@ -90,7 +90,8 @@ Four AEAD constructions are available:
 - `xchacha20poly1305ietf`: XChaCha20-Poly1305, recommended for most applications
 - `aegis128l`: AEGIS-128L, very fast on modern CPUs with AES acceleration
 - `aegis256`: AEGIS-256, similar to AEGIS-128L with a 256-bit key
-- `aes256gcm`: AES256-GCM, for hardware-accelerated AES on Intel/ARM
+- `aes256gcm`: AES256-GCM, for hardware-accelerated AES on Intel/ARM.
+  It requires CPU support, so check `aes256gcm.isAvailable` first: without it, `encrypt` and `decrypt` return `nil`.
 
 ```swift
 let sodium = Sodium()
